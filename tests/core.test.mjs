@@ -119,3 +119,46 @@ test('The entry point loads only local resources and blocks external connections
  const html=readFileSync(new URL('index.html',root),'utf8');assert.match(html,/connect-src 'none'/);assert.match(html,/frame-src 'self'/);assert.match(html,/form-action 'none'/);
  for(const [,src]of html.matchAll(/(?:src|href)="([^"]+)"/g)){assert.ok(!/^https?:/.test(src),src);assert.ok(existsSync(new URL(src,root)),src);}
 });
+
+test('The desktop belongs to Adminisztrátor, but a name the user chose is kept',()=>{
+ assert.equal(boot().xp.state.user,'Adminisztrátor');
+ assert.equal(boot({version:1,user:'Levente',files:[]}).xp.state.user,'Adminisztrátor');
+ assert.equal(boot({version:1,user:'Teszt',files:[]}).xp.state.user,'Teszt');
+ // Renaming happens once, so a user who types the old name back in the control panel keeps it.
+ assert.equal(boot({version:1,user:'Levente',administratorRenamed:true,files:[]}).xp.state.user,'Levente');
+});
+
+test('Resizing honours the minimum size and stops at the edge of the desktop',()=>{
+ const {xp}=boot();
+ const rect={left:100,top:100,width:400,height:300};
+ const area={minWidth:300,minHeight:180,width:1000,height:700};
+ const box=(dir,dx,dy)=>{const r=xp.resizeBox(dir,rect,dx,dy,area);return {left:r.left,top:r.top,width:r.width,height:r.height};};
+ assert.deepEqual(box('e',60,0),{left:100,top:100,width:460,height:300});
+ assert.deepEqual(box('s',0,25),{left:100,top:100,width:400,height:325});
+ // The left and top edges move the window while they resize it.
+ assert.deepEqual(box('w',-40,0),{left:60,top:100,width:440,height:300});
+ assert.deepEqual(box('n',0,-30),{left:100,top:70,width:400,height:330});
+ // Shrinking past the minimum pins the opposite edge instead of dragging the window along.
+ assert.deepEqual(box('w',5000,0),{left:200,top:100,width:300,height:300});
+ assert.deepEqual(box('n',0,5000),{left:100,top:220,width:400,height:180});
+ // Nothing may be dragged outside the desktop.
+ assert.deepEqual(box('w',-5000,0),{left:0,top:100,width:500,height:300});
+ assert.deepEqual(box('n',0,-5000),{left:100,top:0,width:400,height:400});
+ assert.deepEqual(box('se',5000,5000),{left:100,top:100,width:900,height:600});
+});
+
+test('The taskbar has the tray flyout and every window edge can be grabbed',()=>{
+ const html=readFileSync(new URL('index.html',root),'utf8');
+ assert.match(html,/id="tray-toggle"/);
+ assert.match(html,/id="tray-hidden" class="tray-hidden" hidden/);
+ assert.equal((html.match(/data-tray="/g)||[]).length,3);
+ assert.match(html,/id="show-desktop"[^>]*>\s*<img src="assets\/icons\/showdesktop\.png"/);
+ // The dotted handle only belongs on an unlocked taskbar, and XP locks it by default.
+ assert.doesNotMatch(html,/class="grip"/);
+ const core=readFileSync(new URL('js/core.js',root),'utf8');
+ assert.match(core,/\['n','s','e','w','ne','nw','se','sw'\]/);
+ assert.match(core,/data-resize="se"/);
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ for(const dir of ['n','s','e','w','ne','nw','se','sw'])assert.ok(css.includes(`.resize-${dir}{`),`.resize-${dir} is styled`);
+ assert.ok(css.includes('.tray-hidden[hidden]{display:none}'));
+});

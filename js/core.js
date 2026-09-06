@@ -6,7 +6,7 @@ window.XP = (() => {
   const iconPath = name => `assets/icons/${name==='windows'?'windows-logo':name || 'documents'}.${name === 'recycle' || name === 'pinball' ? 'ico' : 'png'}`;
   const icon = (name, cls='') => `<img class="${cls}" src="${iconPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
-  const defaults = () => ({version:1,user:'Levente',wallpaper:'bliss',theme:'blue',volume:55,sounds:true,showWelcome:true,iconPositions:{},draft:'',files:[
+  const defaults = () => ({version:1,user:'Adminisztrátor',wallpaper:'bliss',theme:'blue',volume:55,sounds:true,showWelcome:true,iconPositions:{},draft:'',files:[
     {id:'welcome',name:'Üdv a Windows XP-ben.txt',type:'text',parent:'documents',content:'Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n',modified:Date.now()},
     {id:'todo',name:'Teendők.txt',type:'text',parent:'documents',content:'Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n',modified:Date.now()},
     {id:'folder-personal',name:'Személyes',type:'folder',parent:'documents',modified:Date.now()}
@@ -20,6 +20,10 @@ window.XP = (() => {
   if(state.desktopLayoutVersion!==2){
     for(const id of ['computer','internet','documents','recycle','network','notepad','paint','player','mines','solitaire'])delete state.iconPositions[id];
     state.desktopLayoutVersion=2;
+  }
+  if(!state.administratorRenamed){
+    if(state.user==='Levente')state.user='Adminisztrátor';
+    state.administratorRenamed=true;
   }
   if(!state.gamesFolderAdded){
     let folder=state.files.find(f=>f.parent==='desktop'&&f.type==='folder'&&f.name==='Játékok'&&!f.deleted);
@@ -69,13 +73,26 @@ window.XP = (() => {
   function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
   function minimize(win){if(win.modal)return;win.minimized=true;win.el.hidden=true;frontmost();}
   function maximize(win){if(win.fixed)return;win.maximized=!win.maximized;win.el.classList.toggle('maximized',win.maximized);if(win.maximized){win.restore={left:win.el.style.left,top:win.el.style.top,width:win.el.style.width,height:win.el.style.height};Object.assign(win.el.style,{left:'0px',top:'0px',width:'100%',height:'100%'});}else Object.assign(win.el.style,win.restore);focus(win);}
+  function resizeBox(dir,rect,dx,dy,limits){
+    const {minWidth,minHeight,width:areaWidth,height:areaHeight}=limits;
+    let left=rect.left,top=rect.top,width=rect.width,height=rect.height;
+    if(dir.includes('e'))width=rect.width+dx;
+    if(dir.includes('s'))height=rect.height+dy;
+    if(dir.includes('w')){width=rect.width-dx;left=rect.left+dx;}
+    if(dir.includes('n')){height=rect.height-dy;top=rect.top+dy;}
+    if(width<minWidth){if(dir.includes('w'))left=rect.left+rect.width-minWidth;width=minWidth;}
+    if(height<minHeight){if(dir.includes('n'))top=rect.top+rect.height-minHeight;height=minHeight;}
+    if(left<0){width+=left;left=0;}
+    if(top<0){height+=top;top=0;}
+    return {left,top,width:Math.max(minWidth,Math.min(width,areaWidth-left)),height:Math.max(minHeight,Math.min(height,areaHeight-top))};
+  }
   function createWindow(options){
     const id=`win-${++sequence}`;const bounds=$('#desktop').getBoundingClientRect();
     const width=Math.min(options.width||680,bounds.width-12),height=Math.min(options.height||460,bounds.height-12);
     const offset=(windows.size%5)*22;const left=Math.max(0,Math.min(options.left??Math.round((bounds.width-width)/2)+offset,bounds.width-width));
     const top=Math.max(0,Math.min(options.top??Math.round((bounds.height-height)/2)-18+offset,bounds.height-height));
     const el=document.createElement('section');el.className=`window ${options.className||''}`;el.id=id;el.setAttribute('role','dialog');el.setAttribute('aria-label',options.title);el.style.cssText=`left:${left}px;top:${top}px;width:${width}px;height:${height}px;`;
-    el.innerHTML=`<header class="title-bar">${icon(options.icon)}<span class="window-title">${esc(options.title)}</span><div class="window-controls">${options.modal?'':`<button class="window-control minimize" aria-label="Kis méret" title="Kis méret"></button><button class="window-control maximize" aria-label="Teljes méret" title="Teljes méret" ${options.fixed?'disabled':''}></button>`}<button class="window-control close" aria-label="Bezárás" title="Bezárás">×</button></div></header><div class="window-content"></div>${options.fixed?'':'<div class="resize-handle" aria-label="Átméretezés"></div>'}`;
+    el.innerHTML=`<header class="title-bar">${icon(options.icon)}<span class="window-title">${esc(options.title)}</span><div class="window-controls">${options.modal?'':`<button class="window-control minimize" aria-label="Kis méret" title="Kis méret"></button><button class="window-control maximize" aria-label="Teljes méret" title="Teljes méret" ${options.fixed?'disabled':''}></button>`}<button class="window-control close" aria-label="Bezárás" title="Bezárás">×</button></div></header><div class="window-content"></div>${options.fixed?'':['n','s','e','w','ne','nw','se','sw'].map(d=>`<div class="resize-edge resize-${d}" data-resize="${d}"></div>`).join('')+'<div class="resize-handle" data-resize="se" aria-label="Átméretezés"></div>'}`;
     const win={id,el,body:$('.window-content',el),title:options.title,icon:options.icon,app:options.app,fixed:options.fixed,modal:options.modal,minimized:false,maximized:false,cleanup:[]};
     win.setTitle=title=>{win.title=title;$('.window-title',el).textContent=title;el.setAttribute('aria-label',title);renderTasks();};win.close=()=>close(win);win.focus=()=>focus(win);
     if(options.modal){modalDepth++;el.classList.add('dialog-window');el.setAttribute('aria-modal','true');const shade=document.createElement('div');shade.className='modal-shade';$('#windows').append(shade);win.shade=shade;}
@@ -84,7 +101,19 @@ window.XP = (() => {
     if(!options.modal){$('.minimize',el).onclick=()=>minimize(win);$('.maximize',el).onclick=()=>maximize(win);}
     const bar=$('.title-bar',el);bar.ondblclick=e=>{if(!e.target.closest('button'))maximize(win);};
     bar.onpointerdown=e=>{if(e.button!==0||e.target.closest('button')||win.maximized)return;focus(win);e.preventDefault();const rect=el.getBoundingClientRect(),sx=e.clientX,sy=e.clientY;bar.setPointerCapture(e.pointerId);bar.onpointermove=ev=>{el.style.left=`${Math.max(-width+100,Math.min(bounds.width-90,rect.left+ev.clientX-sx))}px`;el.style.top=`${Math.max(0,Math.min(bounds.height-29,rect.top+ev.clientY-sy))}px`;};bar.onpointerup=()=>{bar.onpointermove=null;};bar.onlostpointercapture=()=>bar.onpointermove=null;};
-    const handle=$('.resize-handle',el);if(handle)handle.onpointerdown=e=>{e.preventDefault();focus(win);const rect=el.getBoundingClientRect(),sx=e.clientX,sy=e.clientY;handle.setPointerCapture(e.pointerId);handle.onpointermove=ev=>{el.style.width=`${Math.max(Math.min(options.minWidth||300,bounds.width),Math.min(bounds.width-Math.max(0,rect.left),rect.width+ev.clientX-sx))}px`;el.style.height=`${Math.max(options.minHeight||180,Math.min(bounds.height-rect.top,rect.height+ev.clientY-sy))}px`;};handle.onpointerup=()=>handle.onpointermove=null;handle.onlostpointercapture=()=>handle.onpointermove=null;};
+    // Every edge and corner resizes; dragging the top or left edge moves the window as it shrinks.
+    for(const grip of $$('[data-resize]',el))grip.onpointerdown=e=>{
+      if(e.button!==0||win.maximized)return;
+      e.preventDefault();focus(win);
+      const dir=grip.dataset.resize,rect=el.getBoundingClientRect(),area=$('#desktop').getBoundingClientRect(),sx=e.clientX,sy=e.clientY;
+      const minWidth=Math.min(options.minWidth||300,area.width),minHeight=Math.min(options.minHeight||180,area.height);
+      grip.setPointerCapture(e.pointerId);
+      grip.onpointermove=ev=>{
+        const next=resizeBox(dir,rect,ev.clientX-sx,ev.clientY-sy,{minWidth,minHeight,width:area.width,height:area.height});
+        Object.assign(el.style,{left:`${next.left}px`,top:`${next.top}px`,width:`${next.width}px`,height:`${next.height}px`});
+      };
+      grip.onpointerup=()=>grip.onpointermove=null;grip.onlostpointercapture=()=>grip.onpointermove=null;
+    };
     focus(win);return win;
   }
   function open(app,...args){hideMenus();if(modalDepth)return;const fn=apps[app];if(fn)return fn(...args);notify('A program nem található',app);}
@@ -109,5 +138,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,deleteFile,restoreFile,descendants,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,deleteFile,restoreFile,descendants,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
 })();
