@@ -1,0 +1,292 @@
+[
+  {
+    "file": "google.gif",
+    "url": "https://www.google.com/intl/en_ALL/images/logo.gif",
+    "bytes": 8558
+  },
+  {
+    "file": "icons/back.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/back.png",
+    "bytes": 1202
+  },
+  {
+    "file": "icons/calculator.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/74(32x32).png",
+    "bytes": 2217
+  },
+  {
+    "file": "icons/cd.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/111(48x48).png",
+    "bytes": 3239
+  },
+  {
+    "file": "icons/cmd.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/56(16x16).png",
+    "bytes": 451
+  },
+  {
+    "file": "icons/computer.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/676(32x32).png",
+    "bytes": 2512
+  },
+  {
+    "file": "icons/control.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/300(32x32).png",
+    "bytes": 2360
+  },
+  {
+    "file": "icons/disk.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/334(48x48).png",
+    "bytes": 2181
+  },
+  {
+    "file": "icons/documents.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/308(32x32).png",
+    "bytes": 1957
+  },
+  {
+    "file": "icons/error.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/897(32x32).png",
+    "bytes": 2432
+  },
+  {
+    "file": "icons/favorite.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/744(32x32).png",
+    "bytes": 2355
+  },
+  {
+    "file": "icons/folder.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/318(32x32).png",
+    "bytes": 1408
+  },
+  {
+    "file": "icons/forward.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/forward.png",
+    "bytes": 1249
+  },
+  {
+    "file": "icons/help.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/747(32x32).png",
+    "bytes": 2596
+  },
+  {
+    "file": "icons/history.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/history.png",
+    "bytes": 1352
+  },
+  {
+    "file": "icons/home.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/home.png",
+    "bytes": 1123
+  },
+  {
+    "file": "icons/ie.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/ie.png",
+    "bytes": 3063
+  },
+  {
+    "file": "icons/info.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/505(16x16).png",
+    "bytes": 913
+  },
+  {
+    "file": "icons/logoff.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/546(32x32).png",
+    "bytes": 2153
+  },
+  {
+    "file": "icons/mail.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/887(32x32).png",
+    "bytes": 1882
+  },
+  {
+    "file": "icons/mines.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/mine-icon.png",
+    "bytes": 2493
+  },
+  {
+    "file": "icons/msn.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/msn.png",
+    "bytes": 2500
+  },
+  {
+    "file": "icons/music.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/550(32x32).png",
+    "bytes": 2017
+  },
+  {
+    "file": "icons/network.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/309(32x32).png",
+    "bytes": 2533
+  },
+  {
+    "file": "icons/notepad.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/327(32x32).png",
+    "bytes": 2584
+  },
+  {
+    "file": "icons/paint-tools.png",
+    "url": "https://raw.githubusercontent.com/1j01/jspaint/master/images/classic/tools.png",
+    "bytes": 1381
+  },
+  {
+    "file": "icons/paint.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/680(32x32).png",
+    "bytes": 2650
+  },
+  {
+    "file": "icons/pictures.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/307(32x32).png",
+    "bytes": 2020
+  },
+  {
+    "file": "icons/player.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/846(32x32).png",
+    "bytes": 2813
+  },
+  {
+    "file": "icons/recycle.ico",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Icons/Windows XP/ico/shell32.dll/ICON32_1.ico",
+    "bytes": 25214
+  },
+  {
+    "file": "icons/refresh.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/refresh.png",
+    "bytes": 930
+  },
+  {
+    "file": "icons/run.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/743(32x32).png",
+    "bytes": 979
+  },
+  {
+    "file": "icons/search.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/299(32x32).png",
+    "bytes": 1589
+  },
+  {
+    "file": "icons/shutdown.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/310(32x32).png",
+    "bytes": 2130
+  },
+  {
+    "file": "icons/solitaire.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/solitaire.png",
+    "bytes": 1421
+  },
+  {
+    "file": "icons/start.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/start.png",
+    "bytes": 6605
+  },
+  {
+    "file": "icons/stop.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/stop.png",
+    "bytes": 829
+  },
+  {
+    "file": "icons/up.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/up.png",
+    "bytes": 1273
+  },
+  {
+    "file": "icons/user.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/user.png",
+    "bytes": 6417
+  },
+  {
+    "file": "icons/volume.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/120(16x16).png",
+    "bytes": 598
+  },
+  {
+    "file": "icons/windows-logo.png",
+    "url": "https://win32.run/favicon.png",
+    "bytes": 10158
+  },
+  {
+    "file": "icons/windows.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/windows.png",
+    "bytes": 1052
+  },
+  {
+    "file": "mines/checked.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/checked.png",
+    "bytes": 92
+  },
+  {
+    "file": "mines/dead.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/dead.png",
+    "bytes": 147
+  },
+  {
+    "file": "mines/flag.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/flag.png",
+    "bytes": 104
+  },
+  {
+    "file": "mines/mine-ceil.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/mine-ceil.png",
+    "bytes": 112
+  },
+  {
+    "file": "mines/smile.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/smile.png",
+    "bytes": 141
+  },
+  {
+    "file": "mines/win.png",
+    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/win.png",
+    "bytes": 160
+  },
+  {
+    "file": "sounds/ding.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Ding.wav",
+    "bytes": 17132
+  },
+  {
+    "file": "sounds/error.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Error.wav",
+    "bytes": 44136
+  },
+  {
+    "file": "sounds/notify.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Notify.wav",
+    "bytes": 48988
+  },
+  {
+    "file": "sounds/recycle.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Recycle.wav",
+    "bytes": 22816
+  },
+  {
+    "file": "sounds/shutdown.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Shutdown.wav",
+    "bytes": 282608
+  },
+  {
+    "file": "sounds/startup.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Startup.wav",
+    "bytes": 424644
+  },
+  {
+    "file": "wallpapers/autumn-1920.jpg",
+    "url": "https://4kwallpapers.com/images/wallpapers/windows-xp-autumn-1920x1200-17201.jpg",
+    "bytes": 1450480
+  },
+  {
+    "file": "wallpapers/azul-1920.jpg",
+    "url": "https://i.imgur.com/tLLKmd8.jpg",
+    "bytes": 2167983
+  },
+  {
+    "file": "wallpapers/bliss-hd.jpg",
+    "url": "https://pranx.com/images/background.jpg",
+    "bytes": 306906
+  },
+  {
+    "file": "wallpapers/windows-xp.jpg",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Wallpapers/Windows XP/Desktop/Windows XP.jpg",
+    "bytes": 56772
+  }
+]

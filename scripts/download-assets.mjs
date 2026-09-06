@@ -1,0 +1,28 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+const root = new URL('../assets/', import.meta.url);
+const xp = 'https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/';
+const original = 'https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/';
+const icons = {computer:'676(32x32)',documents:'308(32x32)',pictures:'307(32x32)',music:'550(32x32)',notepad:'327(32x32)',paint:'680(32x32)',calculator:'74(32x32)',control:'300(32x32)',network:'309(32x32)',help:'747(32x32)',search:'299(32x32)',run:'743(32x32)',logoff:'546(32x32)',shutdown:'310(32x32)',folder:'318(32x32)',disk:'334(48x48)',cd:'111(48x48)',player:'846(32x32)',mail:'887(32x32)',cmd:'56(16x16)',volume:'120(16x16)',error:'897(32x32)',info:'505(16x16)'};
+const files = Object.entries(icons).map(([name,file])=>[`icons/${name}.png`,xp+`windowsIcons/${file}.png`]);
+for(const name of ['ie','back','forward','up','home','refresh','stop','history','user','windows','solitaire','start','msn']) files.push([`icons/${name}.png`,xp+`windowsIcons/${name}.png`]);
+files.push(['icons/windows-logo.png','https://win32.run/favicon.png']);
+files.push(['icons/favorite.png',xp+'windowsIcons/744(32x32).png']);
+files.push(['icons/mines.png',xp+'minesweeper/mine-icon.png']);
+for(const name of ['smile','dead','win','flag','mine-ceil','checked']) files.push([`mines/${name}.png`,xp+`minesweeper/${name}.png`]);
+files.push(['icons/recycle.ico',original+'Icons/Windows XP/ico/shell32.dll/ICON32_1.ico']);
+files.push(['wallpapers/bliss-hd.jpg','https://pranx.com/images/background.jpg']);
+files.push(['wallpapers/azul-1920.jpg','https://i.imgur.com/tLLKmd8.jpg']);
+files.push(['wallpapers/autumn-1920.jpg','https://4kwallpapers.com/images/wallpapers/windows-xp-autumn-1920x1200-17201.jpg']);
+files.push(['wallpapers/windows-xp.jpg',original+'Wallpapers/Windows XP/Desktop/Windows XP.jpg']);
+for(const [name,file] of Object.entries({startup:'Windows XP Startup',shutdown:'Windows XP Shutdown',error:'Windows XP Error',recycle:'Windows XP Recycle',notify:'Windows XP Notify',ding:'Windows XP Ding'})) files.push([`sounds/${name}.wav`,original+`Sounds/Windows XP/${file}.wav`]);
+files.push(['google.gif','https://www.google.com/intl/en_ALL/images/logo.gif']);
+files.push(['icons/paint-tools.png','https://raw.githubusercontent.com/1j01/jspaint/master/images/classic/tools.png']);
+const manifest=[];
+await Promise.all(files.map(async ([file,url])=>{
+ const response=await fetch(encodeURI(url)); if(!response.ok) throw new Error(`${response.status}: ${url}`);
+ const bytes=Buffer.from(await response.arrayBuffer()); const dest=new URL(file,root);
+ await mkdir(new URL('./',dest),{recursive:true}); await writeFile(dest,bytes);
+ manifest.push({file,url,bytes:bytes.length});
+}));
+await writeFile(new URL('sources.json',root),JSON.stringify(manifest.sort((a,b)=>a.file.localeCompare(b.file)),null,2));
+console.log(`Downloaded ${manifest.length} local assets.`);
