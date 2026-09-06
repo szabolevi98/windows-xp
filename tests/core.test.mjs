@@ -196,7 +196,7 @@ test('Every downloaded asset is present locally at its recorded size',()=>{
 test('The share card points at an image that ships, at the size it claims',()=>{
  const html=readFileSync(new URL('index.html',root),'utf8');
  const meta=name=>html.match(new RegExp(`<meta property="${name}" content="([^"]+)"`))?.[1];
- const site='https://szabolevi98.github.io/windows-xp/';
+ const site='https://windows-xp.levente.net/';
  assert.equal(meta('og:url'),site);
  for(const tag of ['og:title','og:description','og:type'])assert.ok(meta(tag),tag);
  // Facebook and Slack need an absolute URL, so the local file has to be found through it.
