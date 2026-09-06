@@ -31,6 +31,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 - 3D Pinball – Space Cadet: az eredeti asztal helyben futó WebAssembly-portja. Karok, kilövés, asztallökés billentyűzetről vagy érintőgombokkal, XP-menü, szünet, hangerő a rendszerbeállításból, helyben mentett rekordok.
 - Windows Media Player: eredeti rendszerhangok, saját helyi hangfájlok, lejátszás, szünet, keresés a hangban, hangerő.
 - Vezérlőpult: négy eredeti háttérkép, három színséma, felhasználónév, rendszerhangok, hangerő, rendszerinformáció, naptár.
+- Biztonsági központ: a Service Pack 2 ablaka lenyíló tűzfal-, frissítés- és vírusvédelem-panelekkel. A tűzfal és az automatikus frissítések ki-be kapcsolhatók, és az állapotuk mentődik. A tálca pajzsikonjáról, a Vezérlőpultból és a `wscui` paranccsal is megnyitható.
 - Parancssor és Futtatás. `help` megmutatja a támogatott parancsokat.
 
 Az asztalon dupla kattintás nyitja meg az ikonokat. Érintőképernyőn egy koppintás is elég. F11: a valódi böngésző teljes képernyője; az asztal helyi menüjéből is kérhető.
@@ -85,9 +86,9 @@ Nyolc regressziós ellenőrzés: ékezetes fájlok mentése és visszatöltése,
 
 Az indítási ellenőrzések vizsgálják az 5,5 másodperces betöltést, a 2 másodperces üdvözlést és a bejelentkezésenként egyszer megszólaló hangot. A hang előre betöltődik. Ha a böngésző oldalfrissítés után tiltja az automatikus lejátszást, az üdvözlőképernyőn megjelenő Bejelentkezés gomb indítja el a hangot és az asztalt együtt. Egy későbbi asztali kattintás nem játssza le újra a hangot.
 
-Nyolc további ellenőrzés fedi le az ikonok alaphelyét, a rácsra igazítást, az ütközéskori helycserét, a Lomtár mozgatását és helyének mentését, az átméretezést, a sok ikont, a korábbi mentések frissítését és a játékparancsikonok indítását. A hangkezelés tesztjei kitérnek az automatikus lejátszás tiltására, a némításra, a ki-be jelentkezésre, az újraindításra és a sikertelen médiafájlra is. Összesen 47 automatikus teszt fut.
+Nyolc további ellenőrzés fedi le az ikonok alaphelyét, a rácsra igazítást, az ütközéskori helycserét, a Lomtár mozgatását és helyének mentését, az átméretezést, a sok ikont, a korábbi mentések frissítését és a játékparancsikonok indítását. A hangkezelés tesztjei kitérnek az automatikus lejátszás tiltására, a némításra, a ki-be jelentkezésre, az újraindításra és a sikertelen médiafájlra is. Összesen 49 automatikus teszt fut.
 
-A felület ellenőrzései közé tartozik az, hogy a Játékbarlang oldalon minden asztali játékhoz tartozik indítógomb, a párbeszédablakok üzenethez igazodó magassága, az alapértelmezett Adminisztrátor felhasználónév egyszeri átvétele a régi mentésekből, az ablakok minden élről történő átméretezésének alsó mérethatára és az asztal széléhez igazítása, valamint a tálca értesítési területének felépítése.
+A felület ellenőrzései közé tartozik a Biztonsági központ kapcsolóinak alapértelmezése és mentése, az, hogy a Játékbarlang oldalon minden asztali játékhoz tartozik indítógomb, a párbeszédablakok üzenethez igazodó magassága, az alapértelmezett Adminisztrátor felhasználónév egyszeri átvétele a régi mentésekből, az ablakok minden élről történő átméretezésének alsó mérethatára és az asztal széléhez igazítása, valamint a tálca értesítési területének felépítése.
 
 A kártyajátékok kilenc ellenőrzése lapról lapra összeveti a FreeCell leosztásait az eredeti Microsoft-számozással, méri a több lap mozgatásának korlátját és az automatikus gyűjtés biztonsági szabályát, ellenőrzi a pókpasziánsz 104 lapos csomagját és a kész sorok felismerését, a Hearts nyitását, színkövetését, ütés- és pontszámítását, a „lövés a Holdra” elszámolását, valamint harminc teljes leosztást játszik végig azt vizsgálva, hogy a gépi ellenfelek mindig szabályos lapot tesznek le és megvan mind a 26 pont.
 

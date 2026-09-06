@@ -192,3 +192,28 @@ test('The local games site can start every game the desktop has',()=>{
  // Every one of them is also findable by name.
  for(const term of ['freecell','pinball','hearts','pókpasziánsz'])assert.equal(xp.searchWeb(term)[0]?.id,'games',`${term} leads to the games site`);
 });
+
+test('The Security Centre starts protected and remembers a switch that was turned off',()=>{
+ const {xp,storage}=boot();
+ assert.equal(xp.state.security.firewall,true);
+ assert.equal(xp.state.security.updates,true);
+ xp.state.security.firewall=false;xp.persist();
+ const next=boot(JSON.parse(storage.get('windows-xp-simulator-v1'))).xp;
+ assert.equal(next.state.security.firewall,false);
+ assert.equal(next.state.security.updates,true);
+ // A save made before the Security Centre existed still comes up protected.
+ assert.equal(boot({version:1,user:'Teszt',files:[]}).xp.state.security.firewall,true);
+});
+
+test('The Security Centre is a window, reachable from the tray, the control panel and the prompt',()=>{
+ const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
+ assert.match(utils,/register\('security'/);
+ assert.match(utils,/title:'Windows Biztonsági központ'/);
+ assert.match(utils,/'Biztonsági központ','Tűzfal, frissítések és vírusvédelem','security'/);
+ assert.match(utils,/wscui:'security'/);
+ assert.match(readFileSync(new URL('js/apps.js',root),'utf8'),/wscui:'security'/);
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ // The shield opens the window now; the icons left in the flyout still show a notice.
+ assert.doesNotMatch(start,/security:\['Biztonsági központ'/);
+ assert.match(start,/else XP\.open\(button\.dataset\.tray\)/);
+});
