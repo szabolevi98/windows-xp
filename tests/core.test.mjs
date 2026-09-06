@@ -49,6 +49,41 @@ test('A file can be moved between folders, but not onto a name that is taken or 
  assert.equal(xp.moveFile('twin','desktop'),false);
 });
 
+test('Copying duplicates the whole subtree under a free name; cutting moves it once',()=>{
+ const {xp}=boot();
+ xp.saveFile({id:'folder',name:'Mappa',type:'folder',parent:'documents'});
+ xp.saveFile({id:'note',name:'Bent.txt',type:'text',parent:'folder',content:'tartalom'});
+ // A copy is a new tree: fresh ids, same content, and the name steps aside.
+ assert.equal(xp.clip('folder',false),true);
+ assert.equal(xp.clipped,null);
+ assert.equal(xp.paste('documents'),true);
+ const copy=xp.state.files.find(f=>!f.deleted&&f.name==='Mappa (2)');
+ const copiedNote=xp.state.files.find(f=>!f.deleted&&f.parent===copy.id);
+ assert.equal(copiedNote.name,'Bent.txt');
+ assert.equal(copiedNote.content,'tartalom');
+ assert.notEqual(copiedNote.id,'note');
+ assert.equal(xp.state.files.find(f=>f.id==='note').parent,'folder');
+ // Pasting again keeps counting instead of colliding.
+ xp.paste('documents');
+ assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Mappa (3)'));
+ // The clipboard survives a copy, so it can be pasted somewhere else too.
+ assert.equal(xp.canPaste(),true);
+ // A cut is marked, moves once, and then the clipboard is spent.
+ assert.equal(xp.clip('note',true),true);
+ assert.equal(xp.clipped,'note');
+ assert.equal(xp.paste('desktop'),true);
+ assert.equal(xp.state.files.find(f=>f.id==='note').parent,'desktop');
+ assert.equal(xp.canPaste(),false);
+ assert.equal(xp.paste('documents'),false);
+ // Nothing that is gone can be cut or copied.
+ xp.deleteFile('folder');
+ assert.equal(xp.clip('folder',true),false);
+ // An extension is kept on the far side of the counter.
+ xp.saveFile({id:'pic',name:'Rajz.png',type:'image',parent:'documents',content:'data:,'});
+ xp.clip('pic',false);xp.paste('documents');
+ assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Rajz (2).png'));
+});
+
 test('Search ranks relevant pages and understands Hungarian accents',()=>{
  const {xp}=boot();assert.equal(xp.searchWeb('macska')[0].id,'cats');assert.equal(xp.searchWeb('játékok')[0].id,'games');assert.equal(xp.searchWeb('jatekok')[0].id,'games');assert.equal(xp.searchWeb('programozás')[0].id,'html');assert.equal(xp.searchWeb('nincsenilyen-123456').length,0);
 });

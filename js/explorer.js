@@ -119,17 +119,25 @@ register('explorer',(initial='computer')=>{
       state.files=state.files.filter(f=>!f.deleted);persist();XP.sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));
     }
   }
+  // New items land in the folder on screen, unless it is one that holds no files of its own.
+  const pasteParent=()=>['computer','recycle','music'].includes(folder)?'documents':folder;
+  const cut=()=>canEdit()&&XP.clip(selected,true);
+  const copy=()=>selectedFile()&&folder!=='recycle'&&XP.clip(selected,false);
+  const pasteHere=()=>{if(!readOnly()&&folder!=='recycle')XP.paste(pasteParent());};
   const fileActions=()=>[
     {label:'Megnyitás',action:()=>selected&&openEntry(selected),disabled:!selected},
     {label:'Új mappa',icon:'folder',action:newFolder,disabled:readOnly()},
     {label:'Új szöveges dokumentum',icon:'notepad',action:newDocument,disabled:readOnly()},null,
+    {label:'Kivágás',shortcut:'Ctrl+X',action:cut,disabled:!canEdit()},
+    {label:'Másolás',shortcut:'Ctrl+C',action:copy,disabled:!selectedFile()||folder==='recycle'},
+    {label:'Beillesztés',shortcut:'Ctrl+V',action:pasteHere,disabled:!XP.canPaste()||readOnly()||folder==='recycle'},null,
     {label:'Átnevezés',shortcut:'F2',action:rename,disabled:!canEdit()},
     {label:folder==='recycle'?'Végleges törlés':'Törlés',shortcut:'Del',action:remove,disabled:!selectedFile()||readOnly()},null,
     {label:'Bezárás',action:()=>w.close()}
   ];
   menubar(w,{
     'Fájl':fileActions,
-    'Szerkesztés':()=>[{label:'Átnevezés',action:rename,disabled:!canEdit()},{label:'Törlés',action:remove,disabled:!selectedFile()||readOnly()}],
+    'Szerkesztés':()=>[{label:'Kivágás',shortcut:'Ctrl+X',action:cut,disabled:!canEdit()},{label:'Másolás',shortcut:'Ctrl+C',action:copy,disabled:!selectedFile()||folder==='recycle'},{label:'Beillesztés',shortcut:'Ctrl+V',action:pasteHere,disabled:!XP.canPaste()||readOnly()||folder==='recycle'},null,{label:'Átnevezés',action:rename,disabled:!canEdit()},{label:'Törlés',action:remove,disabled:!selectedFile()||readOnly()}],
     'Nézet':()=>[{label:'Ikonok',checked:!listView,action:()=>{listView=false;render();}},{label:'Lista',checked:listView,action:()=>{listView=true;render();}},{label:'Frissítés',shortcut:'F5',action:render}],
     'Kedvencek':[{label:'Dokumentumok',icon:'documents',action:()=>navigate('documents')},{label:'Képek',icon:'pictures',action:()=>navigate('pictures')}],
     'Eszközök':[{label:'Mappabeállítások',action:()=>XP.dialog('Mappabeállítások','Az elemeket dupla kattintással nyithatod meg.\nA saját fájljaidat jobb kattintással átnevezheted, törölheted vagy letöltheted.')}],
@@ -158,7 +166,7 @@ register('explorer',(initial='computer')=>{
       count=children.length;html=`<div class="file-grid">${children.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'')).join('')}</div>`;
     }else{
       const files=state.files.filter(f=>folder==='recycle'?f.deleted:!f.deleted&&f.parent===folder).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
-      count=files.length;html=`<div class="file-grid">${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item('Windows rendszerhangok','player','data-player'):''}${files.map(f=>item(f.name,XP.fileIcon(f),`data-file="${esc(f.id)}"`,selected===f.id?'selected':'')).join('')}</div>`;
+      count=files.length;html=`<div class="file-grid">${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item('Windows rendszerhangok','player','data-player'):''}${files.map(f=>item(f.name,XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''}`)).join('')}</div>`;
       if(folder==='pictures')count+=3;if(folder==='music')count++;
     }
     if(!count)html+=`<div class="empty-folder">${icon(folder==='recycle'?'recycle':'folder')}${folder==='recycle'?'A Lomtár üres.':'Ez a mappa üres.'}</div>`;
@@ -213,7 +221,7 @@ register('explorer',(initial='computer')=>{
       document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);
       if(!ghost)return;
       ghost.remove();XP.highlightDrop(null);
-      if(ev.type==='pointerup')XP.applyDrop(target,id,dropPoint(ev));
+      if(ev.type==='pointerup')XP.applyDrop(target,id,dropPoint(ev),ev.ctrlKey);
       dragged=true;setTimeout(()=>dragged=false,0);
     };
     document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
@@ -234,6 +242,7 @@ register('explorer',(initial='computer')=>{
   };
   w.el.addEventListener('keydown',e=>{
     if(e.key==='F2'){e.preventDefault();rename();}if(e.key==='Delete')remove();
+    if(e.ctrlKey&&!e.target.closest('input,textarea')){const key=e.key.toLowerCase();if(key==='x'){e.preventDefault();cut();}if(key==='c'){e.preventDefault();copy();}if(key==='v'){e.preventDefault();pasteHere();}}
     if(e.key==='Enter'&&e.target.closest('.file-item')){e.preventDefault();activate(e.target);}
     else if(e.key==='Enter'&&selected&&e.target===filesEl){e.preventDefault();openEntry(selected);}
     if(e.key==='F5'){e.preventDefault();render();}
