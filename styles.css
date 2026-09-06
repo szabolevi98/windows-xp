@@ -287,5 +287,24 @@ body[data-theme=classic] .window.inactive .window-title{color:#d8d8d8;text-shado
 .player-volume{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
 .player-volume i{width:13px;height:11px;flex-shrink:0;background:#cfe2f7;clip-path:polygon(0 32%,32% 32%,64% 0,64% 100%,32% 68%,0 68%)}
 .player-volume input{width:74px}
+/* ...and the same grey reaches inside the applications: buttons, bars and menus. */
+body[data-theme=classic] .status-bar{background:#d4d0c8;border-top:1px solid #808080;box-shadow:inset 0 1px #fff}
+body[data-theme=classic] .toolbar{background:#d4d0c8;border-bottom-color:#808080}
+body[data-theme=classic] .address-bar{background:#d4d0c8;border-bottom-color:#808080;color:#333}
+body[data-theme=classic] .menu-bar{border-bottom:1px solid #808080}
+body[data-theme=classic] .menu-bar button:hover{background:#0a246a;color:#fff}
+body[data-theme=classic] .xp-button{border:1px solid;border-color:#fff #000 #000 #fff;border-radius:0;background:#d4d0c8;box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf}
+body[data-theme=classic] .xp-button:hover{box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf}
+body[data-theme=classic] .xp-button.primary{box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf,0 0 0 1px #000}
+body[data-theme=classic] .xp-button:active{border-color:#000 #fff #fff #000;background:#d4d0c8;box-shadow:inset 1px 1px #808080}
+body[data-theme=classic] .popup-menu{background:#d4d0c8;border:1px solid;border-color:#dfdfdf #000 #000 #dfdfdf;box-shadow:inset -1px -1px #808080,inset 1px 1px #fff,2px 2px 2px #0004;padding:1px}
+body[data-theme=classic] .popup-menu button:hover:not(:disabled){background:#0a246a;color:#fff}
+body[data-theme=classic] .tabs button{border-radius:0;background:#d4d0c8;border-color:#808080}
+body[data-theme=classic] .tabs button.active{background:#d4d0c8;box-shadow:none;border-bottom-color:#d4d0c8}
+body[data-theme=classic] .tab-panel{background:#d4d0c8;border-color:#dfdfdf #808080 #808080 #dfdfdf}
+body[data-theme=classic] .settings-body,body[data-theme=classic] .dialog-window{background:#d4d0c8}
+body[data-theme=classic] .explorer-panel h3{background:linear-gradient(90deg,#fff,#c8c4bc);border-radius:0}
+body[data-theme=classic] .explorer-panel{background:#d4d0c8;border-radius:0;color:#111}
+body[data-theme=classic] .explorer-sidebar{background:#d4d0c8}
 @media(min-width:1600px){.google-home{padding-top:64px}.google-footer{margin-top:45px}}
 @media(max-width:700px){.quick-launch{display:none}#start-button{width:106px;min-width:106px}#start-menu{width:min(390px,100vw)}.tray{padding:0 4px}.tray>button[data-open],.tray>button[data-tray],.tray .tray-toggle,.tray-hidden{display:none}.window{min-width:260px}.toolbar{gap:0;padding:2px}.toolbar button{padding:4px}.toolbar .toolbar-label{display:none}.advanced-links{display:none}.google-home{padding:35px 14px 20px}.google-form{width:95%}.google-logo{width:220px;height:88px}.google-footer{margin-top:30px}.google-nav{gap:10px}.google-nav .right{display:none}.explorer-sidebar{width:145px;padding:8px}.window .explorer-files{padding:9px}.welcome-login{gap:20px;flex-direction:column}.welcome-login .windows-brand{border:0;padding-right:0;margin-left:0}.help-cards{grid-template-columns:1fr}.player-sidebar{width:88px}.player-playlist{width:150px}.solitaire-body{padding:10px}.card-slot,.playing-card,.card-column{width:45px}.card-top,.solitaire-columns{gap:6px}.playing-card{font-size:14px}.playing-card .big-suit{font-size:22px;right:5px}.google-search-line input{font-size:15px}.search-header{padding:12px;gap:10px}.search-header img{width:85px}.search-header form{flex-wrap:wrap}.boot-bottom{left:20px;right:20px}.windows-brand{font-size:30px}}
