@@ -194,7 +194,7 @@ window.XP = (() => {
   }
   // Where a dragged file would land if it were let go at this point on the screen.
   const dropFolders=['documents','pictures','desktop'];
-  function dropTarget(x,y){
+  function dropTarget(x,y,ignore){
     const el=document.elementFromPoint(x,y);if(!el)return null;
     const item=el.closest('.file-item[data-file],.file-item[data-folder]');
     if(item){
@@ -207,7 +207,7 @@ window.XP = (() => {
     if(pane)return pane.dataset.dropFolder==='recycle'?{type:'recycle',el:pane}:{type:'folder',id:pane.dataset.dropFolder,el:pane};
     if(el.closest('.window,#taskbar,.popup-menu'))return null;
     const icon=el.closest('.desktop-icon');
-    if(icon){
+    if(icon&&icon.dataset.iconId!==ignore){
       const id=icon.dataset.iconId;
       if(id==='recycle')return {type:'recycle',el:icon};
       const file=state.files.find(f=>f.id===id&&!f.deleted);
@@ -235,6 +235,11 @@ window.XP = (() => {
   function saveFile(file){const i=state.files.findIndex(f=>f.id===file.id);const next={...file,modified:Date.now()};if(i<0)state.files.push(next);else state.files[i]=next;const ok=persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));return ok;}
   function descendants(id){const ids=[id];for(let i=0;i<ids.length;i++)state.files.filter(f=>f.parent===ids[i]).forEach(f=>ids.push(f.id));return ids;}
   function deleteFile(id){const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))f.deleted=true;});persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));}
+  async function emptyTrash(){
+    if(!state.files.some(f=>f.deleted))return false;
+    if(!await confirm('Lomtár ürítése','Végleg törlöd a Lomtár összes elemét?'))return false;
+    state.files=state.files.filter(f=>!f.deleted);persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));return true;
+  }
   function restoreFile(id){const file=state.files.find(f=>f.id===id);if(!file)return;const parent=state.files.find(f=>f.id===file.parent);if(parent?.deleted)restoreFile(parent.id);const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))delete f.deleted;});persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   function download(name,content,type='text/plain;charset=utf-8'){const blob=content instanceof Blob?content:new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fileName(name)||'dokumentum.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   function openFile(id){const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file)return;if(file.type==='folder')open('explorer',id);else if(file.type==='image')open('image',id);else if(file.type==='shortcut'){if(Object.hasOwn(shortcutApps,file.app))open(shortcutApps[file.app]);}else open('notepad',id);}
@@ -244,5 +249,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,onFiles,status,get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,onFiles,status,get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

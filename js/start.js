@@ -28,7 +28,7 @@ function renderIcons(){
   if(e.key==='Delete'&&item.file)XP.deleteFile(item.file);
   if(e.ctrlKey){const key=e.key.toLowerCase();if(key==='v'){e.preventDefault();XP.paste('desktop');}if(item.file&&(key==='x'||key==='c')){e.preventDefault();XP.clip(item.file,key==='x');}}
  };
- b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));XP.menu([{label:'Megnyitás',icon:item.icon,action:()=>activateIcon(item)},...(item.file?[null,{label:'Kivágás',shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:'Másolás',shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:'Átnevezés',action:async()=>{const name=XP.fileName(await XP.prompt('Átnevezés','Új név:',item.label));if(name){const f=state.files.find(f=>f.id===item.file);if(state.files.some(o=>o.id!==f.id&&o.parent===f.parent&&o.name===name&&!o.deleted)){notify('Átnevezés','Ez a név már foglalt.');return;}XP.saveFile({...f,name});}}},{label:'Törlés',icon:'recycle',action:()=>XP.deleteFile(item.file)}]:[]),null,{label:'Tulajdonságok',action:()=>item.id==='computer'?XP.open('system'):XP.dialog(item.label,`${item.label}\n${item.file?'Saját fájl az asztalon.':'Windows XP alkalmazás vagy rendszermappa.'}`)}],e.clientX,e.clientY);};
+ b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));XP.menu([{label:'Megnyitás',icon:item.icon,action:()=>activateIcon(item)},...(item.id==='recycle'?[{label:'Lomtár ürítése',icon:'recycle',action:XP.emptyTrash,disabled:!state.files.some(f=>f.deleted)}]:[]),...(item.file?[null,{label:'Kivágás',shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:'Másolás',shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:'Átnevezés',action:async()=>{const name=XP.fileName(await XP.prompt('Átnevezés','Új név:',item.label));if(name){const f=state.files.find(f=>f.id===item.file);if(state.files.some(o=>o.id!==f.id&&o.parent===f.parent&&o.name===name&&!o.deleted)){notify('Átnevezés','Ez a név már foglalt.');return;}XP.saveFile({...f,name});}}},{label:'Törlés',icon:'recycle',action:()=>XP.deleteFile(item.file)}]:[]),null,{label:'Tulajdonságok',action:()=>item.id==='computer'?XP.open('system'):XP.dialog(item.label,`${item.label}\n${item.file?'Saját fájl az asztalon.':'Windows XP alkalmazás vagy rendszermappa.'}`)}],e.clientX,e.clientY);};
  b.onpointerdown=e=>{
   if(e.button!==0)return;
   const sx=e.clientX,sy=e.clientY,left=parseInt(b.style.left),top=parseInt(b.style.top);
@@ -37,8 +37,8 @@ function renderIcons(){
   b.setPointerCapture(e.pointerId);
   const finish=(ev,cancelled=false)=>{
    b.onpointermove=null;b.onpointerup=null;b.onpointercancel=null;b.onlostpointercapture=null;
+   const target=moved&&!cancelled?XP.dropTarget(ev.clientX,ev.clientY,item.id):null;
    b.classList.remove('dragging');
-   const target=moved&&!cancelled?XP.dropTarget(ev.clientX,ev.clientY):null;
    XP.highlightDrop(null);
    // Dropped on the bin or into a folder the file leaves the desktop; otherwise it just moves.
    const relocated=item.file&&target&&target.type!=='desktop'&&XP.applyDrop(target,item.file,null,ev.ctrlKey);
@@ -59,7 +59,7 @@ function renderIcons(){
    const max=XP.DesktopGrid.pixel({col:grid.maxColumns-1,row:grid.rows-1},grid);
    b.style.left=Math.max(0,Math.min(max.x,left+ev.clientX-sx))+'px';
    b.style.top=Math.max(0,Math.min(max.y,top+ev.clientY-sy))+'px';
-   const over=XP.dropTarget(ev.clientX,ev.clientY);
+   const over=XP.dropTarget(ev.clientX,ev.clientY,item.id);
    XP.highlightDrop(item.file&&over&&over.type!=='desktop'?over:null);
   };
   b.onpointerup=ev=>finish(ev);

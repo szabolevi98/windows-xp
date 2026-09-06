@@ -113,12 +113,6 @@ register('explorer',(initial='computer')=>{
     }else XP.deleteFile(f.id);
     selected=null;
   }
-  async function emptyTrash(){
-    if(!state.files.some(f=>f.deleted))return;
-    if(await XP.confirm('Lomtár ürítése','Végleg törlöd a Lomtár összes elemét?')){
-      state.files=state.files.filter(f=>!f.deleted);persist();XP.sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));
-    }
-  }
   // New items land in the folder on screen, unless it is one that holds no files of its own.
   const pasteParent=()=>['computer','recycle','music'].includes(folder)?'documents':folder;
   const cut=()=>canEdit()&&XP.clip(selected,true);
@@ -184,7 +178,7 @@ register('explorer',(initial='computer')=>{
   };
   sidebar.onclick=e=>{
     const b=e.target.closest('button');if(!b)return;if(b.dataset.folder)navigate(b.dataset.folder);
-    const a=b.dataset.side;if(a==='new')newFolder();if(a==='notepad')newDocument();if(a==='rename')rename();if(a==='delete')remove();if(a==='empty')emptyTrash();
+    const a=b.dataset.side;if(a==='new')newFolder();if(a==='notepad')newDocument();if(a==='rename')rename();if(a==='delete')remove();if(a==='empty')XP.emptyTrash();
     if(a==='restore'&&selectedFile()){XP.restoreFile(selected);selected=null;render();}if(a==='control')XP.open('control');if(a==='system')XP.open('system');
   };
   filesEl.onclick=e=>{
@@ -232,7 +226,7 @@ register('explorer',(initial='computer')=>{
     const builtIn=selected&&!selectedFile();
     const actions=folder==='recycle'?[
       {label:'Visszaállítás',action:()=>selected&&XP.restoreFile(selected),disabled:!selectedFile()},
-      {label:'Végleges törlés',action:remove,disabled:!selectedFile()},null,{label:'Lomtár ürítése',action:emptyTrash}
+      {label:'Végleges törlés',action:remove,disabled:!selectedFile()},null,{label:'Lomtár ürítése',action:XP.emptyTrash}
     ]:builtIn?[
       {label:'Megnyitás',action:()=>openEntry(selected)},null,{label:'Tulajdonságok',action:()=>properties(selected)}
     ]:[...fileActions().slice(0,-2),{label:'Letöltés',disabled:!selected||!['text','image'].includes(selectedFile()?.type),action:()=>{
