@@ -162,3 +162,22 @@ test('The taskbar has the tray flyout and every window edge can be grabbed',()=>
  for(const dir of ['n','s','e','w','ne','nw','se','sw'])assert.ok(css.includes(`.resize-${dir}{`),`.resize-${dir} is styled`);
  assert.ok(css.includes('.tray-hidden[hidden]{display:none}'));
 });
+
+test('A dialog is as tall as its message, so nothing hides behind the title bar',()=>{
+ const {xp,context}=boot();
+ context.document.querySelector=()=>({getBoundingClientRect:()=>({height:700})});
+ const dialog=(copy,row=41,bar=29)=>{
+  const parts={'.title-bar':{offsetHeight:bar},'.dialog-body':{scrollHeight:copy},'.button-row':{offsetHeight:row}};
+  const win={el:{style:{},querySelector:selector=>parts[selector]},body:{}};
+  xp.fitDialog(win);return win.el.style;
+ };
+ // 29 title bar + message + 41 buttons + 3 border
+ assert.equal(dialog(80).height,'153px');
+ assert.equal(dialog(80).top,'256px');
+ assert.equal(dialog(300).height,'373px');
+ // Short messages keep the classic dialog proportions.
+ assert.equal(dialog(20).height,'130px');
+ // A message taller than the desktop stops at its edge and scrolls inside instead.
+ assert.equal(dialog(2000).height,'676px');
+ assert.equal(dialog(2000).top,'0px');
+});
