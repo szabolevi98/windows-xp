@@ -8,6 +8,9 @@ for(const name of ['ie','back','forward','up','home','refresh','stop','history',
 files.push(['icons/windows-logo.png','https://win32.run/favicon.png']);
 files.push(['icons/favorite.png',xp+'windowsIcons/744(32x32).png']);
 files.push(['icons/mines.png',xp+'minesweeper/mine-icon.png']);
+files.push(['icons/pinball.ico','https://raw.githubusercontent.com/alula/SpaceCadetPinball/0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9/SpaceCadetPinball/Icon_1.ico']);
+files.push(['pinball/vendor.js','https://raw.githubusercontent.com/lrusso/3DPinballSpaceCadet/684f0b57d0cc93d5a29329f0b59d9996c54f1553/3DPinballSpaceCadet.js']);
+files.push(['pinball/LICENSE','https://raw.githubusercontent.com/alula/SpaceCadetPinball/0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9/LICENSE']);
 for(const name of ['smile','dead','win','flag','mine-ceil','checked']) files.push([`mines/${name}.png`,xp+`minesweeper/${name}.png`]);
 files.push(['icons/recycle.ico',original+'Icons/Windows XP/ico/shell32.dll/ICON32_1.ico']);
 files.push(['wallpapers/bliss-hd.jpg','https://pranx.com/images/background.jpg']);

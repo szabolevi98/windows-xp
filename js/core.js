@@ -3,7 +3,7 @@ window.XP = (() => {
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const iconPath = name => `assets/icons/${name==='windows'?'windows-logo':name || 'documents'}.${name === 'recycle' ? 'ico' : 'png'}`;
+  const iconPath = name => `assets/icons/${name==='windows'?'windows-logo':name || 'documents'}.${name === 'recycle' || name === 'pinball' ? 'ico' : 'png'}`;
   const icon = (name, cls='') => `<img class="${cls}" src="${iconPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
   const defaults = () => ({version:1,user:'Levente',wallpaper:'bliss',theme:'blue',volume:55,sounds:true,showWelcome:true,iconPositions:{},draft:'',files:[
@@ -29,8 +29,15 @@ window.XP = (() => {
     }
     state.gamesFolderAdded=true;
   }
+  if(!state.pinballAdded){
+    const existing=state.files.find(f=>f.type==='shortcut'&&f.app==='pinball');
+    const otherGame=state.files.find(f=>f.type==='shortcut'&&['mines','solitaire'].includes(f.app));
+    const folder=state.files.find(f=>f.type==='folder'&&f.id===(otherGame?.parent||'folder-games'));
+    if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:'3D Pinball – Space Cadet',type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
+    state.pinballAdded=true;
+  }
   persist();
-  const shortcutApps={mines:'mines',solitaire:'solitaire'};
+  const shortcutApps={mines:'mines',solitaire:'solitaire',pinball:'pinball'};
   const fileIcon=file=>file.type==='folder'?'folder':file.type==='image'?'pictures':file.type==='shortcut'?(shortcutApps[file.app]||'help'):'notepad';
   const windows = new Map(), apps = {};
   let sequence=0,z=20,active=null,modalDepth=0;

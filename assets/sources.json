@@ -140,6 +140,11 @@
     "bytes": 2020
   },
   {
+    "file": "icons/pinball.ico",
+    "url": "https://raw.githubusercontent.com/alula/SpaceCadetPinball/0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9/SpaceCadetPinball/Icon_1.ico",
+    "bytes": 25214
+  },
+  {
     "file": "icons/player.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/846(32x32).png",
     "bytes": 2813
@@ -238,6 +243,16 @@
     "file": "mines/win.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/minesweeper/win.png",
     "bytes": 160
+  },
+  {
+    "file": "pinball/LICENSE",
+    "url": "https://raw.githubusercontent.com/alula/SpaceCadetPinball/0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9/LICENSE",
+    "bytes": 1079
+  },
+  {
+    "file": "pinball/vendor.js",
+    "url": "https://raw.githubusercontent.com/lrusso/3DPinballSpaceCadet/684f0b57d0cc93d5a29329f0b59d9996c54f1553/3DPinballSpaceCadet.js",
+    "bytes": 9317175
   },
   {
     "file": "sounds/ding.wav",
