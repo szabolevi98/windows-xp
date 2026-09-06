@@ -1,6 +1,6 @@
 # Windows XP szimulátor
 
-![Windows XP szimulátor – asztal a Windows Media Playerrel és az Internet Explorerrel](docs/screenshot.jpg)
+![Windows XP szimulátor – asztal és Internet Explorer](docs/screenshot.jpg)
 
 Függőségek nélküli, magyar nyelvű Windows XP-élmény HTML, CSS és JavaScript használatával.
 
