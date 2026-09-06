@@ -13,7 +13,7 @@ const baseIcons=[
 const BOOT_DURATION=5500,WELCOME_DURATION=2000;
 let selectedIcon=null,skipClick=false,desktopShown=false,hiddenWindows=[],bootTimer,welcomeTimer,bootPhase='boot';
 let bootGeneration=0,startupPending=false;
-function desktopItems(){return [...baseIcons,...state.files.filter(f=>f.parent==='desktop'&&!f.deleted).map(f=>({id:f.id,label:f.name,icon:XP.fileIcon(f),file:f.id}))];}
+function desktopItems(){return [...baseIcons.map(i=>i.id==='recycle'?{...i,icon:XP.recycleIcon()}:i),...state.files.filter(f=>f.parent==='desktop'&&!f.deleted).map(f=>({id:f.id,label:f.name,icon:XP.fileIcon(f),file:f.id}))];}
 function activateIcon(item){if(item.file)XP.openFile(item.file);else XP.open(item.app);}
 function renderIcons(){
  const el=$('#desktop-icons');el.replaceChildren();

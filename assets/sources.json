@@ -305,6 +305,11 @@
     "bytes": 500242
   },
   {
+    "file": "icons/recycle-full.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/RecycleBin(full).png",
+    "bytes": 5022
+  },
+  {
     "file": "icons/recycle.ico",
     "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Icons/Windows XP/ico/shell32.dll/ICON32_1.ico",
     "bytes": 25214
