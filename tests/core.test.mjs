@@ -280,18 +280,30 @@ test('The settings sit where XP kept them, and one Service Pack is claimed every
 
 test('The desktop remembers the account picture, the computer name and the screensaver',()=>{
  const {xp,storage}=boot();
- assert.equal(xp.state.avatar,'user');
+ assert.equal(xp.state.avatar,'chess');
  assert.equal(xp.state.accountType,'admin');
  assert.equal(xp.state.computerName,'OTTHONI-PC');
  assert.equal(xp.state.wallpaperFit,'fill');
  assert.equal(xp.state.screensaver.name,'none');
- Object.assign(xp.state,{avatar:'favorite',computerName:'NAPPALI-PC',wallpaperFit:'tile',screensaver:{name:'stars',minutes:3}});
+ Object.assign(xp.state,{avatar:'guitar',computerName:'NAPPALI-PC',wallpaperFit:'tile',screensaver:{name:'stars',minutes:3}});
  xp.persist();
  const next=boot(JSON.parse(storage.get('windows-xp-simulator-v1'))).xp;
- assert.equal(next.state.avatar,'favorite');
+ assert.equal(next.state.avatar,'guitar');
  assert.equal(next.state.computerName,'NAPPALI-PC');
  assert.equal(next.state.wallpaperFit,'tile');
  assert.equal(next.state.screensaver.minutes,3);
  // A save made before any of this still comes up with the defaults.
- assert.equal(boot({version:1,user:'Teszt',files:[]}).xp.state.avatar,'user');
+ assert.equal(boot({version:1,user:'Teszt',files:[]}).xp.state.avatar,'chess');
+ // Pictures chosen before the original tiles arrived named an application icon, not a photograph.
+ assert.equal(boot({version:1,user:'Teszt',avatar:'favorite',files:[]}).xp.state.avatar,'chess');
+});
+
+test('Account pictures come from the bundled tiles, and a name from elsewhere cannot escape that folder',()=>{
+ const {xp}=boot();
+ assert.ok(xp.avatars.includes('chess')&&xp.avatars.includes('guitar'));
+ for(const name of xp.avatars)assert.equal(xp.avatarPath(name),`assets/avatars/${name}.png`);
+ for(const name of ['user','favorite','../../etc/passwd','',null,undefined])
+  assert.equal(xp.avatarPath(name),'assets/avatars/chess.png');
+ // The picker offers exactly the bundled tiles, so no entry can point at a missing file.
+ assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/const pictures=XP\.avatars\.map/);
 });
