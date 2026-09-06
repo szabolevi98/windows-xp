@@ -101,7 +101,8 @@ async function enterDesktop(){
  }
  bootPhase='desktop';$('#welcome-screen').hidden=true;$('#boot-screen').hidden=true;$('#off-screen').hidden=true;
  if(playback==='error')notify('Bejelentkezési hang','A bejelentkezési hangot nem sikerült lejátszani.');
- else if(state.showWelcome)notify('Üdv a Windows XP-ben!', 'Az ikonokat dupla kattintással nyithatod meg. Kezdj a Start menüvel, és fedezd fel a régi kedvenceket! Az igazi élményhez az F11 billentyűvel válthatsz teljes képernyőre.');
+ // The tip is for the first arrival; after that the desktop speaks for itself.
+ else if(state.showWelcome){state.showWelcome=false;persist();notify('Üdv a Windows XP-ben!', 'Az ikonokat dupla kattintással nyithatod meg. Kezdj a Start menüvel, és fedezd fel a régi kedvenceket! Az igazi élményhez az F11 billentyűvel válthatsz teljes képernyőre.');}
 }
 function loginScreen(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();closeAll();bootPhase='login';$('#boot-screen').hidden=true;$('#welcome-screen').hidden=false;$('.welcome-center').innerHTML=`<div class="welcome-login"><div class="windows-brand">${icon('windows')}<small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong></div><div class="welcome-users"><p class="welcome-hint">A kezdéshez kattints a nevedre</p><button class="welcome-user">${XP.avatar(state.avatar)}<span><strong>${esc(state.user)}</strong><small>Bejelentkezés</small></span></button></div></div>`;$('.welcome-user').onclick=()=>{bootPhase='boot';welcome();};}
 register('logoff',()=>powerDialog(true));register('power',()=>powerDialog(false));
