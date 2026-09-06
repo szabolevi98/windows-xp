@@ -29,7 +29,9 @@ body[data-theme=silver] .window{border-color:#7c7c94}body[data-theme=silver] .ti
 .drag-ghost img{display:block;width:32px;height:32px;margin:0 auto 4px}
 .file-item.drop-hover{background:#316ac5;color:#fff;outline:1px dotted #fff}
 .desktop-icon.drop-hover{background:#235bc555;border:1px dotted #dcecff}
-[data-drop-folder].drop-hover{box-shadow:inset 0 0 0 2px #316ac5}#start-button{height:30px;align-self:flex-start;flex-shrink:0;margin:0;padding:0;border:0;border-radius:0;background:url('assets/icons/start.png') 0 -2px/106px 34px no-repeat;box-shadow:none}#start-button>*{visibility:hidden}.google-home{padding-top:40px}.google-footer{margin-top:32px}.google-logo{margin-bottom:18px}.google-local{display:none}.settings-body{flex-shrink:1}.power-dialog .window-content{justify-content:space-between}
+[data-drop-folder].drop-hover{box-shadow:inset 0 0 0 2px #316ac5}
+.file-item.cut img,.desktop-icon.cut img{opacity:.4}
+.desktop-icon.cut .icon-label,.file-item.cut span{opacity:.65}#start-button{height:30px;align-self:flex-start;flex-shrink:0;margin:0;padding:0;border:0;border-radius:0;background:url('assets/icons/start.png') 0 -2px/106px 34px no-repeat;box-shadow:none}#start-button>*{visibility:hidden}.google-home{padding-top:40px}.google-footer{margin-top:32px}.google-logo{margin-bottom:18px}.google-local{display:none}.settings-body{flex-shrink:1}.power-dialog .window-content{justify-content:space-between}
 .paint-tool{font-size:0;display:flex;align-items:center;justify-content:center}
 .paint-tool:before{content:'';width:16px;height:16px;flex-shrink:0;background:url('assets/icons/paint-tools.png') no-repeat;background-position-x:calc(var(--tool)*-16px);image-rendering:pixelated}
 .paint-tool[data-tool=eraser]{--tool:2}

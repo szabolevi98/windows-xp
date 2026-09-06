@@ -148,6 +148,40 @@ window.XP = (() => {
   const prompt=(title,message,value='')=>dialog(title,message,{input:'Fájlnév',value,buttons:['OK','Mégse']});
   const confirm=(title,message)=>dialog(title,message,{buttons:['Igen','Nem']});
   function fileName(name){return String(name||'').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'').trim().slice(0,100);}
+  function uniqueName(name,parent,ignoreId){
+    const taken=candidate=>state.files.some(f=>f.id!==ignoreId&&f.parent===parent&&!f.deleted&&f.name===candidate);
+    if(!taken(name))return name;
+    const dot=name.lastIndexOf('.'),base=dot>0?name.slice(0,dot):name,ext=dot>0?name.slice(dot):'';
+    for(let i=2;i<999;i++){const next=`${base} (${i})${ext}`;if(!taken(next))return next;}
+    return null;
+  }
+  // A copy takes the whole subtree with it and steps its name aside if one is taken.
+  function copyInto(id,parent){
+    const source=state.files.find(f=>f.id===id&&!f.deleted);if(!source)return null;
+    if(source.type==='folder'&&descendants(id).includes(parent)){sound('error');notify('Másolás','Egy mappát nem lehet önmagába másolni.');return null;}
+    const name=uniqueName(source.name,parent);if(!name)return null;
+    const clone=(file,newParent,newName)=>{const copy={...file,id:uniqueId(),parent:newParent,name:newName||file.name,modified:Date.now()};state.files.push(copy);return copy;};
+    const root=clone(source,parent,name);
+    (function walk(originalId,copyId){
+      for(const child of state.files.filter(f=>f.parent===originalId&&!f.deleted).slice())walk(child.id,clone(child,copyId).id);
+    })(id,root.id);
+    persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));return root.id;
+  }
+  // Cut and copy hold an item until it is pasted; a cut one is shown faded meanwhile.
+  let clipboard=null;
+  function clip(id,cut){
+    if(!state.files.some(f=>f.id===id&&!f.deleted))return false;
+    clipboard={id,cut:!!cut};document.dispatchEvent(new CustomEvent('xp-files-changed'));return true;
+  }
+  const canPaste=()=>!!clipboard&&state.files.some(f=>f.id===clipboard.id&&!f.deleted);
+  function paste(parent){
+    if(!canPaste())return false;
+    const {id,cut}=clipboard;
+    if(!cut)return !!copyInto(id,parent);
+    const moved=moveFile(id,parent);
+    if(moved){clipboard=null;document.dispatchEvent(new CustomEvent('xp-files-changed'));}
+    return moved;
+  }
   // Moving is refused for the same reasons XP refused it: a folder cannot swallow
   // itself, and two items in one folder cannot share a name.
   function moveFile(id,parent){
@@ -185,14 +219,13 @@ window.XP = (() => {
     target?.el?.classList.add('drop-hover');
   }
   // Letting go: the bin deletes, a folder takes the file in, the desktop keeps the spot.
-  function applyDrop(target,id,point){
+  function applyDrop(target,id,point,copy){
     if(!target||!state.files.some(f=>f.id===id&&!f.deleted))return false;
     if(target.type==='recycle'){deleteFile(id);return true;}
-    if(target.type==='desktop'){
-      if(point)state.iconPositions={...state.iconPositions,[id]:{x:point.x,y:point.y}};
-      return moveFile(id,'desktop');
-    }
-    return moveFile(id,target.id);
+    const parent=target.type==='desktop'?'desktop':target.id;
+    if(copy)return !!copyInto(id,parent);
+    if(target.type==='desktop'&&point)state.iconPositions={...state.iconPositions,[id]:{x:point.x,y:point.y}};
+    return moveFile(id,parent);
   }
   function dragGhost(source){
     const ghost=document.createElement('div');ghost.className='drag-ghost';
@@ -210,5 +243,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,moveFile,deleteFile,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,onFiles,status,get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();
