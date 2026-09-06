@@ -150,7 +150,8 @@ register('explorer',(initial='computer')=>{
   const sidebar=$('.explorer-sidebar',layout),filesEl=$('.explorer-files',layout),bar=status(w,'');
   function item(name,ic,data,extra=''){return `<button class="file-item ${extra}" ${data}>${icon(ic)}<span>${esc(name)}</span></button>`;}
   function render(keepFiles=false){
-    const info=folderInfo(),details=selectedEntry();w.setTitle(info.name);w.icon=info.icon||'folder';$('input',addr).value=folderPath(folder);
+    folders.recycle.icon=XP.recycleIcon();
+    const info=folderInfo(),details=selectedEntry();w.setTitle(info.name);w.setIcon(info.icon||'folder');$('input',addr).value=folderPath(folder);
     $('[data-action=back]',toolbar).disabled=!backStack.length;$('[data-action=forward]',toolbar).disabled=!forwardStack.length;
     $('[data-action=up]',toolbar).disabled=folder==='computer';$('[data-action=folder]',toolbar).disabled=readOnly();
     const actions=readOnly()?`<button data-side="system">${icon('computer')} A számítógép adatainak megjelenítése</button><button data-side="control">${icon('control')} Vezérlőpult</button>`:folder==='recycle'?`<button data-side="empty">${icon('recycle')} Lomtár ürítése</button><button data-side="restore" ${!selectedFile()?'disabled':''}>${icon('back')} Kijelölt elem visszaállítása</button>`:`<button data-side="new">${icon('folder')} Új mappa létrehozása</button><button data-side="notepad">${icon('notepad')} Új dokumentum</button>${canEdit()?`<button data-side="rename">${icon('documents')} Elem átnevezése</button><button data-side="delete">${icon('recycle')} Elem törlése</button>`:''}`;

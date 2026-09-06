@@ -84,6 +84,24 @@ test('Copying duplicates the whole subtree under a free name; cutting moves it o
  assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Rajz (2).png'));
 });
 
+test('The Recycle Bin shows whether it holds anything',()=>{
+ const {xp}=boot();
+ assert.equal(xp.recycleIcon(),'recycle');
+ xp.saveFile({id:'note',name:'Jegyzet.txt',type:'text',parent:'documents',content:''});
+ assert.equal(xp.recycleIcon(),'recycle');
+ xp.deleteFile('note');
+ assert.equal(xp.recycleIcon(),'recycle-full');
+ xp.restoreFile('note');
+ assert.equal(xp.recycleIcon(),'recycle');
+ // Emptying it for good leaves the bin empty as well.
+ xp.deleteFile('note');
+ xp.state.files=xp.state.files.filter(f=>!f.deleted);
+ assert.equal(xp.recycleIcon(),'recycle');
+ // Both faces resolve to a file that ships.
+ for(const name of ['recycle','recycle-full'])assert.ok(existsSync(new URL(xp.iconPath(name),root)),name);
+ assert.match(xp.iconPath('recycle-full'),/\.png$/);
+});
+
 test('Search ranks relevant pages and understands Hungarian accents',()=>{
  const {xp}=boot();assert.equal(xp.searchWeb('macska')[0].id,'cats');assert.equal(xp.searchWeb('játékok')[0].id,'games');assert.equal(xp.searchWeb('jatekok')[0].id,'games');assert.equal(xp.searchWeb('programozás')[0].id,'html');assert.equal(xp.searchWeb('nincsenilyen-123456').length,0);
 });
