@@ -193,6 +193,30 @@ test('Every downloaded asset is present locally at its recorded size',()=>{
  const manifest=JSON.parse(readFileSync(new URL('assets/sources.json',root),'utf8'));assert.ok(manifest.length>=55);
  for(const asset of manifest){const file=new URL('assets/'+asset.file,root);assert.ok(existsSync(file),asset.file);assert.equal(statSync(file).size,asset.bytes,asset.file);}
 });
+test('The share card points at an image that ships, at the size it claims',()=>{
+ const html=readFileSync(new URL('index.html',root),'utf8');
+ const meta=name=>html.match(new RegExp(`<meta property="${name}" content="([^"]+)"`))?.[1];
+ const site='https://szabolevi98.github.io/windows-xp/';
+ assert.equal(meta('og:url'),site);
+ for(const tag of ['og:title','og:description','og:type'])assert.ok(meta(tag),tag);
+ // Facebook and Slack need an absolute URL, so the local file has to be found through it.
+ const image=meta('og:image');
+ assert.ok(image.startsWith(site),image);
+ const file=new URL('assets/'+image.slice((site+'assets/').length),root);
+ assert.ok(existsSync(file),image);
+ // A JPEG's real size, read off its start-of-frame marker.
+ const bytes=readFileSync(file);
+ let at=2,size=null;
+ while(at<bytes.length-9&&!size){
+  if(bytes[at]!==0xff){at++;continue;}
+  const marker=bytes[at+1];
+  if(marker>=0xc0&&marker<=0xcf&&![0xc4,0xc8,0xcc].includes(marker)){size={height:bytes.readUInt16BE(at+5),width:bytes.readUInt16BE(at+7)};break;}
+  at+=2+bytes.readUInt16BE(at+2);
+ }
+ assert.deepEqual(size,{width:Number(meta('og:image:width')),height:Number(meta('og:image:height'))});
+ assert.equal(size.width,1200);assert.equal(size.height,630);
+});
+
 test('The entry point loads only local resources and blocks external connections',()=>{
  const html=readFileSync(new URL('index.html',root),'utf8');assert.match(html,/connect-src 'none'/);assert.match(html,/frame-src 'self'/);assert.match(html,/form-action 'none'/);
  for(const [,src]of html.matchAll(/(?:src|href)="([^"]+)"/g)){assert.ok(!/^https?:/.test(src),src);assert.ok(existsSync(new URL(src,root)),src);}
