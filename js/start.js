@@ -63,7 +63,7 @@ $('#start-button').onclick=e=>{e.stopPropagation();if(XP.modal)return;const el=$
 $('#show-desktop').onclick=()=>{if(XP.modal)return;if(!desktopShown){hiddenWindows=[...XP.windows.values()].filter(w=>!w.minimized).map(w=>w.id);hiddenWindows.forEach(id=>XP.minimize(XP.windows.get(id)));desktopShown=true;}else{hiddenWindows.forEach(id=>{const w=XP.windows.get(id);if(w)XP.focus(w);});desktopShown=false;hiddenWindows=[];}};
 $('#volume-button').onclick=()=>XP.open('volume');$('#clock').onclick=()=>XP.open('calendar');
 const trayToggle=$('#tray-toggle'),trayHidden=$('#tray-hidden');
-trayToggle.onclick=e=>{e.stopPropagation();const show=trayHidden.hidden;trayHidden.hidden=!show;trayToggle.textContent=show?'»':'«';trayToggle.title=show?'Rejtett ikonok elrejtése':'Rejtett ikonok megjelenítése';trayToggle.setAttribute('aria-expanded',String(show));};
+trayToggle.onclick=e=>{e.stopPropagation();const show=trayHidden.hidden;trayHidden.hidden=!show;trayToggle.title=trayToggle.ariaLabel=show?'Rejtett ikonok elrejtése':'Rejtett ikonok megjelenítése';trayToggle.setAttribute('aria-expanded',String(show));};
 const trayNotices={
  security:['Biztonsági központ','Tűzfal: BEKAPCSOLVA\nAutomatikus frissítések: BEKAPCSOLVA\nVírusvédelem: NEM TALÁLHATÓ\n\nEz a gép nem csatlakozik valódi hálózathoz, így nincs mitől védeni.'],
  mail:['Outlook Express','Nincs új üzenet.\n\nA szimulátor nem kapcsolódik levelezőkiszolgálóhoz.']
