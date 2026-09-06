@@ -314,7 +314,10 @@ test('Every Paint tool shows one whole icon and no piece of its neighbours',()=>
 test('The interface never tells the user it is a simulation',()=>{
  const files=['js/core.js','js/apps.js','js/internet.js','js/utilities.js','js/start.js','js/games.js',
   'js/cardgames.js','js/explorer.js','js/pinball.js','js/desktop-grid.js','index.html'];
- for(const file of files)assert.doesNotMatch(readFileSync(new URL(file,root),'utf8'),/szimul/i,`${file} stays in character`);
+ // The <head> metadata describes the page to search engines and link previews;
+ // it is never shown inside the desktop, so it may say what this is.
+ const inCharacter=file=>readFileSync(new URL(file,root),'utf8').replace(/<meta [^>]*>/g,'');
+ for(const file of files)assert.doesNotMatch(inCharacter(file),/szimul/i,`${file} stays in character`);
 });
 
 test('The settings sit where XP kept them, and one Service Pack is claimed everywhere',()=>{
