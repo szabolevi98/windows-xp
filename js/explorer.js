@@ -47,7 +47,9 @@ register('explorer',(initial='computer')=>{
   const folders={computer:{name:'Sajátgép',icon:'computer'},documents:{name:'Dokumentumok',icon:'documents'},pictures:{name:'Képek',icon:'pictures'},music:{name:'Zene',icon:'music'},desktop:{name:'Asztal',icon:'computer'},recycle:{name:'Lomtár',icon:'recycle'},...system};
   const dvd={id:'dvd',name:'DVD-meghajtó (D:)',icon:'cd',readOnly:true,type:'drive',path:'D:\\'};
   const w=createWindow({title:'Sajátgép',icon:'computer',app:'explorer',width:760,height:490});
-  let folder=initial,selected=null,backStack=[],forwardStack=[],listView=false;
+  let folder=initial,selected=null,backStack=[],forwardStack=[],listView=false,dragged=false;
+  // The desktop grid puts an icon's top-left corner where the pointer is, minus half a cell.
+  const dropPoint=ev=>{const box=$('#desktop').getBoundingClientRect();return {x:ev.clientX-box.left-42,y:ev.clientY-box.top-40};};
   const savedFile=id=>state.files.find(f=>f.id===id);
   const entry=id=>id==='dvd'?dvd:folders[id]||savedFile(id);
   const folderInfo=()=>entry(folder)||folders.documents;
@@ -138,7 +140,7 @@ register('explorer',(initial='computer')=>{
   const addr=document.createElement('div');addr.className='address-bar';addr.innerHTML=`Cím <div class="address-input">${icon('computer')}<input type="text" aria-label="Mappa elérési útja" readonly></div>`;w.body.append(addr);
   const layout=document.createElement('div');layout.className='explorer-layout';layout.innerHTML='<aside class="explorer-sidebar"></aside><div class="explorer-files"></div>';w.body.append(layout);
   const sidebar=$('.explorer-sidebar',layout),filesEl=$('.explorer-files',layout),bar=status(w,'');
-  function item(name,ic,data,extra=''){return `<button class="file-item ${extra}" ${data} ${/data-file=/.test(data)?'draggable="true"':''}>${icon(ic)}<span>${esc(name)}</span></button>`;}
+  function item(name,ic,data,extra=''){return `<button class="file-item ${extra}" ${data}>${icon(ic)}<span>${esc(name)}</span></button>`;}
   function render(keepFiles=false){
     const info=folderInfo(),details=selectedEntry();w.setTitle(info.name);w.icon=info.icon||'folder';$('input',addr).value=folderPath(folder);
     $('[data-action=back]',toolbar).disabled=!backStack.length;$('[data-action=forward]',toolbar).disabled=!forwardStack.length;
@@ -146,6 +148,8 @@ register('explorer',(initial='computer')=>{
     const actions=readOnly()?`<button data-side="system">${icon('computer')} A számítógép adatainak megjelenítése</button><button data-side="control">${icon('control')} Vezérlőpult</button>`:folder==='recycle'?`<button data-side="empty">${icon('recycle')} Lomtár ürítése</button><button data-side="restore" ${!selectedFile()?'disabled':''}>${icon('back')} Kijelölt elem visszaállítása</button>`:`<button data-side="new">${icon('folder')} Új mappa létrehozása</button><button data-side="notepad">${icon('notepad')} Új dokumentum</button>${canEdit()?`<button data-side="rename">${icon('documents')} Elem átnevezése</button><button data-side="delete">${icon('recycle')} Elem törlése</button>`:''}`;
     sidebar.innerHTML=`<section class="explorer-panel"><h3>${readOnly()?'Rendszerfeladatok':folder==='recycle'?'Lomtár-műveletek':'Fájl- és mappaműveletek'}</h3><div>${actions}</div></section><section class="explorer-panel"><h3>Egyéb helyek</h3><div>${['computer','documents','pictures','music','recycle'].filter(f=>f!==folder).map(f=>`<button data-folder="${f}">${icon(folders[f].icon)} ${folders[f].name}</button>`).join('')}<button data-side="control">${icon('control')} Vezérlőpult</button></div></section><section class="explorer-panel"><h3>Részletek</h3><div><b>${esc(details?.name||info.name)}</b><p>${details?`${entryType(details)}${details.modified?`<br>Módosítva: ${new Date(details.modified).toLocaleDateString('hu-HU')}`:''}`:readOnly()?'Rendszermappa':'Itt találod a saját fájljaidat és mappáidat.'}${(details?.readOnly||readOnly())?'<br>Attribútumok: Csak olvasható':''}</p></div></section>`;
     if(keepFiles)return;
+    if(!readOnly()&&(folder==='recycle'||['documents','pictures'].includes(folder)||!!savedFile(folder)))filesEl.dataset.dropFolder=folder;
+    else delete filesEl.dataset.dropFolder;
     filesEl.classList.toggle('list-view',listView);let html='',count=0;
     if(folder==='computer'){
       html=`<div class="explorer-section">A számítógépen tárolt fájlok</div><div class="file-grid">${item('Dokumentumok','documents','data-folder="documents"')}${item('Képek','pictures','data-folder="pictures"')}${item('Zene','music','data-folder="music"')}</div><div class="explorer-section" style="margin-top:25px">Merevlemezek</div><div class="file-grid">${item('Helyi lemez (C:)','disk','data-folder="disk"','drive')}</div><div class="explorer-section" style="margin-top:25px">Cserélhető adathordozós eszközök</div><div class="file-grid">${item(dvd.name,'cd','data-cd','drive')}</div>`;count=5;
@@ -175,6 +179,7 @@ register('explorer',(initial='computer')=>{
     if(a==='restore'&&selectedFile()){XP.restoreFile(selected);selected=null;render();}if(a==='control')XP.open('control');if(a==='system')XP.open('system');
   };
   filesEl.onclick=e=>{
+    if(dragged)return;
     const b=e.target.closest('.file-item');selected=buttonId(b);
     $$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
     const details=selectedEntry();$('span',bar).textContent=details?`${details.name} · ${entryType(details)}${details.readOnly?' · Csak olvasható':''}`:'Nincs kijelölés';render(true);
@@ -187,11 +192,31 @@ register('explorer',(initial='computer')=>{
     if(b.hasAttribute('data-player'))XP.open('player');
   }
   filesEl.ondblclick=e=>activate(e.target);filesEl.onpointerup=e=>{if(e.pointerType==='touch')activate(e.target);};
-  filesEl.ondragstart=e=>{
-    const b=e.target.closest('.file-item'),id=b?.dataset.file;
-    if(!id||readOnly()||folder==='recycle'||folder==='desktop'){e.preventDefault();return;}
-    selected=id;$$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
-    e.dataTransfer.setData('application/x-xp-file',id);e.dataTransfer.effectAllowed='move';
+  // Dragging a file out of the window: the icon follows the pointer and whatever is
+  // under it lights up, so the same gesture works towards the desktop or another folder.
+  filesEl.onpointerdown=e=>{
+    if(e.button!==0||XP.modal)return;
+    const button=e.target.closest('.file-item'),id=button?.dataset.file;
+    if(!id||readOnly()||folder==='recycle')return;
+    const startX=e.clientX,startY=e.clientY;let ghost=null,target=null;
+    const move=ev=>{
+      if(!ghost){
+        if(Math.abs(ev.clientX-startX)+Math.abs(ev.clientY-startY)<6)return;
+        ghost=XP.dragGhost(button);
+      }
+      ghost.style.left=`${ev.clientX+10}px`;ghost.style.top=`${ev.clientY+8}px`;
+      target=XP.dropTarget(ev.clientX,ev.clientY);
+      if(target?.type==='folder'&&target.id===folder)target=null;
+      XP.highlightDrop(target);
+    };
+    const up=ev=>{
+      document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);
+      if(!ghost)return;
+      ghost.remove();XP.highlightDrop(null);
+      if(ev.type==='pointerup')XP.applyDrop(target,id,dropPoint(ev));
+      dragged=true;setTimeout(()=>dragged=false,0);
+    };
+    document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
   };
   filesEl.oncontextmenu=e=>{
     e.preventDefault();e.stopPropagation();selected=buttonId(e.target.closest('.file-item'));render();

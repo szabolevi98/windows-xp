@@ -5,7 +5,9 @@ import vm from 'node:vm';
 const root=new URL('../',import.meta.url);
 function boot(saved){
  const storage=new Map();if(saved)storage.set('windows-xp-simulator-v1',JSON.stringify(saved));
- const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},dispatchEvent(){}},localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console});
+ // Enough of an element for the balloon notice, which refusals raise.
+ const element={hidden:true,innerHTML:'',onclick:null,querySelector:()=>element};
+ const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},dispatchEvent(){},querySelector:()=>element},localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console});
  vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
  vm.runInContext(readFileSync(new URL('js/internet.js',root),'utf8'),context);
  return {xp:context.XP,storage,context};
@@ -24,6 +26,29 @@ test('Restoring a nested file restores the enclosing folder and its original con
  const {xp}=boot();xp.saveFile({id:'folder',name:'Mappa',type:'folder',parent:'documents'});xp.saveFile({id:'note',name:'Jegyzet.txt',type:'text',parent:'folder',content:'eredeti'});xp.deleteFile('folder');xp.restoreFile('note');
  assert.equal(xp.state.files.find(f=>f.id==='folder').deleted,undefined);assert.equal(xp.state.files.find(f=>f.id==='note').deleted,undefined);assert.equal(xp.state.files.find(f=>f.id==='note').parent,'folder');assert.equal(xp.state.files.find(f=>f.id==='note').content,'eredeti');
 });
+test('A file can be moved between folders, but not onto a name that is taken or into itself',()=>{
+ const {xp}=boot();
+ xp.saveFile({id:'note',name:'Jegyzet.txt',type:'text',parent:'documents',content:'szoveg'});
+ assert.equal(xp.moveFile('note','desktop'),true);
+ assert.equal(xp.state.files.find(f=>f.id==='note').parent,'desktop');
+ assert.equal(xp.state.files.find(f=>f.id==='note').content,'szoveg');
+ // Moving somewhere it already is changes nothing.
+ assert.equal(xp.moveFile('note','desktop'),false);
+ // A folder cannot swallow itself or anything it contains.
+ xp.saveFile({id:'outer',name:'Kint',type:'folder',parent:'documents'});
+ xp.saveFile({id:'inner',name:'Bent',type:'folder',parent:'outer'});
+ assert.equal(xp.moveFile('outer','outer'),false);
+ assert.equal(xp.moveFile('outer','inner'),false);
+ assert.equal(xp.state.files.find(f=>f.id==='outer').parent,'documents');
+ // Two items in one folder cannot share a name.
+ xp.saveFile({id:'twin',name:'Jegyzet.txt',type:'text',parent:'documents',content:''});
+ assert.equal(xp.moveFile('twin','desktop'),false);
+ assert.equal(xp.state.files.find(f=>f.id==='twin').parent,'documents');
+ // A deleted file is not somewhere to move things.
+ xp.deleteFile('twin');
+ assert.equal(xp.moveFile('twin','desktop'),false);
+});
+
 test('Search ranks relevant pages and understands Hungarian accents',()=>{
  const {xp}=boot();assert.equal(xp.searchWeb('macska')[0].id,'cats');assert.equal(xp.searchWeb('játékok')[0].id,'games');assert.equal(xp.searchWeb('jatekok')[0].id,'games');assert.equal(xp.searchWeb('programozás')[0].id,'html');assert.equal(xp.searchWeb('nincsenilyen-123456').length,0);
 });
