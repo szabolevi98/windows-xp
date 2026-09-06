@@ -102,6 +102,19 @@ test('The Recycle Bin shows whether it holds anything',()=>{
  assert.match(xp.iconPath('recycle-full'),/\.png$/);
 });
 
+test('An empty bin is emptied without asking, and without touching anything',async()=>{
+ const {xp}=boot();
+ // No confirmation dialog is raised, which in this harness would need a real DOM:
+ // reaching one here would throw, so the early return is what keeps this quiet.
+ assert.equal(await xp.emptyTrash(),false);
+ assert.equal(xp.state.files.some(f=>f.deleted),false);
+ const before=xp.state.files.length;
+ xp.saveFile({id:'note',name:'Jegyzet.txt',type:'text',parent:'documents',content:'x'});
+ xp.deleteFile('note');
+ assert.equal(xp.state.files.length,before+1,'a deleted file is kept until the bin is emptied');
+ assert.equal(xp.recycleIcon(),'recycle-full');
+});
+
 test('Search ranks relevant pages and understands Hungarian accents',()=>{
  const {xp}=boot();assert.equal(xp.searchWeb('macska')[0].id,'cats');assert.equal(xp.searchWeb('játékok')[0].id,'games');assert.equal(xp.searchWeb('jatekok')[0].id,'games');assert.equal(xp.searchWeb('programozás')[0].id,'html');assert.equal(xp.searchWeb('nincsenilyen-123456').length,0);
 });
