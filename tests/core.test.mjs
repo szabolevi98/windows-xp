@@ -250,3 +250,48 @@ test('Every Paint tool shows one whole icon and no piece of its neighbours',()=>
  assert.equal(height,16);
  for(const cell of cells)assert.ok(cell*16<width,`cell ${cell} is inside the ${width}px strip`);
 });
+
+test('The interface never tells the user it is a simulation',()=>{
+ const files=['js/core.js','js/apps.js','js/internet.js','js/utilities.js','js/start.js','js/games.js',
+  'js/cardgames.js','js/explorer.js','js/pinball.js','js/desktop-grid.js','index.html'];
+ for(const file of files)assert.doesNotMatch(readFileSync(new URL(file,root),'utf8'),/szimul/i,`${file} stays in character`);
+});
+
+test('The settings sit where XP kept them, and one Service Pack is claimed everywhere',()=>{
+ const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
+ const labels=name=>{
+  const block=utils.slice(utils.indexOf(name));
+  const line=block.slice(block.indexOf('tabs:['));
+  return Array.from(line.slice(0,line.indexOf('\n')).matchAll(/\['[a-z]+','([^']+)'\]/g),m=>m[1]);
+ };
+ assert.deepEqual(labels('function displayProperties('),['Témák','Asztal','Képernyőkímélő','Megjelenés','Beállítások']);
+ assert.deepEqual(labels('function systemProperties('),['Általános','Számítógépnév','Hardver','Speciális','Automatikus frissítések']);
+ assert.deepEqual(labels('function soundProperties('),['Hangerő','Hangok','Hang']);
+ // Neither the account name nor the system facts belong on the display sheet.
+ const display=utils.slice(utils.indexOf('function displayProperties('),utils.indexOf('function systemProperties('));
+ assert.doesNotMatch(display,/Felhasználó neve/);
+ assert.doesNotMatch(display,/system-facts/);
+ // The name is changed where the account is.
+ assert.match(utils,/function userAccounts\(\)/);
+ assert.match(utils,/A fiók nevének megváltoztatása/);
+ const packs=new Set(Array.from(utils.matchAll(/Service Pack (\d)/g),m=>m[1]));
+ assert.deepEqual(Array.from(packs),['3']);
+});
+
+test('The desktop remembers the account picture, the computer name and the screensaver',()=>{
+ const {xp,storage}=boot();
+ assert.equal(xp.state.avatar,'user');
+ assert.equal(xp.state.accountType,'admin');
+ assert.equal(xp.state.computerName,'OTTHONI-PC');
+ assert.equal(xp.state.wallpaperFit,'fill');
+ assert.equal(xp.state.screensaver.name,'none');
+ Object.assign(xp.state,{avatar:'favorite',computerName:'NAPPALI-PC',wallpaperFit:'tile',screensaver:{name:'stars',minutes:3}});
+ xp.persist();
+ const next=boot(JSON.parse(storage.get('windows-xp-simulator-v1'))).xp;
+ assert.equal(next.state.avatar,'favorite');
+ assert.equal(next.state.computerName,'NAPPALI-PC');
+ assert.equal(next.state.wallpaperFit,'tile');
+ assert.equal(next.state.screensaver.minutes,3);
+ // A save made before any of this still comes up with the defaults.
+ assert.equal(boot({version:1,user:'Teszt',files:[]}).xp.state.avatar,'user');
+});
