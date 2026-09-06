@@ -209,11 +209,25 @@ test('The Security Centre is a window, reachable from the tray, the control pane
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  assert.match(utils,/register\('security'/);
  assert.match(utils,/title:'Windows Biztonsági központ'/);
- assert.match(utils,/'Biztonsági központ','Tűzfal, frissítések és vírusvédelem','security'/);
+ assert.match(utils,/security:\{name:'Biztonsági központ'[^}]*XP\.open\('security'\)/);
  assert.match(utils,/wscui:'security'/);
  assert.match(readFileSync(new URL('js/apps.js',root),'utf8'),/wscui:'security'/);
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  // The shield opens the window now; the icons left in the flyout still show a notice.
  assert.doesNotMatch(start,/security:\['Biztonsági központ'/);
  assert.match(start,/else XP\.open\(button\.dataset\.tray\)/);
+});
+
+test('Every control panel category leads to applets that exist, in both views',()=>{
+ const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
+ const block=utils.slice(utils.indexOf('const applets={'),utils.indexOf('let classic='));
+ const applets=new Set(Array.from(block.matchAll(/^\s*([a-z]+):\{name:/gm),m=>m[1]));
+ const categories=Array.from(block.matchAll(/id:'([a-z]+)',name:'([^']+)'/g),m=>m[1]);
+ assert.ok(applets.size>=12,'the classic view lists the individual applets');
+ assert.ok(categories.length>=9,'the category view keeps the original XP categories');
+ const items=Array.from(block.matchAll(/items:\[([^\]]+)\]/g)).flatMap(m=>m[1].split(',').map(s=>s.trim().replace(/'/g,'')));
+ for(const id of items)assert.ok(applets.has(id),`the ${id} applet exists`);
+ // Every applet is reachable from some category, so the two views show the same set.
+ for(const id of applets)assert.ok(items.includes(id),`${id} sits in a category`);
+ assert.match(utils,/state\.controlClassic/,'the chosen view is remembered');
 });

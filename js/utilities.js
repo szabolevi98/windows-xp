@@ -18,7 +18,98 @@ function settings(initial='desktop'){
  buttons.onclick=e=>{const a=e.target.dataset.settings;if(a==='apply')apply();if(a==='ok'){apply();w.close();}if(a==='cancel')w.close();};render();return w;
 }
 register('control',()=>{
- if(XP.singleton('control'))return;const w=createWindow({title:'Vezérlőpult',icon:'control',app:'control',width:680,height:465});menubar(w,{'Fájl':[{label:'Bezárás',action:()=>w.close()}],'Súgó':[{label:'Súgó és támogatás',action:()=>XP.open('help')}]});const body=document.createElement('div');body.className='help-content';body.innerHTML=`<div class="help-banner">${icon('control')}<div><h1>Válassz egy kategóriát</h1><p>A számítógép beállításainak módosítása</p></div></div><div class="help-cards">${[['control','Megjelenés és témák','Háttérkép és ablakok színe','display'],['volume','Hangok és audioeszközök','Rendszerhangok és hangerő','volume'],['network','Hálózati kapcsolatok','A helyi kapcsolat állapota','network'],['user','Felhasználói fiókok','A személyes profilod','profile'],['computer','Rendszer','Rendszerinformációk és tárhely','system'],['security','Biztonsági központ','Tűzfal, frissítések és vírusvédelem','security'],['help','Dátum és idő','Naptár és pontos idő','calendar']].map(([ic,title,desc,app])=>`<button class="help-card" data-open="${app}">${icon(ic)}<span><strong>${title}</strong>${desc}</span></button>`).join('')}</div>`;w.body.append(body);status(w,'7 objektum');return w;
+ if(XP.singleton('control'))return;
+ const w=createWindow({title:'Vezérlőpult',icon:'control',app:'control',width:760,height:525,minWidth:470,minHeight:380});
+ const note=(title,text)=>()=>XP.dialog(title,text);
+ const applets={
+  display:{name:'Megjelenítés',icon:'control',hint:'Háttérkép, színséma és felhasználónév',open:()=>XP.open('display')},
+  folders:{name:'Mappabeállítások',icon:'folder',hint:'Az elemek megnyitásának módja',open:note('Mappabeállítások','Az elemeket dupla kattintással nyithatod meg, érintőképernyőn egy koppintás is elég.\n\nA saját fájljaidat jobb kattintással átnevezheted, törölheted vagy letöltheted.')},
+  network:{name:'Hálózati kapcsolatok',icon:'network',hint:'A helyi kapcsolat állapota',open:()=>XP.open('network')},
+  internet:{name:'Internetbeállítások',icon:'ie',hint:'Kezdőlap, előzmények és kedvencek',open:()=>XP.open('ie')},
+  programs:{name:'Programok telepítése és törlése',icon:'programs',hint:'A gépre telepített programok',open:()=>XP.dialog('Programok telepítése és törlése','Jelenleg telepített programok:\n\nInternet Explorer 6 — 12,4 MB\nWindows Media Player 9 — 18,7 MB\nOutlook Express 6 — 6,2 MB\nMSN Explorer — 9,1 MB\nWindows XP játékok — 24,3 MB\n3D Pinball – Space Cadet — 9,4 MB\n\nEzek a szimulátor részei, ezért nem távolíthatók el.')},
+  volume:{name:'Hangok és audioeszközök',icon:'volume',hint:'Rendszerhangok és hangerő',open:()=>XP.open('volume')},
+  player:{name:'Hangeszközök',icon:'player',hint:'Lejátszás és hangfájlok',open:()=>XP.open('player')},
+  system:{name:'Rendszer',icon:'computer',hint:'Rendszerinformációk és tárhely',open:()=>XP.open('system')},
+  cleanup:{name:'Lemezkarbantartó',icon:'disk',hint:'Hely felszabadítása a lemezen',open:note('Lemezkarbantartó','A C: meghajtón nincs felszabadítható hely: ez egy szimulált meghajtó, a fájljaid a böngésző tárhelyén vannak.\n\nHa helyet szeretnél felszabadítani, ürítsd ki a Lomtárat.')},
+  printers:{name:'Nyomtatók és faxok',icon:'printers',hint:'Telepített nyomtatók',open:note('Nyomtatók és faxok','Nincs telepítve nyomtató.\n\nEz a gép nem lát valódi hardvert, ezért nyomtatót sem lehet hozzáadni. A dokumentumaidat a Fájl menüből töltheted le.')},
+  profile:{name:'Felhasználói fiókok',icon:'user',hint:'A személyes profilod',open:()=>XP.open('profile')},
+  datetime:{name:'Dátum és idő',icon:'datetime',hint:'Naptár és pontos idő',open:()=>XP.open('calendar')},
+  accessibility:{name:'Kisegítő lehetőségek',icon:'accessibility',hint:'Billentyűzet, hang és megjelenítés',open:note('Kisegítő lehetőségek','A szimulátor billentyűzetről is végig használható: Tab a léptetéshez, Enter a megnyitáshoz, Alt+F4 a bezáráshoz, Ctrl+Esc a Start menühöz.\n\nA nagyobb betűkhöz a böngésző saját nagyítását (Ctrl és +) érdemes használni.')},
+  security:{name:'Biztonsági központ',icon:'security',hint:'Tűzfal, frissítések és vírusvédelem',open:()=>XP.open('security')}
+ };
+ const categories=[
+  {id:'appearance',name:'Megjelenés és témák',icon:'control',hint:'Az asztal háttere, a színséma és a képernyő beállításai',items:['display','folders']},
+  {id:'network',name:'Hálózati és internetkapcsolatok',icon:'network',hint:'A kapcsolat állapota és a böngésző beállításai',items:['network','internet']},
+  {id:'programs',name:'Programok telepítése és törlése',icon:'programs',hint:'A gépre telepített programok listája',items:['programs']},
+  {id:'sound',name:'Hangok, beszéd és audioeszközök',icon:'volume',hint:'Rendszerhangok, hangerő és lejátszás',items:['volume','player']},
+  {id:'performance',name:'Teljesítmény és karbantartás',icon:'computer',hint:'Rendszeradatok és a lemez karbantartása',items:['system','cleanup']},
+  {id:'hardware',name:'Nyomtatók és egyéb hardver',icon:'printers',hint:'Nyomtatók, faxok és eszközök',items:['printers']},
+  {id:'accounts',name:'Felhasználói fiókok',icon:'user',hint:'A felhasználóneved és a profilod',items:['profile']},
+  {id:'datetime',name:'Dátum, idő, nyelv és területi beállítások',icon:'datetime',hint:'Naptár, pontos idő és a magyar beállítások',items:['datetime']},
+  {id:'access',name:'Kisegítő lehetőségek',icon:'accessibility',hint:'Billentyűzetes használat és láthatóság',items:['accessibility']},
+  {id:'security',name:'Biztonsági központ',icon:'security',hint:'Tűzfal, automatikus frissítések és vírusvédelem',items:['security']}
+ ];
+ let classic=!!state.controlClassic,category='';
+ menubar(w,{
+  'Fájl':[{label:'Bezárás',action:()=>w.close()}],
+  'Nézet':()=>[{label:'Kategórianézet',checked:!classic,action:()=>setView(false)},{label:'Klasszikus nézet',checked:classic,action:()=>setView(true)}],
+  'Súgó':[{label:'Súgó és támogatás',action:()=>XP.open('help')}]
+ },true);
+ const toolbar=document.createElement('div');toolbar.className='toolbar';
+ toolbar.innerHTML=`<button data-action="back">${icon('back')}<span>Vissza</span></button><button data-action="up" title="Egy szinttel feljebb">${icon('up')}</button><span class="toolbar-separator"></span><button data-action="search">${icon('search')}<span class="toolbar-label">Keresés</span></button><button data-action="view">${icon('documents')}<span class="toolbar-label">Nézet</span></button>`;
+ w.body.append(toolbar);
+ const addr=document.createElement('div');addr.className='address-bar';
+ addr.innerHTML=`Cím ${'<div class="address-input">'}${icon('control')}<input type="text" aria-label="Hely" readonly></div>`;
+ w.body.append(addr);
+ const layout=document.createElement('div');layout.className='explorer-layout';
+ layout.innerHTML='<aside class="explorer-sidebar"></aside><div class="explorer-files control-files"></div>';
+ w.body.append(layout);
+ const sidebar=$('.explorer-sidebar',layout),files=$('.control-files',layout),bar=status(w,'');
+ const current=()=>categories.find(c=>c.id===category);
+ function setView(next){classic=next;category='';state.controlClassic=classic;persist();render();}
+ function render(){
+  const here=current();
+  w.setTitle(here?here.name:'Vezérlőpult');
+  $('input',addr).value=here?'Vezérlőpult\\'+here.name:'Vezérlőpult';
+  $('[data-action=back]',toolbar).disabled=!here;
+  $('[data-action=up]',toolbar).disabled=!here;
+  sidebar.innerHTML=`<section class="explorer-panel"><h3>Vezérlőpult</h3><div><button data-view="${classic?'category':'classic'}">${icon('control')} Váltás ${classic?'kategórianézetre':'klasszikus nézetre'}</button>${here?`<button data-view="home">${icon('back')} Vissza a kategóriákhoz</button>`:''}</div></section><section class="explorer-panel"><h3>Lásd még</h3><div><button data-side="update">${icon('refresh')} Windows Update</button><button data-side="help">${icon('help')} Súgó és támogatás</button><button data-side="explorer">${icon('computer')} Sajátgép</button></div></section>`;
+  if(here){
+   files.className='explorer-files control-files';
+   files.innerHTML=`<h1 class="control-title">${esc(here.name)}</h1><p class="control-lead">${esc(here.hint)}</p><h2 class="control-sub">Válasszon egy Vezérlőpult-ikont</h2><div class="file-grid">${here.items.map(id=>`<button class="file-item" data-applet="${id}">${icon(applets[id].icon)}<span>${esc(applets[id].name)}</span></button>`).join('')}</div>`;
+   bar.firstElementChild.textContent=`${here.items.length} objektum`;
+   return;
+  }
+  if(classic){
+   files.className='explorer-files control-files';
+   files.innerHTML=`<div class="file-grid">${Object.entries(applets).map(([id,a])=>`<button class="file-item" data-applet="${id}">${icon(a.icon)}<span>${esc(a.name)}</span></button>`).join('')}</div>`;
+   bar.firstElementChild.textContent=`${Object.keys(applets).length} objektum`;
+   return;
+  }
+  files.className='explorer-files control-files category-view';
+  files.innerHTML=`<h1 class="control-title">Válasszon kategóriát</h1><div class="control-categories">${categories.map(c=>`<button class="control-category" data-category="${c.id}">${icon(c.icon)}<span><strong>${esc(c.name)}</strong>${esc(c.hint)}</span></button>`).join('')}</div>`;
+  bar.firstElementChild.textContent=`${categories.length} kategória`;
+ }
+ toolbar.onclick=e=>{
+  const action=e.target.closest('[data-action]')?.dataset.action;
+  if(action==='back'||action==='up'){category='';render();}
+  if(action==='search')XP.open('search');
+  if(action==='view')setView(!classic);
+ };
+ layout.onclick=e=>{
+  const button=e.target.closest('button');if(!button)return;
+  if(button.dataset.category){category=button.dataset.category;render();return;}
+  if(button.dataset.applet){applets[button.dataset.applet].open();return;}
+  const view=button.dataset.view;
+  if(view==='home'){category='';render();return;}
+  if(view)  {setView(view==='classic');return;}
+  const side=button.dataset.side;
+  if(side==='update')XP.dialog('Windows Update','A gép nem csatlakozik hálózathoz, ezért nincs mit letölteni. Minden szükséges fájl helyben van.');
+  if(side==='help')XP.open('help');
+  if(side==='explorer')XP.open('explorer','computer');
+ };
+ render();
+ return w;
 });
 register('profile',()=>settings('appearance'));
 register('volume',()=>{

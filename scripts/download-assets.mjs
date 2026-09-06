@@ -9,7 +9,7 @@ files.push(['icons/windows-logo.png','https://win32.run/favicon.png']);
 files.push(['icons/favorite.png',xp+'windowsIcons/744(32x32).png']);
 files.push(['icons/mines.png',xp+'minesweeper/mine-icon.png']);
 const xpicons='https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/';
-for(const [name,remote] of [['freecell','Freecell'],['hearts','Hearts'],['spider','SpiderSolitaire'],['showdesktop','Desktop'],['security','SecurityCenter']]) files.push([`icons/${name}.png`,`${xpicons}${remote}.png`]);
+for(const [name,remote] of [['freecell','Freecell'],['hearts','Hearts'],['spider','SpiderSolitaire'],['showdesktop','Desktop'],['security','SecurityCenter'],['programs','ChangeorRemovePrograms'],['printers','PrintersandHardware'],['datetime','DateandTime'],['accessibility','Accessibility']]) files.push([`icons/${name}.png`,`${xpicons}${remote}.png`]);
 files.push(['icons/pinball.ico','https://raw.githubusercontent.com/alula/SpaceCadetPinball/0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9/SpaceCadetPinball/Icon_1.ico']);
 files.push(['pinball/vendor.js','https://raw.githubusercontent.com/lrusso/3DPinballSpaceCadet/684f0b57d0cc93d5a29329f0b59d9996c54f1553/3DPinballSpaceCadet.js']);
 files.push(['pinball/LICENSE','https://raw.githubusercontent.com/alula/SpaceCadetPinball/0bc12d3ca97a30a61e1e325cfde1eeec379bb9b9/LICENSE']);
