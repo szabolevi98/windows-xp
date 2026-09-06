@@ -36,8 +36,16 @@ window.XP = (() => {
     if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:'3D Pinball – Space Cadet',type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
     state.pinballAdded=true;
   }
+  if(!state.cardGamesAdded){
+    const anchor=state.files.find(f=>f.type==='shortcut'&&['mines','solitaire','pinball'].includes(f.app));
+    const folder=state.files.find(f=>f.type==='folder'&&f.id===(anchor?.parent||'folder-games'));
+    if(folder)for(const [app,name] of [['freecell','FreeCell'],['spider','Pókpasziánsz'],['hearts','Hearts']]){
+      if(!state.files.some(f=>f.type==='shortcut'&&f.app===app))state.files.push({id:`shortcut-${app}`,name,type:'shortcut',app,parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
+    }
+    state.cardGamesAdded=true;
+  }
   persist();
-  const shortcutApps={mines:'mines',solitaire:'solitaire',pinball:'pinball'};
+  const shortcutApps={mines:'mines',solitaire:'solitaire',pinball:'pinball',freecell:'freecell',spider:'spider',hearts:'hearts'};
   const fileIcon=file=>file.type==='folder'?'folder':file.type==='image'?'pictures':file.type==='shortcut'?(shortcutApps[file.app]||'help'):'notepad';
   const windows = new Map(), apps = {};
   let sequence=0,z=20,active=null,modalDepth=0;
