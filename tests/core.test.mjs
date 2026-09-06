@@ -231,3 +231,22 @@ test('Every control panel category leads to applets that exist, in both views',(
  for(const id of applets)assert.ok(items.includes(id),`${id} sits in a category`);
  assert.match(utils,/state\.controlClassic/,'the chosen view is remembered');
 });
+
+test('Every Paint tool shows one whole icon and no piece of its neighbours',()=>{
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ // The strip is drawn on a box exactly one cell wide, so nothing either side can show through.
+ assert.match(css,/\.paint-tool:before\{[^}]*width:16px;height:16px[^}]*paint-tools\.png/);
+ assert.doesNotMatch(css,/\.paint-tool[^:{]*\{[^}]*background-image:url\('assets\/icons\/paint-tools\.png'\)/);
+ const apps=readFileSync(new URL('js/apps.js',root),'utf8');
+ const list=apps.slice(apps.indexOf('const tools=['),apps.indexOf('layout.innerHTML'));
+ const tools=Array.from(list.matchAll(/\['([a-z]+)','/g),m=>m[1]);
+ assert.equal(tools.length,9,'the toolbox still holds nine tools');
+ for(const tool of tools)assert.match(css,new RegExp(`\\.paint-tool\\[data-tool=${tool}\\]\\{--tool:\\d+\\}`),`${tool} names a cell`);
+ const cells=Array.from(css.matchAll(/\.paint-tool\[data-tool=[a-z]+\]\{--tool:(\d+)\}/g),m=>Number(m[1]));
+ assert.equal(new Set(cells).size,cells.length,'no two tools share a cell');
+ // The cells have to exist in the image itself.
+ const sprite=readFileSync(new URL('assets/icons/paint-tools.png',root));
+ const width=sprite.readUInt32BE(16),height=sprite.readUInt32BE(20);
+ assert.equal(height,16);
+ for(const cell of cells)assert.ok(cell*16<width,`cell ${cell} is inside the ${width}px strip`);
+});
