@@ -2,46 +2,53 @@
 (() => {
 const {$,$$,esc,icon,state,register,createWindow,menubar,status,persist,notify}=XP;
 // --- Képernyőkímélő ------------------------------------------------------
-const saver={el:null,frame:0,at:0};
+const saver={el:null,stop:null,at:0};
 const saverSettings=()=>({name:state.screensaver?.name||'none',minutes:Math.max(1,Number(state.screensaver?.minutes)||10)});
-function stopSaver(){if(!saver.el)return;cancelAnimationFrame(saver.frame);saver.el.remove();saver.el=null;}
-function startSaver(name){
- if(saver.el||name==='none')return;
- const el=document.createElement('div');el.className='screensaver';document.body.append(el);saver.el=el;saver.at=Date.now();
+function stopSaver(){if(!saver.el)return;saver.stop?.();saver.el.remove();saver.el=null;saver.stop=null;}
+function paintSaver(box,name){
+ let frame=0;
+ const width=()=>box.clientWidth||box.offsetWidth||320,height=()=>box.clientHeight||box.offsetHeight||240;
  if(name==='logo'){
-  const img=document.createElement('img');img.src=XP.iconPath('windows');img.alt='';el.append(img);
-  let x=innerWidth/3,y=innerHeight/3,dx=1.7,dy=1.2;
+  const img=document.createElement('img');img.src=XP.iconPath('windows');img.alt='';
+  const size=Math.max(14,Math.min(128,Math.round(width()*0.14)));
+  img.style.width=img.style.height=size+'px';box.append(img);
+  let x=width()/3,y=height()/3,dx=Math.max(0.35,width()/560),dy=Math.max(0.25,height()/620);
   const step=()=>{
-   const w=img.offsetWidth||128,h=img.offsetHeight||128;
    x+=dx;y+=dy;
-   if(x<=0||x+w>=innerWidth){dx=-dx;x=Math.max(0,Math.min(innerWidth-w,x));}
-   if(y<=0||y+h>=innerHeight){dy=-dy;y=Math.max(0,Math.min(innerHeight-h,y));}
+   if(x<=0||x+size>=width()){dx=-dx;x=Math.max(0,Math.min(width()-size,x));}
+   if(y<=0||y+size>=height()){dy=-dy;y=Math.max(0,Math.min(height()-size,y));}
    img.style.transform=`translate(${x}px,${y}px)`;
-   saver.frame=requestAnimationFrame(step);
+   frame=requestAnimationFrame(step);
   };
   step();
  }else{
-  const canvas=document.createElement('canvas');el.append(canvas);
+  const canvas=document.createElement('canvas');box.append(canvas);
+  canvas.width=width();canvas.height=height();
   const ctx=canvas.getContext('2d');
-  canvas.width=innerWidth;canvas.height=innerHeight;
-  const stars=Array.from({length:240},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:Math.random()||0.5}));
+  const stars=Array.from({length:Math.max(70,Math.round(width()*0.3))},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:Math.random()||0.5}));
   const step=()=>{
    ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);
    ctx.fillStyle='#fff';
    for(const star of stars){
-    star.z-=0.007;
+    star.z-=0.008;
     if(star.z<=0.02){star.x=Math.random()*2-1;star.y=Math.random()*2-1;star.z=1;}
     const px=canvas.width/2+star.x/star.z*canvas.width/2,py=canvas.height/2+star.y/star.z*canvas.height/2;
     if(px<0||px>canvas.width||py<0||py>canvas.height)continue;
-    const size=Math.max(0.6,(1-star.z)*2.6);
-    ctx.globalAlpha=Math.min(1,1.1-star.z);
+    const size=Math.max(0.7,(1-star.z)*Math.max(1.6,canvas.width/380));
+    ctx.globalAlpha=Math.min(1,1.15-star.z);
     ctx.fillRect(px,py,size,size);
    }
    ctx.globalAlpha=1;
-   saver.frame=requestAnimationFrame(step);
+   frame=requestAnimationFrame(step);
   };
   step();
  }
+ return ()=>cancelAnimationFrame(frame);
+}
+function startSaver(name){
+ if(saver.el||name==='none')return;
+ const el=document.createElement('div');el.className='screensaver';document.body.append(el);
+ saver.el=el;saver.at=Date.now();saver.stop=paintSaver(el,name);
 }
 let idleSince=Date.now();
 const wake=()=>{idleSince=Date.now();if(saver.el&&Date.now()-saver.at>500)stopSaver();};
@@ -69,6 +76,7 @@ function propertySheet({app,title,icon:ic,tabs,initial,width=470,height=515,read
  row.innerHTML='<button class="xp-button primary" data-sheet="ok">OK</button><button class="xp-button" data-sheet="cancel">Mégse</button><button class="xp-button" data-sheet="apply">Alkalmaz</button>';
  w.body.append(row);
  row.onclick=e=>{const action=e.target.dataset.sheet;if(!action)return;if(action!=='cancel'){read(current,panel);apply();}if(action!=='apply')w.close();};
+ w.repaint=paint;
  paint();
  return w;
 }
@@ -79,48 +87,69 @@ const wallpaperStyle=(name,fit)=>name==='none'?'background:#3a6ea5':`background:
 register('display',()=>displayProperties());
 register('screensaver',()=>displayProperties('screensaver'));
 function displayProperties(initial='themes'){
- const draft={wallpaper:state.wallpaper,fit:state.wallpaperFit||'fill',theme:state.theme,saver:saverSettings()};
+ const draft={wallpaper:state.wallpaper,fit:state.wallpaperFit||'fill',theme:state.theme,style:state.visualStyle||'xp',saver:saverSettings()};
  const options=(list,value)=>list.map(([key,label])=>`<option value="${key}" ${key===value?'selected':''}>${esc(label)}</option>`).join('');
  const wallpapers=[['none','(Nincs)'],['bliss','Bliss'],['azul','Azul'],['autumn','Autumn'],['windows-xp','Windows XP']];
  const schemes=[['blue','Alapértelmezett (kék)'],['olive','Olívazöld'],['silver','Ezüst']];
  const savers=[['none','(Nincs)'],['logo','Windows XP'],['stars','Csillagmező']];
- return propertySheet({
+ const scheme=()=>draft.style==='classic'?'classic':draft.theme;
+ // A miniature desktop, so the theme and the colour scheme can be judged before applying them.
+ const preview=()=>`<div class="preview-desktop" style="${wallpaperStyle(draft.wallpaper,draft.fit)}"><div class="preview-window" data-scheme="${scheme()}"><div class="preview-title">Aktív ablak</div><div class="preview-content"><span>Windows és gombok</span><span class="preview-button">OK</span></div></div><div class="preview-taskbar" data-scheme="${scheme()}"></div></div>`;
+ let stopPreview=null,sheet=null;
+ const refresh=panel=>{
+  const shown=$('.preview-desktop',panel);if(!shown)return;
+  shown.style.cssText=wallpaperStyle(draft.wallpaper,draft.fit);
+  $$('[data-scheme]',shown).forEach(el=>el.dataset.scheme=scheme());
+ };
+ sheet=propertySheet({
   app:'display',title:'Megjelenítés tulajdonságai',icon:'control',initial,height:535,
   tabs:[['themes','Témák'],['desktop','Asztal'],['screensaver','Képernyőkímélő'],['appearance','Megjelenés'],['settings','Beállítások']],
   read(tab,panel){
-   if(tab==='themes')draft.theme=$('[name=theme]',panel).value;
+   if(tab==='themes')draft.style=$('[name=theme]',panel).value;
    if(tab==='desktop'){draft.wallpaper=$('[name=wallpaper]',panel).value;draft.fit=$('[name=fit]',panel).value;}
-   if(tab==='screensaver'){draft.saver={name:$('[name=saver]',panel).value,minutes:Math.max(1,Number($('[name=wait]',panel).value)||10)};}
-   if(tab==='appearance')draft.theme=$('[name=scheme]',panel).value;
+   if(tab==='screensaver')draft.saver={name:$('[name=saver]',panel).value,minutes:Math.max(1,Number($('[name=wait]',panel).value)||10)};
+   if(tab==='appearance'){draft.style=$('[name=style]',panel).value;const box=$('[name=scheme]',panel);if(box&&!box.disabled)draft.theme=box.value;}
   },
   draw(tab,panel){
+   stopPreview?.();stopPreview=null;
    if(tab==='themes'){
-    panel.innerHTML=`<label class="settings-field"><span>Téma:</span><select name="theme">${options(schemes,draft.theme)}</select></label>${monitor(`<div class="preview-desktop" style="${wallpaperStyle(draft.wallpaper,draft.fit)}"></div>`)}<p class="settings-note">A téma a háttérképet, az ablakok színét és a hangokat fogja össze. Mentsd el a beállításaidat, ha később vissza szeretnél térni hozzájuk.</p>`;
-    $('[name=theme]',panel).onchange=e=>{draft.theme=e.target.value;};
+    panel.innerHTML=`<label class="settings-field"><span>Téma:</span><select name="theme">${options([['xp','Windows XP'],['classic','Windows klasszikus']],draft.style)}</select></label><p class="settings-note" style="margin:0 0 6px">Minta:</p>${monitor(preview())}<p class="settings-note">A téma az ablakok és a gombok stílusát, a színsémát és a hangokat fogja össze. A színséma külön a Megjelenés lapon állítható.</p>`;
+    $('[name=theme]',panel).onchange=e=>{draft.style=e.target.value;refresh(panel);};
    }
    if(tab==='desktop'){
-    panel.innerHTML=`${monitor(`<div class="preview-desktop" style="${wallpaperStyle(draft.wallpaper,draft.fit)}"></div>`)}<div class="settings-columns"><div><label class="settings-field"><span>Háttér:</span><select class="wallpaper-picker" name="wallpaper" size="5">${options(wallpapers,draft.wallpaper)}</select></label></div><div><label class="settings-field"><span>Elhelyezés:</span><select name="fit">${options([['fill','Nyújtott'],['center','Középre'],['tile','Mozaik']],draft.fit)}</select></label></div></div>`;
-    const refresh=()=>{draft.wallpaper=$('[name=wallpaper]',panel).value;draft.fit=$('[name=fit]',panel).value;$('.preview-desktop',panel).style.cssText=wallpaperStyle(draft.wallpaper,draft.fit);};
-    $('[name=wallpaper]',panel).onchange=refresh;$('[name=fit]',panel).onchange=refresh;
+    panel.innerHTML=`${monitor(preview())}<div class="settings-columns"><div><label class="settings-field"><span>Háttér:</span><select class="wallpaper-picker" name="wallpaper" size="5">${options(wallpapers,draft.wallpaper)}</select></label></div><div><label class="settings-field"><span>Elhelyezés:</span><select name="fit">${options([['fill','Nyújtott'],['center','Középre'],['tile','Mozaik']],draft.fit)}</select></label></div></div>`;
+    const update=()=>{draft.wallpaper=$('[name=wallpaper]',panel).value;draft.fit=$('[name=fit]',panel).value;refresh(panel);};
+    $('[name=wallpaper]',panel).onchange=update;$('[name=fit]',panel).onchange=update;
    }
    if(tab==='screensaver'){
-    panel.innerHTML=`${monitor('<div class="preview-desktop" style="background:#000"></div>')}<label class="settings-field"><span>Képernyőkímélő:</span><select name="saver">${options(savers,draft.saver.name)}</select></label><div class="settings-inline"><button class="xp-button" data-preview>Előnézet</button><label>Várakozás: <input type="number" name="wait" min="1" max="60" value="${draft.saver.minutes}"> perc</label></div><p class="settings-note">A képernyőkímélő akkor indul el, ha a megadott ideig nem használod a gépet. Bármelyik billentyű vagy az egér mozgatása leállítja.</p>`;
-    $('[data-preview]',panel).onclick=()=>{const name=$('[name=saver]',panel).value;if(name==='none')XP.dialog('Képernyőkímélő','Nincs képernyőkímélő kiválasztva.');else startSaver(name);};
+    panel.innerHTML=`${monitor('<div class="preview-desktop saver-preview" style="background:#000"></div>')}<label class="settings-field"><span>Képernyőkímélő:</span><select name="saver">${options(savers,draft.saver.name)}</select></label><div class="settings-inline"><button class="xp-button" data-preview>Előnézet</button><label>Várakozás: <input type="number" name="wait" min="1" max="60" value="${draft.saver.minutes}"> perc</label></div><p class="settings-note">A képernyőkímélő akkor indul el, ha a megadott ideig nem használod a gépet. Bármelyik billentyű vagy az egér mozgatása leállítja.</p>`;
+    const box=$('.saver-preview',panel);
+    const show=()=>{stopPreview?.();box.replaceChildren();stopPreview=draft.saver.name==='none'?null:paintSaver(box,draft.saver.name);};
+    $('[name=saver]',panel).onchange=e=>{draft.saver.name=e.target.value;show();};
+    $('[data-preview]',panel).onclick=()=>{
+     const name=$('[name=saver]',panel).value;
+     if(name==='none')XP.dialog('Képernyőkímélő','Nincs képernyőkímélő kiválasztva.');else startSaver(name);
+    };
+    setTimeout(show,0);
    }
    if(tab==='appearance'){
-    panel.innerHTML=`<div class="appearance-preview"><div class="window"><div class="title-bar">Aktív ablak</div><div class="appearance-body">Windows és gombok<br><br><button class="xp-button">OK</button></div></div></div><label class="settings-field"><span>Ablakok és gombok:</span><select disabled><option>Windows XP stílus</option></select></label><label class="settings-field"><span>Színséma:</span><select name="scheme">${options(schemes,draft.theme)}</select></label><label class="settings-field"><span>Betűméret:</span><select disabled><option>Normál</option></select></label>`;
-    $('[name=scheme]',panel).onchange=e=>{draft.theme=e.target.value;};
+    const classic=draft.style==='classic';
+    panel.innerHTML=`${monitor(preview())}<label class="settings-field"><span>Ablakok és gombok:</span><select name="style">${options([['xp','Windows XP stílus'],['classic','Windows klasszikus stílus']],draft.style)}</select></label><label class="settings-field"><span>Színséma:</span><select name="scheme" ${classic?'disabled':''}>${classic?'<option>Windows alapértelmezett</option>':options(schemes,draft.theme)}</select></label><label class="settings-field"><span>Betűméret:</span><select disabled><option>Normál</option></select></label>`;
+    $('[name=style]',panel).onchange=e=>{draft.style=e.target.value;sheet.repaint();};
+    if(!classic)$('[name=scheme]',panel).onchange=e=>{draft.theme=e.target.value;refresh(panel);};
    }
    if(tab==='settings'){
     const area=$('#desktop').getBoundingClientRect();
-    panel.innerHTML=`${monitor(`<div class="preview-desktop" style="${wallpaperStyle(draft.wallpaper,draft.fit)}"></div>`)}<div class="settings-columns"><div><label class="settings-field"><span>Képernyőfelbontás:</span><input type="range" min="0" max="2" value="1" disabled><small>${Math.round(area.width)} × ${Math.round(area.height+30)} képpont</small></label></div><div><label class="settings-field"><span>Színminőség:</span><select disabled><option>Legjobb (32 bit)</option></select></label></div></div><p class="settings-note">A képernyő az ablak méretéhez igazodik: ha átméretezed, a felbontás is ennek megfelelően változik.</p>`;
+    panel.innerHTML=`${monitor(preview())}<div class="settings-columns"><div><label class="settings-field"><span>Képernyőfelbontás:</span><input type="range" min="0" max="2" value="1" disabled><small>${Math.round(area.width)} × ${Math.round(area.height+30)} képpont</small></label></div><div><label class="settings-field"><span>Színminőség:</span><select disabled><option>Legjobb (32 bit)</option></select></label></div></div><p class="settings-note">A képernyő az ablak méretéhez igazodik: ha átméretezed, a felbontás is ennek megfelelően változik.</p>`;
    }
   },
   apply(){
-   Object.assign(state,{wallpaper:draft.wallpaper,wallpaperFit:draft.fit,theme:draft.theme,screensaver:{...draft.saver}});
+   Object.assign(state,{wallpaper:draft.wallpaper,wallpaperFit:draft.fit,theme:draft.theme,visualStyle:draft.style,screensaver:{...draft.saver}});
    persist();XP.applySettings();document.dispatchEvent(new CustomEvent('xp-settings-changed'));
   }
  });
+ sheet?.cleanup.push(()=>stopPreview?.());
+ return sheet;
 }
 
 // --- Rendszertulajdonságok (sysdm.cpl) -----------------------------------

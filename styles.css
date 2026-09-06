@@ -80,8 +80,8 @@ body[data-theme=silver] .window{border-color:#7c7c94}body[data-theme=silver] .ti
 .control-category:hover strong{color:#c33}
 .control-category span{font-size:11px;color:#555;line-height:1.45}
 .screensaver{position:fixed;inset:0;z-index:99999;background:#000;overflow:hidden;cursor:none}
-.screensaver img{position:absolute;left:0;top:0;width:128px;height:128px;will-change:transform}
-.screensaver canvas{display:block;width:100%;height:100%}
+.screensaver img,.saver-preview img{position:absolute;left:0;top:0;will-change:transform}
+.screensaver canvas,.saver-preview canvas{display:block;width:100%;height:100%}
 .preview-desktop{width:100%;height:100%}
 .settings-inline{display:flex;align-items:center;gap:12px;margin:12px 0;flex-wrap:wrap}
 .settings-inline input[type=number]{width:52px;padding:2px 4px}
@@ -90,9 +90,6 @@ body[data-theme=silver] .window{border-color:#7c7c94}body[data-theme=silver] .ti
 .settings-block b{display:block;margin-bottom:3px}
 .settings-block p{margin:0 0 7px;font-size:11px;color:#555;line-height:1.5}
 .settings-field small{color:#666;font-size:10px;margin-left:19px;display:block}
-.appearance-preview{height:110px;background:#3a6ea5;padding:16px;margin-bottom:16px;overflow:hidden}
-.appearance-preview .window{position:static;width:100%;height:auto;box-shadow:none}
-.appearance-preview .appearance-body{padding:9px;font-size:11px}
 .system-facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 14px;font-size:11px}
 .system-facts dt{color:#555}
 .system-facts dd{margin:0;line-height:1.5}
@@ -128,5 +125,53 @@ body[data-theme=silver] .window{border-color:#7c7c94}body[data-theme=silver] .ti
 .picture-choice:hover{border-color:#7ba7e3}
 .picture-choice.selected{border-color:#f0a30a;box-shadow:0 0 0 1px #f0a30a inset}
 .account-buttons{display:flex;gap:8px;margin-top:6px}
+.preview-desktop{position:absolute;inset:0;overflow:hidden}
+.monitor-screen:has(.preview-desktop):after{display:none}
+.preview-taskbar{position:absolute;left:0;right:0;bottom:0;height:9px;z-index:2;background:linear-gradient(#4698ff,#245edc 45%,#1949bd)}
+.preview-taskbar[data-scheme=silver]{background:linear-gradient(#fff,#aaaec0 60%,#7d8197)}
+.preview-taskbar[data-scheme=olive]{background:linear-gradient(#d7edab,#6d883f 60%,#4a622d)}
+.preview-taskbar[data-scheme=classic]{background:#d4d0c8;box-shadow:inset 0 1px #fff}
+.preview-window{position:absolute;left:9%;top:16%;width:76%;z-index:1;background:#ece9d8;color:#111;border:2px solid #0055ea;border-top:0;border-radius:4px 4px 0 0;font:9px Tahoma,sans-serif;overflow:hidden}
+.preview-window .preview-title{height:13px;display:flex;align-items:center;padding:0 4px;color:#fff;font-weight:bold;background:linear-gradient(#4a96ff 0,#0865ee 9%,#0058e8 35%,#0052d7 78%,#0043b7 100%)}
+.preview-window .preview-content{padding:6px 5px;display:flex;align-items:center;justify-content:space-between;gap:5px}
+.preview-window .preview-button{border:1px solid #7ea0c8;border-radius:2px;background:linear-gradient(#fff,#eae7d8 90%,#d6d1ba);padding:1px 6px}
+.preview-window[data-scheme=olive]{border-color:#6d7d3e}
+.preview-window[data-scheme=olive] .preview-title{background:linear-gradient(#d4eaa8,#91a962 12%,#718b45 85%,#5b7036)}
+.preview-window[data-scheme=silver]{border-color:#7c7c94}
+.preview-window[data-scheme=silver] .preview-title{background:linear-gradient(#fff,#c1c4d3 15%,#a4a8ba 80%,#c4c7d4);color:#111}
+.preview-window[data-scheme=classic]{border:2px outset #d4d0c8;border-top-width:2px;border-radius:0;background:#d4d0c8}
+.preview-window[data-scheme=classic] .preview-title{background:linear-gradient(90deg,#0a246a,#a6caf0);margin:2px 2px 0}
+.preview-window[data-scheme=classic] .preview-button{border:1px outset #d4d0c8;border-radius:0;background:#d4d0c8}
+
+/* Windows klasszikus: a Windows 2000 szürke felülete. */
+body[data-theme=classic] .window{border:2px outset #d4d0c8;border-top-width:2px;border-radius:0;background:#d4d0c8}
+body[data-theme=classic] .title-bar{height:20px;border-radius:0;box-shadow:none;margin:2px 2px 0;padding:2px 2px 2px 4px;background:linear-gradient(90deg,#0a246a,#a6caf0)}
+body[data-theme=classic] .window-title{text-shadow:none;font:bold 11px Tahoma,sans-serif}
+body[data-theme=classic] .window.inactive .title-bar{background:linear-gradient(90deg,#808080,#c0c0c0)}
+body[data-theme=classic] .window.inactive{border-color:#d4d0c8}
+body[data-theme=classic] .window-control{width:16px;height:14px;border:1px outset #d4d0c8;border-radius:0;background:#d4d0c8;color:#000;font:bold 10px Arial;box-shadow:none;text-shadow:none}
+body[data-theme=classic] .window-control:hover{filter:none;background:#dedad2}
+body[data-theme=classic] .menu-bar{background:#d4d0c8}
+body[data-theme=classic] .window-content{background:#d4d0c8}
+body[data-theme=classic] #taskbar{background:#d4d0c8;box-shadow:inset 0 1px #fff;color:#000}
+body[data-theme=classic] #start-button{background:#d4d0c8;border:1px outset #d4d0c8;height:24px;align-self:center;margin-left:2px;border-radius:0}
+body[data-theme=classic] #start-button>*{visibility:visible}
+body[data-theme=classic] #start-button span{font:bold 12px Tahoma,sans-serif;color:#000;text-shadow:none}
+body[data-theme=classic] #start-button img{width:18px;height:18px}
+body[data-theme=classic] .task-button{background:#d4d0c8;color:#000;border:1px outset #d4d0c8;border-radius:0;box-shadow:none}
+body[data-theme=classic] .task-button.active{border-style:inset;background:#c8c4bc}
+body[data-theme=classic] .tray{background:#d4d0c8;color:#000;border-left:1px solid #808080;box-shadow:inset 1px 0 #fff}
+body[data-theme=classic] .tray .tray-toggle{background:#d4d0c8;box-shadow:inset 1px 1px 1px #808080,inset -1px -1px 1px #fff}
+body[data-theme=classic] .tray .tray-toggle:before{border-color:#000}
+body[data-theme=classic] .quick-launch button:hover{background:#00000014;outline-color:#808080}
+body[data-theme=classic] #start-menu{border-radius:0;border:2px outset #d4d0c8}
+body[data-theme=classic] .start-header{background:linear-gradient(90deg,#0a246a,#3a6ea5);border-radius:0;border-bottom:2px solid #808080;text-shadow:none}
+body[data-theme=classic] .start-avatar{border-radius:0;box-shadow:none}
+body[data-theme=classic] .start-columns{background:#d4d0c8}
+body[data-theme=classic] .start-right{background:#d4d0c8;border-left:1px solid #808080;color:#000;box-shadow:inset 1px 0 #fff}
+body[data-theme=classic] .start-item:hover{background:#0a246a}
+body[data-theme=classic] .start-footer{background:#d4d0c8;color:#000}
+body[data-theme=classic] .start-footer button{color:#000}
+body[data-theme=classic] .start-footer button:hover{background:#0a246a;color:#fff}
 @media(min-width:1600px){.google-home{padding-top:64px}.google-footer{margin-top:45px}}
 @media(max-width:700px){.quick-launch{display:none}#start-button{width:106px;min-width:106px}#start-menu{width:min(390px,100vw)}.tray{padding:0 4px}.tray>button[data-open],.tray>button[data-tray],.tray .tray-toggle,.tray-hidden{display:none}.window{min-width:260px}.toolbar{gap:0;padding:2px}.toolbar button{padding:4px}.toolbar .toolbar-label{display:none}.advanced-links{display:none}.google-home{padding:35px 14px 20px}.google-form{width:95%}.google-logo{width:220px;height:88px}.google-footer{margin-top:30px}.google-nav{gap:10px}.google-nav .right{display:none}.explorer-sidebar{width:145px;padding:8px}.window .explorer-files{padding:9px}.welcome-login{gap:20px;flex-direction:column}.welcome-login .windows-brand{border:0;padding:0}.help-cards{grid-template-columns:1fr}.player-sidebar{width:100px}.solitaire-body{padding:10px}.card-slot,.playing-card,.card-column{width:45px}.card-top,.solitaire-columns{gap:6px}.playing-card{font-size:14px}.playing-card .big-suit{font-size:22px;right:5px}.google-search-line input{font-size:15px}.search-header{padding:12px;gap:10px}.search-header img{width:85px}.search-header form{flex-wrap:wrap}.boot-bottom{left:20px;right:20px}.windows-brand>img{width:70px;height:70px}.windows-brand strong{font-size:39px}.windows-brand strong span{font-size:25px}.windows-brand p{font-size:16px}}
