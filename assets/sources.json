@@ -362,7 +362,8 @@
   {
     "file": "icons/start.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/start.png",
-    "bytes": 6605
+    "bytes": 6455,
+    "note": "Right cap re-drawn with sub-pixel coverage; the download had no antialiasing there."
   },
   {
     "file": "icons/stop.png",
