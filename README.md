@@ -4,9 +4,9 @@
 
 Függőségek nélküli, magyar nyelvű Windows XP-élmény HTML, CSS és JavaScript használatával.
 
-## Indítás
+**[Live demo – próbáld ki a böngészőben](https://szabolevi98.github.io/windows-xp/)**
 
-XAMPP Apache mellett: **http://localhost/windows-xp/**
+## Indítás
 
 Az `index.html` közvetlen megnyitása is működik. A mentések az adott böngészőhöz és címhez tartoznak; következetesen ugyanazon a címen használd. Nincs build, npm-telepítés vagy CDN.
 
