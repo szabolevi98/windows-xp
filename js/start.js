@@ -65,7 +65,7 @@ $('#volume-button').onclick=()=>XP.open('volume');$('#clock').onclick=()=>XP.ope
 const trayToggle=$('#tray-toggle'),trayHidden=$('#tray-hidden');
 trayToggle.onclick=e=>{e.stopPropagation();const show=trayHidden.hidden;trayHidden.hidden=!show;trayToggle.title=trayToggle.ariaLabel=show?'Rejtett ikonok elrejtése':'Rejtett ikonok megjelenítése';trayToggle.setAttribute('aria-expanded',String(show));};
 const trayNotices={
- mail:['Outlook Express','Nincs új üzenet.\n\nA szimulátor nem kapcsolódik levelezőkiszolgálóhoz.']
+ mail:['Outlook Express','Nincs új üzenet.\n\nUtolsó ellenőrzés: ma. A következő automatikus ellenőrzés 30 perc múlva.']
 };
 $$('[data-tray]').forEach(button=>button.onclick=()=>{const notice=trayNotices[button.dataset.tray];if(notice)XP.dialog(notice[0],notice[1]);else XP.open(button.dataset.tray);});
 function updateClock(){const now=new Date();$('#clock').textContent=now.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});$('#clock').title=now.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
