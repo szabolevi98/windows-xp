@@ -4,7 +4,7 @@
 
 Függőségek nélküli, magyar nyelvű Windows XP-élmény HTML, CSS és JavaScript használatával.
 
-**[Live demo – próbáld ki a böngészőben](https://szabolevi98.github.io/windows-xp/)**
+**[Live demo – próbáld ki a böngészőben](https://windows-xp.levente.net/)**
 
 ## Indítás
 
