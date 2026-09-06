@@ -10,7 +10,7 @@ window.XP = (() => {
     {id:'welcome',name:'Üdv a Windows XP-ben.txt',type:'text',parent:'documents',content:'Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n',modified:Date.now()},
     {id:'todo',name:'Teendők.txt',type:'text',parent:'documents',content:'Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n',modified:Date.now()},
     {id:'folder-personal',name:'Személyes',type:'folder',parent:'documents',modified:Date.now()}
-  ],favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
+  ],security:{firewall:true,updates:true},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
   let state;
   try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
   let storageWarned=false;

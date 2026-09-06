@@ -25,5 +25,37 @@
 body[data-theme=silver] .window{border-color:#7c7c94}body[data-theme=silver] .title-bar{background:linear-gradient(#fff,#c1c4d3 15%,#a4a8ba 80%,#c4c7d4);color:#111}body[data-theme=silver] .window-title{text-shadow:1px 1px white}body[data-theme=silver] #taskbar{background:linear-gradient(#fff,#c3c5d3 15%,#aaaec0 85%,#7d8197)}body[data-theme=silver] .task-button{background:linear-gradient(#e3e5ed,#adb2c5);color:#222;border-color:#8e95aa}body[data-theme=silver] .task-button.active{background:#8b93ab}body[data-theme=olive] .window{border-color:#6d7d3e}body[data-theme=olive] .title-bar{background:linear-gradient(#d4eaa8,#91a962 12%,#718b45 85%,#5b7036)}body[data-theme=olive] .window-title{text-shadow:1px 1px #455629}body[data-theme=olive] #taskbar{background:linear-gradient(#d7edab,#8da762 12%,#6d883f 85%,#4a622d)}body[data-theme=olive] .task-button{background:linear-gradient(#afc588,#8ca565);border-color:#5a7435}body[data-theme=olive] .task-button.active{background:#587735}
 .desktop-icon .icon-label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;max-height:30px;margin:0 -3px;padding:1px 0;overflow:hidden;overflow-wrap:anywhere}.desktop-icon.dragging{z-index:10;opacity:.8}#start-button{height:30px;align-self:flex-start;flex-shrink:0;margin:0;padding:0;border:0;border-radius:0;background:url('assets/icons/start.png') 0 -2px/106px 34px no-repeat;box-shadow:none}#start-button>*{visibility:hidden}.google-home{padding-top:40px}.google-footer{margin-top:32px}.google-logo{margin-bottom:18px}.google-local{display:none}.settings-body{flex-shrink:1}.power-dialog .window-content{justify-content:space-between}
 .paint-tool,.paint-tool.active{font-size:0;background-image:url('assets/icons/paint-tools.png');background-repeat:no-repeat;background-position-y:5px}.paint-tool[data-tool=pencil]{background-position-x:-91px}.paint-tool[data-tool=brush]{background-position-x:-107px}.paint-tool[data-tool=eraser]{background-position-x:-27px}.paint-tool[data-tool=fill]{background-position-x:-43px}.paint-tool[data-tool=line]{background-position-x:-155px}.paint-tool[data-tool=rect]{background-position-x:-187px}.paint-tool[data-tool=ellipse]{background-position-x:-219px}.paint-tool[data-tool=text]{background-position-x:-139px}.paint-tool[data-tool=picker]{background-position-x:-59px}
+.security-body{flex:1;display:flex;flex-direction:column;overflow:auto;background:#fff}
+.security-head{display:flex;align-items:center;gap:14px;padding:14px 18px;background:linear-gradient(#3f7fd6,#1c4f9c);color:#fff;flex-shrink:0}
+.security-head img{width:38px;height:38px}
+.security-head h1{font-size:17px;margin:0}
+.security-head p{margin:2px 0 0;font-size:11px;opacity:.9}
+.security-main{display:flex;flex:1;align-items:stretch}
+.security-side{width:190px;flex-shrink:0;background:#eef3fb;border-right:1px solid #c4d3ea;padding:12px 10px}
+.security-side h2{font-size:12px;color:#1c4f9c;margin:0 0 8px}
+.security-side ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.security-side button{background:none;border:0;padding:0;text-align:left;color:#1a4f9e;text-decoration:underline;font:11px Tahoma,sans-serif;cursor:pointer;line-height:1.45}
+.security-side button:hover{color:#c33}
+.security-panels{flex:1;min-width:0;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.security-panels h2{font-size:13px;margin:4px 0 0}
+.security-note{border:1px solid #c4d3ea;background:#f3f7fd;border-radius:3px;padding:9px 11px;font-size:11px;line-height:1.5}
+.security-note.warn{border-color:#e3b96b;background:#fdf6e6}
+.security-item{border:1px solid #b7c8e2;border-radius:3px;overflow:hidden}
+.security-row{width:100%;display:flex;align-items:center;gap:10px;padding:7px 10px;background:linear-gradient(#f6f9ff,#dfe8f7);border:0;font:bold 12px Tahoma,sans-serif;color:#123;cursor:pointer;text-align:left}
+.security-row:hover{background:linear-gradient(#fff,#e8effb)}
+.security-name{flex:1}
+.security-state{font:bold 11px Tahoma,sans-serif;padding:1px 8px;border-radius:2px;color:#fff}
+.security-state.on{background:#3f8f34}
+.security-state.off{background:#b52d21}
+.security-state.missing{background:#b52d21}
+.security-chevron{width:6px;height:6px;flex-shrink:0;border-right:2px solid #33507d;border-bottom:2px solid #33507d;transform:rotate(45deg);margin:-3px 3px 0}
+.security-row[aria-expanded=true] .security-chevron{transform:rotate(-135deg);margin:3px 3px 0}
+.security-detail{padding:10px 12px;border-top:1px solid #cddaee;font-size:11px;line-height:1.6;background:#fff}
+.security-detail p{margin:0 0 9px}
+.security-manage{margin-top:auto;padding-top:12px;border-top:1px solid #d7e0ef;font-size:11px}
+.security-manage>div{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap}
+.security-manage button{display:flex;align-items:center;gap:6px;background:none;border:0;padding:2px;color:#1a4f9e;font:11px Tahoma,sans-serif;cursor:pointer}
+.security-manage button:hover span{text-decoration:underline}
+.security-manage img{width:22px;height:22px}
 @media(min-width:1600px){.google-home{padding-top:64px}.google-footer{margin-top:45px}}
 @media(max-width:700px){.quick-launch{display:none}#start-button{width:106px;min-width:106px}#start-menu{width:min(390px,100vw)}.tray{padding:0 4px}.tray>button[data-open],.tray>button[data-tray],.tray .tray-toggle,.tray-hidden{display:none}.window{min-width:260px}.toolbar{gap:0;padding:2px}.toolbar button{padding:4px}.toolbar .toolbar-label{display:none}.advanced-links{display:none}.google-home{padding:35px 14px 20px}.google-form{width:95%}.google-logo{width:220px;height:88px}.google-footer{margin-top:30px}.google-nav{gap:10px}.google-nav .right{display:none}.explorer-sidebar{width:145px;padding:8px}.window .explorer-files{padding:9px}.welcome-login{gap:20px;flex-direction:column}.welcome-login .windows-brand{border:0;padding:0}.help-cards{grid-template-columns:1fr}.player-sidebar{width:100px}.solitaire-body{padding:10px}.card-slot,.playing-card,.card-column{width:45px}.card-top,.solitaire-columns{gap:6px}.playing-card{font-size:14px}.playing-card .big-suit{font-size:22px;right:5px}.google-search-line input{font-size:15px}.search-header{padding:12px;gap:10px}.search-header img{width:85px}.search-header form{flex-wrap:wrap}.boot-bottom{left:20px;right:20px}.windows-brand>img{width:70px;height:70px}.windows-brand strong{font-size:39px}.windows-brand strong span{font-size:25px}.windows-brand p{font-size:16px}}
