@@ -181,3 +181,14 @@ test('A dialog is as tall as its message, so nothing hides behind the title bar'
  assert.equal(dialog(2000).height,'676px');
  assert.equal(dialog(2000).top,'0px');
 });
+
+test('The local games site can start every game the desktop has',()=>{
+ const {xp}=boot();
+ const page=xp.searchWeb('játékok')[0];
+ assert.equal(page.url,'www.jatekbarlang.hu');
+ const games=xp.state.files.filter(f=>f.type==='shortcut').map(f=>f.app).sort();
+ assert.deepEqual(Array.from(games),['freecell','hearts','mines','pinball','solitaire','spider']);
+ for(const app of games)assert.ok(page.body.includes(`data-app="${app}"`),`${app} has a launch button on the page`);
+ // Every one of them is also findable by name.
+ for(const term of ['freecell','pinball','hearts','pókpasziánsz'])assert.equal(xp.searchWeb(term)[0]?.id,'games',`${term} leads to the games site`);
+});
