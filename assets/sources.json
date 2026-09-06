@@ -65,6 +65,16 @@
     "bytes": 1249
   },
   {
+    "file": "icons/freecell.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/Freecell.png",
+    "bytes": 216990
+  },
+  {
+    "file": "icons/hearts.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/Hearts.png",
+    "bytes": 208555
+  },
+  {
     "file": "icons/help.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/747(32x32).png",
     "bytes": 2596
@@ -178,6 +188,11 @@
     "file": "icons/solitaire.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/solitaire.png",
     "bytes": 1421
+  },
+  {
+    "file": "icons/spider.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/SpiderSolitaire.png",
+    "bytes": 268714
   },
   {
     "file": "icons/start.png",

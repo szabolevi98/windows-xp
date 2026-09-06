@@ -1,0 +1,53 @@
+/* Buttons centre their content, which hides the rank of every card but the last one in a cascade. */
+.playing-card{display:flex;flex-direction:row;align-items:baseline;justify-content:flex-start;gap:1px;text-align:left;line-height:1}
+.playing-card .suit{display:inline-block;font-size:15px;line-height:1;margin:0}
+.playing-card.dimmed{opacity:.5}
+.playing-card[disabled]{cursor:default}
+
+.freecell-body .card-top{margin-bottom:22px}
+.freecell-body .card-slot[data-cell]{background:#00713b;border-style:dashed}
+
+.spider-body{padding:10px 12px}
+.spider-body .card-slot,.spider-body .playing-card{width:52px;height:72px;font-size:13px}
+.spider-body .playing-card{padding:2px 4px}
+.spider-body .playing-card .suit{font-size:12px}
+.spider-body .playing-card .big-suit{font-size:20px;right:5px;bottom:5px}
+.spider-body .solitaire-columns{gap:7px}
+.spider-body .card-column{width:52px;min-height:230px}
+.spider-body .card-column .playing-card{top:calc(var(--card-y)*1px)}
+.spider-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;min-height:74px}
+.spider-done{display:flex;gap:4px;flex-wrap:wrap}
+.spider-done .done-pile{width:34px;height:48px;border-radius:3px;border:1px solid #004d29;background:repeating-linear-gradient(45deg,#386bb6 0 2px,#255297 2px 4px);box-shadow:1px 1px 2px #0004}
+.spider-stock{display:flex;align-items:center;gap:6px;color:#d2ebde;font-size:11px}
+.spider-hint{color:#a8cdb9;font-size:10px}
+
+.hearts-body{display:flex;flex-direction:column;gap:6px;padding:10px 12px;overflow:auto}
+.hearts-top{display:flex;justify-content:center}
+.hearts-middle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1;min-height:150px}
+.hearts-seat{color:#e8f5ee;font-size:11px;text-align:center;padding:4px 7px;border-radius:4px;min-width:96px}
+.hearts-seat.active{background:#0000002e;outline:1px solid #ffe57a}
+.hearts-seat b{display:block;font-size:12px}
+.hearts-seat span{opacity:.85}
+.hearts-backs{display:flex;height:22px;margin-top:4px;justify-content:center}
+.hearts-backs i{width:6px;height:22px;border-radius:2px;border:1px solid #123e57;background:repeating-linear-gradient(45deg,#386bb6 0 2px,#255297 2px 4px);margin-left:-1px}
+.hearts-centre{flex:1;text-align:center;color:#e8f5ee;font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px}
+.hearts-centre p{margin:0}
+.hearts-table{flex:1;position:relative;min-height:200px;align-self:stretch}
+.hearts-play{position:absolute;left:50%;top:50%}
+.hearts-play .playing-card{cursor:default}
+.play-south{transform:translate(-50%,30px)}
+.play-north{transform:translate(-50%,-100%) translateY(-30px)}
+.play-west{transform:translate(-100%,-50%) translateX(-34px)}
+.play-east{transform:translate(34px,-50%)}
+.hearts-hand{position:relative;height:92px;flex-shrink:0}
+.hearts-hand .playing-card{position:absolute;left:calc(var(--card-i)*42px);top:0}
+.hearts-hand .playing-card:hover{top:-6px}
+
+@media(max-width:700px){
+ .spider-body .card-slot,.spider-body .playing-card,.spider-body .card-column{width:40px;height:58px;font-size:11px}
+ .spider-body .playing-card .suit{font-size:12px;line-height:12px}
+ .spider-body .playing-card .big-suit{display:none}
+ .spider-body .solitaire-columns{gap:4px}
+ .hearts-hand .playing-card{left:calc(var(--card-i)*28px)}
+ .hearts-seat{min-width:70px;font-size:10px}
+}

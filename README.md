@@ -14,7 +14,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 
 - XP betöltés, üdvözlés, kijelentkezés, készenlét, kikapcsolás, újraindítás.
 - Rácsra igazodó asztali ikonok, ütközéskor helycsere. A Lomtár alapból jobb alul jelenik meg, szabadon áthelyezhető, és megjegyzi a helyét.
-- Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz és a 3D Pinball – Space Cadet parancsikonja.
+- Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
 - Mozgatható ablakok, átméretezés, teljes méret, kis méret, tálca, Start menü, helyi menük.
 - Internet Explorer: régi Google, kulcsszavas helyi keresés, 13 beépített oldal, címsor, előzmények, kedvencek. Az ismeretlen címek helyi hibaoldalt kapnak.
 - Jegyzettömb: piszkozat, dokumentummentés, automatikus mentés, keresés, sortörés, szövegfájl letöltése.
@@ -24,6 +24,9 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 - Számológép: alapműveletek, százalék, gyök, reciprok, memória, billentyűzet.
 - Aknakereső: két nehézség, biztonságos első lépés, zászló, számláló, időmérő, eredmények.
 - Klondike Pasziánsz: szabályos lépések, lapcsoportok, gyűjtőhelyek, újraosztás, visszavonás, automatikus gyűjtés.
+- FreeCell: az eredeti, számozott leosztások (a 617-es játék itt is a 617-es), négy szabad hely, több lap együttes mozgatása, automatikus gyűjtés, visszavonás és nyerési statisztika.
+- Pókpasziánsz: egy, két vagy négy színnel, tíz oszlop, osztás a pakliból, kész sorok levétele és az eredeti 500 pontról induló pontozás.
+- Hearts: három gépi ellenfél, lapátadás balra/jobbra/szemközt, treff 2 kezd, pikk dáma 13 pont, „lövés a Holdra”, 100 pontig tartó játszma.
 - 3D Pinball – Space Cadet: az eredeti asztal helyben futó WebAssembly-portja. Karok, kilövés, asztallökés billentyűzetről vagy érintőgombokkal, XP-menü, szünet, hangerő a rendszerbeállításból, helyben mentett rekordok.
 - Windows Media Player: eredeti rendszerhangok, saját helyi hangfájlok, lejátszás, szünet, keresés a hangban, hangerő.
 - Vezérlőpult: négy eredeti háttérkép, három színséma, felhasználónév, rendszerhangok, hangerő, rendszerinformáció, naptár.
@@ -33,7 +36,7 @@ Az asztalon dupla kattintás nyitja meg az ikonokat. Érintőképernyőn egy kop
 
 ## Mentés és helyi működés
 
-A `windows-xp-simulator-v1` localStorage-kulcs tartalmazza a dokumentumokat, mappákat, képeket, piszkozatokat, beállításokat, kedvenceket, ikonpozíciókat, valamint az Aknakereső- és Space Cadet-rekordokat. A megnyitott ablakok és a folyamatban lévő játékok nem mentődnek.
+A `windows-xp-simulator-v1` localStorage-kulcs tartalmazza a dokumentumokat, mappákat, képeket, piszkozatokat, beállításokat, kedvenceket, ikonpozíciókat, valamint az Aknakereső-, FreeCell- és Space Cadet-eredményeket. A megnyitott ablakok és a folyamatban lévő játékok nem mentődnek.
 
 Ha a helyi tárhely nem elérhető vagy megtelt, a program figyelmeztet. A böngészőadatok törlése a mentéseket is törli. A fontos dokumentumok és képek a saját gépre is letölthetők. A Media Playerben megnyitott saját hangok csak az aktuális munkamenetben érhetők el.
 
@@ -49,6 +52,7 @@ Minden futtatáshoz szükséges fájl az `assets` mappában van. A CSP tiltja a 
 - `js/explorer.js`: fájlkezelő, csak olvasható rendszermappák, C: és D: meghajtó.
 - `js/utilities.js`: beállítások, Media Player és további eszközök.
 - `js/games.js`: Aknakereső és Pasziánsz.
+- `js/cardgames.js` és `cardgames.css`: FreeCell, Pókpasziánsz és Hearts. A szabályok DOM nélküli függvényekben vannak, ezért teljes leosztások tesztelhetők.
 - `js/pinball.js` és `pinball.css`: a Space Cadet ablaka, menüje és vezérlői.
 - `assets/pinball/`: a játék helyi WebAssembly-csomagja és beágyazó oldala.
 - `js/desktop-grid.js`: ikonrács, foglalt helyek kezelése és átrendezés.
@@ -64,6 +68,7 @@ Eredeti XP-s képi és hangelemeket töltöttünk le; nincs generált helyettes�
 - [JS Paint](https://github.com/1j01/jspaint): eredeti megjelenésű klasszikus Paint-eszközikonok.
 - [Pranx Bliss háttérkép](https://pranx.com/images/background.jpg): 1920×1200-as helyi háttérkép (`bliss-hd.jpg`).
 - [Azul](https://i.imgur.com/tLLKmd8.jpg) és [Autumn](https://4kwallpapers.com/nature/windows-xp-autumn-17201.html): kész, 1920×1200-as változatok helyi másolatai (`azul-1920.jpg`, `autumn-1920.jpg`), helyi átméretezés nélkül. A Bliss is 1920×1200-as. A kék, logós Windows XP háttér egyelőre az eredeti 800×600-as fájl.
+- [XPIcons – Software History Society](https://github.com/softwarehistorysociety/XPIcons): a FreeCell, a Pókpasziánsz és a Hearts eredeti programikonja nagy felbontásban (Unlicense).
 - [3DPinballSpaceCadet – lrusso](https://github.com/lrusso/3DPinballSpaceCadet): a Space Cadet böngészős WebAssembly-csomagja, [alula](https://github.com/alula/SpaceCadetPinball) és [k4zmu2a](https://github.com/k4zmu2a/SpaceCadetPinball) MIT licencű motorjából; innen származik a játék ikonja is. Részletek: `assets/pinball/NOTICE.md`.
 - Vizuális referencia: [Pranx Windows XP Simulator](https://pranx.com/windows-xp-simulator/).
 
@@ -79,8 +84,10 @@ Nyolc regressziós ellenőrzés: ékezetes fájlok mentése és visszatöltése,
 
 Az indítási ellenőrzések vizsgálják az 5,5 másodperces betöltést, a 2 másodperces üdvözlést és a bejelentkezésenként egyszer megszólaló hangot. A hang előre betöltődik. Ha a böngésző oldalfrissítés után tiltja az automatikus lejátszást, az üdvözlőképernyőn megjelenő Bejelentkezés gomb indítja el a hangot és az asztalt együtt. Egy későbbi asztali kattintás nem játssza le újra a hangot.
 
-Nyolc további ellenőrzés fedi le az ikonok alaphelyét, a rácsra igazítást, az ütközéskori helycserét, a Lomtár mozgatását és helyének mentését, az átméretezést, a sok ikont, a korábbi mentések frissítését és a játékparancsikonok indítását. A hangkezelés tesztjei kitérnek az automatikus lejátszás tiltására, a némításra, a ki-be jelentkezésre, az újraindításra és a sikertelen médiafájlra is. Összesen 32 automatikus teszt fut.
+Nyolc további ellenőrzés fedi le az ikonok alaphelyét, a rácsra igazítást, az ütközéskori helycserét, a Lomtár mozgatását és helyének mentését, az átméretezést, a sok ikont, a korábbi mentések frissítését és a játékparancsikonok indítását. A hangkezelés tesztjei kitérnek az automatikus lejátszás tiltására, a némításra, a ki-be jelentkezésre, az újraindításra és a sikertelen médiafájlra is. Összesen 42 automatikus teszt fut.
+
+A kártyajátékok kilenc ellenőrzése lapról lapra összeveti a FreeCell leosztásait az eredeti Microsoft-számozással, méri a több lap mozgatásának korlátját és az automatikus gyűjtés biztonsági szabályát, ellenőrzi a pókpasziánsz 104 lapos csomagját és a kész sorok felismerését, a Hearts nyitását, színkövetését, ütés- és pontszámítását, a „lövés a Holdra” elszámolását, valamint harminc teljes leosztást játszik végig azt vizsgálva, hogy a gépi ellenfelek mindig szabályos lapot tesznek le és megvan mind a 26 pont.
 
 A Space Cadet öt ellenőrzése az indítás forrásellenőrzését és a beállítások visszatöltését, a szüneteltetéskor felengedett gombokat és a némítást, a fókuszvesztéskor elengedett kilövőt, a bezáráskori mentést és az egyszeri hangleállítást, valamint a helyi erőforrásokat és a CSP-t vizsgálja.
 
-A böngészőben külön ellenőrzött folyamatok: betöltés, üdvözlés, Start menü, keresés és helyi hibaoldal, dokumentummentés újratöltéssel, Lomtár-visszaállítás, számolás, Paint-rajzolás és mentés, Aknakereső első lépése és zászlózás, valamint a Space Cadet betöltése, kilövés, szünet, bezárás és újranyitás.
+A böngészőben külön ellenőrzött folyamatok: betöltés, üdvözlés, Start menü, keresés és helyi hibaoldal, dokumentummentés újratöltéssel, Lomtár-visszaállítás, számolás, Paint-rajzolás és mentés, Aknakereső első lépése és zászlózás, valamint a Space Cadet betöltése, kilövés, szünet, bezárás és újranyitás, továbbá a FreeCell lapmozgatása szabad helyre, a pókpasziánsz osztása és sorépítése, illetve egy teljes Hearts-kör lapátadástól a kör végi pontozásig.

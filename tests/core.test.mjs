@@ -33,23 +33,38 @@ test('Existing desktops gain the games folder once while retaining documents, se
  const {xp,storage}=boot(saved);assert.equal(xp.state.user,'Teszt');assert.equal(xp.state.volume,24);assert.equal(xp.state.files.find(f=>f.id==='personal').content,'megmarad');
  assert.equal(xp.state.iconPositions.computer,undefined);assert.equal(xp.state.iconPositions.personal.x,150);
  const folder=xp.state.files.find(f=>f.parent==='desktop'&&f.name==='Játékok');assert.ok(folder);
- const children=xp.state.files.filter(f=>f.parent===folder.id);assert.equal(children.length,3);
- assert.deepEqual(Array.from(children,f=>f.app).sort(),['mines','pinball','solitaire']);assert.ok(children.every(f=>f.type==='shortcut'));
+ const children=xp.state.files.filter(f=>f.parent===folder.id);assert.equal(children.length,6);
+ assert.deepEqual(Array.from(children,f=>f.app).sort(),['freecell','hearts','mines','pinball','solitaire','spider']);assert.ok(children.every(f=>f.type==='shortcut'));
  xp.deleteFile(folder.id);
  const next=boot(JSON.parse(storage.get('windows-xp-simulator-v1'))).xp;
  assert.equal(next.state.files.filter(f=>f.id===folder.id).length,1);assert.ok(next.state.files.find(f=>f.id===folder.id).deleted);
- assert.equal(next.state.files.filter(f=>f.type==='shortcut').length,3);
+ assert.equal(next.state.files.filter(f=>f.type==='shortcut').length,6);
 });
 
 test('Game shortcuts launch the corresponding application and have the original game icons',()=>{
- const {xp,context}=boot();let mines=0,solitaire=0,pinball=0;
+ const {xp,context}=boot();const opened={};
+ const games=['mines','solitaire','pinball','freecell','spider','hearts'];
  context.document.querySelector=()=>({hidden:false,classList:{remove(){}},setAttribute(){}});
- xp.register('mines',()=>mines++);xp.register('solitaire',()=>solitaire++);xp.register('pinball',()=>pinball++);
- for(const app of ['mines','solitaire','pinball']){
+ games.forEach(app=>xp.register(app,()=>opened[app]=(opened[app]||0)+1));
+ for(const app of games){
   const shortcut=xp.state.files.find(f=>f.type==='shortcut'&&f.app===app);
   assert.equal(xp.fileIcon(shortcut),app);xp.openFile(shortcut.id);
  }
- assert.equal(mines,1);assert.equal(solitaire,1);assert.equal(pinball,1);assert.equal(xp.iconPath("pinball"),"assets/icons/pinball.ico");
+ assert.deepEqual(opened,Object.fromEntries(games.map(app=>[app,1])));
+ assert.equal(xp.iconPath("pinball"),"assets/icons/pinball.ico");
+});
+
+test('The card games join an existing games folder once, wherever the user moved it',()=>{
+ const {xp}=boot();const saved=JSON.parse(JSON.stringify(xp.state));
+ delete saved.cardGamesAdded;saved.files=saved.files.filter(f=>!['freecell','spider','hearts'].includes(f.app));
+ const folder=saved.files.find(f=>f.id==='folder-games');folder.name='Kártyák';folder.parent='documents';
+ const migrated=boot(saved).xp;
+ for(const app of ['freecell','spider','hearts']){
+  const added=migrated.state.files.filter(f=>f.app===app);
+  assert.equal(added.length,1);assert.equal(added[0].parent,folder.id);
+ }
+ const again=boot(JSON.parse(JSON.stringify(migrated.state))).xp;
+ assert.equal(again.state.files.filter(f=>f.app==='hearts').length,1);
 });
 
 test('Pinball is added once to a renamed and moved existing games folder',()=>{
