@@ -180,6 +180,16 @@
     "bytes": 1589
   },
   {
+    "file": "icons/security.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/SecurityCenter.png",
+    "bytes": 241871
+  },
+  {
+    "file": "icons/showdesktop.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/Desktop.png",
+    "bytes": 282627
+  },
+  {
     "file": "icons/shutdown.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/310(32x32).png",
     "bytes": 2130
