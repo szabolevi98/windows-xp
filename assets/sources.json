@@ -5,6 +5,11 @@
     "bytes": 8558
   },
   {
+    "file": "icons/accessibility.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/Accessibility.png",
+    "bytes": 125078
+  },
+  {
     "file": "icons/back.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/back.png",
     "bytes": 1202
@@ -33,6 +38,11 @@
     "file": "icons/control.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/300(32x32).png",
     "bytes": 2360
+  },
+  {
+    "file": "icons/datetime.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/DateandTime.png",
+    "bytes": 391514
   },
   {
     "file": "icons/disk.png",
@@ -158,6 +168,16 @@
     "file": "icons/player.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/846(32x32).png",
     "bytes": 2813
+  },
+  {
+    "file": "icons/printers.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/PrintersandHardware.png",
+    "bytes": 394817
+  },
+  {
+    "file": "icons/programs.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/ChangeorRemovePrograms.png",
+    "bytes": 500242
   },
   {
     "file": "icons/recycle.ico",
