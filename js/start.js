@@ -66,7 +66,6 @@ const trayToggle=$('#tray-toggle'),trayHidden=$('#tray-hidden');
 trayToggle.onclick=e=>{e.stopPropagation();const show=trayHidden.hidden;trayHidden.hidden=!show;trayToggle.textContent=show?'»':'«';trayToggle.title=show?'Rejtett ikonok elrejtése':'Rejtett ikonok megjelenítése';trayToggle.setAttribute('aria-expanded',String(show));};
 const trayNotices={
  security:['Biztonsági központ','Tűzfal: BEKAPCSOLVA\nAutomatikus frissítések: BEKAPCSOLVA\nVírusvédelem: NEM TALÁLHATÓ\n\nEz a gép nem csatlakozik valódi hálózathoz, így nincs mitől védeni.'],
- messenger:['Windows Messenger','Nem vagy bejelentkezve.\n\nA szimulátor nem kapcsolódik hálózatra, ezért a bejelentkezés nem érhető el.'],
  mail:['Outlook Express','Nincs új üzenet.\n\nA szimulátor nem kapcsolódik levelezőkiszolgálóhoz.']
 };
 $$('[data-tray]').forEach(button=>button.onclick=()=>{const notice=trayNotices[button.dataset.tray];if(notice)XP.dialog(notice[0],notice[1]);});

@@ -151,7 +151,7 @@ test('The taskbar has the tray flyout and every window edge can be grabbed',()=>
  const html=readFileSync(new URL('index.html',root),'utf8');
  assert.match(html,/id="tray-toggle"/);
  assert.match(html,/id="tray-hidden" class="tray-hidden" hidden/);
- assert.equal((html.match(/data-tray="/g)||[]).length,3);
+ assert.equal((html.match(/data-tray="/g)||[]).length,2);
  assert.match(html,/id="show-desktop"[^>]*>\s*<img src="assets\/icons\/showdesktop\.png"/);
  // The dotted handle only belongs on an unlocked taskbar, and XP locks it by default.
  assert.doesNotMatch(html,/class="grip"/);
