@@ -33,23 +33,45 @@ test('Existing desktops gain the games folder once while retaining documents, se
  const {xp,storage}=boot(saved);assert.equal(xp.state.user,'Teszt');assert.equal(xp.state.volume,24);assert.equal(xp.state.files.find(f=>f.id==='personal').content,'megmarad');
  assert.equal(xp.state.iconPositions.computer,undefined);assert.equal(xp.state.iconPositions.personal.x,150);
  const folder=xp.state.files.find(f=>f.parent==='desktop'&&f.name==='Játékok');assert.ok(folder);
- const children=xp.state.files.filter(f=>f.parent===folder.id);assert.equal(children.length,2);
- assert.deepEqual(Array.from(children,f=>f.app).sort(),['mines','solitaire']);assert.ok(children.every(f=>f.type==='shortcut'));
+ const children=xp.state.files.filter(f=>f.parent===folder.id);assert.equal(children.length,3);
+ assert.deepEqual(Array.from(children,f=>f.app).sort(),['mines','pinball','solitaire']);assert.ok(children.every(f=>f.type==='shortcut'));
  xp.deleteFile(folder.id);
  const next=boot(JSON.parse(storage.get('windows-xp-simulator-v1'))).xp;
  assert.equal(next.state.files.filter(f=>f.id===folder.id).length,1);assert.ok(next.state.files.find(f=>f.id===folder.id).deleted);
- assert.equal(next.state.files.filter(f=>f.type==='shortcut').length,2);
+ assert.equal(next.state.files.filter(f=>f.type==='shortcut').length,3);
 });
 
 test('Game shortcuts launch the corresponding application and have the original game icons',()=>{
- const {xp,context}=boot();let mines=0,solitaire=0;
+ const {xp,context}=boot();let mines=0,solitaire=0,pinball=0;
  context.document.querySelector=()=>({hidden:false,classList:{remove(){}},setAttribute(){}});
- xp.register('mines',()=>mines++);xp.register('solitaire',()=>solitaire++);
- for(const app of ['mines','solitaire']){
+ xp.register('mines',()=>mines++);xp.register('solitaire',()=>solitaire++);xp.register('pinball',()=>pinball++);
+ for(const app of ['mines','solitaire','pinball']){
   const shortcut=xp.state.files.find(f=>f.type==='shortcut'&&f.app===app);
   assert.equal(xp.fileIcon(shortcut),app);xp.openFile(shortcut.id);
  }
- assert.equal(mines,1);assert.equal(solitaire,1);
+ assert.equal(mines,1);assert.equal(solitaire,1);assert.equal(pinball,1);assert.equal(xp.iconPath("pinball"),"assets/icons/pinball.ico");
+});
+
+test('Pinball is added once to a renamed and moved existing games folder',()=>{
+ const {xp}=boot();const saved=JSON.parse(JSON.stringify(xp.state));
+ delete saved.pinballAdded;saved.files=saved.files.filter(f=>f.app!=='pinball');
+ const folder=saved.files.find(f=>f.id==='folder-games');folder.name='Kedvencek';folder.parent='documents';
+ const migrated=boot(saved).xp;
+ assert.equal(migrated.state.files.filter(f=>f.app==='pinball').length,1);
+ assert.equal(migrated.state.files.find(f=>f.app==='pinball').parent,folder.id);
+ assert.equal(migrated.state.files.find(f=>f.id===folder.id).name,'Kedvencek');
+ const again=boot(migrated.state).xp;assert.equal(again.state.files.filter(f=>f.app==='pinball').length,1);
+});
+
+test('Pinball migration respects removed games folders and deleted shortcuts',()=>{
+ const {xp}=boot();const saved=JSON.parse(JSON.stringify(xp.state));
+ saved.files.find(f=>f.app==='pinball').deleted=123;
+ assert.equal(boot(saved).xp.state.files.find(f=>f.app==='pinball').deleted,123);
+ delete saved.pinballAdded;saved.files=saved.files.filter(f=>f.app!=='pinball');
+ saved.files.find(f=>f.id==='folder-games').deleted=456;
+ assert.equal(boot(saved).xp.state.files.find(f=>f.app==='pinball').deleted,456);
+ saved.files=saved.files.filter(f=>f.id!=='folder-games');
+ assert.equal(boot(saved).xp.state.files.some(f=>f.app==='pinball'),false);
 });
 test('Untrusted display text and filenames cannot introduce HTML or paths',()=>{
  const {xp}=boot();assert.equal(xp.esc('<img src=x onerror="alert(1)">'),'&lt;img src=x onerror=&quot;alert(1)&quot;&gt;');assert.equal(xp.fileName('../a/b:c?.txt'),'..abc.txt');assert.ok(!xp.fileName('a\u0000b').includes('\u0000'));
@@ -79,6 +101,6 @@ test('Every downloaded asset is present locally at its recorded size',()=>{
  for(const asset of manifest){const file=new URL('assets/'+asset.file,root);assert.ok(existsSync(file),asset.file);assert.equal(statSync(file).size,asset.bytes,asset.file);}
 });
 test('The entry point loads only local resources and blocks external connections',()=>{
- const html=readFileSync(new URL('index.html',root),'utf8');assert.match(html,/connect-src 'none'/);assert.match(html,/frame-src 'none'/);assert.match(html,/form-action 'none'/);
+ const html=readFileSync(new URL('index.html',root),'utf8');assert.match(html,/connect-src 'none'/);assert.match(html,/frame-src 'self'/);assert.match(html,/form-action 'none'/);
  for(const [,src]of html.matchAll(/(?:src|href)="([^"]+)"/g)){assert.ok(!/^https?:/.test(src),src);assert.ok(existsSync(new URL(src,root)),src);}
 });
