@@ -80,7 +80,7 @@ Eredeti XP-s képi és hangelemeket töltöttünk le; nincs generált helyettes�
 
 A Windows XP, az ikonok és hangok a Microsoft tulajdonát képezik; a Bliss fotó Charles O’Rear / Microsoft alkotása, a Google-logó a Google tulajdona. A Space Cadet és a hozzá tartozó képi és hangelemek a Cinematronics, a Maxis és a Microsoft tulajdonát képezik; a játékmotor MIT licence ezekre nem terjed ki. A forrásprojektek nem ruházzák át a harmadik felek védjegy- és szerzői jogait. Ez egy független nosztalgikus bemutató, a programkód saját megvalósítás.
 
-A `scripts/download-assets.mjs` csak a fejlesztéshez használt egyszeri letöltő; a szimulátor nem futtatja, és használatához nincs szükség internetre.
+Minden eszközfájl a repóban van, így a szimulátorhoz semmit nem kell letölteni. Az `assets/sources.json` soronként megadja, melyik fájl honnan származik és mekkora; ahol a letöltött képet utólag alakítottuk (a profilképek BMP-ből, néhány ikon 1024 képpontról kicsinyítve, a Start gomb jobb éle újrarajzolva), azt a bejegyzés `note` mezője írja le.
 
 ## Ellenőrzés
 
