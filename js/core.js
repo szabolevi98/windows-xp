@@ -148,6 +148,56 @@ window.XP = (() => {
   const prompt=(title,message,value='')=>dialog(title,message,{input:'Fájlnév',value,buttons:['OK','Mégse']});
   const confirm=(title,message)=>dialog(title,message,{buttons:['Igen','Nem']});
   function fileName(name){return String(name||'').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'').trim().slice(0,100);}
+  // Moving is refused for the same reasons XP refused it: a folder cannot swallow
+  // itself, and two items in one folder cannot share a name.
+  function moveFile(id,parent){
+    const file=state.files.find(f=>f.id===id&&!f.deleted);
+    if(!file||file.parent===parent)return false;
+    if(file.type==='folder'&&descendants(id).includes(parent)){sound('error');notify('Áthelyezés','Egy mappát nem lehet önmagába vagy a saját almappájába helyezni.');return false;}
+    if(state.files.some(other=>other.id!==id&&other.parent===parent&&other.name===file.name&&!other.deleted)){sound('error');notify('Áthelyezés',`Ezen a helyen már van „${file.name}” nevű elem.`);return false;}
+    saveFile({...file,parent});return true;
+  }
+  // Where a dragged file would land if it were let go at this point on the screen.
+  const dropFolders=['documents','pictures','desktop'];
+  function dropTarget(x,y){
+    const el=document.elementFromPoint(x,y);if(!el)return null;
+    const item=el.closest('.file-item[data-file],.file-item[data-folder]');
+    if(item){
+      const id=item.dataset.file||item.dataset.folder;
+      if(id==='recycle')return {type:'recycle',el:item};
+      const file=state.files.find(f=>f.id===id&&!f.deleted);
+      if(file?.type==='folder'||dropFolders.includes(id))return {type:'folder',id,el:item};
+    }
+    const pane=el.closest('[data-drop-folder]');
+    if(pane)return pane.dataset.dropFolder==='recycle'?{type:'recycle',el:pane}:{type:'folder',id:pane.dataset.dropFolder,el:pane};
+    if(el.closest('.window,#taskbar,.popup-menu'))return null;
+    const icon=el.closest('.desktop-icon');
+    if(icon){
+      const id=icon.dataset.iconId;
+      if(id==='recycle')return {type:'recycle',el:icon};
+      const file=state.files.find(f=>f.id===id&&!f.deleted);
+      if(file?.type==='folder')return {type:'folder',id,el:icon};
+    }
+    return el.closest('#desktop')?{type:'desktop'}:null;
+  }
+  function highlightDrop(target){
+    $$('.drop-hover').forEach(el=>el.classList.remove('drop-hover'));
+    target?.el?.classList.add('drop-hover');
+  }
+  // Letting go: the bin deletes, a folder takes the file in, the desktop keeps the spot.
+  function applyDrop(target,id,point){
+    if(!target||!state.files.some(f=>f.id===id&&!f.deleted))return false;
+    if(target.type==='recycle'){deleteFile(id);return true;}
+    if(target.type==='desktop'){
+      if(point)state.iconPositions={...state.iconPositions,[id]:{x:point.x,y:point.y}};
+      return moveFile(id,'desktop');
+    }
+    return moveFile(id,target.id);
+  }
+  function dragGhost(source){
+    const ghost=document.createElement('div');ghost.className='drag-ghost';
+    ghost.innerHTML=source.innerHTML;document.body.append(ghost);return ghost;
+  }
   function saveFile(file){const i=state.files.findIndex(f=>f.id===file.id);const next={...file,modified:Date.now()};if(i<0)state.files.push(next);else state.files[i]=next;const ok=persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));return ok;}
   function descendants(id){const ids=[id];for(let i=0;i<ids.length;i++)state.files.filter(f=>f.parent===ids[i]).forEach(f=>ids.push(f.id));return ids;}
   function deleteFile(id){const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))f.deleted=true;});persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));}
@@ -160,5 +210,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,deleteFile,restoreFile,descendants,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,moveFile,deleteFile,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
 })();

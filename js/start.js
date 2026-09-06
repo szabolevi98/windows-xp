@@ -34,10 +34,15 @@ function renderIcons(){
   const finish=(ev,cancelled=false)=>{
    b.onpointermove=null;b.onpointerup=null;b.onpointercancel=null;b.onlostpointercapture=null;
    b.classList.remove('dragging');
-   if(moved&&!cancelled){
+   const target=moved&&!cancelled?XP.dropTarget(ev.clientX,ev.clientY):null;
+   XP.highlightDrop(null);
+   // Dropped on the bin or into a folder the file leaves the desktop; otherwise it just moves.
+   const relocated=item.file&&target&&target.type!=='desktop'&&XP.applyDrop(target,item.file);
+   if(moved&&!cancelled&&!relocated){
     positions=XP.DesktopGrid.drop(positions,item.id,{x:parseInt(b.style.left),y:parseInt(b.style.top)},grid);
     state.iconPositions=positions;persist();
    }
+   if(relocated)return;
    $$('.desktop-icon').forEach(n=>place(n,n.dataset.iconId));
    if(b.hasPointerCapture(e.pointerId))b.releasePointerCapture(e.pointerId);
    if(moved){skipClick=true;setTimeout(()=>skipClick=false,0);}
@@ -50,6 +55,8 @@ function renderIcons(){
    const max=XP.DesktopGrid.pixel({col:grid.maxColumns-1,row:grid.rows-1},grid);
    b.style.left=Math.max(0,Math.min(max.x,left+ev.clientX-sx))+'px';
    b.style.top=Math.max(0,Math.min(max.y,top+ev.clientY-sy))+'px';
+   const over=XP.dropTarget(ev.clientX,ev.clientY);
+   XP.highlightDrop(item.file&&over&&over.type!=='desktop'?over:null);
   };
   b.onpointerup=ev=>finish(ev);
   b.onpointercancel=ev=>finish(ev,true);
@@ -72,26 +79,6 @@ function updateClock(){const now=new Date();$('#clock').textContent=now.toLocale
 async function newDesktop(type){const result=await XP.prompt(type==='folder'?'Új mappa':'Új szöveges dokumentum','Név:',type==='folder'?'Új mappa':'Új dokumentum.txt');let name=XP.fileName(result);if(!name)return;if(type==='text'&&!name.endsWith('.txt'))name+='.txt';if(state.files.some(f=>f.parent==='desktop'&&f.name===name&&!f.deleted)){notify('Új elem','Ez a név már foglalt.');return;}XP.saveFile({id:XP.uniqueId(),name,type,parent:'desktop',content:''});}
 $('#desktop').oncontextmenu=e=>{if(e.target.closest('.window,.desktop-icon'))return;e.preventDefault();XP.menu([{label:'Ikonok rendezése',action:()=>{state.iconPositions={};persist();renderIcons();}},{label:'Frissítés',action:renderIcons},null,{label:'Új mappa',icon:'folder',action:()=>newDesktop('folder')},{label:'Új szöveges dokumentum',icon:'notepad',action:()=>newDesktop('text')},null,{label:document.fullscreenElement?'Kilépés a teljes képernyőből':'Teljes képernyő',action:()=>{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p?.catch(()=>notify('Teljes képernyő','A teljes képernyőhöz az F11 billentyűt is használhatod.'));}},{label:'Tulajdonságok',icon:'control',action:()=>XP.open('display')}],e.clientX,e.clientY);};
 $('#desktop').addEventListener('pointerdown',e=>{if(e.target.closest('.window,.desktop-icon')||e.button!==0||XP.modal)return;selectedIcon=null;$$('.desktop-icon').forEach(b=>b.classList.remove('selected'));const box=$('#selection-box'),x=e.clientX,y=e.clientY;box.hidden=false;Object.assign(box.style,{left:x+'px',top:y+'px',width:'0px',height:'0px'});function move(ev){Object.assign(box.style,{left:Math.min(x,ev.clientX)+'px',top:Math.min(y,ev.clientY)+'px',width:Math.abs(x-ev.clientX)+'px',height:Math.abs(y-ev.clientY)+'px'});const r=box.getBoundingClientRect();$$('.desktop-icon').forEach(b=>{const br=b.getBoundingClientRect();b.classList.toggle('selected',br.left<r.right&&br.right>r.left&&br.top<r.bottom&&br.bottom>r.top);});}function up(){box.hidden=true;document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);});
-// Files dragged out of a folder window land on the desktop, where they were dropped.
-const desktopEl=$('#desktop');
-const draggingFile=e=>[...(e.dataTransfer?.types||[])].includes('application/x-xp-file');
-desktopEl.addEventListener('dragover',e=>{
- if(!draggingFile(e)||e.target.closest('.window'))return;
- e.preventDefault();e.dataTransfer.dropEffect='move';desktopEl.classList.add('drop-target');
-});
-desktopEl.addEventListener('dragleave',e=>{if(e.target===desktopEl)desktopEl.classList.remove('drop-target');});
-desktopEl.addEventListener('drop',e=>{
- desktopEl.classList.remove('drop-target');
- if(!draggingFile(e)||e.target.closest('.window'))return;
- e.preventDefault();
- const file=state.files.find(f=>f.id===e.dataTransfer.getData('application/x-xp-file')&&!f.deleted);
- if(!file||file.parent==='desktop')return;
- if(state.files.some(o=>o.id!==file.id&&o.parent==='desktop'&&o.name===file.name&&!o.deleted)){notify('Áthelyezés','Ezen a néven már van elem az asztalon.');return;}
- const box=desktopEl.getBoundingClientRect();
- state.iconPositions={...state.iconPositions,[file.id]:{x:e.clientX-box.left-42,y:e.clientY-box.top-40}};
- XP.saveFile({...file,parent:'desktop'});
-});
-document.addEventListener('dragend',()=>desktopEl.classList.remove('drop-target'));
 function closeAll(){[...XP.windows.values()].forEach(w=>XP.close(w));}
 function resetStartup(){bootGeneration++;startupPending=false;const startup=$('#startup-sound');startup.pause();startup.currentTime=0;}
 function boot(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();bootPhase='boot';$('#off-screen').hidden=true;$('#welcome-screen').hidden=true;$('#boot-screen').hidden=false;XP.hideMenus();bootTimer=setTimeout(welcome,BOOT_DURATION);}
