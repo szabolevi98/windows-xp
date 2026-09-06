@@ -138,7 +138,7 @@ register('explorer',(initial='computer')=>{
   const addr=document.createElement('div');addr.className='address-bar';addr.innerHTML=`Cím <div class="address-input">${icon('computer')}<input type="text" aria-label="Mappa elérési útja" readonly></div>`;w.body.append(addr);
   const layout=document.createElement('div');layout.className='explorer-layout';layout.innerHTML='<aside class="explorer-sidebar"></aside><div class="explorer-files"></div>';w.body.append(layout);
   const sidebar=$('.explorer-sidebar',layout),filesEl=$('.explorer-files',layout),bar=status(w,'');
-  function item(name,ic,data,extra=''){return `<button class="file-item ${extra}" ${data}>${icon(ic)}<span>${esc(name)}</span></button>`;}
+  function item(name,ic,data,extra=''){return `<button class="file-item ${extra}" ${data} ${/data-file=/.test(data)?'draggable="true"':''}>${icon(ic)}<span>${esc(name)}</span></button>`;}
   function render(keepFiles=false){
     const info=folderInfo(),details=selectedEntry();w.setTitle(info.name);w.icon=info.icon||'folder';$('input',addr).value=folderPath(folder);
     $('[data-action=back]',toolbar).disabled=!backStack.length;$('[data-action=forward]',toolbar).disabled=!forwardStack.length;
@@ -187,8 +187,14 @@ register('explorer',(initial='computer')=>{
     if(b.hasAttribute('data-player'))XP.open('player');
   }
   filesEl.ondblclick=e=>activate(e.target);filesEl.onpointerup=e=>{if(e.pointerType==='touch')activate(e.target);};
+  filesEl.ondragstart=e=>{
+    const b=e.target.closest('.file-item'),id=b?.dataset.file;
+    if(!id||readOnly()||folder==='recycle'||folder==='desktop'){e.preventDefault();return;}
+    selected=id;$$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
+    e.dataTransfer.setData('application/x-xp-file',id);e.dataTransfer.effectAllowed='move';
+  };
   filesEl.oncontextmenu=e=>{
-    e.preventDefault();selected=buttonId(e.target.closest('.file-item'));render();
+    e.preventDefault();e.stopPropagation();selected=buttonId(e.target.closest('.file-item'));render();
     const builtIn=selected&&!selectedFile();
     const actions=folder==='recycle'?[
       {label:'Visszaállítás',action:()=>selected&&XP.restoreFile(selected),disabled:!selectedFile()},

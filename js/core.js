@@ -5,8 +5,12 @@ window.XP = (() => {
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const iconPath = name => `assets/icons/${name==='windows'?'windows-logo':name || 'documents'}.${name === 'recycle' || name === 'pinball' ? 'ico' : 'png'}`;
   const icon = (name, cls='') => `<img class="${cls}" src="${iconPath(name)}" alt="" draggable="false">`;
+  // The genuine Windows XP account tiles, in the order the Control Panel showed them.
+  const avatars = ['chess','guitar','ball','butterfly','fish','frog','dog','cat','duck','horses','car','airplane','astronaut','beach','palm-tree','red-flower','pink-flower','snowflake','skater','kick','dirt-bike','giraffe','drip','africa','lift-off'];
+  const avatarPath = name => `assets/avatars/${avatars.includes(name)?name:'chess'}.png`;
+  const avatar = (name, cls='') => `<img class="account-picture ${cls}" src="${avatarPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
-  const defaults = () => ({version:1,user:'Adminisztrátor',wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',avatar:'user',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,iconPositions:{},draft:'',files:[
+  const defaults = () => ({version:1,user:'Adminisztrátor',wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,iconPositions:{},draft:'',files:[
     {id:'welcome',name:'Üdv a Windows XP-ben.txt',type:'text',parent:'documents',content:'Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n',modified:Date.now()},
     {id:'todo',name:'Teendők.txt',type:'text',parent:'documents',content:'Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n',modified:Date.now()},
     {id:'folder-personal',name:'Személyes',type:'folder',parent:'documents',modified:Date.now()}
@@ -16,6 +20,7 @@ window.XP = (() => {
   let storageWarned=false;
   function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{if(!storageWarned){storageWarned=true;setTimeout(()=>notify('A mentés nem sikerült','A böngésző tárhelye megtelt vagy nem elérhető. Töltsd le a fontos dokumentumokat a Fájl menüből.'),0);}return false;}}
   if(!state.iconPositions||typeof state.iconPositions!=='object'||Array.isArray(state.iconPositions))state.iconPositions={};
+  if(!avatars.includes(state.avatar))state.avatar='chess';
   // Apply the new desktop arrangement once, without discarding personal files or settings.
   if(state.desktopLayoutVersion!==2){
     for(const id of ['computer','internet','documents','recycle','network','notepad','paint','player','mines','solitaire'])delete state.iconPositions[id];
@@ -155,5 +160,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,deleteFile,restoreFile,descendants,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,saveFile,deleteFile,restoreFile,descendants,download,openFile,onFiles,status,get active(){return active;},get modal(){return modalDepth>0;}};
 })();
