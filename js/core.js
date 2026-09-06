@@ -78,7 +78,7 @@ window.XP = (() => {
       return Promise.resolve(a.play()).then(()=>'played',failed);
     }catch(error){return Promise.resolve(failed(error));}
   }
-  function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="Értesítés bezárása">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,6500);}
+  function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="Értesítés bezárása">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
   function focus(win){if(!win || (modalDepth&&!win.modal))return;active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();}
   function frontmost(){const next=[...windows.values()].filter(w=>!w.minimized).sort((a,b)=>Number(b.el.style.zIndex)-Number(a.el.style.zIndex))[0];active=null;if(next)focus(next);else renderTasks();}
   function renderTasks(){const container=$('#task-buttons');container.replaceChildren();for(const w of windows.values()){if(w.modal)continue;const b=document.createElement('button');b.className=`task-button ${w.id===active&&!w.minimized?'active':''}`;b.title=w.title;b.setAttribute('aria-label',w.title);b.innerHTML=`${icon(w.icon)}<span>${esc(w.title)}</span>`;b.onclick=()=>{if(modalDepth)return;if(w.id===active&&!w.minimized)minimize(w);else focus(w);};container.append(b);}}
