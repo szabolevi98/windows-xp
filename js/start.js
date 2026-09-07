@@ -105,13 +105,35 @@ async function enterDesktop(){
  // The tip is for the first arrival; after that the desktop speaks for itself.
  else if(state.showWelcome){state.showWelcome=false;persist();notify('Üdv a Windows XP-ben!', 'Az ikonokat dupla kattintással nyithatod meg. Kezdj a Start menüvel, és fedezd fel a régi kedvenceket! Az igazi élményhez az F11 billentyűvel válthatsz teljes képernyőre.');}
 }
+function logonPower(){
+ const screen=$('#welcome-screen');
+ if($('.logon-power',screen))return;
+ const panel=document.createElement('div');panel.className='logon-power';
+ panel.innerHTML=`<div class="power-panel"><header class="power-heading"><span>A számítógép kikapcsolása</span>${icon('windows')}</header><div class="power-options"><button data-power="standby">${icon('standby')} Készenlét</button><button data-power="shutdown">${icon('shutdown')} Kikapcsolás</button><button data-power="restart">${icon('restart')} Újraindítás</button></div><footer class="power-bottom"><button class="xp-button" data-power="cancel">Mégse</button></footer></div>`;
+ screen.append(panel);
+ panel.onclick=event=>{
+  const action=event.target.closest('[data-power]')?.dataset.power;
+  if(!action)return;
+  panel.remove();
+  if(action==='cancel')return;
+  persist();
+  if(action==='restart'){closeAll();boot();return;}
+  if(action==='shutdown'){closeAll();XP.sound('shutdown');screen.hidden=true;$('#off-screen').hidden=false;bootPhase='off';return;}
+  // Waking from standby returns to the logon screen, since nobody has signed in yet.
+  bootPhase='standby';
+  $('.welcome-center').innerHTML='<button class="welcome-user"><span><strong>Készenlét</strong><small>Kattints a folytatáshoz</small></span></button>';
+  $('.welcome-bottom').innerHTML='';
+  $('.welcome-user').onclick=()=>loginScreen();
+ };
+ $('[data-power=cancel]',panel).focus();
+}
 function loginMarkup(){
  return `<div class="welcome-login"><div class="welcome-brand"><div class="windows-brand">${icon('windows')}<small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong></div><p class="welcome-hint">A kezdéshez kattints a nevedre</p></div><i class="welcome-divider"></i><div class="welcome-users"><button class="welcome-user">${XP.avatar(state.avatar)}<span><strong>${esc(state.user)}</strong><small>Bejelentkezés</small></span></button></div></div>`;
 }
 function showLogin(){
  $('.welcome-center').innerHTML=loginMarkup();
  $('.welcome-bottom').innerHTML=`<button class="welcome-power">${icon('shutdown')}<span>A számítógép kikapcsolása</span></button><p class="welcome-note">A fiók módosításához nyisd meg a Vezérlőpultot,<br>és kattints a Felhasználói fiókok elemre.</p>`;
- $('.welcome-power').onclick=()=>{closeAll();XP.sound('shutdown');$('#welcome-screen').hidden=true;$('#off-screen').hidden=false;bootPhase='off';};
+ $('.welcome-power').onclick=logonPower;
 }
 function loginScreen(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();closeAll();bootPhase='login';$('#boot-screen').hidden=true;$('#welcome-screen').hidden=false;showLogin();$('.welcome-user').onclick=()=>{bootPhase='boot';welcome();};}
 register('logoff',()=>powerDialog(true));register('power',()=>powerDialog(false));
