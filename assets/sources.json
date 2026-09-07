@@ -220,6 +220,12 @@
     "bytes": 125078
   },
   {
+    "file": "icons/addressbook.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/AddressBook.png",
+    "bytes": 3898,
+    "note": "1024×1024-es forrás 48×48-ra kicsinyítve."
+  },
+  {
     "file": "icons/back.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/back.png",
     "bytes": 1202
@@ -476,14 +482,21 @@
     "note": "A taskmgr.exe eredeti 32×32-es ikonja. A talált kép egy 447×447-es nagyítás volt, ebből állítottuk vissza a pontos 32×32-es rácsot, és tettük átlátszóvá a fehér hátteret."
   },
   {
+    "file": "icons/switchuser.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/SwitchUser.png",
+    "bytes": 3114,
+    "note": "1024×1024-es forrás 48×48-ra kicsinyítve."
+  },
+  {
     "file": "icons/up.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/up.png",
     "bytes": 1273
   },
   {
     "file": "icons/user.png",
-    "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/user.png",
-    "bytes": 6417
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/UserAccounts.png",
+    "bytes": 5091,
+    "note": "1024×1024-es forrás 48×48-ra kicsinyítve."
   },
   {
     "file": "icons/volume.png",

@@ -99,7 +99,7 @@ test('The logon screen, the power dialog and User Accounts all know about the Gu
  assert.match(start,/function bindLogin\(after\)/);
  assert.match(start,/XP\.switchUser\(button\.dataset\.account\)/);
  // Fast user switching sits beside logging off: it parks the session instead of closing it.
- assert.match(start,/data-power="switch">\$\{icon\('user'\)\} Felhasználóváltás/);
+ assert.match(start,/data-power="switch">\$\{icon\('switchuser'\)\} Felhasználóváltás/);
  assert.match(start,/if\(a==='switch'\)\{XP\.sound\('logoff'\);XP\.parkSession\(\);loginScreen\(true\);\}/);
  assert.match(start,/if\(a==='logoff'\)\{XP\.sound\('logoff'\);loginScreen\(\);\}/);
 
