@@ -87,3 +87,32 @@ test('The dictionaries load before the desktop, and the menu tables stay in the 
  assert.match(utils,/XP\.setLanguage\(draft\.language\)/);
  assert.match(utils,/items:\['datetime','regional'\]/);
 });
+
+// A stale dictionary in the browser cache showed half a German desktop in Hungarian,
+// so the version marker is part of the contract now.
+test('Every dictionary and the language layer load with a version',()=>{
+ const html=read('index.html');
+ for(const file of ['lang/hu.js','lang/en.js','lang/de.js','js/lang.js'])
+  assert.match(html,new RegExp(`src="${file.replace('/','\\/')}\\?v=\\d+"`),`${file} carries a version`);
+});
+
+test('Every sentence the code asks for has a translation',()=>{
+ const context={window:{},console};
+ vm.createContext(context);
+ vm.runInContext(read('lang/en.js'),context);
+ const en=context.window.XP_STRINGS.en;
+ const call=/(?<![\w$.])t\('((?:[^'\\]|\\.)*)'/g;
+ const missing=[];
+ let seen=0;
+ for(const file of ['core','start','explorer','apps','utilities','internet','web-pages','outlook',
+  'player','games','cardgames','pinball','taskmgr','compmgmt']){
+  const source=read(`js/${file}.js`);
+  for(const match of source.matchAll(call)){
+   seen++;
+   const key=match[1].replace(/\\(['"\\])/g,'$1').replace(/\\n/g,'\n');
+   if(!(key in en)) missing.push(`${file}.js: ${key}`);
+  }
+ }
+ assert.ok(seen>1000,`the programs speak through the translator (${seen} sentences)`);
+ assert.deepEqual(missing,[],'no sentence is left without a translation');
+});
