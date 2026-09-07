@@ -22,6 +22,9 @@ body{
   --ct-slider-thumb-normal:url('assets/controls/blue/slider-thumb-normal.png');
   --ct-slider-thumb-pressed:url('assets/controls/blue/slider-thumb-pressed.png');
   --ct-slider-thumb-v-normal:url('assets/controls/blue/slider-thumb-v-normal.png');
+  --ct-slider-thumb-v-hot:url('assets/controls/blue/slider-thumb-v-hot.png');
+  --ct-slider-thumb-v-pressed:url('assets/controls/blue/slider-thumb-v-pressed.png');
+  --ct-slider-thumb-v-disabled:url('assets/controls/blue/slider-thumb-v-disabled.png');
   --ct-slider-track:url('assets/controls/blue/slider-track.png');
   --ct-spin-down-normal:url('assets/controls/blue/spin-down-normal.png');
   --ct-spin-up-normal:url('assets/controls/blue/spin-up-normal.png');
@@ -58,6 +61,9 @@ body[data-theme=olive]{
   --ct-slider-thumb-normal:url('assets/controls/olive/slider-thumb-normal.png');
   --ct-slider-thumb-pressed:url('assets/controls/olive/slider-thumb-pressed.png');
   --ct-slider-thumb-v-normal:url('assets/controls/olive/slider-thumb-v-normal.png');
+  --ct-slider-thumb-v-hot:url('assets/controls/olive/slider-thumb-v-hot.png');
+  --ct-slider-thumb-v-pressed:url('assets/controls/olive/slider-thumb-v-pressed.png');
+  --ct-slider-thumb-v-disabled:url('assets/controls/olive/slider-thumb-v-disabled.png');
   --ct-slider-track:url('assets/controls/olive/slider-track.png');
   --ct-spin-down-normal:url('assets/controls/olive/spin-down-normal.png');
   --ct-spin-up-normal:url('assets/controls/olive/spin-up-normal.png');
@@ -94,6 +100,9 @@ body[data-theme=silver]{
   --ct-slider-thumb-normal:url('assets/controls/silver/slider-thumb-normal.png');
   --ct-slider-thumb-pressed:url('assets/controls/silver/slider-thumb-pressed.png');
   --ct-slider-thumb-v-normal:url('assets/controls/silver/slider-thumb-v-normal.png');
+  --ct-slider-thumb-v-hot:url('assets/controls/silver/slider-thumb-v-hot.png');
+  --ct-slider-thumb-v-pressed:url('assets/controls/silver/slider-thumb-v-pressed.png');
+  --ct-slider-thumb-v-disabled:url('assets/controls/silver/slider-thumb-v-disabled.png');
   --ct-slider-track:url('assets/controls/silver/slider-track.png');
   --ct-spin-down-normal:url('assets/controls/silver/spin-down-normal.png');
   --ct-spin-up-normal:url('assets/controls/silver/spin-up-normal.png');
@@ -206,11 +215,25 @@ body:not([data-theme=classic]) input[type=range]::-webkit-slider-thumb{
 body:not([data-theme=classic]) input[type=range]:hover::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-hot)}
 body:not([data-theme=classic]) input[type=range]:active::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-pressed)}
 body:not([data-theme=classic]) input[type=range]:disabled::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-disabled)}
-body:not([data-theme=classic]) input[type=range][orient=vertical]::-webkit-slider-runnable-track{width:5px;height:auto}
-body:not([data-theme=classic]) input[type=range][orient=vertical]::-webkit-slider-thumb{
+/* Luna keeps a thumb of its own for a track bar turned on its side, so a
+   vertical slider gets that one rather than the horizontal thumb rotated.
+   Chrome only hands over the slider parts when the control is not left to its
+   own vertical appearance, so ask for a plain box and turn it with writing-mode. */
+body:not([data-theme=classic]) #volume-flyout .volume-dial,
+body:not([data-theme=classic]) input[type=range][orient=vertical]{
+  appearance:none;-webkit-appearance:none;
+  writing-mode:vertical-lr;direction:rtl;
+}
+body:not([data-theme=classic]) input[type=range][orient=vertical]::-webkit-slider-runnable-track,
+body:not([data-theme=classic]) #volume-flyout .volume-dial::-webkit-slider-runnable-track{width:5px;height:auto}
+body:not([data-theme=classic]) input[type=range][orient=vertical]::-webkit-slider-thumb,
+body:not([data-theme=classic]) #volume-flyout .volume-dial::-webkit-slider-thumb{
   width:21px;height:11px;margin-top:0;margin-left:-8px;
   background-image:var(--ct-slider-thumb-v-normal);
 }
+body:not([data-theme=classic]) #volume-flyout .volume-dial:hover::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-v-hot)}
+body:not([data-theme=classic]) #volume-flyout .volume-dial:active::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-v-pressed)}
+body:not([data-theme=classic]) #volume-flyout .volume-dial:disabled::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-v-disabled)}
 
 /* Tree glyphs: two true-size 9 x 9 boxes, plus and minus. */
 body:not([data-theme=classic]) .tree-twist{
