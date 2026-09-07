@@ -1,0 +1,35 @@
+.outlook-shell{flex:1;display:flex;min-height:0;background:#fff}
+.oe-side{width:186px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #b7c4d8;background:#f4f7fd}
+.oe-tree{flex:1;min-height:0;overflow:auto;padding:8px 6px}
+.oe-side h3{font:bold 11px Tahoma,sans-serif;color:#25457f;margin:0 0 6px;padding:0 4px}
+.oe-side ul{list-style:none;margin:0;padding:0}
+.oe-side li{margin-bottom:1px}
+.oe-tree button{display:flex;align-items:center;gap:6px;width:100%;background:none;border:0;padding:3px 5px;text-align:left;font:11px Tahoma,sans-serif;color:#111;cursor:pointer}
+.oe-tree button img{width:16px;height:16px}
+.oe-tree button:hover{background:#dbe6f7}
+.oe-tree button.active{background:#316ac5;color:#fff}
+.oe-contacts{border-top:1px solid #b7c4d8;padding:8px 6px;max-height:40%;overflow:auto}
+.oe-contacts button{background:none;border:0;padding:2px 5px;text-align:left;font:11px Tahoma,sans-serif;color:#1a4f9e;cursor:pointer;width:100%}
+.oe-contacts button:hover{text-decoration:underline;color:#c33}
+.oe-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.oe-list{flex:0 0 44%;min-height:0;overflow:auto;border-bottom:2px solid #b7c4d8;background:#fff}
+.oe-list table{width:100%;border-collapse:collapse;font:11px Tahoma,sans-serif}
+.oe-list th{position:sticky;top:0;background:linear-gradient(#fff,#e7ecf5);border:1px solid #c3cdde;border-top:0;padding:3px 6px;text-align:left;font-weight:normal;color:#333}
+.oe-list td{padding:3px 6px;border-bottom:1px solid #eef1f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
+.oe-list td:nth-child(3){width:132px}
+.oe-list tr{cursor:default}
+.oe-list tr:hover td{background:#eef4fd}
+.oe-list tr.unread td{font-weight:bold}
+.oe-list tr.selected td{background:#316ac5;color:#fff}
+.oe-preview{flex:1;min-height:0;overflow:auto;padding:10px 12px;background:#fff}
+.oe-preview header{display:flex;flex-direction:column;gap:2px;border-bottom:1px solid #d5dced;padding-bottom:7px;margin-bottom:9px}
+.oe-preview header b{font:bold 13px Tahoma,sans-serif}
+.oe-preview header span{font-size:11px;color:#555}
+.oe-preview pre{margin:0;font:12px Tahoma,sans-serif;white-space:pre-wrap;line-height:1.6}
+.oe-empty{margin:0;padding:16px;color:#777;font-size:11px}
+.oe-compose{flex:1;display:flex;flex-direction:column;gap:7px;padding:10px;min-height:0}
+.oe-compose label{display:flex;align-items:center;gap:8px}
+.oe-compose label span{width:62px;flex-shrink:0;font-size:11px}
+.oe-compose input{flex:1;min-width:0}
+.oe-compose textarea{flex:1;min-height:0;resize:none;font:12px Tahoma,sans-serif;padding:6px;border:1px solid #7f9db9}
+.oe-compose .button-row{padding:0}

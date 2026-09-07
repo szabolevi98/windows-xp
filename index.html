@@ -23,20 +23,22 @@
   <link rel="stylesheet" href="styles.css?v=32">
   <link rel="stylesheet" href="pinball.css?v=1">
   <link rel="stylesheet" href="player.css?v=1">
+  <link rel="stylesheet" href="outlook.css?v=2">
   <link rel="stylesheet" href="web-pages.css?v=1">
   <link rel="stylesheet" href="cardgames.css?v=1">
   <script defer src="js/core.js?v=19"></script>
   <script defer src="js/internet.js?v=5"></script>
   <script defer src="js/web-pages.js?v=1"></script>
-  <script defer src="js/apps.js?v=7"></script>
+  <script defer src="js/apps.js?v=8"></script>
   <script defer src="js/explorer.js?v=6"></script>
-  <script defer src="js/utilities.js?v=12"></script>
+  <script defer src="js/utilities.js?v=13"></script>
   <script defer src="js/player.js?v=2"></script>
+  <script defer src="js/outlook.js?v=2"></script>
   <script defer src="js/games.js?v=3"></script>
   <script defer src="js/cardgames.js?v=1"></script>
   <script defer src="js/pinball.js?v=5"></script>
   <script defer src="js/desktop-grid.js?v=4"></script>
-  <script defer src="js/start.js?v=25"></script>
+  <script defer src="js/start.js?v=26"></script>
 </head>
 <body>
   <audio id="startup-sound" src="assets/sounds/startup.wav" preload="auto" hidden></audio>
@@ -50,7 +52,7 @@
     <button id="start-button" aria-label="Start menü" aria-expanded="false"><img src="assets/icons/windows-logo.png" alt=""><span>start</span></button>
     <div class="quick-launch"><button id="show-desktop" title="Asztal megjelenítése"><img src="assets/icons/showdesktop.png" alt="Asztal megjelenítése"></button><button data-open="ie" title="Internet Explorer"><img src="assets/icons/ie.png" alt="Internet Explorer"></button><button data-open="player" title="Windows Media Player"><img src="assets/icons/player.png" alt="Windows Media Player"></button></div>
     <div id="task-buttons"></div>
-    <div class="tray"><button id="tray-toggle" class="tray-toggle" title="Rejtett ikonok megjelenítése" aria-label="Rejtett ikonok megjelenítése" aria-expanded="false" aria-controls="tray-hidden"></button><div id="tray-hidden" class="tray-hidden" hidden><button data-tray="mail" title="Outlook Express"><img src="assets/icons/mail.png" alt="Outlook Express"></button></div><button data-tray="security" title="Biztonsági központ"><img src="assets/icons/security.png" alt="Biztonsági központ"></button><button id="volume-button" title="Hangerő"><img src="assets/icons/volume.png" alt="Hangerő"></button><button data-open="network" title="Helyi kapcsolat"><img src="assets/icons/network.png" alt="Hálózat"></button><button id="clock" title="Dátum és idő"></button></div>
+    <div class="tray"><button id="tray-toggle" class="tray-toggle" title="Rejtett ikonok megjelenítése" aria-label="Rejtett ikonok megjelenítése" aria-expanded="false" aria-controls="tray-hidden"></button><div id="tray-hidden" class="tray-hidden" hidden><button data-tray="outlook" title="Outlook Express"><img src="assets/icons/mail.png" alt="Outlook Express"></button></div><button data-tray="security" title="Biztonsági központ"><img src="assets/icons/security.png" alt="Biztonsági központ"></button><button id="volume-button" title="Hangerő"><img src="assets/icons/volume.png" alt="Hangerő"></button><button data-open="network" title="Helyi kapcsolat"><img src="assets/icons/network.png" alt="Hálózat"></button><button id="clock" title="Dátum és idő"></button></div>
   </footer>
   <section id="start-menu" aria-label="Start menü" hidden></section>
   <div id="context-menu" class="popup-menu" role="menu" hidden></div>
