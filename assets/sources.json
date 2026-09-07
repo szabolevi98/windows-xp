@@ -162,58 +162,57 @@
   },
   {
     "file": "cursors/arrow.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/arrow_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwarro.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/beam.cur",
     "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/beam_r.cur",
-    "bytes": 326
+    "bytes": 326,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/cross.cur",
     "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/cross_r.cur",
-    "bytes": 326
-  },
-  {
-    "file": "cursors/help.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/help_r.cur",
-    "bytes": 326
+    "bytes": 326,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/move.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/move_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwmove.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/no.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/no_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwno.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/size-nesw.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size1_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwnesw.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/size-ns.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size4_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwns.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/size-nwse.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size2_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwnwse.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "cursors/size-we.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size3_r.cur",
-    "bytes": 326
-  },
-  {
-    "file": "cursors/wait.cur",
-    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/wait_r.cur",
-    "bytes": 326
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/3dwwe.cur",
+    "bytes": 766,
+    "note": "A Windows Standard (3D fehér) séma mutatója."
   },
   {
     "file": "icons/accessibility.png",

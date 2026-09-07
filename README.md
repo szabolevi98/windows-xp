@@ -19,7 +19,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 - A Start menü emlékszik: a bal oszlop a leggyakrabban használt hat programot kínálja, a jobb oldalon pedig a Legutóbbi dokumentumok almenüje sorolja fel a megnyitott fájlokat (a lista törölhető).
 - Rácsra igazodó asztali ikonok, ütközéskor helycsere. A Lomtár alapból jobb alul jelenik meg, szabadon áthelyezhető, és megjegyzi a helyét.
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
-- Eredeti XP-egérmutatók (nyíl, szövegkurzor, átméretezők, célkereszt), és XP-s mozgás: az ablak a tálcagombjához repül kicsinyítéskor, onnan nő vissza, a menük és a Start menü halványan úsznak be. Csökkentett mozgásigény esetén mindez elmarad.
+- Eredeti XP-egérmutatók a Windows Standard (3D fehér) sémából (nyíl, szövegkurzor, átméretezők, célkereszt), és XP-s mozgás: az ablak a tálcagombjához repül kicsinyítéskor, onnan nő vissza, a menük és a Start menü halványan úsznak be. Csökkentett mozgásigény esetén mindez elmarad.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
 - Tálca: gyorsindítás az Asztal megjelenítése gombbal, futó ablakok, értesítési terület órával, hangerővel, hálózattal és biztonsági központtal. A « gomb kinyitja a rejtett ikonokat.
 - Hangerő: a hangszóróra egy kattintás a kis csúszkát nyitja a tálca fölött, kettő a Hangerő-szabályozót a Fő hangerő, Hullám, SW Synth és CD-lejátszó csatornákkal, balansszal és némítással. Az órán ugyanígy a dupla kattintás nyitja a naptárt.
