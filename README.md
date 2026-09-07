@@ -12,7 +12,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 
 ## Használat
 
-- XP betöltés, üdvözlés, kijelentkezés, készenlét, kikapcsolás, újraindítás.
+- XP betöltés, bejelentkezés a névre kattintva, üdvözlés, kijelentkezés, készenlét, kikapcsolás, újraindítás.
 - Rácsra igazodó asztali ikonok, ütközéskor helycsere. A Lomtár alapból jobb alul jelenik meg, szabadon áthelyezhető, és megjegyzi a helyét.
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
@@ -93,6 +93,6 @@ Minden eszközfájl a repóban van, így a szimulátorhoz semmit nem kell letöl
 
 A 68 automatikus teszt lefedi a dokumentumok és beállítások mentését, a fájlműveleteket, az ikonrácsot, az ablakméretezést, az indítást és a hangkezelést, a kártyajátékok szabályait, a Pinball szüneteltetését és fókuszát, az erőforrásokat és a CSP-t. Az új tesztek az összes helyi oldal képeit és belső linkjeit, a kosár és vendégkönyv mentését, a HTML-escape-elést, valamint a Media Player lejátszási sorrendjét is vizsgálják.
 
-A betöltés 5,5 másodpercig, az üdvözlés 2 másodpercig tart. Ha a böngésző tiltja a hang automatikus lejátszását, a Bejelentkezés gomb együtt indítja a hangot és az asztalt.
+A betöltés 5,5 másodpercig tart, utána a bejelentkezőképernyő várakozik: az asztal mindig a névre kattintva nyílik meg, majd 2 másodperc üdvözlés következik. Ez a kattintás egyben az a gesztus is, amit a böngésző a hang lejátszásához vár. Ha a hangot mégis megtagadja, a képernyő a bejelentkezésnél marad, és az újabb kattintás ismét megpróbálja.
 
 Böngészőben ellenőrzött folyamatok: mind a nyolc ablakél/sarok húzása, teljes méret és visszaállítás; a Pinball újraaktiválása másik ablakból, alsó vezérlőkről és súgó bezárása után; Media Player lejátszás és médiatárkeresés; helyi weboldalak, kosár, hozzászólás, levélpiszkozat, valamint ezek újratöltés utáni megőrzése.
