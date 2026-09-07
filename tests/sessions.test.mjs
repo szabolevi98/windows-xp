@@ -130,3 +130,20 @@ test('The bin asks before it takes anything, and the windows sound like XP',()=>
  for(const file of ['minimize','restore','logoff'])
   assert.match(read('assets/sources.json'),new RegExp(`sounds/${file}\\.wav`),`${file}.wav is credited`);
 });
+
+test('The taskbar groups a crowded program, and every window carries its own menu',()=>{
+ const core=read('js/core.js');
+ // One button per program once the bar runs out of room, labelled the way XP labelled it.
+ assert.match(core,/const fits=Math\.max\(1,Math\.floor\(\(container\.clientWidth\|\|600\)\/154\)\)/);
+ assert.match(core,/const grouping=list\.length>fits/);
+ assert.match(core,/function groupButton\(app,family\)/);
+ assert.match(core,/const label=`\$\{family\.length\} \$\{programName\(family\[0\]\)\}`/);
+ assert.match(core,/label:'Csoport kis mérete'/);
+ assert.match(core,/label:'Csoport bezárása'/);
+ assert.match(core,/const PROGRAMS=\{notepad:'Jegyzettömb'/,'the group knows the program name');
+ // The window menu lives in one place and is reached three ways.
+ assert.match(core,/function windowMenu\(win\)/);
+ assert.match(core,/bar\.oncontextmenu=e=>\{[^}]*menu\(windowMenu\(win\)/,'title bar right click');
+ assert.match(core,/\$\('img',bar\)\.onclick=/,'the title bar icon opens it too');
+ assert.match(core,/if\(e\.altKey&&e\.key===' '&&active\)/,'and Alt+Space');
+});

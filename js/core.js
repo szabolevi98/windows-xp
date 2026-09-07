@@ -171,20 +171,73 @@ window.XP = (() => {
   function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="Értesítés bezárása">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
   function focus(win){if(!win || (modalDepth&&!win.modal))return;if(win.minimized&&!win.parked)sound('restore');active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
   function frontmost(){const next=[...windows.values()].filter(w=>!w.minimized).sort((a,b)=>Number(b.el.style.zIndex)-Number(a.el.style.zIndex))[0];active=null;if(next)focus(next);else renderTasks();}
-  function renderTasks(){const container=$('#task-buttons');container.replaceChildren();for(const w of windows.values()){if(w.modal)continue;const b=document.createElement('button');b.className=`task-button ${w.id===active&&!w.minimized?'active':''}`;b.title=w.title;b.setAttribute('aria-label',w.title);b.innerHTML=`${icon(w.icon)}<span>${esc(w.title)}</span>`;b.onclick=()=>{if(modalDepth)return;if(w.id===active&&!w.minimized)minimize(w);else focus(w);};
+  // The name of the program behind a window, for the grouped taskbar buttons.
+  const PROGRAMS={notepad:'Jegyzettömb',paint:'Paint',calculator:'Számológép',cmd:'Parancssor',ie:'Internet Explorer',
+    outlook:'Outlook Express',player:'Windows Media Player',explorer:'Windows Intéző',mines:'Aknakereső',
+    solitaire:'Pasziánsz',freecell:'FreeCell',spider:'Pókpasziánsz',hearts:'Hearts',pinball:'3D Pinball',
+    taskmgr:'Feladatkezelő',help:'Súgó és támogatás',image:'Képnézegető'};
+  const programName=win=>PROGRAMS[win.app]||win.title.split(' – ').at(-1);
+  // The menu a window carries: on its task button, on its title bar and under Alt+Space.
+  function windowMenu(win){
+    return [
+      {label:'Visszaállítás',disabled:!win.minimized&&!win.maximized,action:()=>{if(win.maximized)maximize(win);else focus(win);}},
+      {label:'Áthelyezés',disabled:true},{label:'Méret',disabled:true},
+      {label:'Kis méret',disabled:win.minimized,action:()=>{focus(win);minimize(win);}},
+      {label:'Teljes méret',disabled:win.maximized||win.fixed,action:()=>{if(!win.maximized)maximize(win);}},
+      null,
+      {label:'Bezárás',shortcut:'Alt+F4',action:()=>close(win)}
+    ];
+  }
+  function renderTasks(){
+    const container=$('#task-buttons');container.replaceChildren();
+    const list=[...windows.values()].filter(win=>!win.modal);
+    // XP collapsed a program's windows into one button once the bar ran out of room.
+    const fits=Math.max(1,Math.floor((container.clientWidth||600)/154));
+    const grouped=new Map();
+    for(const win of list)grouped.set(win.app,[...(grouped.get(win.app)||[]),win]);
+    const grouping=list.length>fits;
+    const done=new Set();
+    for(const win of list){
+      const family=grouped.get(win.app);
+      if(grouping&&family.length>1){
+        if(done.has(win.app))continue;
+        done.add(win.app);
+        container.append(groupButton(win.app,family));
+      }else container.append(taskButton(win));
+    }
+  }
+  function taskButton(win){
+    const b=document.createElement('button');
+    b.className=`task-button ${win.id===active&&!win.minimized?'active':''}`;
+    b.title=win.title;b.setAttribute('aria-label',win.title);
+    b.innerHTML=`${icon(win.icon)}<span>${esc(win.title)}</span>`;
+    b.onclick=()=>{if(modalDepth)return;if(win.id===active&&!win.minimized)minimize(win);else focus(win);};
+    b.oncontextmenu=event=>{event.preventDefault();event.stopPropagation();if(!modalDepth)menu(windowMenu(win),event.clientX,event.clientY);};
+    return b;
+  }
+  function groupButton(app,family){
+    const b=document.createElement('button');
+    const label=`${family.length} ${programName(family[0])}`;
+    b.className=`task-button group ${family.some(win=>win.id===active&&!win.minimized)?'active':''}`;
+    b.title=label;b.setAttribute('aria-label',label);
+    b.innerHTML=`${icon(family[0].icon)}<span>${esc(label)}</span><b class="group-arrow">▲</b>`;
+    b.onclick=event=>{
+      if(modalDepth)return;
+      const box=b.getBoundingClientRect();
+      menu(family.map(win=>({label:win.title,icon:win.icon,action:()=>focus(win)})),box.left,box.top);
+      event.stopPropagation();
+    };
     b.oncontextmenu=event=>{
       event.preventDefault();event.stopPropagation();
       if(modalDepth)return;
       menu([
-        {label:'Visszaállítás',disabled:!w.minimized&&!w.maximized,action:()=>{if(w.maximized)maximize(w);else focus(w);}},
-        {label:'Áthelyezés',disabled:true},{label:'Méret',disabled:true},
-        {label:'Kis méret',disabled:w.minimized,action:()=>{focus(w);minimize(w);}},
-        {label:'Teljes méret',disabled:w.maximized||w.fixed,action:()=>{if(!w.maximized)maximize(w);}},
+        {label:'Csoport kis mérete',action:()=>{sound('minimize');family.forEach(win=>minimize(win,true));}},
         null,
-        {label:'Bezárás',shortcut:'Alt+F4',action:()=>close(w)}
+        {label:'Csoport bezárása',action:()=>family.slice().forEach(win=>close(win))}
       ],event.clientX,event.clientY);
     };
-    container.append(b);}}
+    return b;
+  }
   function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
   function minimize(win,quiet){if(win.modal)return;if(!quiet)sound('minimize');win.minimized=true;win.el.hidden=true;frontmost();}
   function maximize(win){if(win.fixed)return;sound('restore');win.maximized=!win.maximized;win.el.classList.toggle('maximized',win.maximized);if(win.maximized){win.restore={left:win.el.style.left,top:win.el.style.top,width:win.el.style.width,height:win.el.style.height};Object.assign(win.el.style,{left:'0px',top:'0px',width:'100%',height:'100%'});}else Object.assign(win.el.style,win.restore);focus(win);}
@@ -215,6 +268,8 @@ window.XP = (() => {
     el.addEventListener('pointerdown',()=>focus(win));$('.close',el).onclick=()=>close(win);
     if(!options.modal){$('.minimize',el).onclick=()=>minimize(win);$('.maximize',el).onclick=()=>maximize(win);}
     const bar=$('.title-bar',el);bar.ondblclick=e=>{if(!e.target.closest('button'))maximize(win);};
+    bar.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();if(!modalDepth||win.modal)menu(windowMenu(win),e.clientX,e.clientY);};
+    $('img',bar).onclick=e=>{e.stopPropagation();const box=el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);};
     bar.onpointerdown=e=>{if(e.button!==0||e.target.closest('button')||win.maximized)return;focus(win);e.preventDefault();const rect=el.getBoundingClientRect(),dragBounds=$('#desktop').getBoundingClientRect(),sx=e.clientX,sy=e.clientY;bar.setPointerCapture(e.pointerId);bar.onpointermove=ev=>{el.style.left=`${Math.max(-rect.width+100,Math.min(dragBounds.width-90,rect.left+ev.clientX-sx))}px`;el.style.top=`${Math.max(0,Math.min(dragBounds.height-29,rect.top+ev.clientY-sy))}px`;};bar.onpointerup=()=>{bar.onpointermove=null;};bar.onlostpointercapture=()=>bar.onpointermove=null;};
     // Every edge and corner resizes; dragging the top or left edge moves the window as it shrinks.
     for(const grip of $$('[data-resize]',el))grip.onpointerdown=e=>{
@@ -416,7 +471,8 @@ window.XP = (() => {
   function status(win,text,extra=''){const bar=document.createElement('footer');bar.className='status-bar';bar.innerHTML=`<span>${esc(text)}</span>${extra?`<span class="status-part">${esc(extra)}</span>`:''}`;win.body.append(bar);return bar;}
   document.addEventListener('pointerdown',e=>{if(!e.target.closest('#context-menu,.submenu,#start-menu,#start-button,.menu-bar,#volume-flyout,#volume-button'))hideMenus();});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
-  document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
+  document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key===' '&&active){e.preventDefault();const win=windows.get(active);if(win){const box=win.el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);}}
+    if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
   return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

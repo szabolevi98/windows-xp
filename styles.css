@@ -325,3 +325,5 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
 .menu-folder>.folder-menu{display:none;position:absolute;left:calc(100% - 3px);top:-3px;min-width:190px}
 .menu-folder:hover>.folder-menu,.menu-folder:focus-within>.folder-menu{display:block}
 .programs-menu .start-item.folder .submenu-arrow{margin-left:auto;font-size:8px;padding-left:10px}
+
+.task-button.group .group-arrow{margin-left:auto;font-size:8px;padding-left:6px;opacity:.85}
