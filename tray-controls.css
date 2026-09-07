@@ -1,0 +1,16 @@
+/* Original Luna tray chevrons at their native 19 × 20 size.
+   Columns: collapsed, expanded. Rows: normal, hot, pressed. */
+body{--tray-chevron-sprite:url('assets/tray/blue.png')}
+body[data-theme=olive]{--tray-chevron-sprite:url('assets/tray/olive.png')}
+body[data-theme=silver]{--tray-chevron-sprite:url('assets/tray/silver.png')}
+body:not([data-theme=classic]) .tray .tray-toggle{
+  --tray-chevron-x:0px;
+  --tray-chevron-y:0px;
+  width:19px;height:20px;min-width:19px;
+  border:0;border-radius:0;box-shadow:none;filter:none;
+  background:var(--tray-chevron-sprite) var(--tray-chevron-x) var(--tray-chevron-y)/38px 60px no-repeat;
+}
+body:not([data-theme=classic]) .tray .tray-toggle::before{content:none}
+body:not([data-theme=classic]) .tray .tray-toggle[aria-expanded=true]{--tray-chevron-x:-19px}
+body:not([data-theme=classic]) .tray .tray-toggle:hover{--tray-chevron-y:-20px}
+body:not([data-theme=classic]) .tray .tray-toggle:active{--tray-chevron-y:-40px}

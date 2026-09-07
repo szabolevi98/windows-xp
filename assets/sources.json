@@ -823,5 +823,38 @@
     ],
     "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
     "note": "Original Luna bitmap backgrounds and 13px glyphs, composited at native size into four columns and eight state rows. Original 32-bit alpha and magenta color-key transparency preserved; no redrawing or scaling."
+  },
+  {
+    "file": "tray/blue.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3704,
+    "resourceNames": [
+      "BLUE_TRAYCHEVRONHORIZONTAL_BMP",
+      "BLUE_TRAYCHEVRONHORIZONTALOPEN_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tray-chevron bitmap strips, placed side by side at native 19 x 20 pixels per state. Columns: collapsed, expanded. Rows: normal, hot, pressed. Original alpha and magenta color-key transparency preserved; no redrawing or scaling."
+  },
+  {
+    "file": "tray/olive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2673,
+    "resourceNames": [
+      "HOMESTEAD_TRAYCHEVRONHORIZONTAL_BMP",
+      "HOMESTEAD_TRAYCHEVRONHORIZONTALOPEN_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tray-chevron bitmap strips, placed side by side at native 19 x 20 pixels per state. Columns: collapsed, expanded. Rows: normal, hot, pressed. Original alpha and magenta color-key transparency preserved; no redrawing or scaling."
+  },
+  {
+    "file": "tray/silver.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3406,
+    "resourceNames": [
+      "METALLIC_TRAYCHEVRONHORIZONTAL_BMP",
+      "METALLIC_TRAYCHEVRONHORIZONTALOPEN_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tray-chevron bitmap strips, placed side by side at native 19 x 20 pixels per state. Columns: collapsed, expanded. Rows: normal, hot, pressed. Original alpha and magenta color-key transparency preserved; no redrawing or scaling."
   }
 ]
