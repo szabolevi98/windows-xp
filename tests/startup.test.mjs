@@ -18,62 +18,80 @@ function startSession(outcomes=['played']){
   return {$,sounds,notices,advance,listeners,power,state:xp.state};
 }
 
-test('Startup holds the loading screen for 5.5 seconds and plays sound with the desktop',async()=>{
-  const {$,sounds,advance}=startSession();await advance(5499);assert.equal($('#boot-screen').hidden,false);assert.equal(sounds.length,0);
-  await advance(1);assert.equal($('#boot-screen').hidden,true);assert.equal($('#welcome-screen').hidden,false);assert.equal(sounds.length,0);
-  await advance(1999);assert.equal(sounds.length,0);await advance(1);
-  assert.deepEqual(sounds,[{name:'startup',time:7500}]);assert.equal($('#welcome-screen').hidden,true);
+// Booting stops at the logon screen; the desktop is only reached by clicking the account.
+const BOOT=5500,WELCOME=2000;
+
+test('Startup waits on the loading screen, then on the logon screen until the name is clicked',async()=>{
+  const {$,sounds,advance}=startSession();
+  await advance(BOOT-1);assert.equal($('#boot-screen').hidden,false);assert.equal(sounds.length,0);
+  await advance(1);assert.equal($('#boot-screen').hidden,true);assert.equal($('#welcome-screen').hidden,false);
+  // Nothing happens on its own from here, however long it waits.
+  await advance(30000);assert.equal(sounds.length,0);assert.equal($('#welcome-screen').hidden,false);
+  $('.welcome-user').onclick();
+  await advance(WELCOME-1);assert.equal(sounds.length,0);assert.equal($('#welcome-screen').hidden,false);
+  await advance(1);
+  assert.deepEqual(sounds,[{name:'startup',time:BOOT+30000+WELCOME}]);
+  assert.equal($('#welcome-screen').hidden,true);
 });
 
 test('Desktop clicks cannot replay the startup sound; another boot plays it once again',async()=>{
-  const {$,sounds,advance,listeners}=startSession();await advance(7500);
+  const {$,sounds,advance,listeners}=startSession();
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
   for(let i=0;i<3;i++)for(const callback of listeners.get('pointerdown')||[])callback({});
-  assert.equal(sounds.length,1);$('#power-on').onclick();await advance(7499);assert.equal(sounds.length,1);await advance(1);assert.equal(sounds.length,2);assert.equal($('#welcome-screen').hidden,true);
+  assert.equal(sounds.length,1);
+  $('#power-on').onclick();await advance(BOOT);assert.equal(sounds.length,1,'the logon screen makes no sound');
+  $('.welcome-user').onclick();await advance(WELCOME);
+  assert.equal(sounds.length,2);assert.equal($('#welcome-screen').hidden,true);
 });
 
-test('An autoplay block after reload offers a login click and starts the sound before showing the desktop',async()=>{
-  for(let reload=0;reload<2;reload++){
-    const {$,sounds,advance}=startSession(['blocked','played']);await advance(7500);
-    assert.equal($('#welcome-screen').hidden,false);assert.equal(typeof $('.welcome-user').onclick,'function');
-    const login=$('.welcome-user').onclick();assert.equal(sounds.length,2);
-    await login;assert.equal($('#welcome-screen').hidden,true);
-    await $('.welcome-user').onclick();assert.equal(sounds.length,2);
-  }
+test('A refused sound leaves the user on the logon screen to try once more',async()=>{
+  const {$,sounds,advance}=startSession(['blocked','played']);
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  assert.equal(sounds.length,1);
+  assert.equal($('#welcome-screen').hidden,false,'the desktop is not shown without its sound');
+  await $('.welcome-user').onclick();
+  assert.equal(sounds.length,2);assert.equal($('#welcome-screen').hidden,true);
 });
 
 test('Logoff, restart and shutdown followed by power-on each replay the startup sound',async()=>{
-  const {$,sounds,advance,power}=startSession();await advance(7500);
-  power('logoff');$('.welcome-user').onclick();await advance(2000);
-  power('restart');await advance(7500);
-  power('shutdown');$('#power-on').onclick();await advance(7500);
+  const {$,sounds,advance,power}=startSession();
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  power('logoff');$('.welcome-user').onclick();await advance(WELCOME);
+  power('restart');await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  power('shutdown');$('#power-on').onclick();await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
   assert.equal(sounds.filter(s=>s.name==='startup').length,4);assert.equal($('#welcome-screen').hidden,true);
 });
 
 test('Muted sound settings allow login without retrying playback',async()=>{
-  const muted=startSession(['muted']);await muted.advance(7500);assert.equal(muted.$('#welcome-screen').hidden,true);
-  assert.equal(muted.sounds.length,1);
+  const {$,sounds,advance}=startSession(['muted']);
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  assert.equal($('#welcome-screen').hidden,true);assert.equal(sounds.length,1);
 });
 
 test('An obsolete pending playback cannot dismiss the loading screen of a newer boot',async()=>{
   let finish;const {$,advance}=startSession([()=>new Promise(resolve=>finish=resolve)]);
-  await advance(7500);$('#power-on').onclick();finish('played');await advance(0);
-  assert.equal($('#boot-screen').hidden,false);await advance(7500);assert.equal($('#welcome-screen').hidden,true);
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  $('#power-on').onclick();finish('played');await advance(0);
+  assert.equal($('#boot-screen').hidden,false);
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  assert.equal($('#welcome-screen').hidden,true);
 });
 
 test('An unreadable audio file does not leave the desktop inaccessible',async()=>{
-  const {$,advance}=startSession(['error']);await advance(7500);assert.equal($('#welcome-screen').hidden,true);
+  const {$,advance}=startSession(['error']);
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
+  assert.equal($('#welcome-screen').hidden,true);
 });
 
 test('The welcome tip greets the first arrival only',async()=>{
-  const {sounds,notices,advance,state,power}=startSession(['played','played','played']);
+  const {$,sounds,notices,advance,state,power}=startSession(['played','played','played']);
   state.showWelcome=true;
-  await advance(7500);
+  await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
   assert.deepEqual(notices,['Üdv a Windows XP-ben!']);
   assert.equal(state.showWelcome,false,'the desktop remembers having said it');
   // Logging out and back in does not repeat it, and neither does another boot.
-  power('logoff');await advance(1);
-  await advance(7500);
-  power('restart');await advance(7500);
+  power('logoff');$('.welcome-user').onclick();await advance(WELCOME);
+  power('restart');await advance(BOOT);$('.welcome-user').onclick();await advance(WELCOME);
   assert.deepEqual(notices,['Üdv a Windows XP-ben!']);
   assert.ok(sounds.length>1,'the startup sound still plays each time');
 });
