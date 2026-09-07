@@ -202,3 +202,19 @@ test('The pointers are the ones XP shipped, in the scheme the mouse settings nam
  assert.match(utils,/items:\['printers','mouse'\]/);
  assert.match(read('js/core.js'),/document\.documentElement\.dataset\.cursors=state\.cursors\|\|'default'/);
 });
+
+test('The caption buttons are drawn, not typed',()=>{
+ const core=read('js/core.js'),css=read('styles.css');
+ // The close button carries no character: its X is two rotated bars.
+ assert.doesNotMatch(core,/window-control close"[^>]*>×/);
+ assert.match(css,/\.window-control\.close:before,\.window-control\.close:after\{content:''/);
+ assert.match(css,/\.window-control\.close:before\{transform:rotate\(45deg\)/);
+ assert.match(css,/\.window-control\.close:after\{transform:rotate\(-45deg\)/);
+ // The minimize bar sits low, the maximize box carries the thicker top edge.
+ assert.match(css,/\.window-control\.minimize:after\{[^}]*height:2px/);
+ assert.match(css,/\.window-control\.maximize:after\{[^}]*border-top-width:2px/);
+ // Maximized, the same button shows the two overlapping squares of Restore.
+ assert.match(css,/\.window\.maximized \.window-control\.maximize:after\{[^}]*box-shadow:2px -2px/);
+ // The classic theme draws the same glyphs in black.
+ assert.match(css,/data-theme=classic\] \.window-control\.close:before[^{]*\{[^}]*background:#000/);
+});
