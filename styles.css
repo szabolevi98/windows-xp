@@ -391,3 +391,14 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
 @media(prefers-reduced-motion:reduce){
  .popup-menu:not([hidden]),#start-menu:not([hidden]),#balloon:not([hidden]),#volume-flyout:not([hidden]){animation:none}
 }
+
+/* Az eredeti XP-mutatók: a .cur fájl viszi magával a saját forrópontját. */
+*{cursor:inherit}
+body,button,.title-bar,input[type=range]{cursor:url('assets/cursors/arrow.cur'),default}
+input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,[contenteditable]{cursor:url('assets/cursors/beam.cur'),text}
+.resize-n,.resize-s{cursor:url('assets/cursors/size-ns.cur'),ns-resize}
+.resize-e,.resize-w{cursor:url('assets/cursors/size-we.cur'),ew-resize}
+.resize-ne,.resize-sw{cursor:url('assets/cursors/size-nesw.cur'),nesw-resize}
+.resize-nw,.resize-se,.resize-handle{cursor:url('assets/cursors/size-nwse.cur'),nwse-resize}
+.paint-canvas,.paint-surface canvas{cursor:url('assets/cursors/cross.cur'),crosshair}
+button:disabled,.start-item:disabled{cursor:url('assets/cursors/arrow.cur'),default}

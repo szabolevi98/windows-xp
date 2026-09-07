@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 import vm from 'node:vm';
 const root=new URL('../',import.meta.url);
 const read=name=>readFileSync(new URL(name,root),'utf8');
@@ -166,4 +166,24 @@ test('Windows fly to the taskbar and back, and the menus fade in',()=>{
  for(const rule of ['menu-appear','start-appear','balloon-appear'])
   assert.match(css,new RegExp(`@keyframes ${rule}`),`${rule} is defined`);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+});
+
+test('The pointers are the ones XP shipped',()=>{
+ const css=read('styles.css');
+ // Buttons and title bars carry a cursor of their own in the browser, so they are named too.
+ assert.match(css,/\*\{cursor:inherit\}/);
+ assert.match(css,/body,button,\.title-bar,input\[type=range\]\{cursor:url\('assets\/cursors\/arrow\.cur'\),default\}/);
+ assert.match(css,/textarea,\[contenteditable\]\{cursor:url\('assets\/cursors\/beam\.cur'\),text\}/);
+ // Each edge and corner gets the arrow that belongs to it.
+ assert.match(css,/\.resize-n,\.resize-s\{cursor:url\('assets\/cursors\/size-ns\.cur'\),ns-resize\}/);
+ assert.match(css,/\.resize-e,\.resize-w\{cursor:url\('assets\/cursors\/size-we\.cur'\),ew-resize\}/);
+ assert.match(css,/\.resize-ne,\.resize-sw\{cursor:url\('assets\/cursors\/size-nesw\.cur'\),nesw-resize\}/);
+ assert.match(css,/\.resize-nw,\.resize-se,\.resize-handle\{cursor:url\('assets\/cursors\/size-nwse\.cur'\),nwse-resize\}/);
+ assert.match(css,/\.paint-canvas,\.paint-surface canvas\{cursor:url\('assets\/cursors\/cross\.cur'\),crosshair\}/);
+ // Every cursor file is on the machine and credited.
+ const sources=read('assets/sources.json');
+ for(const name of ['arrow','beam','cross','help','move','no','size-nesw','size-ns','size-nwse','size-we','wait']){
+  assert.ok(existsSync(new URL(`assets/cursors/${name}.cur`,root)),`${name}.cur is bundled`);
+  assert.match(sources,new RegExp(`cursors/${name}\.cur`),`${name}.cur is credited`);
+ }
 });

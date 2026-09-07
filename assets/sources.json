@@ -161,6 +161,61 @@
     "bytes": 8558
   },
   {
+    "file": "cursors/arrow.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/arrow_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/beam.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/beam_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/cross.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/cross_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/help.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/help_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/move.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/move_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/no.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/no_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/size-nesw.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size1_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/size-ns.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size4_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/size-nwse.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size2_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/size-we.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/size3_r.cur",
+    "bytes": 326
+  },
+  {
+    "file": "cursors/wait.cur",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Cursors/Windows XP/wait_r.cur",
+    "bytes": 326
+  },
+  {
     "file": "icons/accessibility.png",
     "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/Accessibility.png",
     "bytes": 125078
