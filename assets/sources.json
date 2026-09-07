@@ -778,5 +778,50 @@
     "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
     "archiveMember": "volume_slider.bmp",
     "bytes": 632
+  },
+  {
+    "file": "caption/blue.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 10741,
+    "resourceNames": [
+      "BLUE_CAPTIONBUTTON_BMP",
+      "BLUE_MINIMIZEGLYPH_BMP",
+      "BLUE_MAXIMIZEGLYPH_BMP",
+      "BLUE_RESTOREGLYPH_BMP",
+      "BLUE_CLOSEBUTTON_BMP",
+      "BLUE_CLOSEGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna bitmap backgrounds and 13px glyphs, composited at native size into four columns and eight state rows. Original 32-bit alpha and magenta color-key transparency preserved; no redrawing or scaling."
+  },
+  {
+    "file": "caption/olive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 11008,
+    "resourceNames": [
+      "HOMESTEAD_CAPTIONBUTTON_BMP",
+      "HOMESTEAD_MINIMIZEGLYPH_BMP",
+      "HOMESTEAD_MAXIMIZEGLYPH_BMP",
+      "HOMESTEAD_RESTOREGLYPH_BMP",
+      "HOMESTEAD_CLOSEBUTTON_BMP",
+      "HOMESTEAD_CLOSEGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna bitmap backgrounds and 13px glyphs, composited at native size into four columns and eight state rows. Original 32-bit alpha and magenta color-key transparency preserved; no redrawing or scaling."
+  },
+  {
+    "file": "caption/silver.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 8107,
+    "resourceNames": [
+      "METALLIC_CAPTIONBUTTON_BMP",
+      "METALLIC_MINIMIZEGLYPH_BMP",
+      "METALLIC_MAXIMIZEGLYPH_BMP",
+      "METALLIC_RESTOREGLYPH_BMP",
+      "METALLIC_CLOSEBUTTON_BMP",
+      "METALLIC_CLOSEGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna bitmap backgrounds and 13px glyphs, composited at native size into four columns and eight state rows. Original 32-bit alpha and magenta color-key transparency preserved; no redrawing or scaling."
   }
 ]
