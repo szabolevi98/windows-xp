@@ -111,5 +111,5 @@ test('The logon screen, the power dialog and User Accounts all know about the Gu
  assert.match(utils,/const asGuest=\(\)=>XP\.session==='guest'/);
  assert.match(utils,/A fiók nevét, képét és beállításait a számítógép rendszergazdája kezeli/);
  assert.doesNotMatch(utils,/data-for="guest"/,'nobody edits the Guest picture');
- assert.match(utils,/typeName=type=>type==='guest'\?'Vendég fiók'/);
+ assert.match(utils,/typeName=type=>type==='guest'\?t\('Vendég fiók'\)/);
 });

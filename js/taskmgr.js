@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-  const {$,$$,esc,icon,state}=XP;
+  const {$,$$,esc,icon,state,t}=XP;
   // The image name each program would run under on a real machine.
   const EXE={notepad:'notepad.exe',paint:'mspaint.exe',calculator:'calc.exe',cmd:'cmd.exe',ie:'iexplore.exe',
     outlook:'msimn.exe',player:'wmplayer.exe',explorer:'explorer.exe',mines:'winmine.exe',solitaire:'sol.exe',
@@ -11,11 +11,11 @@
   const SYSTEM=[
     ['System Idle Process','SYSTEM',28],['System','SYSTEM',236],['smss.exe','SYSTEM',388],
     ['csrss.exe','SYSTEM',4128],['winlogon.exe','SYSTEM',3512],['services.exe','SYSTEM',4020],
-    ['lsass.exe','SYSTEM',1284],['svchost.exe','SYSTEM',4784],['svchost.exe','HÁLÓZATI SZOLGÁLTATÁS',3496],
-    ['svchost.exe','HELYI SZOLGÁLTATÁS',4256],['spoolsv.exe','SYSTEM',5140],['explorer.exe',null,14260]
+    ['lsass.exe','SYSTEM',1284],['svchost.exe','SYSTEM',4784],['svchost.exe',t('HÁLÓZATI SZOLGÁLTATÁS'),3496],
+    ['svchost.exe',t('HELYI SZOLGÁLTATÁS'),4256],['spoolsv.exe','SYSTEM',5140],['explorer.exe',null,14260]
   ];
   // Everything the machine is running: the services it always has, plus a process per open program.
-  function processes(apps,user='Adminisztrátor'){
+  function processes(apps,user=t('Adminisztrátor')){
     const system=SYSTEM.map(([name,owner,memory])=>({name,user:owner||user,memory,app:null}));
     const running=apps.map((app,index)=>({name:EXE[app]||`${app}.exe`,user,memory:3600+((index*1637)%9200),app}));
     return [...system,...running];
@@ -24,19 +24,19 @@
 
   XP.register('taskmgr',()=>{
     if(XP.singleton('taskmgr'))return;
-    const w=XP.createWindow({title:'Windows Feladatkezelő',icon:'taskmgr',app:'taskmgr',className:'taskmgr-window',
+    const w=XP.createWindow({title:t('Windows Feladatkezelő'),icon:'taskmgr',app:'taskmgr',className:'taskmgr-window',
       width:520,height:500,minWidth:400,minHeight:340});
-    const TABS=[['apps','Alkalmazások'],['processes','Folyamatok'],['performance','Teljesítmény'],['network','Hálózat'],['users','Felhasználók']];
+    const TABS=[['apps',t('Alkalmazások')],['processes',t('Folyamatok')],['performance',t('Teljesítmény')],['network',t('Hálózat')],['users',t('Felhasználók')]];
     let tab='apps',selectedTask=null,selectedProcess=null,cpu=3,history=Array(60).fill(3),net=Array(60).fill(0);
     const others=()=>[...XP.windows.values()].filter(win=>!win.modal);
-    const rows=()=>processes(others().map(win=>win.app),state.user||'Adminisztrátor');
+    const rows=()=>processes(others().map(win=>win.app),state.user||t('Adminisztrátor'));
 
     XP.menubar(w,{
-      'Fájl':()=>[{label:'Új feladat (Futtatás…)',action:()=>XP.open('run')},null,{label:'Kilépés a Feladatkezelőből',action:()=>w.close()}],
-      'Beállítások':[{label:'Mindig látható',disabled:true},{label:'Kis méret használatkor',disabled:true}],
-      'Nézet':()=>TABS.map(([key,label])=>({label,checked:tab===key,action:()=>{tab=key;render();}})),
-      'Leállítás':[{label:'Készenlét',action:()=>XP.open('power')},{label:'Kikapcsolás',action:()=>XP.open('power')},null,{label:'Kijelentkezés',action:()=>XP.open('logoff')}],
-      'Súgó':[{label:'A Feladatkezelő névjegye',action:()=>XP.dialog('Windows Feladatkezelő','Windows Feladatkezelő\n\nA futó programokat és folyamatokat mutatja, és le is állíthatod őket.\n\nMegnyitás: Ctrl+Shift+Esc vagy Ctrl+Alt+Del.')}]
+      [t('Fájl')]:()=>[{label:t('Új feladat (Futtatás…)'),action:()=>XP.open('run')},null,{label:t('Kilépés a Feladatkezelőből'),action:()=>w.close()}],
+      [t('Beállítások')]:[{label:t('Mindig látható'),disabled:true},{label:t('Kis méret használatkor'),disabled:true}],
+      [t('Nézet')]:()=>TABS.map(([key,label])=>({label,checked:tab===key,action:()=>{tab=key;render();}})),
+      [t('Leállítás')]:[{label:t('Készenlét'),action:()=>XP.open('power')},{label:t('Kikapcsolás'),action:()=>XP.open('power')},null,{label:t('Kijelentkezés'),action:()=>XP.open('logoff')}],
+      [t('Súgó')]:[{label:t('A Feladatkezelő névjegye'),action:()=>XP.dialog(t('Windows Feladatkezelő'),t('Windows Feladatkezelő\n\nA futó programokat és folyamatokat mutatja, és le is állíthatod őket.\n\nMegnyitás: Ctrl+Shift+Esc vagy Ctrl+Alt+Del.'))}]
     });
 
     const body=document.createElement('div');body.className='taskmgr-body';
@@ -68,34 +68,34 @@
       const running=others(),list=rows();
       if(tab==='apps'){
         panel.innerHTML=running.length
-          ?`<table class="taskmgr-table"><thead><tr><th>Feladat</th><th>Állapot</th></tr></thead><tbody>${running.map(win=>
-             `<tr class="${win.id===selectedTask?'selected':''}" data-task="${win.id}"><td>${icon(win.icon)}${esc(win.title)}</td><td>${win.minimized?'Fut':'Fut'}</td></tr>`).join('')}</tbody></table>`
-          :'<p class="taskmgr-empty">Nincs futó alkalmazás.</p>';
-        buttons.innerHTML='<button class="xp-button" data-do="end">Feladat befejezése</button><button class="xp-button" data-do="switch">Váltás</button><button class="xp-button" data-do="new">Új feladat…</button>';
+          ?`<table class="taskmgr-table"><thead><tr><th>Feladat</th><th>${esc(t('Állapot'))}</th></tr></thead><tbody>${running.map(win=>
+             `<tr class="${win.id===selectedTask?'selected':''}" data-task="${win.id}"><td>${icon(win.icon)}${esc(win.title)}</td><td>${win.minimized?t('Fut'):t('Fut')}</td></tr>`).join('')}</tbody></table>`
+          :`<p class="taskmgr-empty">${esc(t('Nincs futó alkalmazás.'))}</p>`;
+        buttons.innerHTML=`<button class="xp-button" data-do="end">${esc(t('Feladat befejezése'))}</button><button class="xp-button" data-do="switch">${esc(t('Váltás'))}</button><button class="xp-button" data-do="new">${esc(t('Új feladat…'))}</button>`;
       }
       if(tab==='processes'){
-        panel.innerHTML=`<table class="taskmgr-table processes"><thead><tr><th>Képfájlnév</th><th>Felhasználónév</th><th>CPU</th><th>Memóriahasználat</th></tr></thead><tbody>${list.map((process,index)=>{
+        panel.innerHTML=`<table class="taskmgr-table processes"><thead><tr><th>${esc(t('Képfájlnév'))}</th><th>${esc(t('Felhasználónév'))}</th><th>CPU</th><th>${esc(t('Memóriahasználat'))}</th></tr></thead><tbody>${list.map((process,index)=>{
           const share=process.name==='System Idle Process'?100-cpu:process.app?Math.max(0,Math.round(cpu/Math.max(1,running.length))):0;
           return `<tr class="${index===selectedProcess?'selected':''}" data-process="${index}"><td>${esc(process.name)}</td><td>${esc(process.user)}</td><td>${String(share).padStart(2,'0')}</td><td>${process.memory.toLocaleString('hu-HU')} KB</td></tr>`;
         }).join('')}</tbody></table>`;
-        buttons.innerHTML='<button class="xp-button" data-do="kill">Folyamat leállítása</button>';
+        buttons.innerHTML=`<button class="xp-button" data-do="kill">${esc(t('Folyamat leállítása'))}</button>`;
       }
       if(tab==='performance'){
-        panel.innerHTML=`<div class="taskmgr-meters"><div><h3>CPU-használat</h3><div class="meter-box"><b>${cpu}%</b></div></div><div class="taskmgr-graph"><h3>CPU-használat előzményei</h3><canvas class="cpu-graph"></canvas></div></div><dl class="taskmgr-facts"><dt>Leírók</dt><dd>${8214+list.length*37}</dd><dt>Szálak</dt><dd>${312+list.length*9}</dd><dt>Folyamatok</dt><dd>${list.length}</dd><dt>Fizikai memória összesen</dt><dd>523 760 KB</dd><dt>Fizikai memória szabad</dt><dd>${(268400-list.length*1800).toLocaleString('hu-HU')} KB</dd><dt>Véglegesített memória</dt><dd>${(146200+list.length*2400).toLocaleString('hu-HU')} KB</dd></dl>`;
+        panel.innerHTML=`<div class="taskmgr-meters"><div><h3>${esc(t('CPU-használat'))}</h3><div class="meter-box"><b>${cpu}%</b></div></div><div class="taskmgr-graph"><h3>${esc(t('CPU-használat előzményei'))}</h3><canvas class="cpu-graph"></canvas></div></div><dl class="taskmgr-facts"><dt>${esc(t('Leírók'))}</dt><dd>${8214+list.length*37}</dd><dt>${esc(t('Szálak'))}</dt><dd>${312+list.length*9}</dd><dt>Folyamatok</dt><dd>${list.length}</dd><dt>${esc(t('Fizikai memória összesen'))}</dt><dd>523 760 KB</dd><dt>${esc(t('Fizikai memória szabad'))}</dt><dd>${(268400-list.length*1800).toLocaleString('hu-HU')} KB</dd><dt>${esc(t('Véglegesített memória'))}</dt><dd>${(146200+list.length*2400).toLocaleString('hu-HU')} KB</dd></dl>`;
         graph($('.cpu-graph',panel),history,'#26ff5c');
         buttons.innerHTML='';
       }
       if(tab==='network'){
-        panel.innerHTML=`<div class="taskmgr-graph wide"><h3>Helyi kapcsolat</h3><canvas class="net-graph"></canvas></div><table class="taskmgr-table"><thead><tr><th>Adapter</th><th>Hálózat kihasználtsága</th><th>Kapcsolat sebessége</th><th>Állapot</th></tr></thead><tbody><tr><td>Helyi kapcsolat</td><td>${(net.at(-1)/10).toFixed(2)} %</td><td>100 Mbps</td><td>Működik</td></tr></tbody></table>`;
+        panel.innerHTML=`<div class="taskmgr-graph wide"><h3>Helyi kapcsolat</h3><canvas class="net-graph"></canvas></div><table class="taskmgr-table"><thead><tr><th>Adapter</th><th>${esc(t('Hálózat kihasználtsága'))}</th><th>${esc(t('Kapcsolat sebessége'))}</th><th>${esc(t('Állapot'))}</th></tr></thead><tbody><tr><td>Helyi kapcsolat</td><td>${(net.at(-1)/10).toFixed(2)} %</td><td>100 Mbps</td><td>${esc(t('Működik'))}</td></tr></tbody></table>`;
         graph($('.net-graph',panel),net,'#ffd23f');
         buttons.innerHTML='';
       }
       if(tab==='users'){
         // Everyone signed in: the account at the machine, and whoever left programs running.
         const sessions=XP.accounts().filter(account=>account.active||account.running);
-        panel.innerHTML=`<table class="taskmgr-table"><thead><tr><th>Felhasználó</th><th>Azonosító</th><th>Állapot</th><th>Futó programok</th></tr></thead><tbody>${sessions.map((account,index)=>
-          `<tr class="${account.active?'selected':''}"><td>${XP.avatar(account.avatar)}${esc(account.name)}</td><td>${index}</td><td>${account.active?'Aktív':'Leválasztva'}</td><td>${account.active?others().length:account.running}</td></tr>`).join('')}</tbody></table>`;
-        buttons.innerHTML='<button class="xp-button" data-do="switch-user">Felhasználóváltás</button><button class="xp-button" data-do="logoff">Kijelentkezés</button>';
+        panel.innerHTML=`<table class="taskmgr-table"><thead><tr><th>${esc(t('Felhasználó'))}</th><th>${esc(t('Azonosító'))}</th><th>${esc(t('Állapot'))}</th><th>${esc(t('Futó programok'))}</th></tr></thead><tbody>${sessions.map((account,index)=>
+          `<tr class="${account.active?'selected':''}"><td>${XP.avatar(account.avatar)}${esc(account.name)}</td><td>${index}</td><td>${account.active?t('Aktív'):t('Leválasztva')}</td><td>${account.active?others().length:account.running}</td></tr>`).join('')}</tbody></table>`;
+        buttons.innerHTML=`<button class="xp-button" data-do="switch-user">${esc(t('Felhasználóváltás'))}</button><button class="xp-button" data-do="logoff">${esc(t('Kijelentkezés'))}</button>`;
       }
       $('span',footer).textContent=`Folyamatok: ${list.length}`;
       $$('.status-part',footer)[0].textContent=`CPU-használat: ${cpu}%`;
@@ -123,8 +123,8 @@
       if(action==='kill'){
         const process=rows()[selectedProcess];
         if(!process)return;
-        if(!process.app){XP.sound('error');XP.dialog('Feladatkezelő','Ez egy rendszerfolyamat, és nem állítható le.',{icon:'error'});return;}
-        XP.confirm('Feladatkezelő – figyelmeztetés',`Biztosan leállítod a(z) ${process.name} folyamatot?\n\nA nem mentett adatok elvesznek.`).then(answer=>{
+        if(!process.app){XP.sound('error');XP.dialog(t('Feladatkezelő'),t('Ez egy rendszerfolyamat, és nem állítható le.'),{icon:'error'});return;}
+        XP.confirm(t('Feladatkezelő – figyelmeztetés'),`Biztosan leállítod a(z) ${process.name} folyamatot?\n\nA nem mentett adatok elvesznek.`).then(answer=>{
           if(answer!=='Igen')return;
           const victim=others().find(win=>win.app===process.app);
           if(victim)XP.close(victim);

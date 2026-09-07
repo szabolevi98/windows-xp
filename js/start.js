@@ -30,10 +30,10 @@ function renderIcons(){
   if(e.ctrlKey){const key=e.key.toLowerCase();if(key==='v'){e.preventDefault();XP.paste('desktop');}if(item.file&&(key==='x'||key==='c')){e.preventDefault();XP.clip(item.file,key==='x');}}
  };
  b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));XP.menu([{label:t('Megnyitás'),icon:item.icon,action:()=>activateIcon(item)},...(item.id==='computer'?[{label:t('Az Intéző megnyitása'),icon:'folder',action:()=>XP.open('explorer')},{label:t('Keresés…'),icon:'search',action:()=>XP.open('search')},{label:t('Kezelés'),icon:'computer',action:()=>XP.open('compmgmt')},null,{label:t('Csatlakoztatás hálózati meghajtóhoz…'),disabled:true},{label:t('Hálózati meghajtó leválasztása…'),disabled:true}]:[]),...(item.id==='recycle'?[{label:t('Lomtár ürítése'),icon:'recycle',action:XP.emptyTrash,disabled:!state.files.some(f=>f.deleted)}]:[]),...(item.file?[null,{label:t('Kivágás'),shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:t('Másolás'),shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:t('Küldés'),items:[
-  {label:t('Asztal (parancsikon létrehozása)'),icon:'showdesktop',action:()=>{if(XP.shortcutToFile(item.file))notify(t(t('Parancsikon')),t('A(z) „{name}” parancsikonja elkészült.',{name:item.label}));}},
-  {label:t('Dokumentumok'),icon:'documents',action:()=>{if(XP.copyInto(item.file,'documents'))notify(t(t('Küldés')),t('Másolat készült a Dokumentumokba: {name}',{name:item.label}));}}
+  {label:t('Asztal (parancsikon létrehozása)'),icon:'showdesktop',action:()=>{if(XP.shortcutToFile(item.file))notify(t('Parancsikon'),t('A(z) „{name}” parancsikonja elkészült.',{name:item.label}));}},
+  {label:t('Dokumentumok'),icon:'documents',action:()=>{if(XP.copyInto(item.file,'documents'))notify(t('Küldés'),t('Másolat készült a Dokumentumokba: {name}',{name:item.label}));}}
  ]},
- {label:t('Átnevezés'),action:async()=>{const name=XP.fileName(await XP.prompt(t('Átnevezés'),t('Új név:'),item.label));if(name){const f=state.files.find(f=>f.id===item.file);if(state.files.some(o=>o.id!==f.id&&o.parent===f.parent&&o.name===name&&!o.deleted)){notify(t('Átnevezés'),t('Ez a név már foglalt.'));return;}XP.saveFile({...f,name});}}},{label:t('Törlés'),icon:'recycle',action:()=>XP.trashFile(item.file)}]:[]),null,{label:t('Tulajdonságok'),action:()=>item.id==='computer'?XP.open('system'):XP.dialog(item.label,`${item.label}\n${item.shortcut?'Parancsikon egy Windows XP programhoz.':item.file?t('Saját fájl az asztalon.'):t('Windows XP alkalmazás vagy rendszermappa.')}`)}],e.clientX,e.clientY);};
+ {label:t('Átnevezés'),action:async()=>{const name=XP.fileName(await XP.prompt(t('Átnevezés'),t('Új név:'),item.label));if(name){const f=state.files.find(f=>f.id===item.file);if(state.files.some(o=>o.id!==f.id&&o.parent===f.parent&&o.name===name&&!o.deleted)){notify(t('Átnevezés'),t('Ez a név már foglalt.'));return;}XP.saveFile({...f,name});}}},{label:t('Törlés'),icon:'recycle',action:()=>XP.trashFile(item.file)}]:[]),null,{label:t('Tulajdonságok'),action:()=>item.id==='computer'?XP.open('system'):XP.dialog(item.label,`${item.label}\n${item.shortcut?t('Parancsikon egy Windows XP programhoz.'):item.file?t('Saját fájl az asztalon.'):t('Windows XP alkalmazás vagy rendszermappa.')}`)}],e.clientX,e.clientY);};
  b.onpointerdown=e=>{
   if(e.button!==0)return;
   const sx=e.clientX,sy=e.clientY,left=parseInt(b.style.left),top=parseInt(b.style.top);
@@ -126,7 +126,7 @@ $('#start-menu').oncontextmenu=e=>{
   {label:t('Megnyitás'),icon:ic,action:()=>XP.open(app)},
   null,
   {label:t('Küldés az asztalra (parancsikon)'),icon:'showdesktop',disabled:already,action:()=>{
-   if(XP.shortcutTo(app,label,ic))notify(t(t('Parancsikon')),t('A(z) „{name}” parancsikonja az asztalra került.',{name:label}));
+   if(XP.shortcutTo(app,label,ic))notify(t('Parancsikon'),t('A(z) „{name}” parancsikonja az asztalra került.',{name:label}));
   }}
  ],e.clientX,e.clientY);
 };

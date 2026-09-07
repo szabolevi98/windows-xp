@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-const {$,$$,state,register,createWindow,menubar,status,persist,notify,dialog}=XP;
+const {$,$$,state,register,createWindow,menubar,status,persist,notify,dialog,t,esc}=XP;
 const SUITS=['♠','♥','♣','♦'],NAMES=[null,'A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const red=c=>c.suit===1||c.suit===3;
 const label=c=>NAMES[c.rank]+SUITS[c.suit];
@@ -36,7 +36,7 @@ rules.freecellSafe=(card,foundations)=>{
 
 register('freecell',()=>{
  if(XP.singleton('freecell'))return;
- const w=createWindow({title:'FreeCell',icon:'freecell',app:'freecell',width:660,height:565,minWidth:430,minHeight:380});
+ const w=createWindow({title:t('FreeCell'),icon:'freecell',app:'freecell',width:660,height:565,minWidth:430,minHeight:380});
  let columns=[],cells=[null,null,null,null],foundations=[[],[],[],[]],selected=null,number=1,moves=0,snapshots=[],finished=false;
  const stats=()=>state.freecellStats||{played:0,won:0,streak:0,best:0};
  const freeCount=()=>cells.filter(c=>!c).length;
@@ -55,15 +55,15 @@ register('freecell',()=>{
  function saveMove(){snapshots.push(JSON.stringify({columns,cells,foundations,moves}));if(snapshots.length>200)snapshots.shift();}
  function undo(){if(!snapshots.length)return;({columns,cells,foundations,moves}=JSON.parse(snapshots.pop()));selected=null;render();}
  async function pick(){
-  const answer=await dialog('Játék száma','Add meg a leosztás számát (1 – 1 000 000).\nAz eredeti FreeCell számozását követi.',{input:'Játék száma',value:String(number),buttons:['OK','Mégse']});
+  const answer=await dialog(t('Játék száma'),t('Add meg a leosztás számát (1 – 1 000 000).\nAz eredeti FreeCell számozását követi.'),{input:t('Játék száma'),value:String(number),buttons:['OK',t('Mégse')]});
   if(answer!==null&&String(answer).trim())reset(Number(String(answer).trim()));
  }
  menubar(w,{
-  'Játék':()=>[{label:'Új játék',shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:'Játék száma…',shortcut:'F3',action:pick},{label:'Ugyanez újra',action:()=>reset(number)},null,{label:'Visszavonás',shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:'Automatikus gyűjtés',action:()=>{collect(true);render();}},null,{label:'Statisztika…',action:()=>{const s=stats();XP.dialog('FreeCell – Statisztika',`Lejátszott játékok: ${s.played}\nMegnyert játékok: ${s.won}\nNyerési arány: ${s.played?Math.round(s.won/s.played*100):0}%\nJelenlegi sorozat: ${s.streak}\nLeghosszabb sorozat: ${s.best}`);}},null,{label:'Kilépés',action:()=>w.close()}],
-  'Súgó':[{label:'Játékszabályok',action:()=>XP.dialog('FreeCell','Cél: mind az 52 lapot ásztól királyig a jobb felső gyűjtőhelyekre rakni.\n\nAz oszlopokban csökkenő sorrendben, váltakozó színnel építkezhetsz.\nA bal felső négy szabad helyre laponként egy lap tehető le.\nÜres oszlopba bármelyik lap kerülhet.\n\nEgyszerre annyi lapot mozgathatsz, amennyi a szabad helyekre és üres oszlopokba beférne: (szabad helyek + 1) × 2 ^ üres oszlopok.\n\nKattints a lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre rakás.\nMinden leosztás számozott, és a 617-es játék mindig ugyanaz.')}]
+  [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:t('Játék száma…'),shortcut:'F3',action:pick},{label:t('Ugyanez újra'),action:()=>reset(number)},null,{label:t('Visszavonás'),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t('Automatikus gyűjtés'),action:()=>{collect(true);render();}},null,{label:t('Statisztika…'),action:()=>{const s=stats();XP.dialog('FreeCell – Statisztika',`Lejátszott játékok: ${s.played}\nMegnyert játékok: ${s.won}\nNyerési arány: ${s.played?Math.round(s.won/s.played*100):0}%\nJelenlegi sorozat: ${s.streak}\nLeghosszabb sorozat: ${s.best}`);}},null,{label:t('Kilépés'),action:()=>w.close()}],
+  [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog('FreeCell',t('Cél: mind az 52 lapot ásztól királyig a jobb felső gyűjtőhelyekre rakni.\n\nAz oszlopokban csökkenő sorrendben, váltakozó színnel építkezhetsz.\nA bal felső négy szabad helyre laponként egy lap tehető le.\nÜres oszlopba bármelyik lap kerülhet.\n\nEgyszerre annyi lapot mozgathatsz, amennyi a szabad helyekre és üres oszlopokba beférne: (szabad helyek + 1) × 2 ^ üres oszlopok.\n\nKattints a lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre rakás.\nMinden leosztás számozott, és a 617-es játék mindig ugyanaz.'))}]
  });
  const body=document.createElement('div');body.className='solitaire-body freecell-body';w.body.append(body);
- const bar=status(w,'Lépések: 0','Szabad helyek: 4');
+ const bar=status(w,t('Lépések: 0'),'Szabad helyek: 4');
  function stack(){
   if(!selected)return[];
   if(selected.kind==='cell')return cells[selected.index]?[cells[selected.index]]:[];
@@ -94,7 +94,7 @@ register('freecell',()=>{
    saveMove();detach();pile.push(...cards);
   }
   moves++;selected=null;collect(false);render();
-  if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify('Gratulálunk!',`Kiraktad a(z) ${number}. játékot ${moves} lépésből!`);}
+  if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),`Kiraktad a(z) ${number}. játékot ${moves} lépésből!`);}
   return true;
  }
  function collect(all){
@@ -110,12 +110,12 @@ register('freecell',()=>{
     foundations[c.suit].push(c);changed=true;break;
    }
   }
-  if(all&&foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify('Gratulálunk!',`Kiraktad a(z) ${number}. játékot ${moves} lépésből!`);}
+  if(all&&foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),`Kiraktad a(z) ${number}. játékot ${moves} lépésből!`);}
  }
  function render(){
   const chosen=(kind,a,b)=>selected?.kind===kind&&(kind==='column'?selected.col===a:selected.index===a);
-  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${i+1}. szabad hely"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${SUITS[i]} gyűjtőhely">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">Kattints egy lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre.</div>`;
-  $('span',bar).textContent='Lépések: '+moves;
+  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${i+1}. szabad hely"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${SUITS[i]} gyűjtőhely">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t('Kattints egy lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre.'))}</div>`;
+  $('span',bar).textContent=t('Lépések: ')+moves;
   $('.status-part',bar).textContent=`Szabad helyek: ${freeCount()} · Egyszerre ${rules.freecellCapacity(freeCount(),emptyCount(),false)} lap`;
   const max=Math.max(1,...columns.map(c=>c.length));
   $$('.card-column',body).forEach(el=>el.style.minHeight=Math.max(240,max*22+65)+'px');
@@ -171,7 +171,7 @@ rules.spiderComplete=column=>{
 
 register('spider',()=>{
  if(XP.singleton('spider'))return;
- const w=createWindow({title:'Pókpasziánsz',icon:'spider',app:'spider',width:700,height:585,minWidth:440,minHeight:380});
+ const w=createWindow({title:t('Pókpasziánsz'),icon:'spider',app:'spider',width:700,height:585,minWidth:440,minHeight:380});
  let columns=[],stock=[],done=0,selected=null,score=500,moves=0,suitCount=1,snapshots=[];
  function reset(count=suitCount){
   suitCount=count;const deal=rules.spiderDeal(count);
@@ -181,14 +181,14 @@ register('spider',()=>{
  function saveMove(){snapshots.push(JSON.stringify({columns,stock,done,score,moves}));if(snapshots.length>200)snapshots.shift();}
  function undo(){if(!snapshots.length)return;({columns,stock,done,score,moves}=JSON.parse(snapshots.pop()));selected=null;render();}
  menubar(w,{
-  'Játék':()=>[{label:'Új játék',shortcut:'F2',action:()=>reset()},null,{label:'Egy szín',checked:suitCount===1,action:()=>reset(1)},{label:'Két szín',checked:suitCount===2,action:()=>reset(2)},{label:'Négy szín',checked:suitCount===4,action:()=>reset(4)},null,{label:'Osztás a pakliból',disabled:!stock.length,action:deal},{label:'Visszavonás',shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},null,{label:'Kilépés',action:()=>w.close()}],
-  'Súgó':[{label:'Játékszabályok',action:()=>XP.dialog('Pókpasziánsz','Cél: nyolc teljes, királytól ászig tartó azonos színű sort összeállítani. Az elkészült sorok lekerülnek az asztalról.\n\nAz oszlopokra színtől függetlenül rakhatsz csökkenő sorrendben, de csak azonos színű, folyamatos sorozatot mozgathatsz együtt.\nÜres oszlopba bármi kerülhet.\n\nA jobb alsó pakliból egyszerre mind a tíz oszlop kap egy lapot – ehhez egyetlen oszlop sem lehet üres.\n\nA pontszám 500-ról indul, minden lépés egy pontba kerül, egy kész sor 100 pontot ér.')}]
+  [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',action:()=>reset()},null,{label:t('Egy szín'),checked:suitCount===1,action:()=>reset(1)},{label:t('Két szín'),checked:suitCount===2,action:()=>reset(2)},{label:t('Négy szín'),checked:suitCount===4,action:()=>reset(4)},null,{label:t('Osztás a pakliból'),disabled:!stock.length,action:deal},{label:t('Visszavonás'),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},null,{label:t('Kilépés'),action:()=>w.close()}],
+  [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog(t('Pókpasziánsz'),t('Cél: nyolc teljes, királytól ászig tartó azonos színű sort összeállítani. Az elkészült sorok lekerülnek az asztalról.\n\nAz oszlopokra színtől függetlenül rakhatsz csökkenő sorrendben, de csak azonos színű, folyamatos sorozatot mozgathatsz együtt.\nÜres oszlopba bármi kerülhet.\n\nA jobb alsó pakliból egyszerre mind a tíz oszlop kap egy lapot – ehhez egyetlen oszlop sem lehet üres.\n\nA pontszám 500-ról indul, minden lépés egy pontba kerül, egy kész sor 100 pontot ér.'))}]
  });
  const body=document.createElement('div');body.className='solitaire-body spider-body';w.body.append(body);
- const bar=status(w,'Pontszám: 500','Kész sorok: 0 / 8');
+ const bar=status(w,t('Pontszám: 500'),t('Kész sorok: 0 / 8'));
  function deal(){
   if(!stock.length)return;
-  if(columns.some(c=>!c.length)){XP.sound('error');XP.dialog('Pókpasziánsz','Nem oszthatsz, amíg üres oszlop van a táblán.',{icon:'error'});return;}
+  if(columns.some(c=>!c.length)){XP.sound('error');XP.dialog(t('Pókpasziánsz'),t('Nem oszthatsz, amíg üres oszlop van a táblán.'),{icon:'error'});return;}
   saveMove();columns.forEach(col=>{const c=stock.pop();c.face=true;col.push(c);});moves++;score--;selected=null;sweep();render();
  }
  function sweep(){
@@ -198,7 +198,7 @@ register('spider',()=>{
    col.splice(at);done++;score+=100;
    const top=col.at(-1);if(top&&!top.face)top.face=true;
   });
-  if(done===8){XP.sound('notify');notify('Gratulálunk!',`Kiraktad a pókpasziánszt ${suitCount} színnel! Pontszám: ${score}`);}
+  if(done===8){XP.sound('notify');notify(t('Gratulálunk!'),`Kiraktad a pókpasziánszt ${suitCount} színnel! Pontszám: ${score}`);}
  }
  function moveTo(target){
   if(!selected||selected.col===target)return false;
@@ -212,11 +212,11 @@ register('spider',()=>{
  }
  function render(){
   let offsets;
-  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||'<span class="spider-hint">Nyolc kész sor kell a győzelemhez.</span>'}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="Osztás a pakliból, ${Math.ceil(stock.length/10)} osztás maradt"></button><span>${Math.ceil(stock.length/10)}×</span>`:'<span class="spider-hint">Elfogyott a pakli</span>'}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
+  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="Osztás a pakliból, ${Math.ceil(stock.length/10)} osztás maradt"></button><span>${Math.ceil(stock.length/10)}×</span>`:'<span class="spider-hint">Elfogyott a pakli</span>'}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
    let y=0;offsets=col.map(card=>{const at=y;y+=card.face?20:8;return at;});
    return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
   }).join('')}</div>`;
-  $('span',bar).textContent='Pontszám: '+score;
+  $('span',bar).textContent=t('Pontszám: ')+score;
   $('.status-part',bar).textContent=`Kész sorok: ${done} / 8`;
   const max=Math.max(1,...columns.map(col=>col.reduce((y,card)=>y+(card.face?20:8),0)));
   $$('.card-column',body).forEach(el=>el.style.minHeight=Math.max(230,max+60)+'px');
@@ -298,11 +298,11 @@ rules.heartsChoice=(hand,trick,info={})=>{
 
 register('hearts',()=>{
  if(XP.singleton('hearts'))return;
- const w=createWindow({title:'Hearts',icon:'hearts',app:'hearts',width:700,height:585,minWidth:440,minHeight:400});
- const names=[state.user||'Te','Nyugat','Észak','Kelet'];
+ const w=createWindow({title:t('Hearts'),icon:'hearts',app:'hearts',width:700,height:585,minWidth:440,minHeight:400});
+ const names=[state.user||t('Te'),t('Nyugat'),t('Észak'),t('Kelet')];
  const seats=['south','west','north','east'];
  let hands=[],scores=[0,0,0,0],taken=[0,0,0,0],trick=[],turn=0,leader=0,tricks=0,broken=false,phase='pass',passIndex=0,chosen=[],queenGone=false,over=false;
- const directions=[{label:'balra',shift:1},{label:'jobbra',shift:3},{label:'szemközt',shift:2},{label:'nincs csere',shift:0}];
+ const directions=[{label:'balra',shift:1},{label:'jobbra',shift:3},{label:t('szemközt'),shift:2},{label:t('nincs csere'),shift:0}];
  const timers=new Set();
  const later=(fn,ms)=>{const id=setTimeout(()=>{timers.delete(id);fn();},ms);timers.add(id);return id;};
  w.cleanup.push(()=>{timers.forEach(clearTimeout);timers.clear();});
@@ -345,7 +345,7 @@ register('hearts',()=>{
   const lines=names.map((n,i)=>`${n}: +${round[i]} → ${scores[i]}`).join('\n');
   phase='over';render();
   const done=Math.max(...scores)>=100;
-  const title=done?'Hearts – vége':'Hearts – kör vége';
+  const title=done?t('Hearts – vége'):t('Hearts – kör vége');
   const message=(moon>=0?`${names[moon]} bevitte az összes lapot – „lövés a Holdra”!\n\n`:'')+lines+(done?`\n\nGyőztes: ${names[scores.indexOf(Math.min(...scores))]}`:'');
   XP.sound(done?'notify':'ding');
   XP.dialog(title,message).then(()=>{
@@ -364,11 +364,11 @@ register('hearts',()=>{
   },650);
  }
  menubar(w,{
-  'Játék':()=>[{label:'Új játszma',shortcut:'F2',action:()=>reset(true)},null,{label:'Pontállás…',action:()=>XP.dialog('Hearts – Pontállás',names.map((n,i)=>`${n}: ${scores[i]} pont`).join('\n')+'\n\nA játszma 100 pontnál ér véget, a legkevesebb pont nyer.')},null,{label:'Kilépés',action:()=>w.close()}],
-  'Súgó':[{label:'Játékszabályok',action:()=>XP.dialog('Hearts','Négy játékos, 13-13 lap. Minden kör elején három lapot adsz át (balra, jobbra, szemközt, majd csere nélkül).\n\nA treff 2 kezd. Színre színt kell tenni; ha nem tudsz, bármit dobhatsz.\nAz első ütésbe nem tehető kőr és pikk dáma.\nKőrrel csak akkor nyithatsz, ha már esett kőr, vagy csak kőröd maradt.\n\nMinden kőr 1 pont, a pikk dáma 13. A pont rossz: a legkevesebb nyer.\nHa valaki mind a 26 pontot beviszi („lövés a Holdra”), a másik három kap 26-ot.\n\nA játszma akkor ér véget, ha valaki eléri a 100 pontot.')}]
+  [t('Játék')]:()=>[{label:t('Új játszma'),shortcut:'F2',action:()=>reset(true)},null,{label:t('Pontállás…'),action:()=>XP.dialog(t('Hearts – Pontállás'),names.map((n,i)=>`${n}: ${scores[i]} pont`).join('\n')+t('\n\nA játszma 100 pontnál ér véget, a legkevesebb pont nyer.'))},null,{label:t('Kilépés'),action:()=>w.close()}],
+  [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog('Hearts',t('Négy játékos, 13-13 lap. Minden kör elején három lapot adsz át (balra, jobbra, szemközt, majd csere nélkül).\n\nA treff 2 kezd. Színre színt kell tenni; ha nem tudsz, bármit dobhatsz.\nAz első ütésbe nem tehető kőr és pikk dáma.\nKőrrel csak akkor nyithatsz, ha már esett kőr, vagy csak kőröd maradt.\n\nMinden kőr 1 pont, a pikk dáma 13. A pont rossz: a legkevesebb nyer.\nHa valaki mind a 26 pontot beviszi („lövés a Holdra”), a másik három kap 26-ot.\n\nA játszma akkor ér véget, ha valaki eléri a 100 pontot.'))}]
  });
  const body=document.createElement('div');body.className='solitaire-body hearts-body';w.body.append(body);
- const bar=status(w,'Pontállás','');
+ const bar=status(w,t('Pontállás'),'');
  function seatHtml(p){
   const active=phase==='play'&&turn===p&&trick.length<4;
   return `<div class="hearts-seat seat-${seats[p]} ${active?'active':''}"><b>${names[p]}</b><span>${scores[p]} pont · ${hands[p].length} lap</span><div class="hearts-backs">${Array.from({length:Math.min(hands[p].length,13)},(_,i)=>`<i style="--back-i:${i}"></i>`).join('')}</div></div>`;
@@ -379,7 +379,7 @@ register('hearts',()=>{
   const table=trick.map(t=>`<div class="hearts-play play-${seats[t.player]}">${cardHtml(t.card)}</div>`).join('');
   const centre=phase==='pass'
    ?`<div class="hearts-centre"><p>Válassz ki három lapot, és add át ${directions[passIndex%4].label}.</p><button class="xp-button primary" data-pass ${chosen.length===3?'':'disabled'}>Átadás (${chosen.length}/3)</button></div>`
-   :over?'<div class="hearts-centre"><p>A játszma véget ért. Új játszma: F2.</p></div>'
+   :over?`<div class="hearts-centre"><p>${esc(t('A játszma véget ért. Új játszma: F2.'))}</p></div>`
    :`<div class="hearts-table">${table}</div>`;
   body.innerHTML=`<div class="hearts-top">${seatHtml(2)}</div><div class="hearts-middle">${seatHtml(1)}${centre}${seatHtml(3)}</div><div class="hearts-hand" aria-label="A te lapjaid">${hands[0].map((c,i)=>cardHtml(c,`data-card="${key(c)}"`,chosen.some(x=>key(x)===key(c)),`--card-i:${i}`)+'').join('')}</div>`;
   $$('.hearts-hand .playing-card',body).forEach((el,i)=>{
@@ -388,7 +388,7 @@ register('hearts',()=>{
   });
   $('span',bar).textContent=names.map((n,i)=>`${n}: ${scores[i]}`).join(' · ');
   $('.status-part',bar)?.remove();
-  const hint=phase==='pass'?'Add át három lapot.':over?'Vége.':turn===0?'Te következel.':`${names[turn]} gondolkodik…`;
+  const hint=phase==='pass'?t('Add át három lapot.'):over?t('Vége.'):turn===0?t('Te következel.'):`${names[turn]} gondolkodik…`;
   bar.insertAdjacentHTML('beforeend',`<span class="status-part">${hint}</span>`);
  }
  body.onclick=e=>{

@@ -80,7 +80,7 @@ test('The tray speaker opens the little slider, and two clicks the mixer',()=>{
 
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  // Hangerő-szabályozó: the master and the channels a sound card of the day offered.
- assert.match(utils,/title:'Hangerő-szabályozó'/);
+ assert.match(utils,/title:t\('Hangerő-szabályozó'\)/);
  for(const channel of ['Hangerő-szabályozó','Hullám','SW Synth','CD-lejátszó'])
   assert.ok(utils.includes(`'${channel}'`),`the mixer has a ${channel} channel`);
  assert.match(utils,/Összes némítása/,'the master mutes everything');
@@ -163,13 +163,13 @@ test('A drive has the properties sheet XP drew, pie and all',()=>{
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  assert.match(utils,/register\('drive',\(which='disk'\)=>/);
  assert.match(utils,/Helyi lemez \(C:\)/);
- assert.match(utils,/tabs:\[\['general','Általános'\],\['tools','Eszközök'\],\['hardware','Hardver'\]\]/);
+ assert.match(utils,/tabs:\[\['general',t\('Általános'\)\]/);
  // The used slice grows with what the account actually keeps on the machine.
  assert.match(utils,/const own=state\.files\.filter\(f=>!f\.deleted\)\.reduce/);
  assert.match(utils,/conic-gradient\(#1b3fa0 0 \$\{percent\}%,#c832c8 \$\{percent\}% 100%\)/);
  assert.match(utils,/Használt terület:/);
  assert.match(utils,/Szabad terület:/);
- assert.match(utils,/Fájlrendszer:<\/dt><dd>NTFS/);
+ assert.match(utils,/Fájlrendszer:'\)\)\}<\/dt><dd>NTFS/);
  assert.match(utils,/Lemezkarbantartó/);
  // An empty drive says so instead of showing a pie of nothing.
  assert.match(utils,/Nincs lemez a meghajtóban/);
@@ -184,9 +184,9 @@ test('The Folders button swaps the task pane for the tree',()=>{
  assert.match(ex,/if\(action==='tree'\)\{showTree=!showTree;render\(\);\}/);
  // The desktop is the root, with My Computer, the drives and the user's own folders under it.
  assert.match(ex,/function treeChildren\(id\)/);
- assert.match(ex,/\{id:'disk',name:'Helyi lemez \(C:\)',icon:'disk'\}/);
+ assert.match(ex,/\{id:'disk',name:t\('Helyi lemez \(C:\)'\),icon:'disk'\}/);
  assert.match(ex,/name:t\('\{user\} dokumentumai',\{user:state\.user\}\)/,'the user folder is named, not repeated');
- assert.match(ex,/\{id:'recycle',name:'Lomtár'/);
+ assert.match(ex,/\{id:'recycle',name:t\('Lomtár'\)/);
  // The little box opens a branch; walking into a folder opens its own.
  assert.match(ex,/if\(b\.dataset\.twist\)\{const id=b\.dataset\.twist;expanded\.has\(id\)\?expanded\.delete\(id\):expanded\.add\(id\);render\(true\);return;\}/);
  assert.match(ex,/for\(let id=next;id;\)\{const parent=entry\(id\)\?\.parent;if\(!parent\)break;expanded\.add\(parent\);id=parent;\}/);
@@ -204,14 +204,14 @@ test('My Computer carries its whole menu, Manage included',()=>{
 
  const mmc=readFileSync(new URL('js/compmgmt.js',root),'utf8');
  assert.match(mmc,/XP\.register\('compmgmt'/);
- assert.match(mmc,/title:'Számítógép-kezelés'/);
+ assert.match(mmc,/title:t\('Számítógép-kezelés'\)/);
  // The three branches the console had, with their own panes behind them.
  for(const label of ['Rendszereszközök','Eseménynapló','Megosztott mappák','Helyi felhasználók és csoportok',
   'Eszközkezelő','Tárolás','Lemezkezelés','Szolgáltatások és alkalmazások','WMI-vezérlő'])
   assert.ok(mmc.includes(`'${label}'`),`the tree holds ${label}`);
  // The user list and the disk pane report what the machine actually has.
  assert.match(mmc,/XP\.accounts\(true\)\.map\(account=>/);
- assert.match(mmc,/account\.enabled\?'Bekapcsolva':'Kikapcsolva'/);
+ assert.match(mmc,/account\.enabled\?t\('Bekapcsolva'\):t\('Kikapcsolva'\)/);
  assert.match(mmc,/state\.files\.filter\(f=>!f\.deleted\)\.reduce/);
  // It answers to its own name in the Run box and the command prompt.
  assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/'compmgmt\.msc':'compmgmt'/);
@@ -231,7 +231,7 @@ test('User Accounts has a way back, and no account picture stands in for an icon
  assert.match(utils,/const go=next=>\{if\(next!==view\)\{trail\.push\(view\);view=next;\}render\(\);\}/);
  assert.match(utils,/const back=\(\)=>\{view=trail\.pop\(\)\|\|'home';render\(\);\}/);
  // Cancel steps back where you came from; a change taken lands on the first page again.
- assert.match(utils,/data-go="back">Mégse<\/button>/);
+ assert.match(utils,/data-go="back">\$\{esc\(t\('Mégse'\)\)\}<\/button>/);
  assert.doesNotMatch(utils,/data-go="home">Mégse/);
  assert.doesNotMatch(utils,/save\(\);view='home';render\(\)/,'nothing jumps home without clearing the trail');
 

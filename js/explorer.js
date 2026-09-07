@@ -15,9 +15,9 @@ function systemDrive(){
   }
   add('Helyi lemez (C:)',null,[
     ['Documents and Settings',[
-      ['All Users',[['Asztal',[]],['Dokumentumok',[]],['Start Menu',[['Programs',[]]]]]],
-      ['Default User',[['Asztal',[]],['Dokumentumok',[]]]],
-      [state.user,[['Asztal',[]],['Dokumentumok',[['Képek',[]],['Zene',[]]]],['Application Data',[]],['Local Settings',[['Temp',[]]]]]]
+      ['All Users',[[t('Asztal'),[]],['Dokumentumok',[]],['Start Menu',[['Programs',[]]]]]],
+      ['Default User',[[t('Asztal'),[]],['Dokumentumok',[]]]],
+      [state.user,[[t('Asztal'),[]],['Dokumentumok',[['Képek',[]],['Zene',[]]]],['Application Data',[]],['Local Settings',[['Temp',[]]]]]]
     ]],
     ['Program Files',[
       ['Common Files',[['Microsoft Shared',[]]]],
@@ -44,7 +44,7 @@ function systemDrive(){
 
 register('explorer',(initial='computer')=>{
   const system=systemDrive();
-  const folders={computer:{name:'Sajátgép',icon:'computer'},documents:{name:'Dokumentumok',icon:'documents'},pictures:{name:'Képek',icon:'pictures'},music:{name:'Zene',icon:'music'},desktop:{name:'Asztal',icon:'computer'},recycle:{name:'Lomtár',icon:'recycle'},...system};
+  const folders={computer:{name:t('Sajátgép'),icon:'computer'},documents:{name:t('Dokumentumok'),icon:'documents'},pictures:{name:t('Képek'),icon:'pictures'},music:{name:t('Zene'),icon:'music'},desktop:{name:t('Asztal'),icon:'computer'},recycle:{name:t('Lomtár'),icon:'recycle'},...system};
   const dvd={id:'dvd',name:t('DVD-meghajtó (D:)'),icon:'cd',readOnly:true,type:'drive',path:'D:\\'};
   const w=createWindow({title:t('Sajátgép'),icon:'computer',app:'explorer',width:760,height:490});
   let folder=initial,selected=null,backStack=[],forwardStack=[],view='icons',sort={key:'name',dir:1},dragged=false;
@@ -139,7 +139,7 @@ register('explorer',(initial='computer')=>{
     [t('Fájl')]:fileActions,
     [t('Szerkesztés')]:()=>[{label:t('Kivágás'),shortcut:'Ctrl+X',action:cut,disabled:!canEdit()},{label:t('Másolás'),shortcut:'Ctrl+C',action:copy,disabled:!selectedFile()||folder==='recycle'},{label:t('Beillesztés'),shortcut:'Ctrl+V',action:pasteHere,disabled:!XP.canPaste()||readOnly()||folder==='recycle'},null,{label:t('Átnevezés'),action:rename,disabled:!canEdit()},{label:t('Törlés'),action:remove,disabled:!selectedFile()||readOnly()}],
     [t('Nézet')]:()=>[...viewItems(),{label:t('Frissítés'),shortcut:'F5',action:render}],
-    [t('Kedvencek')]:[{label:t('Dokumentumok'),icon:'documents',action:()=>navigate('documents')},{label:'Képek',icon:'pictures',action:()=>navigate('pictures')}],
+    [t('Kedvencek')]:[{label:t('Dokumentumok'),icon:'documents',action:()=>navigate('documents')},{label:t('Képek'),icon:'pictures',action:()=>navigate('pictures')}],
     [t('Eszközök')]:[{label:t('Mappabeállítások'),action:()=>XP.dialog(t('Mappabeállítások'),t('Az elemeket dupla kattintással nyithatod meg.\nA saját fájljaidat jobb kattintással átnevezheted, törölheted vagy letöltheted.'))}],
     [t('Súgó')]:[{label:t('Súgó és támogatás'),action:()=>XP.open('help')}]
   },true);
@@ -175,11 +175,11 @@ register('explorer',(initial='computer')=>{
     .sort((a,b)=>a.name.localeCompare(b.name,'hu')).map(f=>({id:f.id,name:f.name,icon:'folder'}));
   function treeChildren(id){
     if(id==='desktop')return [{id:'computer',name:t('Sajátgép'),icon:'computer'},{id:'documents',name:t('Dokumentumok'),icon:'documents'},
-      ...childFolders('desktop'),{id:'recycle',name:'Lomtár',icon:XP.recycleIcon()}];
+      ...childFolders('desktop'),{id:'recycle',name:t('Lomtár'),icon:XP.recycleIcon()}];
     // XP hung the user's own documents under My Computer by name, not a second time as "Dokumentumok".
-    if(id==='computer')return [{id:'disk',name:'Helyi lemez (C:)',icon:'disk'},{id:'dvd',name:t('DVD-meghajtó (D:)'),icon:'cd'},
+    if(id==='computer')return [{id:'disk',name:t('Helyi lemez (C:)'),icon:'disk'},{id:'dvd',name:t('DVD-meghajtó (D:)'),icon:'cd'},
       {id:'documents',name:t('{user} dokumentumai',{user:state.user}),icon:'documents'}];
-    if(id==='documents')return [{id:'pictures',name:'Képek',icon:'pictures'},{id:'music',name:'Zene',icon:'music'},...childFolders('documents')];
+    if(id==='documents')return [{id:'pictures',name:t('Képek'),icon:'pictures'},{id:'music',name:t('Zene'),icon:'music'},...childFolders('documents')];
     if(system[id]||id==='disk')return systemChildren(id);
     return childFolders(id);
   }
@@ -191,7 +191,7 @@ register('explorer',(initial='computer')=>{
       <button class="tree-item ${folder===node.id?'selected':''}" data-folder="${esc(node.id)}">${icon(node.icon)}<span>${esc(node.name)}</span></button>
      </div>${open?children.map(child=>treeNode(child,depth+1)).join(''):''}`;
   }
-  const treeMarkup=()=>`<section class="explorer-tree"><header>${esc(t('Mappák'))}<button class="tree-close" data-side="tree" aria-label="${esc(t('Bezárás'))}">×</button></header>${treeNode({id:'desktop',name:'Asztal',icon:'showdesktop'},0)}</section>`;
+  const treeMarkup=()=>`<section class="explorer-tree"><header>${esc(t('Mappák'))}<button class="tree-close" data-side="tree" aria-label="${esc(t('Bezárás'))}">×</button></header>${treeNode({id:'desktop',name:t('Asztal'),icon:'showdesktop'},0)}</section>`;
   function render(keepFiles=false){
     folders.recycle.icon=XP.recycleIcon();
     const info=folderInfo(),details=selectedEntry();w.setTitle(label(info.name));w.setIcon(info.icon||'folder');$('input',addr).value=folderPath(folder);
