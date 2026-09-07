@@ -70,7 +70,7 @@
     });
 
     const toolbar=document.createElement('div');toolbar.className='toolbar';
-    toolbar.innerHTML=`<button data-mail="new">${icon('mail')}<span class="toolbar-label">Új levél</span></button><span class="toolbar-separator"></span><button data-mail="reply">${icon('back')}<span class="toolbar-label">Válasz</span></button><button data-mail="forward">${icon('forward')}<span class="toolbar-label">Továbbítás</span></button><span class="toolbar-separator"></span><button data-mail="delete">${icon('recycle')}<span class="toolbar-label">Törlés</span></button><button data-mail="receive">${icon('refresh')}<span class="toolbar-label">Küldés/fogadás</span></button><button data-mail="addresses">${icon('user')}<span class="toolbar-label">Címek</span></button>`;
+    toolbar.innerHTML=`<button data-mail="new">${icon('mail')}<span class="toolbar-label">Új levél</span></button><span class="toolbar-separator"></span><button data-mail="reply">${icon('back')}<span class="toolbar-label">Válasz</span></button><button data-mail="forward">${icon('forward')}<span class="toolbar-label">Továbbítás</span></button><span class="toolbar-separator"></span><button data-mail="delete">${icon('recycle')}<span class="toolbar-label">Törlés</span></button><button data-mail="receive">${icon('refresh')}<span class="toolbar-label">Küldés/fogadás</span></button><button data-mail="addresses">${icon('addressbook')}<span class="toolbar-label">Címek</span></button>`;
     w.body.append(toolbar);
 
     const shell=document.createElement('div');shell.className='outlook-shell';
