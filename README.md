@@ -24,6 +24,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 - Tálca: gyorsindítás az Asztal megjelenítése gombbal, futó ablakok, értesítési terület órával, hangerővel, hálózattal és biztonsági központtal. A « gomb kinyitja a rejtett ikonokat.
 - Hangerő: a hangszóróra egy kattintás a kis csúszkát nyitja a tálca fölött, kettő a Hangerő-szabályozót a Fő hangerő, Hullám, SW Synth és CD-lejátszó csatornákkal, balansszal és némítással. Az órán ugyanígy a dupla kattintás nyitja a naptárt.
 - Ha elfogy a hely a tálcán, egy program ablakai egyetlen gombba fogódnak össze („4 Windows Intéző”), ahonnan menüből választható ki az ablak, és a csoport együtt is bezárható. Minden ablaknak jár az ablakmenü: a tálcagombján, a címsorán jobb gombbal, a címsor ikonjára kattintva és Alt+Szóközzel.
+- A Sajátgép ikonjának teljes helyi menüje: Megnyitás, Az Intéző megnyitása, Keresés, Kezelés, hálózati meghajtó. A Kezelés a Számítógép-kezelést nyitja meg: eseménynapló, megosztott mappák, helyi felhasználók és csoportok, eszközkezelő, lemezkezelés és szolgáltatások — a felhasználólista és a lemez adatai a gép valódi állapotát mutatják.
 - Tálca jobb gombbal: ablakok lépcsőzetes és mozaikszerű elrendezése, az összes ablak kis mérete, Feladatkezelő, a Tálca rögzítése és a Tálca tulajdonságai, ahol az óra és a Gyorsindítás elrejthető. A tálcagombokon ablakmenü, a start gombon saját menü.
 - Feladatkezelő (Ctrl+Shift+Esc vagy Ctrl+Alt+Del): alkalmazások, folyamatok, élő CPU- és hálózatgrafikon, felhasználók. Feladat befejezése, váltás, új feladat, folyamat leállítása — rendszerfolyamat nem állítható le.
 - A Start menü bármelyik programja jobb gombbal kitehető az asztalra parancsikonként, a megszokott kis nyíllal a sarkában. Fájlokon és mappákon ugyanezt a „Küldés ▸ Asztal (parancsikon létrehozása)” és a „Küldés ▸ Dokumentumok” intézi; a parancsikon a célja ikonját viseli, és szól, ha a hivatkozott elem már nincs meg.
@@ -76,6 +77,7 @@ Minden futtatáshoz szükséges fájl az `assets` mappában van. A CSP tiltja a 
 - `js/cardgames.js` és `cardgames.css`: FreeCell, Pókpasziánsz és Hearts. A szabályok DOM nélküli függvényekben vannak, ezért teljes leosztások tesztelhetők.
 - `js/pinball.js` és `pinball.css`: a Space Cadet ablaka, menüje és vezérlői.
 - `assets/pinball/`: a játék helyi WebAssembly-csomagja és beágyazó oldala.
+- `js/compmgmt.js` és `compmgmt.css`: Számítógép-kezelés (a Sajátgép „Kezelés” menüpontja).
 - `js/desktop-grid.js`: ikonrács, foglalt helyek kezelése és átrendezés.
 - `js/start.js`: asztal, Start menü és munkamenet.
 

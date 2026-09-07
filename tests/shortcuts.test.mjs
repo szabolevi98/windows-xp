@@ -194,3 +194,29 @@ test('The Folders button swaps the task pane for the tree',()=>{
  assert.match(css,/\.tree-item\.selected\{background:#316ac5/);
  assert.match(css,/\.toolbar button\.pressed\{/,'the button stays pressed while the tree is open');
 });
+
+test('My Computer carries its whole menu, Manage included',()=>{
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ for(const label of ['Az Intéző megnyitása','Keresés…','Kezelés','Csatlakoztatás hálózati meghajtóhoz…','Hálózati meghajtó leválasztása…'])
+  assert.ok(start.includes(`label:'${label}'`),`the icon offers ${label}`);
+ assert.match(start,/item\.id==='computer'\?\[/,'and only that icon does');
+ assert.match(start,/XP\.open\('compmgmt'\)/);
+
+ const mmc=readFileSync(new URL('js/compmgmt.js',root),'utf8');
+ assert.match(mmc,/XP\.register\('compmgmt'/);
+ assert.match(mmc,/title:'Számítógép-kezelés'/);
+ // The three branches the console had, with their own panes behind them.
+ for(const label of ['Rendszereszközök','Eseménynapló','Megosztott mappák','Helyi felhasználók és csoportok',
+  'Eszközkezelő','Tárolás','Lemezkezelés','Szolgáltatások és alkalmazások','WMI-vezérlő'])
+  assert.ok(mmc.includes(`'${label}'`),`the tree holds ${label}`);
+ // The user list and the disk pane report what the machine actually has.
+ assert.match(mmc,/XP\.accounts\(true\)\.map\(account=>/);
+ assert.match(mmc,/account\.enabled\?'Bekapcsolva':'Kikapcsolva'/);
+ assert.match(mmc,/state\.files\.filter\(f=>!f\.deleted\)\.reduce/);
+ // It answers to its own name in the Run box and the command prompt.
+ assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/'compmgmt\.msc':'compmgmt'/);
+ assert.match(readFileSync(new URL('js/apps.js',root),'utf8'),/compmgmt:'compmgmt'/);
+ const html=readFileSync(new URL('index.html',root),'utf8');
+ assert.match(html,/js\/compmgmt\.js/);
+ assert.match(html,/compmgmt\.css/);
+});
