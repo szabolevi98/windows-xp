@@ -60,3 +60,30 @@ test('The taskbar has properties of its own, and they hold',()=>{
  assert.match(css,/body\.no-clock #clock\{display:none\}/);
  assert.match(css,/body\.no-quick-launch \.quick-launch\{display:none\}/);
 });
+
+test('The tray speaker opens the little slider, and two clicks the mixer',()=>{
+ const html=readFileSync(new URL('index.html',root),'utf8');
+ assert.match(html,/id="volume-flyout"/,'the panel lives above the tray, not in a window');
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ assert.match(start,/\$\('#volume-button'\)\.onclick=e=>\{e\.stopPropagation\(\);showVolume\(\);\}/);
+ assert.match(start,/\$\('#volume-button'\)\.ondblclick=\(\)=>\{XP\.hideMenus\(\);XP\.open\('volume'\);\}/);
+ // Anchored by its right edge, so a stylesheet that has not landed yet cannot misplace it.
+ assert.match(start,/volumeFlyout\.style\.right=/);
+ assert.doesNotMatch(start,/volumeFlyout\.style\.left=/);
+ // The clock followed the same rule: one click did nothing, two opened the panel.
+ assert.match(start,/\$\('#clock'\)\.ondblclick=\(\)=>XP\.open\('calendar'\)/);
+ assert.doesNotMatch(start,/\$\('#clock'\)\.onclick=/);
+ const core=readFileSync(new URL('js/core.js',root),'utf8');
+ assert.match(core,/hideMenus\(\)\{[^}]*#volume-flyout'\)\.hidden=true/,'it closes with the other menus');
+
+ const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
+ // Hangerő-szabályozó: the master and the channels a sound card of the day offered.
+ assert.match(utils,/title:'Hangerő-szabályozó'/);
+ for(const channel of ['Hangerő-szabályozó','Hullám','SW Synth','CD-lejátszó'])
+  assert.ok(utils.includes(`'${channel}'`),`the mixer has a ${channel} channel`);
+ assert.match(utils,/Összes némítása/,'the master mutes everything');
+ assert.match(utils,/Balansz:/);
+ assert.doesNotMatch(utils,/volume-panel/,'the old one-slider window is gone');
+ // Sliders wear the classic sunken groove instead of the browser's own.
+ assert.match(readFileSync(new URL('styles.css',root),'utf8'),/input\[type=range\]::-webkit-slider-thumb/);
+});

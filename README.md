@@ -19,6 +19,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
 - Tálca: gyorsindítás az Asztal megjelenítése gombbal, futó ablakok, értesítési terület órával, hangerővel, hálózattal és biztonsági központtal. A « gomb kinyitja a rejtett ikonokat.
+- Hangerő: a hangszóróra egy kattintás a kis csúszkát nyitja a tálca fölött, kettő a Hangerő-szabályozót a Fő hangerő, Hullám, SW Synth és CD-lejátszó csatornákkal, balansszal és némítással. Az órán ugyanígy a dupla kattintás nyitja a naptárt.
 - Tálca jobb gombbal: ablakok lépcsőzetes és mozaikszerű elrendezése, az összes ablak kis mérete, Feladatkezelő, a Tálca rögzítése és a Tálca tulajdonságai, ahol az óra és a Gyorsindítás elrejthető. A tálcagombokon ablakmenü, a start gombon saját menü.
 - Feladatkezelő (Ctrl+Shift+Esc vagy Ctrl+Alt+Del): alkalmazások, folyamatok, élő CPU- és hálózatgrafikon, felhasználók. Feladat befejezése, váltás, új feladat, folyamat leállítása — rendszerfolyamat nem állítható le.
 - A Start menü bármelyik programja jobb gombbal kitehető az asztalra parancsikonként, a megszokott kis nyíllal a sarkában.
