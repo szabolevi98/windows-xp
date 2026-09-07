@@ -5,11 +5,11 @@ import vm from 'node:vm';
 const root=new URL('../',import.meta.url),iniPath='/libsdl/SpaceCadetPinball/imgui_pb.ini';
 function host(){
  const handlers={},keyboard={},sent=[],events=[],timers=new Map(),files=new Map();let timerId=0,closed=0,pausedLoops=0;
- const canvas={addEventListener(){},focus(){},dispatchEvent(event){events.push(event);}};
+ const canvas={addEventListener(){},focus(){events.push({type:'canvas-focus'});},dispatchEvent(event){events.push(event);}};
  const loading={hidden:false,textContent:''};
  const parent={postMessage(message){sent.push(message);}};
  const document={getElementById:id=>id==='canvas'?canvas:loading,createElement:()=>({}),body:{append(){}},addEventListener:(type,fn)=>keyboard[type]=fn};
- const context=vm.createContext({document,parent,location:{origin:'http://localhost'},window:{addEventListener:(type,fn)=>handlers[type]=fn},console,Uint8Array,atob,
+ const context=vm.createContext({document,parent,location:{origin:'http://localhost'},window:{focus(){events.push({type:'window-focus'});},addEventListener:(type,fn)=>handlers[type]=fn},console,Uint8Array,atob,
   KeyboardEvent:class{constructor(type,options){this.type=type;Object.assign(this,options);}},
   setTimeout:fn=>{timers.set(++timerId,fn);return timerId;},clearTimeout:id=>timers.delete(id),setInterval:fn=>{timers.set(++timerId,fn);return timerId;},clearInterval:id=>timers.delete(id),
   FS:{mkdirTree(){},writeFile:(path,value)=>files.set(path,value),readFile:path=>{if(!files.has(path))throw Error('absent');return files.get(path);}}
@@ -50,6 +50,24 @@ test('Closing Pinball saves settings, stops the loop and closes audio exactly on
  assert.equal(h.sent.filter(m=>m.type==='save').length,1);assert.equal(h.sent.find(m=>m.type==='save').ini,h.files.get(iniPath));
  assert.equal(h.closed,1);assert.equal(h.pausedLoops,1);
  h.message({type:'key',code:'KeyZ',down:true});assert.ok(!h.events.some(e=>e.code==='KeyZ'&&e.type==='keydown'));
+});
+
+test('Reactivating the Pinball chrome focuses the game before unpausing, even for repeated identical state',()=>{
+ const h=host();h.ready();h.message({type:'state',paused:true,volume:.5});h.flush();h.events.length=0;
+ h.message({type:'state',paused:false,volume:.5,focus:true});
+ assert.equal(h.events[0].type,'window-focus');assert.equal(h.events[1].type,'canvas-focus');
+ assert.ok(h.events.slice(2).some(e=>e.code==='F3'&&e.type==='keydown'));
+ h.events.length=0;h.message({type:'state',paused:false,volume:.5,focus:true});
+ assert.deepEqual(h.events.map(e=>e.type),['window-focus','canvas-focus']);
+ h.events.length=0;h.message({type:'state',paused:true,volume:.5,focus:false});
+ assert.ok(h.events.every(e=>!e.type.includes('focus')));
+});
+
+test('Rapid pause and resume still deliver two distinct game commands',()=>{
+ const h=host();h.ready();
+ h.message({type:'state',paused:true,volume:.5});
+ h.message({type:'state',paused:false,volume:.5});
+ assert.equal(h.events.filter(e=>e.code==='F3'&&e.type==='keydown').length,2);
 });
 test('Pinball has local-only resources and confines dynamic evaluation to its game document',()=>{
  const main=readFileSync(new URL('index.html',root),'utf8');assert.doesNotMatch(main,/unsafe-eval/);
