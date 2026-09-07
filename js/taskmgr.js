@@ -125,7 +125,7 @@
         if(!process)return;
         if(!process.app){XP.sound('error');XP.dialog(t('Feladatkezelő'),t('Ez egy rendszerfolyamat, és nem állítható le.'),{icon:'error'});return;}
         XP.confirm(t('Feladatkezelő – figyelmeztetés'),t('Biztosan leállítod a(z) {name} folyamatot?\n\nA nem mentett adatok elvesznek.',{name:process.name})).then(answer=>{
-          if(answer!=='Igen')return;
+          if(!answer)return;
           const victim=others().find(win=>win.app===process.app);
           if(victim)XP.close(victim);
           selectedProcess=null;render();
