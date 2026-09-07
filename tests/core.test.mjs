@@ -435,9 +435,15 @@ test('The Start menu header opens the account, and its amber rule stops short of
  // The rule is a tapering strip, not a border running the whole width.
  assert.doesNotMatch(header,/border-bottom:2px solid #e7952b/);
  assert.match(header,/\.start-header:after\{[^}]*clip-path:polygon/);
- const strip=header.slice(header.indexOf('.start-header:after{'));
- const width=strip.match(/width:(\d+)%/);
- assert.ok(width&&Number(width[1])<100,'it ends before the right edge');
+ const strip=header.slice(header.indexOf('.start-header:after{'),header.indexOf('}',header.indexOf('.start-header:after{')));
+ // Both ends run out: the gradient starts and finishes transparent, and the clip thins them.
+ assert.match(strip,/background:linear-gradient\(90deg,#[0-9a-f]{6}00 0,/,'it fades in on the left');
+ assert.match(strip,/#[0-9a-f]{6}00 100%\)/,'it fades out on the right');
+ const clip=strip.match(/clip-path:polygon\(([^)]+)\)/);
+ assert.ok(clip,'the strip is clipped');
+ const points=clip[1].split(',').map(p=>p.trim());
+ assert.equal(points[0],'0 62%','it starts thin');
+ assert.equal(points[3],'100% 62%','it ends thin');
  // The classic theme never had it.
  assert.match(css,/body\[data-theme=classic\] \.start-header:after\{display:none\}/);
 });
