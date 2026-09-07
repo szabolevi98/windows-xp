@@ -27,7 +27,7 @@ A szövegek forrása maga a magyar mondat: a kódban `t('Megnyitás')` áll, a `
 - A Start menü emlékszik: a bal oszlop a leggyakrabban használt öt programot kínálja a rögzített Internet és Email alatt.
 - Rácsra igazodó asztali ikonok, ütközéskor helycsere. A Lomtár alapból jobb alul jelenik meg, szabadon áthelyezhető, és megjegyzi a helyét.
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
-- Eredeti XP-egérmutatók a Windows Standard (3D fehér) sémából (nyíl, szövegkurzor, átméretezők, célkereszt), és XP-s mozgás: az ablak a tálcagombjához repül kicsinyítéskor, onnan nő vissza, a menük és a Start menü halványan úsznak be. Csökkentett mozgásigény esetén mindez elmarad.
+- Eredeti XP-egérmutatók: alapból a fehér, sötét szegélyű nyíl, ahogy az XP indult. Az Egér tulajdonságainál (Vezérlőpult → Nyomtatók és egyéb hardver → Egér) a Windows Fekete és a 3D-Fehér sémára is át lehet váltani. XP-s mozgás: az ablak a tálcagombjához repül kicsinyítéskor, onnan nő vissza, a menük és a Start menü halványan úsznak be. Csökkentett mozgásigény esetén mindez elmarad.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
 - Tálca: gyorsindítás az Asztal megjelenítése gombbal, futó ablakok, értesítési terület órával, hangerővel, hálózattal és biztonsági központtal. A « gomb kinyitja a rejtett ikonokat.
 - Hangerő: a hangszóróra egy kattintás a kis csúszkát nyitja a tálca fölött, kettő a Hangerő-szabályozót a Fő hangerő, Hullám, SW Synth és CD-lejátszó csatornákkal, balansszal és némítással. Az órán ugyanígy a dupla kattintás nyitja a naptárt.

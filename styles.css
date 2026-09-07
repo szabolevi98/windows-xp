@@ -392,16 +392,56 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
  .popup-menu:not([hidden]),#start-menu:not([hidden]),#balloon:not([hidden]),#volume-flyout:not([hidden]){animation:none}
 }
 
-/* Az eredeti XP-mutatók: a .cur fájl viszi magával a saját forrópontját. */
+/* Az eredeti XP-mutatók: a .cur fájl viszi magával a saját forrópontját.
+   Az Egér tulajdonságainál sémát lehet váltani, ezért változókon át hivatkozunk rájuk. */
+:root{
+ --cursor-arrow:url('assets/cursors/default/arrow.cur?v=3');
+ --cursor-beam:url('assets/cursors/default/beam.cur?v=3');
+ --cursor-cross:url('assets/cursors/default/cross.cur?v=3');
+ --cursor-move:url('assets/cursors/default/move.cur?v=3');
+ --cursor-no:url('assets/cursors/default/no.cur?v=3');
+ --cursor-size-ns:url('assets/cursors/default/size-ns.cur?v=3');
+ --cursor-size-we:url('assets/cursors/default/size-we.cur?v=3');
+ --cursor-size-nesw:url('assets/cursors/default/size-nesw.cur?v=3');
+ --cursor-size-nwse:url('assets/cursors/default/size-nwse.cur?v=3');
+}
+:root[data-cursors="black"]{
+ --cursor-arrow:url('assets/cursors/black/arrow.cur?v=3');
+ --cursor-beam:url('assets/cursors/black/beam.cur?v=3');
+ --cursor-cross:url('assets/cursors/black/cross.cur?v=3');
+ --cursor-move:url('assets/cursors/black/move.cur?v=3');
+ --cursor-no:url('assets/cursors/black/no.cur?v=3');
+ --cursor-size-ns:url('assets/cursors/black/size-ns.cur?v=3');
+ --cursor-size-we:url('assets/cursors/black/size-we.cur?v=3');
+ --cursor-size-nesw:url('assets/cursors/black/size-nesw.cur?v=3');
+ --cursor-size-nwse:url('assets/cursors/black/size-nwse.cur?v=3');
+}
+:root[data-cursors="3d-white"]{
+ --cursor-arrow:url('assets/cursors/3d-white/arrow.cur?v=3');
+ --cursor-beam:url('assets/cursors/3d-white/beam.cur?v=3');
+ --cursor-cross:url('assets/cursors/3d-white/cross.cur?v=3');
+ --cursor-move:url('assets/cursors/3d-white/move.cur?v=3');
+ --cursor-no:url('assets/cursors/3d-white/no.cur?v=3');
+ --cursor-size-ns:url('assets/cursors/3d-white/size-ns.cur?v=3');
+ --cursor-size-we:url('assets/cursors/3d-white/size-we.cur?v=3');
+ --cursor-size-nesw:url('assets/cursors/3d-white/size-nesw.cur?v=3');
+ --cursor-size-nwse:url('assets/cursors/3d-white/size-nwse.cur?v=3');
+}
 *{cursor:inherit}
-body,button,.title-bar,input[type=range]{cursor:url('assets/cursors/arrow.cur?v=2'),default}
-input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,[contenteditable]{cursor:url('assets/cursors/beam.cur?v=2'),text}
-.resize-n,.resize-s{cursor:url('assets/cursors/size-ns.cur?v=2'),ns-resize}
-.resize-e,.resize-w{cursor:url('assets/cursors/size-we.cur?v=2'),ew-resize}
-.resize-ne,.resize-sw{cursor:url('assets/cursors/size-nesw.cur?v=2'),nesw-resize}
-.resize-nw,.resize-se,.resize-handle{cursor:url('assets/cursors/size-nwse.cur?v=2'),nwse-resize}
-.paint-canvas,.paint-surface canvas{cursor:url('assets/cursors/cross.cur?v=2'),crosshair}
-button:disabled,.start-item:disabled{cursor:url('assets/cursors/arrow.cur?v=2'),default}
+body,button,.title-bar,input[type=range]{cursor:var(--cursor-arrow),default}
+input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,[contenteditable]{cursor:var(--cursor-beam),text}
+.resize-n,.resize-s{cursor:var(--cursor-size-ns),ns-resize}
+.resize-e,.resize-w{cursor:var(--cursor-size-we),ew-resize}
+.resize-ne,.resize-sw{cursor:var(--cursor-size-nesw),nesw-resize}
+.resize-nw,.resize-se,.resize-handle{cursor:var(--cursor-size-nwse),nwse-resize}
+.paint-canvas,.paint-surface canvas{cursor:var(--cursor-cross),crosshair}
+button:disabled,.start-item:disabled{cursor:var(--cursor-arrow),default}
+.title-bar.dragging,.desktop-icon.dragging,#windows .dragging .title-bar{cursor:var(--cursor-move),move}
+.drop-invalid{cursor:var(--cursor-no),not-allowed}
+
+.pointer-list{list-style:none;margin:0;padding:0;height:150px;overflow:auto;border:1px solid #7f9db9;background:#fff}
+.pointer-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:3px 8px;border-bottom:1px solid #eef1f6;min-height:38px}
+.pointer-list img{width:32px;height:32px;image-rendering:pixelated;flex-shrink:0}
 
 .accounts-nav{display:flex;align-items:center;gap:6px;padding:5px 12px;background:#eef3fd;border-bottom:1px solid #c4d3ea}
 .accounts-nav .nav-gap{flex:1}

@@ -166,10 +166,43 @@ register('regional',()=>{
    // újraindítás teszi ugyanezt, a fájlok és a beállítások megmaradnak.
    const answer=await XP.dialog(t('Területi és nyelvi beállítások'),
     t('A módosítás akkor lép teljesen életbe, ha a Windows újraindul. Újraindítja most?'),
-    {icon:'info',buttons:['Igen',t('Nem')]});
+    {icon:'info',buttons:[t('Igen'),t('Nem')]});
    if(answer)location.reload();
   }
  });
+});
+
+// --- Egér tulajdonságai (main.cpl) ---------------------------------------
+// Az XP itt tartotta a mutatósémákat. Az alapértelmezett a fehér, sötét
+// szegélyű mutató; a fekete és a 3D-fehér készlet a Windows saját sémái.
+register('mouse',()=>{
+ const SCHEMES=[['default','Windows alapértelmezett (rendszerséma)'],
+   ['black','Windows Fekete (rendszerséma)'],['3d-white','3D-Fehér (rendszerséma)']];
+ const ROLES=[['Normál kijelölés','arrow'],['Szövegkijelölés','beam'],['Precíziós kijelölés','cross'],
+   ['Áthelyezés','move'],['Nem elérhető','no'],['Függőleges átméretezés','size-ns'],
+   ['Vízszintes átméretezés','size-we'],['Átlós átméretezés 1','size-nwse'],['Átlós átméretezés 2','size-nesw']];
+ const draft={cursors:state.cursors||'default'};
+ let sheet=null;
+ sheet=propertySheet({
+  app:'mouse',title:t('Egér tulajdonságai'),icon:'mouse',width:410,height:470,initial:'pointers',
+  tabs:[['pointers',t('Mutatók')],['buttons',t('Gombok')]],
+  read(tab,panel){const box=$('[name=scheme]',panel);if(box)draft.cursors=box.value;},
+  draw(tab,panel){
+   if(tab==='pointers'){
+    panel.innerHTML=`<fieldset><legend>${esc(t('Séma'))}</legend>
+      <label class="settings-field"><select name="scheme">${SCHEMES.map(([key,label])=>`<option value="${key}" ${key===draft.cursors?'selected':''}>${esc(t(label))}</option>`).join('')}</select></label>
+      <p class="settings-note">${esc(t('A séma az egérmutatók teljes készletét váltja.'))}</p></fieldset>
+      <fieldset><legend>${esc(t('Testreszabás'))}</legend><ul class="pointer-list">${ROLES.map(([label,file])=>`<li><span>${esc(t(label))}</span><img src="assets/cursors/${draft.cursors}/${file}.cur?v=3" width="32" height="32" alt=""></li>`).join('')}</ul></fieldset>`;
+    $('[name=scheme]',panel).onchange=event=>{draft.cursors=event.target.value;sheet?.repaint();};
+   }
+   if(tab==='buttons')panel.innerHTML=`<fieldset><legend>${esc(t('Gombok felcserélése'))}</legend>
+     <p class="settings-note">${esc(t('A bal és a jobb gomb szerepét a böngésző alatt a rendszer osztja ki, ezért itt nem cserélhető fel.'))}</p></fieldset>
+     <fieldset><legend>${esc(t('Dupla kattintás sebessége'))}</legend>
+     <p class="settings-note">${esc(t('A dupla kattintás idejét szintén a rendszer adja: az ablakok és az ikonok ehhez igazodnak.'))}</p></fieldset>`;
+  },
+  apply(){state.cursors=draft.cursors;persist();XP.applySettings();}
+ });
+ return sheet;
 });
 
 register('printers',()=>XP.dialog(t('Nyomtatók és faxok'),t('Nincs telepítve nyomtató.\n\nNyomtató üzembe helyezéséhez indítsd el a Nyomtató hozzáadása varázslót, vagy csatlakoztass egy Plug and Play nyomtatót – a Windows automatikusan felismeri.'),{icon:'printers'}));
@@ -363,6 +396,7 @@ register('control',()=>{
   system:{name:t('Rendszer'),icon:'computer',hint:t('Rendszerinformációk és tárhely'),open:()=>XP.open('system')},
   cleanup:{name:t('Lemezkarbantartó'),icon:'disk',hint:t('Hely felszabadítása a lemezen'),open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog(t('Lemezkarbantartó – C:'),t('A Lemezkarbantartó a következő fájlokat távolíthatja el:\n\nIdeiglenes internetfájlok        3,17 MB\nLetöltött programfájlok          0,00 MB\nLomtár                           {trash} MB ({count} elem)\nIdeiglenes fájlok                0,84 MB\n\nÖsszesen felszabadítható: {total} MB\n\nA Lomtár tartalmát a Lomtár ablakában ürítheted ki.',{trash:(trash*0.06).toFixed(2),count:trash,total:(4.01+trash*0.06).toFixed(2)}));}},
   printers:{name:t('Nyomtatók és faxok'),icon:'printers',hint:t('Telepített nyomtatók'),open:()=>XP.open('printers')},
+  mouse:{name:t('Egér'),icon:'mouse',hint:t('Az egérmutatók sémája'),open:()=>XP.open('mouse')},
   profile:{name:t('Felhasználói fiókok'),icon:'user',hint:t('A fiók neve, képe és típusa'),open:()=>XP.open('profile')},
   regional:{name:t('Területi és nyelvi beállítások'),icon:'datetime',hint:t('A felület nyelve és a formátumok'),open:()=>XP.open('regional')},
   datetime:{name:t('Dátum és idő'),icon:'datetime',hint:t('Naptár és pontos idő'),open:()=>XP.open('calendar')},
@@ -375,7 +409,7 @@ register('control',()=>{
   {id:'programs',name:t('Programok telepítése és törlése'),icon:'programs',hint:t('A gépre telepített programok listája'),items:['programs']},
   {id:'sound',name:t('Hangok, beszéd és audioeszközök'),icon:'volume',hint:t('Rendszerhangok, hangerő és lejátszás'),items:['volume','player']},
   {id:'performance',name:t('Teljesítmény és karbantartás'),icon:'computer',hint:t('Rendszeradatok és a lemez karbantartása'),items:['system','cleanup']},
-  {id:'hardware',name:t('Nyomtatók és egyéb hardver'),icon:'printers',hint:t('Nyomtatók, faxok és eszközök'),items:['printers']},
+  {id:'hardware',name:t('Nyomtatók és egyéb hardver'),icon:'printers',hint:t('Nyomtatók, faxok és eszközök'),items:['printers','mouse']},
   {id:'accounts',name:t('Felhasználói fiókok'),icon:'user',hint:t('A felhasználóneved és a profilod'),items:['profile']},
   {id:'datetime',name:t('Dátum, idő, nyelv és területi beállítások'),icon:'datetime',hint:t('Naptár, pontos idő és a nyelvi beállítások'),items:['datetime','regional']},
   {id:'access',name:t('Kisegítő lehetőségek'),icon:'accessibility',hint:t('Billentyűzetes használat és láthatóság'),items:['accessibility']},

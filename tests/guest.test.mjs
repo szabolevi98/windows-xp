@@ -11,7 +11,7 @@ function boot(saved){
  const element=()=>({hidden:true,innerHTML:'',style:{},dataset:{},classList:{add(){},remove(){},toggle(){}},
   querySelector:()=>element(),append(){},remove(){},setAttribute(){},addEventListener(){}});
  const context=vm.createContext({window:{addEventListener(){}},
-  document:{body:element(),addEventListener(){},dispatchEvent(){},querySelector:()=>element(),createElement:element},
+  document:{documentElement:{dataset:{}},body:element(),addEventListener(){},dispatchEvent(){},querySelector:()=>element(),createElement:element},
   localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},
   setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console});
  vm.runInContext(read('js/core.js'),context);
