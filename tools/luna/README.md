@@ -49,7 +49,22 @@ python tools/luna/extract.py scrollbar frame
 python tools/luna/extract.py --out /tmp/luna-check
 ```
 
-## Mi van a két fájlban
+## Színek a rajzolt felületekhez
+
+A felület egy része nem bitképpel készül, hanem CSS-átmenettel — ott, ahol lekerekített
+sarok vagy keret van, és egy kép nem tudná követni. Ezek a színek viszont szintén a
+témából jönnek:
+
+```bash
+python tools/luna/gradients.py
+```
+
+Kiírja, milyen színrámpát mutat valójában a tálca, az értesítési terület, a
+feladatgombok, a címsor, az ablakkeret és a Start menü paneljei — abban a magasságban,
+amekkorát az oldal ad nekik —, és mindegyiket kész `linear-gradient()` alakban. A
+`styles.css` ezeket az értékeket hordozza.
+
+## Mi van a fájlokban
 
 - **`luna.py`** — maga az olvasó. Az `.msstyles` valójában egy csak erőforrásokat
   tartalmazó PE-könyvtár: a képek a `RT_BITMAP` táblában ülnek csupasz
@@ -61,6 +76,8 @@ python tools/luna/extract.py --out /tmp/luna-check
   `border-image-slice` kéri.
 - **`extract.py`** — családonként egy függvény, amelyik kivágja a darabokat és
   megírja a hozzájuk tartozó `sources.json` bejegyzést.
+- **`gradients.py`** — a rajzolt felületek színrámpáit olvassa ki. Nem ír fájlt,
+  csak kiírja a CSS-értékeket.
 
 Egyetlen pixelt sem rajzolunk újra és nem méretezünk át. A kibontás csak vág, és a
 téma színkulcsát alakítja átlátszósággá. Ahol a CSS olyan darabot kér, amit a Luna
