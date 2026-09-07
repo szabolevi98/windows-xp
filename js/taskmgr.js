@@ -91,8 +91,11 @@
         buttons.innerHTML='';
       }
       if(tab==='users'){
-        panel.innerHTML=`<table class="taskmgr-table"><thead><tr><th>Felhasználó</th><th>Azonosító</th><th>Állapot</th><th>Ügyfélnév</th></tr></thead><tbody><tr class="selected"><td>${icon(state.avatar||'user')}${esc(state.user||'Adminisztrátor')}</td><td>0</td><td>Aktív</td><td>—</td></tr></tbody></table>`;
-        buttons.innerHTML='<button class="xp-button" data-do="logoff">Kijelentkezés</button>';
+        // Everyone signed in: the account at the machine, and whoever left programs running.
+        const sessions=XP.accounts().filter(account=>account.active||account.running);
+        panel.innerHTML=`<table class="taskmgr-table"><thead><tr><th>Felhasználó</th><th>Azonosító</th><th>Állapot</th><th>Futó programok</th></tr></thead><tbody>${sessions.map((account,index)=>
+          `<tr class="${account.active?'selected':''}"><td>${XP.avatar(account.avatar)}${esc(account.name)}</td><td>${index}</td><td>${account.active?'Aktív':'Leválasztva'}</td><td>${account.active?others().length:account.running}</td></tr>`).join('')}</tbody></table>`;
+        buttons.innerHTML='<button class="xp-button" data-do="switch-user">Felhasználóváltás</button><button class="xp-button" data-do="logoff">Kijelentkezés</button>';
       }
       $('span',footer).textContent=`Folyamatok: ${list.length}`;
       $$('.status-part',footer)[0].textContent=`CPU-használat: ${cpu}%`;
@@ -116,7 +119,7 @@
       if(action==='end'){if(target)XP.close(target);selectedTask=null;render();}
       if(action==='switch'&&target)XP.focus(target);
       if(action==='new')XP.open('run');
-      if(action==='logoff')XP.open('logoff');
+      if(action==='logoff'||action==='switch-user')XP.open('logoff');
       if(action==='kill'){
         const process=rows()[selectedProcess];
         if(!process)return;
@@ -131,6 +134,7 @@
     };
 
     const tick=setInterval(()=>{
+      if(w.parked)return;
       const load=Math.min(96,2+others().length*4+Math.round(Math.random()*7));
       cpu=Math.round((cpu*2+load)/3);
       history=[...history.slice(1),cpu];

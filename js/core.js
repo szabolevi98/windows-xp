@@ -74,7 +74,7 @@ window.XP = (() => {
     const saved=stored(id),base=ACCOUNTS[id];
     if(!base)return null;
     return {id,name:saved?.user||base.name,avatar:id==='guest'?base.avatar:saved?.avatar||base.avatar,type:base.type,
-      active:id===state.session,enabled:id!=='guest'||!!state.guest?.enabled};
+      active:id===state.session,enabled:id!=='guest'||!!state.guest?.enabled,running:parkedCount(id)};
   }
   // The Guest only shows up once somebody has switched it on, exactly as XP kept it.
   const accounts=(all=false)=>Object.keys(ACCOUNTS).map(accountInfo).filter(info=>all||info.enabled);
@@ -84,11 +84,46 @@ window.XP = (() => {
     document.dispatchEvent(new CustomEvent('xp-settings-changed'));
     return true;
   }
+  const parked=new Map();
+  const parkedCount=id=>parked.get(id)?.list.length||0;
+  function parkSession(){
+    if(!windows.size)return false;
+    const list=[...windows.values()];
+    for(const win of list){
+      win.parked=true;win.el.classList.add('parked');win.shade?.classList.add('parked');
+      win.onPark?.();
+    }
+    parked.set(state.session,{list,active,z,modalDepth});
+    windows.clear();active=null;modalDepth=0;renderTasks();
+    return true;
+  }
+  function unparkSession(id){
+    const session=parked.get(id);
+    if(!session)return false;
+    parked.delete(id);
+    for(const win of session.list){
+      windows.set(win.id,win);
+      win.parked=false;win.el.classList.remove('parked');win.shade?.classList.remove('parked');
+      win.onUnpark?.();
+    }
+    active=session.active;z=session.z;modalDepth=session.modalDepth;
+    for(const win of windows.values())win.el.classList.toggle('inactive',win.id!==active);
+    renderTasks();
+    return true;
+  }
+  // Restarting or switching the machine off ends every session, parked ones included.
+  function closeParked(){
+    for(const session of parked.values())for(const win of session.list){
+      win.cleanup.forEach(fn=>fn());win.el.remove();win.shade?.remove();
+    }
+    parked.clear();
+  }
   // Signing in as somebody else puts this desk away and unpacks theirs.
   function switchUser(id){
-    if(!ACCOUNTS[id]||id===state.session)return false;
+    if(!ACCOUNTS[id])return false;
     if(id==='guest'&&!state.guest?.enabled)return false;
-    for(const win of [...windows.values()])close(win);
+    if(id===state.session)return unparkSession(id)||true;
+    parkSession();
     state.profiles={...state.profiles,[state.session]:personal(state)};
     const saved=state.profiles[id],complete=saved&&Array.isArray(saved.files);
     for(const key of Object.keys(state))if(!MACHINE.includes(key))delete state[key];
@@ -100,6 +135,7 @@ window.XP = (() => {
     persist();applySettings();
     document.dispatchEvent(new CustomEvent('xp-settings-changed'));
     document.dispatchEvent(new CustomEvent('xp-files-changed'));
+    unparkSession(id);
     return true;
   }
   const shortcutApps={mines:'mines',solitaire:'solitaire',pinball:'pinball',freecell:'freecell',spider:'spider',hearts:'hearts'};
@@ -312,11 +348,11 @@ window.XP = (() => {
     saveFile(file);return file;
   }
   function openFile(id){const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file)return;if(file.type==='folder')open('explorer',id);else if(file.type==='image')open('image',id);else if(file.type==='shortcut'){if(apps[file.app])open(file.app);}else open('notepad',id);}
-  function onFiles(win,fn){document.addEventListener('xp-files-changed',fn);win.cleanup.push(()=>document.removeEventListener('xp-files-changed',fn));}
+  function onFiles(win,fn){const guarded=()=>{if(!win.parked)fn();};document.addEventListener('xp-files-changed',guarded);win.cleanup.push(()=>document.removeEventListener('xp-files-changed',guarded));}
   function status(win,text,extra=''){const bar=document.createElement('footer');bar.className='status-bar';bar.innerHTML=`<span>${esc(text)}</span>${extra?`<span class="status-part">${esc(extra)}</span>`:''}`;win.body.append(bar);return bar;}
   document.addEventListener('pointerdown',e=>{if(!e.target.closest('#context-menu,#start-menu,#start-button,.menu-bar'))hideMenus();});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,accounts,accountInfo,switchUser,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();
