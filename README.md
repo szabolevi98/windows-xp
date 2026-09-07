@@ -17,6 +17,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
 - Tálca: gyorsindítás az Asztal megjelenítése gombbal, futó ablakok, értesítési terület órával, hangerővel, hálózattal és biztonsági központtal. A « gomb kinyitja a rejtett ikonokat.
+- Outlook Express: helyi mappák olvasatlan-számlálóval, olvasóablak, levélírás, válasz és továbbítás, törlés és Küldés/fogadás. Az elolvasott, elküldött és törölt levelek megmaradnak.
 - Internet Explorer: régi Google, kulcsszavas helyi keresés, 20 beépített oldal, címsor, előzmények, hozzáadható/törölhető kedvencek, beállítható kezdőlap és oldalon belüli keresés. Az ismeretlen címek helyi hibaoldalt kapnak. A `www.jatekbarlang.hu` oldalról mind a hat játék elindítható.
 - Helyi web: Netkapu hírportál szavazással, PC-magazin, PC Bazár mentett kosárral, Netklub fórum menthető hozzászólásokkal, postafiók mintalevelekkel és levélpiszkozattal, városi időjárás és kereshető vasúti bemutatómenetrend. A háttérképgaléria az asztali hátteret is beállítja, a receptoldal adagokat számol, a HTML suli pedig honlapelőnézetet készít.
 - Jegyzettömb: piszkozat, dokumentummentés, automatikus mentés, keresés, sortörés, szövegfájl letöltése.
