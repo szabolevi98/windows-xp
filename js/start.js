@@ -160,7 +160,7 @@ async function enterDesktop(){
  startupPending=false;
  if(playback==='blocked'){
   showLogin();
-  $('.welcome-user').onclick=()=>enterDesktop();
+  bindLogin(()=>enterDesktop());
   return;
  }
  bootPhase='desktop';$('#welcome-screen').hidden=true;$('#boot-screen').hidden=true;$('#off-screen').hidden=true;
@@ -191,17 +191,20 @@ function logonPower(){
  $('[data-power=cancel]',panel).focus();
 }
 function loginMarkup(){
- return `<div class="welcome-login"><div class="welcome-brand"><div class="windows-brand">${icon('windows')}<small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong></div><p class="welcome-hint">A kezdéshez kattints a nevedre</p></div><i class="welcome-divider"></i><div class="welcome-users"><button class="welcome-user">${XP.avatar(state.avatar)}<span><strong>${esc(state.user)}</strong><small>Bejelentkezés</small></span></button></div></div>`;
+ return `<div class="welcome-login"><div class="welcome-brand"><div class="windows-brand">${icon('windows')}<small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong></div><p class="welcome-hint">A kezdéshez kattints a nevedre</p></div><i class="welcome-divider"></i><div class="welcome-users">${XP.accounts().map(account=>`<button class="welcome-user" data-account="${account.id}">${XP.avatar(account.avatar)}<span><strong>${esc(account.name)}</strong><small>${account.id==='guest'?'Vendég fiók':'Bejelentkezés'}</small></span></button>`).join('')}</div></div>`;
+}
+function bindLogin(after){
+ $$('.welcome-user[data-account]').forEach(button=>button.onclick=()=>{XP.switchUser(button.dataset.account);return after();});
 }
 function showLogin(){
  $('.welcome-center').innerHTML=loginMarkup();
  $('.welcome-bottom').innerHTML=`<button class="welcome-power">${icon('shutdown')}<span>A számítógép kikapcsolása</span></button><p class="welcome-note">A fiók módosításához nyisd meg a Vezérlőpultot,<br>és kattints a Felhasználói fiókok elemre.</p>`;
  $('.welcome-power').onclick=logonPower;
 }
-function loginScreen(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();closeAll();bootPhase='login';$('#boot-screen').hidden=true;$('#welcome-screen').hidden=false;showLogin();$('.welcome-user').onclick=()=>{bootPhase='boot';welcome();};}
+function loginScreen(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();closeAll();bootPhase='login';$('#boot-screen').hidden=true;$('#welcome-screen').hidden=false;showLogin();bindLogin(()=>{bootPhase='boot';welcome();});}
 register('logoff',()=>powerDialog(true));register('power',()=>powerDialog(false));
 function powerDialog(logoff){const w=XP.createWindow({title:logoff?'Kijelentkezés':'A számítógép kikapcsolása',icon:'shutdown',width:390,height:230,fixed:true,modal:true,className:'power-dialog'});$('.title-bar',w.el).hidden=true;w.onClose=()=>{};
- const shade=document.createElement('div');shade.className='power-shade';document.body.append(shade);w.cleanup.push(()=>shade.remove());w.body.innerHTML=`<header class="power-heading"><span>${logoff?'Kijelentkezés':'A számítógép kikapcsolása'}</span>${icon('windows')}</header><div class="power-options">${logoff?`<button data-power="logoff">${icon('logoff')} Kijelentkezés</button>`:`<button data-power="standby">${icon('standby')} Készenlét</button><button data-power="shutdown">${icon('shutdown')} Kikapcsolás</button><button data-power="restart">${icon('restart')} Újraindítás</button>`}</div><footer class="power-bottom"><button class="xp-button" data-power="cancel">Mégse</button></footer>`;w.body.onclick=e=>{const a=e.target.closest('[data-power]')?.dataset.power;if(!a)return;w.close();if(a==='cancel')return;persist();if(a==='logoff'){XP.sound('shutdown');loginScreen();}if(a==='restart'){closeAll();boot();}if(a==='shutdown'){closeAll();XP.sound('shutdown');$('#balloon').hidden=true;$('#off-screen').hidden=false;bootPhase='off';}if(a==='standby'){bootPhase='standby';$('#welcome-screen').hidden=false;$('.welcome-center').innerHTML='<button class="welcome-user"><span><strong>Készenlét</strong><small>Kattints a folytatáshoz</small></span></button>';$('.welcome-user').onclick=()=>{bootPhase='desktop';$('#welcome-screen').hidden=true;};}};}
+ const shade=document.createElement('div');shade.className='power-shade';document.body.append(shade);w.cleanup.push(()=>shade.remove());w.body.innerHTML=`<header class="power-heading"><span>${logoff?'Kijelentkezés':'A számítógép kikapcsolása'}</span>${icon('windows')}</header><div class="power-options">${logoff?`<button data-power="switch">${icon('user')} Felhasználóváltás</button><button data-power="logoff">${icon('logoff')} Kijelentkezés</button>`:`<button data-power="standby">${icon('standby')} Készenlét</button><button data-power="shutdown">${icon('shutdown')} Kikapcsolás</button><button data-power="restart">${icon('restart')} Újraindítás</button>`}</div><footer class="power-bottom"><button class="xp-button" data-power="cancel">Mégse</button></footer>`;w.body.onclick=e=>{const a=e.target.closest('[data-power]')?.dataset.power;if(!a)return;w.close();if(a==='cancel')return;persist();if(a==='logoff'||a==='switch'){XP.sound('shutdown');loginScreen();}if(a==='restart'){closeAll();boot();}if(a==='shutdown'){closeAll();XP.sound('shutdown');$('#balloon').hidden=true;$('#off-screen').hidden=false;bootPhase='off';}if(a==='standby'){bootPhase='standby';$('#welcome-screen').hidden=false;$('.welcome-center').innerHTML='<button class="welcome-user"><span><strong>Készenlét</strong><small>Kattints a folytatáshoz</small></span></button>';$('.welcome-user').onclick=()=>{bootPhase='desktop';$('#welcome-screen').hidden=true;};}};}
 $('#skip-boot').onclick=loginScreen;$('#boot-screen').onclick=loginScreen;$('#power-on').onclick=boot;
 document.addEventListener('keydown',e=>{if(bootPhase==='boot'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();loginScreen();}if(e.key==='F1'&&bootPhase==='desktop'&&!XP.modal){e.preventDefault();XP.open('help');}});
 document.addEventListener('xp-files-changed',renderIcons);document.addEventListener('xp-settings-changed',()=>{renderIcons();if(!$('#start-menu').hidden)renderStart();});window.addEventListener('resize',renderIcons);
