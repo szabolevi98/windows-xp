@@ -286,7 +286,13 @@ window.XP = (() => {
     };
     focus(win);return win;
   }
-  function open(app,...args){hideMenus();if(modalDepth)return;const fn=apps[app];if(fn)return fn(...args);notify('A program nem található',app);}
+  function open(app,...args){
+    hideMenus();if(modalDepth)return;
+    const fn=apps[app];
+    if(!fn){notify('A program nem található',app);return;}
+    if(PROGRAMS[app]){state.programUse={...state.programUse,[app]:(state.programUse?.[app]||0)+1};persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));}
+    return fn(...args);
+  }
   function register(name,fn){apps[name]=fn;}
   function singleton(app){const w=[...windows.values()].find(w=>w.app===app);if(w){focus(w);return w;}return null;}
   // Menus cascade: an item with `items` opens a child menu beside itself.
@@ -460,7 +466,13 @@ window.XP = (() => {
     const file={id:uniqueId(),name:uniqueName(name,parent)||name,type:'shortcut',app,icon:iconName,parent,modified:Date.now()};
     saveFile(file);return file;
   }
-  function openFile(id){const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file)return;if(file.type==='folder')open('explorer',id);else if(file.type==='image')open('image',id);else if(file.type==='shortcut'){
+  function rememberDocument(id){
+    const file=state.files.find(f=>f.id===id&&!f.deleted);
+    if(!file||file.type==='folder'||file.type==='shortcut')return;
+    state.recentDocs=[id,...(state.recentDocs||[]).filter(other=>other!==id)].slice(0,15);
+    persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));
+  }
+  function openFile(id){const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file)return;rememberDocument(id);if(file.type==='folder')open('explorer',id);else if(file.type==='image')open('image',id);else if(file.type==='shortcut'){
       if(file.target){
         const target=targetOf(file);
         if(target)openFile(target.id);
@@ -474,5 +486,5 @@ window.XP = (() => {
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key===' '&&active){e.preventDefault();const win=windows.get(active);if(win){const box=win.el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);}}
     if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,rememberDocument,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();
