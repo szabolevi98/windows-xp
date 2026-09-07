@@ -14,7 +14,7 @@ window.XP = (() => {
     {id:'welcome',name:'Üdv a Windows XP-ben.txt',type:'text',parent:'documents',content:'Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n',modified:Date.now()},
     {id:'todo',name:'Teendők.txt',type:'text',parent:'documents',content:'Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n',modified:Date.now()},
     {id:'folder-personal',name:'Személyes',type:'folder',parent:'documents',modified:Date.now()}
-  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:false},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Webkatalógus',url:'about:offline'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
+  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:true},guestDefaultOn:true,favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Webkatalógus',url:'about:offline'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
   let state;
   try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
   let storageWarned=false;
@@ -63,11 +63,13 @@ window.XP = (() => {
   }
   seedProfile();
   persist();
-  const MACHINE=['version','computerName','security','profiles','session','guest'];
+  const MACHINE=['version','computerName','security','profiles','session','guest','guestDefaultOn'];
   const ACCOUNTS={admin:{name:'Adminisztrátor',avatar:'chess',type:'admin'},guest:{name:'Vendég',avatar:'beach',type:'guest'}};
   const personal=source=>Object.fromEntries(Object.entries(source).filter(([key])=>!MACHINE.includes(key)));
   if(!state.profiles||typeof state.profiles!=='object')state.profiles={};
-  if(!state.guest||typeof state.guest!=='object')state.guest={enabled:false};
+  if(!state.guest||typeof state.guest!=='object')state.guest={enabled:true};
+  // The Guest comes switched on, and desktops set up before that get it once.
+  if(!state.guestDefaultOn){state.guest={...state.guest,enabled:true};state.guestDefaultOn=true;persist();}
   if(!ACCOUNTS[state.session])state.session='admin';
   const stored=id=>id===state.session?state:state.profiles[id];
   function accountInfo(id){

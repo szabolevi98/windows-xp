@@ -20,20 +20,29 @@ function boot(saved){
 const plain=value=>JSON.parse(JSON.stringify(value));
 const names=xp=>xp.state.files.filter(f=>f.parent==='desktop'&&!f.deleted).map(f=>f.name).sort();
 
-test('The Guest account stays switched off until somebody turns it on',()=>{
+test('The Guest stands on the logon screen from the start, and can be switched off',()=>{
  const {xp}=boot();
- assert.deepEqual(plain(xp.accounts().map(a=>a.id)),['admin'],'only the administrator can sign in');
- assert.equal(xp.accountInfo('guest').enabled,false);
+ assert.deepEqual(plain(xp.accounts().map(a=>a.id)),['admin','guest'],'both accounts are offered');
+ assert.equal(xp.accountInfo('guest').enabled,true);
+ assert.equal(xp.accountInfo('guest').name,'Vendég');
+ assert.equal(xp.setGuest(false),true);
+ assert.deepEqual(plain(xp.accounts().map(a=>a.id)),['admin']);
  assert.equal(xp.switchUser('guest'),false,'a switched-off account cannot be signed into');
  assert.equal(xp.session,'admin');
- assert.equal(xp.setGuest(true),true);
- assert.deepEqual(plain(xp.accounts().map(a=>a.id)),['admin','guest']);
- assert.equal(xp.accountInfo('guest').name,'Vendég');
+});
+
+test('A desktop set up before the Guest existed gets it switched on once',()=>{
+ const legacy=JSON.stringify({version:1,user:'Adminisztrátor',files:[]});
+ const {xp,storage}=boot(legacy);
+ assert.equal(xp.state.guest.enabled,true,'the account is there without anybody turning it on');
+ // Switching it off afterwards sticks; the one-time change does not come back.
+ xp.setGuest(false);
+ const later=boot(storage.get('windows-xp-simulator-v1')).xp;
+ assert.equal(later.state.guest.enabled,false);
 });
 
 test('Each account keeps its own desk, and neither can see the other one',()=>{
  const {xp,storage}=boot();
- xp.setGuest(true);
  xp.saveFile({id:'admin-note',name:'Admin.txt',type:'text',parent:'desktop',content:'admin'});
  xp.state.wallpaper='azul';xp.persist();
  assert.ok(names(xp).includes('Admin.txt'));
@@ -65,7 +74,7 @@ test('Each account keeps its own desk, and neither can see the other one',()=>{
 
 test('The Guest may not switch itself off, and the machine keeps what belongs to it',()=>{
  const {xp}=boot();
- xp.setGuest(true);xp.state.computerName='OTTHONI-PC';
+ xp.state.computerName='OTTHONI-PC';
  xp.switchUser('guest');
  assert.equal(xp.setGuest(false),false,'only the administrator turns the account off');
  assert.equal(xp.state.guest.enabled,true);
@@ -79,7 +88,6 @@ test('The Guest may not switch itself off, and the machine keeps what belongs to
 
 test('The administrator can set the Guest picture without signing in as the Guest',()=>{
  const {xp}=boot();
- xp.setGuest(true);
  assert.equal(xp.setAccountAvatar('guest','frog'),true);
  assert.equal(xp.accountInfo('guest').avatar,'frog');
  assert.equal(xp.state.avatar,'chess','the administrator keeps their own picture');
