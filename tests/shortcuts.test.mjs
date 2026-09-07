@@ -176,3 +176,21 @@ test('A drive has the properties sheet XP drew, pie and all',()=>{
  assert.match(readFileSync(new URL('js/explorer.js',root),'utf8'),/if\(id==='disk'\|\|id==='dvd'\)\{XP\.open\('drive',id\);return;\}/);
  assert.match(readFileSync(new URL('styles.css',root),'utf8'),/\.disk-pie\{width:96px;height:96px;border-radius:50%/);
 });
+
+test('The Folders button swaps the task pane for the tree',()=>{
+ const ex=readFileSync(new URL('js/explorer.js',root),'utf8');
+ assert.match(ex,/<button data-action="tree">\$\{icon\('folder'\)\}<span class="toolbar-label">Mappák<\/span><\/button>/);
+ assert.doesNotMatch(ex,/toolbar-label">Új mappa/,'the toolbar matches XP, which had no New Folder button');
+ assert.match(ex,/if\(action==='tree'\)\{showTree=!showTree;render\(\);\}/);
+ // The desktop is the root, with My Computer, the drives and the user's own folders under it.
+ assert.match(ex,/function treeChildren\(id\)/);
+ assert.match(ex,/\{id:'disk',name:'Helyi lemez \(C:\)',icon:'disk'\}/);
+ assert.match(ex,/name:`\$\{state\.user\} dokumentumai`/,'the user folder is named, not repeated');
+ assert.match(ex,/\{id:'recycle',name:'Lomtár'/);
+ // The little box opens a branch; walking into a folder opens its own.
+ assert.match(ex,/if\(b\.dataset\.twist\)\{const id=b\.dataset\.twist;expanded\.has\(id\)\?expanded\.delete\(id\):expanded\.add\(id\);render\(true\);return;\}/);
+ assert.match(ex,/for\(let id=next;id;\)\{const parent=entry\(id\)\?\.parent;if\(!parent\)break;expanded\.add\(parent\);id=parent;\}/);
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ assert.match(css,/\.tree-item\.selected\{background:#316ac5/);
+ assert.match(css,/\.toolbar button\.pressed\{/,'the button stays pressed while the tree is open');
+});

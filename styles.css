@@ -367,3 +367,16 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
 .disk-legend.total{grid-template-columns:122px 1fr auto;margin-top:8px}
 .disk-pie{width:96px;height:96px;border-radius:50%;border:1px solid #7a7a7a;flex:none}
 .disk-drive{margin:10px 0 0;text-align:center}
+
+.explorer-sidebar.tree-mode{background:#fff;border-right:1px solid #c8c6bb;padding:0}
+.explorer-tree header{display:flex;align-items:center;justify-content:space-between;height:23px;padding:0 4px 0 8px;font-weight:bold;color:#333;background:#ece9d8;border-bottom:1px solid #c8c6bb}
+.explorer-tree .tree-close{background:none;font-size:13px;line-height:1;padding:0 4px;color:#555}
+.explorer-tree .tree-close:hover{color:#000}
+.tree-node{display:flex;align-items:center;gap:2px;min-height:19px}
+.tree-twist{width:13px;height:13px;flex:none;background:#fff;color:#333;font:11px/9px Tahoma,sans-serif;padding:0}
+.tree-node .tree-twist:not(:empty){border:1px solid #808080}
+.tree-item{display:flex;align-items:center;gap:5px;background:none;padding:1px 4px;text-align:left;min-width:0;color:#111}
+.tree-item img{width:16px;height:16px}
+.tree-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree-item.selected{background:#316ac5;color:#fff}
+.toolbar button.pressed{background:#e2e0d3;border-color:#b9b7ac;box-shadow:inset 1px 1px #b0aea2}
