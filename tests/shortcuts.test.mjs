@@ -118,3 +118,23 @@ test('Menus cascade, and Send To reaches the desktop from a file as well',()=>{
  assert.match(start,/function programsMarkup\(entries\)/);
  assert.match(readFileSync(new URL('styles.css',root),'utf8'),/\.menu-folder:hover>\.folder-menu/);
 });
+
+test('Explorer shows the views XP had, Details with sortable columns',()=>{
+ const ex=readFileSync(new URL('js/explorer.js',root),'utf8');
+ assert.match(ex,/const VIEWS=\[\['tiles','Mozaik'\],\['icons','Ikonok'\],\['list','Lista'\],\['details','Részletek'\]\]/);
+ assert.doesNotMatch(ex,/listView/,'the two-view toggle is gone');
+ // The columns Details showed, and what they say about an entry.
+ assert.match(ex,/\['name','Név'\],\['size','Méret'\],\['type','Típus'\],\['modified','Módosítva'\]/);
+ assert.match(ex,/TYPES=\{folder:'Fájlmappa',text:'Szöveges dokumentum'/);
+ assert.match(ex,/const sizeOf=file=>file\.type==='folder'\?null:/,'folders have no size');
+ // Clicking a header sorts, clicking it again turns the order around.
+ assert.match(ex,/sort=sort\.key===key\?\{key,dir:-sort\.dir\}:\{key,dir:1\}/);
+ assert.match(ex,/const folders=\(b\.type==='folder'\)-\(a\.type==='folder'\)/,'folders still come first');
+ // Both the menu and the toolbar button offer the same list.
+ assert.match(ex,/'Nézet':\(\)=>\[\.\.\.viewItems\(\)/);
+ assert.match(ex,/if\(action==='view'\)\{const box=/);
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ assert.match(css,/\.details-header button\{/);
+ assert.match(css,/\.details-header:before\{content:"";flex:0 0 16px\}/,'the header lines up past the icon column');
+ assert.match(css,/\.tiles-view \.file-item\{display:grid/);
+});

@@ -47,7 +47,7 @@ register('explorer',(initial='computer')=>{
   const folders={computer:{name:'Sajátgép',icon:'computer'},documents:{name:'Dokumentumok',icon:'documents'},pictures:{name:'Képek',icon:'pictures'},music:{name:'Zene',icon:'music'},desktop:{name:'Asztal',icon:'computer'},recycle:{name:'Lomtár',icon:'recycle'},...system};
   const dvd={id:'dvd',name:'DVD-meghajtó (D:)',icon:'cd',readOnly:true,type:'drive',path:'D:\\'};
   const w=createWindow({title:'Sajátgép',icon:'computer',app:'explorer',width:760,height:490});
-  let folder=initial,selected=null,backStack=[],forwardStack=[],listView=false,dragged=false;
+  let folder=initial,selected=null,backStack=[],forwardStack=[],view='icons',sort={key:'name',dir:1},dragged=false;
   // The desktop grid puts an icon's top-left corner where the pointer is, minus half a cell.
   const dropPoint=ev=>{const box=$('#desktop').getBoundingClientRect();return {x:ev.clientX-box.left-42,y:ev.clientY-box.top-40};};
   const savedFile=id=>state.files.find(f=>f.id===id);
@@ -132,7 +132,7 @@ register('explorer',(initial='computer')=>{
   menubar(w,{
     'Fájl':fileActions,
     'Szerkesztés':()=>[{label:'Kivágás',shortcut:'Ctrl+X',action:cut,disabled:!canEdit()},{label:'Másolás',shortcut:'Ctrl+C',action:copy,disabled:!selectedFile()||folder==='recycle'},{label:'Beillesztés',shortcut:'Ctrl+V',action:pasteHere,disabled:!XP.canPaste()||readOnly()||folder==='recycle'},null,{label:'Átnevezés',action:rename,disabled:!canEdit()},{label:'Törlés',action:remove,disabled:!selectedFile()||readOnly()}],
-    'Nézet':()=>[{label:'Ikonok',checked:!listView,action:()=>{listView=false;render();}},{label:'Lista',checked:listView,action:()=>{listView=true;render();}},{label:'Frissítés',shortcut:'F5',action:render}],
+    'Nézet':()=>[...viewItems(),{label:'Frissítés',shortcut:'F5',action:render}],
     'Kedvencek':[{label:'Dokumentumok',icon:'documents',action:()=>navigate('documents')},{label:'Képek',icon:'pictures',action:()=>navigate('pictures')}],
     'Eszközök':[{label:'Mappabeállítások',action:()=>XP.dialog('Mappabeállítások','Az elemeket dupla kattintással nyithatod meg.\nA saját fájljaidat jobb kattintással átnevezheted, törölheted vagy letöltheted.')}],
     'Súgó':[{label:'Súgó és támogatás',action:()=>XP.open('help')}]
@@ -142,7 +142,27 @@ register('explorer',(initial='computer')=>{
   const addr=document.createElement('div');addr.className='address-bar';addr.innerHTML=`Cím <div class="address-input">${icon('computer')}<input type="text" aria-label="Mappa elérési útja" readonly></div>`;w.body.append(addr);
   const layout=document.createElement('div');layout.className='explorer-layout';layout.innerHTML='<aside class="explorer-sidebar"></aside><div class="explorer-files"></div>';w.body.append(layout);
   const sidebar=$('.explorer-sidebar',layout),filesEl=$('.explorer-files',layout),bar=status(w,'');
-  function item(name,ic,data,extra=''){return `<button class="file-item ${extra}" ${data}>${icon(ic)}<span>${esc(name)}</span></button>`;}
+  function item(name,ic,data,extra='',columns=''){return `<button class="file-item ${extra}" ${data}>${icon(ic)}<span>${esc(name)}</span>${columns}</button>`;}
+  const VIEWS=[['tiles','Mozaik'],['icons','Ikonok'],['list','Lista'],['details','Részletek']];
+  const viewItems=()=>VIEWS.map(([key,label])=>({label,checked:view===key,action:()=>{view=key;render();}}));
+  // What the Details columns show about an entry.
+  const TYPES={folder:'Fájlmappa',text:'Szöveges dokumentum',image:'Kép',shortcut:'Parancsikon'};
+  const typeName=file=>TYPES[file.type]||'Fájl';
+  const sizeOf=file=>file.type==='folder'?null:Math.max(1,Math.ceil((file.content||'').length/1024));
+  const sizeText=file=>{const size=sizeOf(file);return size===null?'':`${size.toLocaleString('hu-HU')} KB`;};
+  const dateText=file=>file.modified?new Date(file.modified).toLocaleString('hu-HU',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+  const columns=file=>`<span class="col-size">${sizeText(file)}</span><span class="col-type">${esc(typeName(file))}</span><span class="col-date">${esc(dateText(file))}</span>`;
+  // Clicking a column header sorts by it, and clicking it again turns the order around.
+  const compare=(a,b)=>{
+    const folders=(b.type==='folder')-(a.type==='folder');
+    if(folders)return folders;
+    if(sort.key==='size')return ((sizeOf(a)||0)-(sizeOf(b)||0))*sort.dir||a.name.localeCompare(b.name,'hu');
+    if(sort.key==='type')return typeName(a).localeCompare(typeName(b),'hu')*sort.dir||a.name.localeCompare(b.name,'hu');
+    if(sort.key==='modified')return ((a.modified||0)-(b.modified||0))*sort.dir||a.name.localeCompare(b.name,'hu');
+    return a.name.localeCompare(b.name,'hu')*sort.dir;
+  };
+  const header=()=>view!=='details'?'':`<div class="details-header">${[['name','Név'],['size','Méret'],['type','Típus'],['modified','Módosítva']]
+    .map(([key,label])=>`<button data-sort="${key}" class="col-${key==='modified'?'date':key}">${esc(label)}${sort.key===key?`<b>${sort.dir>0?'▲':'▼'}</b>`:''}</button>`).join('')}</div>`;
   function render(keepFiles=false){
     folders.recycle.icon=XP.recycleIcon();
     const info=folderInfo(),details=selectedEntry();w.setTitle(info.name);w.setIcon(info.icon||'folder');$('input',addr).value=folderPath(folder);
@@ -153,15 +173,16 @@ register('explorer',(initial='computer')=>{
     if(keepFiles)return;
     if(!readOnly()&&(folder==='recycle'||['documents','pictures'].includes(folder)||!!savedFile(folder)))filesEl.dataset.dropFolder=folder;
     else delete filesEl.dataset.dropFolder;
-    filesEl.classList.toggle('list-view',listView);let html='',count=0;
+    filesEl.className=filesEl.className.replace(/\b(tiles|icons|list|details)-view\b/g,'').trim()+` ${view}-view`;
+    let html='',count=0;
     if(folder==='computer'){
       html=`<div class="explorer-section">A számítógépen tárolt fájlok</div><div class="file-grid">${item('Dokumentumok','documents','data-folder="documents"')}${item('Képek','pictures','data-folder="pictures"')}${item('Zene','music','data-folder="music"')}</div><div class="explorer-section" style="margin-top:25px">Merevlemezek</div><div class="file-grid">${item('Helyi lemez (C:)','disk','data-folder="disk"','drive')}</div><div class="explorer-section" style="margin-top:25px">Cserélhető adathordozós eszközök</div><div class="file-grid">${item(dvd.name,'cd','data-cd','drive')}</div>`;count=5;
     }else if(readOnly()){
       const children=Object.values(system).filter(f=>f.parent===folder).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
-      count=children.length;html=`<div class="file-grid">${children.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'')).join('')}</div>`;
+      count=children.length;html=`${header()}<div class="file-grid">${children.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}</div>`;
     }else{
-      const files=state.files.filter(f=>folder==='recycle'?f.deleted:!f.deleted&&f.parent===folder).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
-      count=files.length;html=`<div class="file-grid">${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item('Windows rendszerhangok','player','data-player'):''}${files.map(f=>item(f.name,XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`)).join('')}</div>`;
+      const files=state.files.filter(f=>folder==='recycle'?f.deleted:!f.deleted&&f.parent===folder).sort(compare);
+      count=files.length;html=`${header()}<div class="file-grid">${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item('Windows rendszerhangok','player','data-player'):''}${files.map(f=>item(f.name,XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`,columns(f))).join('')}</div>`;
       if(folder==='pictures')count+=3;if(folder==='music')count++;
     }
     if(!count)html+=`<div class="empty-folder">${icon(folder==='recycle'?'recycle':'folder')}${folder==='recycle'?'A Lomtár üres.':'Ez a mappa üres.'}</div>`;
@@ -174,7 +195,7 @@ register('explorer',(initial='computer')=>{
     if(action==='back'&&backStack.length){forwardStack.push(folder);navigate(backStack.pop(),false);}
     if(action==='forward'&&forwardStack.length){backStack.push(folder);navigate(forwardStack.pop(),false);}
     if(action==='up'&&folder!=='computer')navigate(entry(folder)?.parent||'computer');
-    if(action==='folder')newFolder();if(action==='view'){listView=!listView;render();}if(action==='search')XP.open('search');
+    if(action==='folder')newFolder();if(action==='view'){const box=e.target.closest('[data-action=view]').getBoundingClientRect();XP.menu(viewItems(),box.left,box.bottom);}if(action==='search')XP.open('search');
   };
   sidebar.onclick=e=>{
     const b=e.target.closest('button');if(!b)return;if(b.dataset.folder)navigate(b.dataset.folder);
@@ -182,6 +203,9 @@ register('explorer',(initial='computer')=>{
     if(a==='restore'&&selectedFile()){XP.restoreFile(selected);selected=null;render();}if(a==='control')XP.open('control');if(a==='system')XP.open('system');
   };
   filesEl.onclick=e=>{
+    // A column header sorts by it; the same header again turns the order around.
+    const column=e.target.closest('[data-sort]');
+    if(column){const key=column.dataset.sort;sort=sort.key===key?{key,dir:-sort.dir}:{key,dir:1};render();return;}
     if(dragged)return;
     const b=e.target.closest('.file-item');selected=buttonId(b);
     $$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
