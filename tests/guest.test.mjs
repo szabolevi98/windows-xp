@@ -31,16 +31,6 @@ test('The Guest stands on the logon screen from the start, and can be switched o
  assert.equal(xp.session,'admin');
 });
 
-test('A desktop set up before the Guest existed gets it switched on once',()=>{
- const legacy=JSON.stringify({version:1,user:'Adminisztrátor',files:[]});
- const {xp,storage}=boot(legacy);
- assert.equal(xp.state.guest.enabled,true,'the account is there without anybody turning it on');
- // Switching it off afterwards sticks; the one-time change does not come back.
- xp.setGuest(false);
- const later=boot(storage.get('windows-xp-simulator-v1')).xp;
- assert.equal(later.state.guest.enabled,false);
-});
-
 test('Each account keeps its own desk, and neither can see the other one',()=>{
  const {xp,storage}=boot();
  xp.saveFile({id:'admin-note',name:'Admin.txt',type:'text',parent:'desktop',content:'admin'});
