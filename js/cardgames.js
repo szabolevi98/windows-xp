@@ -212,7 +212,7 @@ register('spider',()=>{
  }
  function render(){
   let offsets;
-  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="Osztás a pakliból, ${Math.ceil(stock.length/10)} osztás maradt"></button><span>${Math.ceil(stock.length/10)}×</span>`:'<span class="spider-hint">Elfogyott a pakli</span>'}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
+  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="Osztás a pakliból, ${Math.ceil(stock.length/10)} osztás maradt"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t('Elfogyott a pakli'))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
    let y=0;offsets=col.map(card=>{const at=y;y+=card.face?20:8;return at;});
    return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
   }).join('')}</div>`;
