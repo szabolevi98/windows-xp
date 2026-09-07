@@ -84,6 +84,55 @@ const monitor=inner=>`<div class="monitor-preview"><div class="monitor-screen">$
 const wallpaperStyle=(name,fit)=>name==='none'?'background:#3a6ea5':`background:#3a6ea5 url('${XP.wallpaperPath(name)}') ${fit==='tile'?'left top/auto repeat':fit==='center'?'center/auto no-repeat':'center/cover no-repeat'}`;
 
 // --- Tálca és Start menü tulajdonságai -----------------------------------
+// --- Meghajtó tulajdonságai (a kördiagrammal) ----------------------------
+register('drive',(which='disk')=>{
+ const dvd=which==='dvd';
+ const GB=1024**3;
+ // A 2001-es gépben egy 40 GB-os lemez ült; a használt hely az itt tárolt fájlokkal nő.
+ const capacity=dvd?0:40*GB-1_100_000_000;
+ const own=state.files.filter(f=>!f.deleted).reduce((sum,f)=>sum+(f.content||'').length+1024,0);
+ const used=dvd?0:4_283_924_480+own;
+ const free=Math.max(0,capacity-used);
+ const bytes=value=>value.toLocaleString('hu-HU');
+ const gb=value=>`${(value/GB).toFixed(2).replace('.',',')} GB`;
+ const percent=capacity?Math.round(used/capacity*100):0;
+ const swatch=(colour,label,value)=>`<div class="disk-legend"><i style="background:${colour}"></i><span>${label}</span><b>${bytes(value)} bájt</b><span>${gb(value)}</span></div>`;
+ return propertySheet({
+  app:'drive',title:`${dvd?'DVD-meghajtó (D:)':'Helyi lemez (C:)'} tulajdonságai`,icon:dvd?'cd':'disk',
+  width:400,height:470,initial:'general',
+  tabs:[['general','Általános'],['tools','Eszközök'],['hardware','Hardver']],
+  read(){},
+  draw(tab,panel){
+   if(tab==='general'){
+    panel.innerHTML=dvd
+     ?`<div class="disk-head">${icon('cd')}<input type="text" value="DVD-meghajtó" readonly></div><hr>
+       <dl class="disk-facts"><dt>Típus:</dt><dd>CD-meghajtó</dd><dt>Fájlrendszer:</dt><dd>Ismeretlen</dd></dl><hr>
+       <p class="settings-note">Nincs lemez a meghajtóban. Helyezzen be egy lemezt, majd próbálja újra.</p>`
+     :`<div class="disk-head">${icon('disk')}<input type="text" value="Helyi lemez" readonly></div><hr>
+       <dl class="disk-facts"><dt>Típus:</dt><dd>Helyi lemez</dd><dt>Fájlrendszer:</dt><dd>NTFS</dd></dl><hr>
+       <div class="disk-usage">
+        <div class="disk-legends">${swatch('#1b3fa0','Használt terület:',used)}${swatch('#c832c8','Szabad terület:',free)}</div>
+        <div class="disk-pie" style="background:conic-gradient(#1b3fa0 0 ${percent}%,#c832c8 ${percent}% 100%)"></div>
+       </div>
+       <hr>
+       <div class="disk-legend total"><span>Kapacitás:</span><b>${bytes(capacity)} bájt</b><span>${gb(capacity)}</span></div>
+       <p class="disk-drive">C: meghajtó</p>
+       <div class="button-row" style="padding:6px 0 0"><button class="xp-button" data-cleanup>Lemezkarbantartó</button></div>
+       <label class="settings-check"><input type="checkbox" checked> A meghajtó indexelése a gyorsabb kereséshez</label>`;
+    const cleanup=$('[data-cleanup]',panel);
+    if(cleanup)cleanup.onclick=()=>XP.dialog('Lemezkarbantartó',`A Lemezkarbantartó kiszámítja, mennyi helyet szabadíthat fel a(z) C: meghajtón.\n\nIdeiglenes internetfájlok: 12,4 MB\nLomtár: ${(state.files.filter(f=>f.deleted).length*0.4).toFixed(1).replace('.',',')} MB\nIdeiglenes fájlok: 3,1 MB`,{icon:'disk'});
+   }
+   if(tab==='tools')panel.innerHTML=`<fieldset><legend>Hibakeresés</legend><p>A beállítás ellenőrzi a kötet hibáit.</p><div class="button-row"><button class="xp-button" disabled>Ellenőrzés…</button></div></fieldset>
+     <fieldset><legend>Töredezettségmentesítés</legend><p>A beállítás töredezettségmentesíti a köteten lévő fájlokat.</p><div class="button-row"><button class="xp-button" disabled>Töredezettségmentesítés…</button></div></fieldset>
+     <fieldset><legend>Biztonsági mentés</legend><p>A beállítás biztonsági másolatot készít a köteten lévő fájlokról.</p><div class="button-row"><button class="xp-button" disabled>Mentés indítása…</button></div></fieldset>`;
+   if(tab==='hardware')panel.innerHTML=`<p>Az összes lemezmeghajtó:</p><table class="taskmgr-table"><thead><tr><th>Név</th><th>Típus</th></tr></thead><tbody>
+     <tr><td>${icon('disk')}ST340016A</td><td>Lemezmeghajtók</td></tr>
+     <tr><td>${icon('cd')}HL-DT-ST DVD-ROM GDR8162B</td><td>DVD/CD-ROM-meghajtók</td></tr>
+     <tr><td>${icon('disk')}Floppy lemezmeghajtó</td><td>Hajlékonylemez-meghajtók</td></tr></tbody></table>`;
+  },
+  apply(){}
+ });
+});
 register('printers',()=>XP.dialog('Nyomtatók és faxok','Nincs telepítve nyomtató.\n\nNyomtató üzembe helyezéséhez indítsd el a Nyomtató hozzáadása varázslót, vagy csatlakoztass egy Plug and Play nyomtatót – a Windows automatikusan felismeri.',{icon:'printers'}));
 register('taskbar',(initial='taskbar')=>{
  const draft={...{locked:true,clock:true,quickLaunch:true},...(state.taskbar||{})};

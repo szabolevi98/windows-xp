@@ -352,3 +352,18 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
 .details-header .col-type{width:150px;flex:none}
 .details-header .col-date{width:132px;flex:none}
 .icons-view .col-size,.icons-view .col-type,.icons-view .col-date,.list-view .col-size,.list-view .col-type,.list-view .col-date{display:none}
+
+.disk-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.disk-head img{width:32px;height:32px}
+.disk-head input{flex:1}
+.disk-facts{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:10px 0}
+.disk-facts dt{color:#333}
+.disk-facts dd{margin:0}
+.disk-usage{display:flex;align-items:center;gap:16px;margin:12px 0}
+.disk-legends{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.disk-legend{display:grid;grid-template-columns:14px 108px 1fr auto;align-items:center;gap:6px}
+.disk-legend i{width:12px;height:12px;border:1px solid #555}
+.disk-legend b{font-weight:normal;text-align:right}
+.disk-legend.total{grid-template-columns:122px 1fr auto;margin-top:8px}
+.disk-pie{width:96px;height:96px;border-radius:50%;border:1px solid #7a7a7a;flex:none}
+.disk-drive{margin:10px 0 0;text-align:center}
