@@ -86,7 +86,24 @@ $('#start-menu').oncontextmenu=e=>{
  ],e.clientX,e.clientY);
 };
 $('#show-desktop').onclick=()=>{if(XP.modal)return;if(!desktopShown){hiddenWindows=[...XP.windows.values()].filter(w=>!w.minimized).map(w=>w.id);hiddenWindows.forEach(id=>XP.minimize(XP.windows.get(id)));desktopShown=true;}else{hiddenWindows.forEach(id=>{const w=XP.windows.get(id);if(w)XP.focus(w);});desktopShown=false;hiddenWindows=[];}};
-$('#volume-button').onclick=()=>XP.open('volume');$('#clock').onclick=()=>XP.open('calendar');
+const volumeFlyout=$('#volume-flyout'),volumeDial=$('.volume-dial',volumeFlyout),volumeMute=$('.volume-mute input',volumeFlyout);
+function showVolume(){
+ const shown=volumeFlyout.hidden;
+ XP.hideMenus();
+ if(!shown||XP.modal)return;
+ volumeDial.value=state.volume;volumeMute.checked=!state.sounds;
+ volumeFlyout.hidden=false;
+ // Anchored by its right edge, so it lands under the speaker without measuring itself.
+ const button=$('#volume-button').getBoundingClientRect();
+ volumeFlyout.style.right=Math.max(2,innerWidth-button.right)+'px';
+}
+const volumeChanged=()=>{persist();document.dispatchEvent(new CustomEvent('xp-volume-changed'));document.dispatchEvent(new CustomEvent('xp-settings-changed'));};
+volumeDial.oninput=e=>{state.volume=Number(e.target.value);volumeChanged();};
+volumeMute.onchange=e=>{state.sounds=!e.target.checked;volumeChanged();};
+$('#volume-button').onclick=e=>{e.stopPropagation();showVolume();};
+$('#volume-button').ondblclick=()=>{XP.hideMenus();XP.open('volume');};
+document.addEventListener('xp-volume-changed',()=>{if(!volumeFlyout.hidden){volumeDial.value=state.volume;volumeMute.checked=!state.sounds;}});
+$('#clock').ondblclick=()=>XP.open('calendar');
 const trayToggle=$('#tray-toggle'),trayHidden=$('#tray-hidden');
 trayToggle.onclick=e=>{e.stopPropagation();const show=trayHidden.hidden;trayHidden.hidden=!show;trayToggle.title=trayToggle.ariaLabel=show?'Rejtett ikonok elrejtése':'Rejtett ikonok megjelenítése';trayToggle.setAttribute('aria-expanded',String(show));};
 const trayNotices={

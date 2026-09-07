@@ -421,7 +421,52 @@ function userAccounts(){
  return w;
 }
 register('volume',()=>{
- if(XP.singleton('volume'))return;const w=createWindow({title:'Hangerő',icon:'volume',app:'volume',width:270,height:210,fixed:true});w.body.innerHTML=`<div class="volume-panel">${icon('volume')} <b>Fő hangerő</b><input type="range" min="0" max="100" value="${state.volume}" aria-label="Fő hangerő"><label><input type="checkbox" ${!state.sounds?'checked':''}> Elnémítás</label></div>`;$('input[type=range]',w.body).oninput=e=>{state.volume=Number(e.target.value);persist();document.dispatchEvent(new CustomEvent('xp-volume-changed'));};$('input[type=checkbox]',w.body).onchange=e=>{state.sounds=!e.target.checked;persist();document.dispatchEvent(new CustomEvent('xp-volume-changed'));};return w;
+ if(XP.singleton('volume'))return;
+ // Hangerő-szabályozó: the master alongside the channels a 2001 sound card offered.
+ const channels=[['master','Hangerő-szabályozó','Összes némítása'],['wave','Hullám','Némítás'],['synth','SW Synth','Némítás'],['cd','CD-lejátszó','Némítás']];
+ const mixer={wave:82,synth:74,cd:70,muted:[],balance:{},...(state.mixer||{})};
+ const level=key=>key==='master'?state.volume:mixer[key];
+ const muted=key=>key==='master'?!state.sounds:mixer.muted.includes(key);
+ const w=createWindow({title:'Hangerő-szabályozó',icon:'volume',app:'volume',width:462,height:326,fixed:true});
+ XP.menubar(w,{
+  'Beállítások':[{label:'Tulajdonságok…',action:()=>XP.open('sounds')},{label:'Speciális vezérlők',disabled:true},null,{label:'Kilépés',action:()=>w.close()}],
+  'Súgó':[{label:'A Hangerő-szabályozó névjegye',action:()=>XP.dialog('Hangerő-szabályozó','Hangerő-szabályozó\n\nA hangeszköz csatornáinak hangereje és balansza.\n\nEgy kattintás a tálca hangszóróján a kis csúszkát nyitja, kettő ezt az ablakot.')}]
+ });
+ const body=document.createElement('div');body.className='mixer';w.body.append(body);
+ body.innerHTML=channels.map(([key,label,muteLabel])=>`<section class="mixer-channel" data-channel="${key}">
+   <h3>${esc(label)}</h3>
+   <p class="mixer-label">Balansz:</p>
+   <div class="mixer-balance">${icon('volume')}<input type="range" min="-10" max="10" step="1" value="${mixer.balance[key]||0}" data-balance="${key}" aria-label="${esc(label)} balansz">${icon('volume')}</div>
+   <p class="mixer-label">Hangerő:</p>
+   <div class="mixer-slider"><input type="range" min="0" max="100" step="1" value="${level(key)}" data-level="${key}" orient="vertical" aria-label="${esc(label)} hangerő"></div>
+   <label class="mixer-mute"><input type="checkbox" data-mute="${key}" ${muted(key)?'checked':''}> ${esc(muteLabel)}</label>
+  </section>`).join('');
+ const store=()=>{state.mixer={wave:mixer.wave,synth:mixer.synth,cd:mixer.cd,muted:mixer.muted,balance:mixer.balance};persist();};
+ const broadcast=()=>{store();document.dispatchEvent(new CustomEvent('xp-volume-changed'));document.dispatchEvent(new CustomEvent('xp-settings-changed'));};
+ body.oninput=e=>{
+  const target=e.target;
+  if(target.dataset.level){
+   const key=target.dataset.level,value=Number(target.value);
+   if(key==='master')state.volume=value;else mixer[key]=value;
+   broadcast();
+  }
+  if(target.dataset.balance){mixer.balance[target.dataset.balance]=Number(target.value);store();}
+ };
+ body.onchange=e=>{
+  const key=e.target.dataset.mute;if(!key)return;
+  if(key==='master')state.sounds=!e.target.checked;
+  else mixer.muted=e.target.checked?[...new Set([...mixer.muted,key])]:mixer.muted.filter(name=>name!==key);
+  broadcast();
+ };
+ // The tray slider and this window are two views of the same knob.
+ const follow=()=>{
+  $('[data-level=master]',body).value=state.volume;
+  $('[data-mute=master]',body).checked=!state.sounds;
+ };
+ document.addEventListener('xp-volume-changed',follow);
+ w.cleanup.push(()=>document.removeEventListener('xp-volume-changed',follow));
+ XP.status(w,'Hangeszköz: Realtek AC97 Audio','Sztereó');
+ return w;
 });
 register('calendar',()=>{
  if(XP.singleton('calendar'))return;const w=createWindow({title:'Dátum és idő',icon:'datetime',app:'calendar',width:330,height:365,fixed:true});const body=document.createElement('div');body.className='calendar';w.body.append(body);const now=new Date();let year=now.getFullYear(),month=now.getMonth();function render(){const first=(new Date(year,month,1).getDay()+6)%7,days=new Date(year,month+1,0).getDate();body.innerHTML=`<div class="calendar-heading"><button class="xp-button" data-month="-1" style="min-width:26px">‹</button> <span>${new Date(year,month).toLocaleDateString('hu-HU',{year:'numeric',month:'long'})}</span> <button class="xp-button" data-month="1" style="min-width:26px">›</button></div><div class="calendar-grid">${['H','K','Sze','Cs','P','Szo','V'].map(d=>`<span class="weekday">${d}</span>`).join('')}${'<span></span>'.repeat(first)}${Array.from({length:days},(_,i)=>`<span class="${i+1===now.getDate()&&month===now.getMonth()&&year===now.getFullYear()?'today':''}">${i+1}</span>`).join('')}</div><div class="calendar-time"></div><small>A számítógép helyi ideje</small>`;tick();}function tick(){const el=$('.calendar-time',body);if(el)el.textContent=new Date().toLocaleTimeString('hu-HU');}body.onclick=e=>{const b=e.target.closest('[data-month]');if(b){month+=Number(b.dataset.month);if(month<0){month=11;year--;}if(month>11){month=0;year++;}render();}};const timer=setInterval(tick,1000);w.cleanup.push(()=>clearInterval(timer));render();return w;
