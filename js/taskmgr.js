@@ -97,9 +97,9 @@
           `<tr class="${account.active?'selected':''}"><td>${XP.avatar(account.avatar)}${esc(account.name)}</td><td>${index}</td><td>${account.active?t('Aktív'):t('Leválasztva')}</td><td>${account.active?others().length:account.running}</td></tr>`).join('')}</tbody></table>`;
         buttons.innerHTML=`<button class="xp-button" data-do="switch-user">${esc(t('Felhasználóváltás'))}</button><button class="xp-button" data-do="logoff">${esc(t('Kijelentkezés'))}</button>`;
       }
-      $('span',footer).textContent=`Folyamatok: ${list.length}`;
-      $$('.status-part',footer)[0].textContent=`CPU-használat: ${cpu}%`;
-      $$('.status-part',footer)[1].textContent=`Véglegesített memória: ${((146200+list.length*2400)/1024).toFixed(0)} M / 1279 M`;
+      $('span',footer).textContent=t('Folyamatok: {count}',{count:list.length});
+      $$('.status-part',footer)[0].textContent=t('CPU-használat: {percent}%',{percent:cpu});
+      $$('.status-part',footer)[1].textContent=t('Véglegesített memória: {size} M / 1279 M',{size:((146200+list.length*2400)/1024).toFixed(0)});
     }
 
     bar.onclick=event=>{const button=event.target.closest('[data-tab]');if(button){tab=button.dataset.tab;render();}};
@@ -124,7 +124,7 @@
         const process=rows()[selectedProcess];
         if(!process)return;
         if(!process.app){XP.sound('error');XP.dialog(t('Feladatkezelő'),t('Ez egy rendszerfolyamat, és nem állítható le.'),{icon:'error'});return;}
-        XP.confirm(t('Feladatkezelő – figyelmeztetés'),`Biztosan leállítod a(z) ${process.name} folyamatot?\n\nA nem mentett adatok elvesznek.`).then(answer=>{
+        XP.confirm(t('Feladatkezelő – figyelmeztetés'),t('Biztosan leállítod a(z) {name} folyamatot?\n\nA nem mentett adatok elvesznek.',{name:process.name})).then(answer=>{
           if(answer!=='Igen')return;
           const victim=others().find(win=>win.app===process.app);
           if(victim)XP.close(victim);

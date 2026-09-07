@@ -96,31 +96,31 @@ register('drive',(which='disk')=>{
  const bytes=value=>value.toLocaleString(locale());
  const gb=value=>`${(value/GB).toFixed(2).replace('.',',')} GB`;
  const percent=capacity?Math.round(used/capacity*100):0;
- const swatch=(colour,label,value)=>`<div class="disk-legend"><i style="background:${colour}"></i><span>${label}</span><b>${bytes(value)} bájt</b><span>${gb(value)}</span></div>`;
+ const swatch=(colour,label,value)=>`<div class="disk-legend"><i style="background:${colour}"></i><span>${label}</span><b>${bytes(value)} ${esc(t('bájt'))}</b><span>${gb(value)}</span></div>`;
  return propertySheet({
-  app:'drive',title:`${dvd?t('DVD-meghajtó (D:)'):'Helyi lemez (C:)'} tulajdonságai`,icon:dvd?'cd':'disk',
+  app:'drive',title:t('{name} tulajdonságai',{name:dvd?t('DVD-meghajtó (D:)'):t('Helyi lemez (C:)')}),icon:dvd?'cd':'disk',
   width:400,height:470,initial:'general',
   tabs:[['general',t('Általános')],['tools',t('Eszközök')],['hardware',t('Hardver')]],
   read(){},
   draw(tab,panel){
    if(tab==='general'){
     panel.innerHTML=dvd
-     ?`<div class="disk-head">${icon('cd')}<input type="text" value="DVD-meghajtó" readonly></div><hr>
+     ?`<div class="disk-head">${icon('cd')}<input type="text" value="${esc(t('DVD-meghajtó'))}" readonly></div><hr>
        <dl class="disk-facts"><dt>${esc(t('Típus:'))}</dt><dd>${esc(t('CD-meghajtó'))}</dd><dt>${esc(t('Fájlrendszer:'))}</dt><dd>${esc(t('Ismeretlen'))}</dd></dl><hr>
        <p class="settings-note">${esc(t('Nincs lemez a meghajtóban. Helyezzen be egy lemezt, majd próbálja újra.'))}</p>`
-     :`<div class="disk-head">${icon('disk')}<input type="text" value="Helyi lemez" readonly></div><hr>
+     :`<div class="disk-head">${icon('disk')}<input type="text" value="${esc(t('Helyi lemez'))}" readonly></div><hr>
        <dl class="disk-facts"><dt>${esc(t('Típus:'))}</dt><dd>${esc(t('Helyi lemez'))}</dd><dt>${esc(t('Fájlrendszer:'))}</dt><dd>NTFS</dd></dl><hr>
        <div class="disk-usage">
         <div class="disk-legends">${swatch('#1b3fa0',t('Használt terület:'),used)}${swatch('#c832c8',t('Szabad terület:'),free)}</div>
         <div class="disk-pie" style="background:conic-gradient(#1b3fa0 0 ${percent}%,#c832c8 ${percent}% 100%)"></div>
        </div>
        <hr>
-       <div class="disk-legend total"><span>${esc(t('Kapacitás:'))}</span><b>${bytes(capacity)} bájt</b><span>${gb(capacity)}</span></div>
+       <div class="disk-legend total"><span>${esc(t('Kapacitás:'))}</span><b>${bytes(capacity)} ${esc(t('bájt'))}</b><span>${gb(capacity)}</span></div>
        <p class="disk-drive">${esc(t('C: meghajtó'))}</p>
        <div class="button-row" style="padding:6px 0 0"><button class="xp-button" data-cleanup>${esc(t('Lemezkarbantartó'))}</button></div>
        <label class="settings-check"><input type="checkbox" checked> ${esc(t('A meghajtó indexelése a gyorsabb kereséshez'))}</label>`;
     const cleanup=$('[data-cleanup]',panel);
-    if(cleanup)cleanup.onclick=()=>XP.dialog(t('Lemezkarbantartó'),`A Lemezkarbantartó kiszámítja, mennyi helyet szabadíthat fel a(z) C: meghajtón.\n\nIdeiglenes internetfájlok: 12,4 MB\nLomtár: ${(state.files.filter(f=>f.deleted).length*0.4).toFixed(1).replace('.',',')} MB\nIdeiglenes fájlok: 3,1 MB`,{icon:'disk'});
+    if(cleanup)cleanup.onclick=()=>XP.dialog(t('Lemezkarbantartó'),t('A Lemezkarbantartó kiszámítja, mennyi helyet szabadíthat fel a(z) C: meghajtón.\n\nIdeiglenes internetfájlok: 12,4 MB\nLomtár: {trash} MB\nIdeiglenes fájlok: 3,1 MB',{trash:(state.files.filter(f=>f.deleted).length*0.4).toFixed(1).replace('.',',')}),{icon:'disk'});
    }
    if(tab==='tools')panel.innerHTML=`<fieldset><legend>${esc(t('Hibakeresés'))}</legend><p>${esc(t('A beállítás ellenőrzi a kötet hibáit.'))}</p><div class="button-row"><button class="xp-button" disabled>${esc(t('Ellenőrzés…'))}</button></div></fieldset>
      <fieldset><legend>${esc(t('Töredezettségmentesítés'))}</legend><p>${esc(t('A beállítás töredezettségmentesíti a köteten lévő fájlokat.'))}</p><div class="button-row"><button class="xp-button" disabled>${esc(t('Töredezettségmentesítés…'))}</button></div></fieldset>
@@ -128,7 +128,7 @@ register('drive',(which='disk')=>{
    if(tab==='hardware')panel.innerHTML=`<p>${esc(t('Az összes lemezmeghajtó:'))}</p><table class="taskmgr-table"><thead><tr><th>${esc(t('Név'))}</th><th>${esc(t('Típus'))}</th></tr></thead><tbody>
      <tr><td>${icon('disk')}ST340016A</td><td>${esc(t('Lemezmeghajtók'))}</td></tr>
      <tr><td>${icon('cd')}HL-DT-ST DVD-ROM GDR8162B</td><td>${esc(t('DVD/CD-ROM-meghajtók'))}</td></tr>
-     <tr><td>${icon('disk')}Floppy lemezmeghajtó</td><td>${esc(t('Hajlékonylemez-meghajtók'))}</td></tr></tbody></table>`;
+     <tr><td>${icon('disk')}${esc(t('Floppy lemezmeghajtó'))}</td><td>${esc(t('Hajlékonylemez-meghajtók'))}</td></tr></tbody></table>`;
   },
   apply(){}
  });
@@ -197,9 +197,9 @@ register('screensaver',()=>displayProperties('screensaver'));
 function displayProperties(initial='themes'){
  const draft={wallpaper:state.wallpaper,fit:state.wallpaperFit||'fill',theme:state.theme,style:state.visualStyle||'xp',saver:saverSettings()};
  const options=(list,value)=>list.map(([key,label])=>`<option value="${key}" ${key===value?'selected':''}>${esc(label)}</option>`).join('');
- const wallpapers=[['none','(Nincs)'],['bliss','Bliss'],['azul','Azul'],['autumn','Autumn'],['windows-xp','Windows XP']];
+ const wallpapers=[['none',t('(Nincs)')],['bliss','Bliss'],['azul','Azul'],['autumn','Autumn'],['windows-xp','Windows XP']];
  const schemes=[['blue',t('Alapértelmezett (kék)')],['olive',t('Olívazöld')],['silver',t('Ezüst')]];
- const savers=[['none','(Nincs)'],['logo','Windows XP'],['stars',t('Csillagmező')]];
+ const savers=[['none',t('(Nincs)')],['logo','Windows XP'],['stars',t('Csillagmező')]];
  const scheme=()=>draft.style==='classic'?'classic':draft.theme;
  // A miniature desktop, so the theme and the colour scheme can be judged before applying them.
  const preview=()=>`<div class="preview-desktop" style="${wallpaperStyle(draft.wallpaper,draft.fit)}"><div class="preview-window" data-scheme="${scheme()}"><div class="preview-title">${esc(t('Aktív ablak'))}</div><div class="preview-content"><span>${esc(t('Windows és gombok'))}</span><span class="preview-button">OK</span></div></div><div class="preview-taskbar" data-scheme="${scheme()}"></div></div>`;
@@ -230,7 +230,7 @@ function displayProperties(initial='themes'){
     $('[name=wallpaper]',panel).onchange=update;$('[name=fit]',panel).onchange=update;
    }
    if(tab==='screensaver'){
-    panel.innerHTML=`${monitor('<div class="preview-desktop saver-preview" style="background:#000"></div>')}<label class="settings-field"><span>${esc(t('Képernyőkímélő:'))}</span><select name="saver">${options(savers,draft.saver.name)}</select></label><div class="settings-inline"><button class="xp-button" data-preview>${esc(t('Előnézet'))}</button><label>${esc(t('Várakozás:'))} <input type="number" name="wait" min="1" max="60" value="${draft.saver.minutes}"> perc</label></div><p class="settings-note">${esc(t('A képernyőkímélő akkor indul el, ha a megadott ideig nem használod a gépet. Bármelyik billentyű vagy az egér mozgatása leállítja.'))}</p>`;
+    panel.innerHTML=`${monitor('<div class="preview-desktop saver-preview" style="background:#000"></div>')}<label class="settings-field"><span>${esc(t('Képernyőkímélő:'))}</span><select name="saver">${options(savers,draft.saver.name)}</select></label><div class="settings-inline"><button class="xp-button" data-preview>${esc(t('Előnézet'))}</button><label>${esc(t('Várakozás:'))} <input type="number" name="wait" min="1" max="60" value="${draft.saver.minutes}"> ${esc(t('perc'))}</label></div><p class="settings-note">${esc(t('A képernyőkímélő akkor indul el, ha a megadott ideig nem használod a gépet. Bármelyik billentyű vagy az egér mozgatása leállítja.'))}</p>`;
     const box=$('.saver-preview',panel);
     const show=()=>{stopPreview?.();box.replaceChildren();stopPreview=draft.saver.name==='none'?null:paintSaver(box,draft.saver.name);};
     $('[name=saver]',panel).onchange=e=>{draft.saver.name=e.target.value;show();};
@@ -248,7 +248,7 @@ function displayProperties(initial='themes'){
    }
    if(tab==='settings'){
     const area=$('#desktop').getBoundingClientRect();
-    panel.innerHTML=`${monitor(preview())}<div class="settings-columns"><div><label class="settings-field"><span>${esc(t('Képernyőfelbontás:'))}</span><input type="range" min="0" max="2" value="1" disabled><small>${Math.round(area.width)} × ${Math.round(area.height+30)} képpont</small></label></div><div><label class="settings-field"><span>${esc(t('Színminőség:'))}</span><select disabled><option>${esc(t('Legjobb (32 bit)'))}</option></select></label></div></div><p class="settings-note">${esc(t('A képernyő az ablak méretéhez igazodik: ha átméretezed, a felbontás is ennek megfelelően változik.'))}</p>`;
+    panel.innerHTML=`${monitor(preview())}<div class="settings-columns"><div><label class="settings-field"><span>${esc(t('Képernyőfelbontás:'))}</span><input type="range" min="0" max="2" value="1" disabled><small>${esc(t('{width} × {height} képpont',{width:Math.round(area.width),height:Math.round(area.height+30)}))}</small></label></div><div><label class="settings-field"><span>${esc(t('Színminőség:'))}</span><select disabled><option>${esc(t('Legjobb (32 bit)'))}</option></select></label></div></div><p class="settings-note">${esc(t('A képernyő az ablak méretéhez igazodik: ha átméretezed, a felbontás is ennek megfelelően változik.'))}</p>`;
    }
   },
   apply(){
@@ -275,7 +275,7 @@ function systemProperties(initial='general'){
   draw(tab,panel){
    if(tab==='general'){
     const used=new Blob([JSON.stringify(state)]).size;
-    panel.innerHTML=`<div class="system-brand">${icon('windows')}<div><strong>Windows<span>xp</span></strong><br>Professional</div></div><dl class="system-facts"><dt>${esc(t('Rendszer:'))}</dt><dd>Microsoft Windows XP<br>Professional<br>Version 2002<br>Service Pack 3</dd><dt>${esc(t('Bejegyzett tulajdonos:'))}</dt><dd>${esc(state.user)}<br>${esc(draft.computerName)}<br>55274-640-1234567-23456</dd><dt>${esc(t('Számítógép:'))}</dt><dd>Intel(R) Pentium(R) 4 CPU 2.40GHz<br>${esc(t('2,40 GHz, 512 MB RAM'))}<br>${(used/1024).toFixed(1)} KB felhasználói adat</dd></dl><p class="settings-note">${esc(t('A Windows XP a Microsoft Corporation védjegye. Ez a program egy független, nem hivatalos újraalkotás.'))}</p>`;
+    panel.innerHTML=`<div class="system-brand">${icon('windows')}<div><strong>Windows<span>xp</span></strong><br>Professional</div></div><dl class="system-facts"><dt>${esc(t('Rendszer:'))}</dt><dd>Microsoft Windows XP<br>Professional<br>Version 2002<br>Service Pack 3</dd><dt>${esc(t('Bejegyzett tulajdonos:'))}</dt><dd>${esc(state.user)}<br>${esc(draft.computerName)}<br>55274-640-1234567-23456</dd><dt>${esc(t('Számítógép:'))}</dt><dd>Intel(R) Pentium(R) 4 CPU 2.40GHz<br>${esc(t('2,40 GHz, 512 MB RAM'))}<br>${esc(t('{size} KB felhasználói adat',{size:(used/1024).toFixed(1)}))}</dd></dl><p class="settings-note">${esc(t('A Windows XP a Microsoft Corporation védjegye. Ez a program egy független, nem hivatalos újraalkotás.'))}</p>`;
    }
    if(tab==='name'){
     panel.innerHTML=`<p>${esc(t('A számítógép a hálózaton a következő adatokkal azonosítható.'))}</p><label class="settings-field"><span>${esc(t('Számítógép leírása:'))}</span><input type="text" value="Otthoni gép" readonly></label><label class="settings-field"><span>${esc(t('Teljes számítógépnév:'))}</span><input type="text" name="computer" maxlength="15" value="${esc(draft.computerName)}"></label><label class="settings-field"><span>${esc(t('Munkacsoport:'))}</span><input type="text" value="MUNKACSOPORT" readonly></label><p class="settings-note">${esc(t('A név megváltoztatása után kattints az Alkalmaz gombra. A név megjelenik a Sajátgépen és a hálózaton.'))}</p>`;
@@ -293,7 +293,7 @@ function systemProperties(initial='general'){
     panel.onclick=e=>{
      const kind=e.target.dataset?.adv;
      if(kind==='perf')info(t('Teljesítménybeállítások'),t('Vizuális effektusok: A Windows válassza ki az optimális beállítást\nProcesszorütemezés: Programok\nMemóriahasználat: Programok\n\nVirtuális memória: 768 MB a C: meghajtón'))();
-     if(kind==='profiles')info(t('Felhasználói profilok'),`${state.user}\nTípus: Helyi\nMéret: 2,4 MB\nUtoljára módosítva: ma`)();
+     if(kind==='profiles')info(t('Felhasználói profilok'),t('{name}\nTípus: Helyi\nMéret: 2,4 MB\nUtoljára módosítva: ma',{name:state.user}))();
      if(kind==='boot')info(t('Indítás és helyreállítás'),t('Alapértelmezett operációs rendszer:\n„Microsoft Windows XP Professional”\n\nAz operációs rendszerek listájának megjelenítése: 30 másodperc\nRendszerhiba esetén: automatikus újraindítás'))();
     };
    }
@@ -361,7 +361,7 @@ register('control',()=>{
   volume:{name:t('Hangok és audioeszközök'),icon:'volume',hint:t('Rendszerhangok és hangerő'),open:()=>XP.open('sounds')},
   player:{name:t('Hangeszközök'),icon:'player',hint:t('Lejátszás és hangfájlok'),open:()=>XP.open('player')},
   system:{name:t('Rendszer'),icon:'computer',hint:t('Rendszerinformációk és tárhely'),open:()=>XP.open('system')},
-  cleanup:{name:t('Lemezkarbantartó'),icon:'disk',hint:t('Hely felszabadítása a lemezen'),open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog(t('Lemezkarbantartó – C:'),`A Lemezkarbantartó a következő fájlokat távolíthatja el:\n\nIdeiglenes internetfájlok        3,17 MB\nLetöltött programfájlok          0,00 MB\nLomtár                           ${(trash*0.06).toFixed(2)} MB (${trash} elem)\nIdeiglenes fájlok                0,84 MB\n\nÖsszesen felszabadítható: ${(4.01+trash*0.06).toFixed(2)} MB\n\nA Lomtár tartalmát a Lomtár ablakában ürítheted ki.`);}},
+  cleanup:{name:t('Lemezkarbantartó'),icon:'disk',hint:t('Hely felszabadítása a lemezen'),open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog(t('Lemezkarbantartó – C:'),t('A Lemezkarbantartó a következő fájlokat távolíthatja el:\n\nIdeiglenes internetfájlok        3,17 MB\nLetöltött programfájlok          0,00 MB\nLomtár                           {trash} MB ({count} elem)\nIdeiglenes fájlok                0,84 MB\n\nÖsszesen felszabadítható: {total} MB\n\nA Lomtár tartalmát a Lomtár ablakában ürítheted ki.',{trash:(trash*0.06).toFixed(2),count:trash,total:(4.01+trash*0.06).toFixed(2)}));}},
   printers:{name:t('Nyomtatók és faxok'),icon:'printers',hint:t('Telepített nyomtatók'),open:()=>XP.open('printers')},
   profile:{name:t('Felhasználói fiókok'),icon:'user',hint:t('A fiók neve, képe és típusa'),open:()=>XP.open('profile')},
   regional:{name:t('Területi és nyelvi beállítások'),icon:'datetime',hint:t('A felület nyelve és a formátumok'),open:()=>XP.open('regional')},
@@ -391,7 +391,7 @@ register('control',()=>{
  toolbar.innerHTML=`<button data-action="back">${icon('back')}<span>${esc(t('Vissza'))}</span></button><button data-action="up" title="${esc(t('Egy szinttel feljebb'))}">${icon('up')}</button><span class="toolbar-separator"></span><button data-action="search">${icon('search')}<span class="toolbar-label">${esc(t('Keresés'))}</span></button><button data-action="view">${icon('documents')}<span class="toolbar-label">${esc(t('Nézet'))}</span></button>`;
  w.body.append(toolbar);
  const addr=document.createElement('div');addr.className='address-bar';
- addr.innerHTML=`Cím ${'<div class="address-input">'}${icon('control')}<input type="text" aria-label="${esc(t('Hely'))}" readonly></div>`;
+ addr.innerHTML=`${esc(t('Cím'))} ${'<div class="address-input">'}${icon('control')}<input type="text" aria-label="${esc(t('Hely'))}" readonly></div>`;
  w.body.append(addr);
  const layout=document.createElement('div');layout.className='explorer-layout';
  layout.innerHTML='<aside class="explorer-sidebar"></aside><div class="explorer-files control-files"></div>';
@@ -405,7 +405,7 @@ register('control',()=>{
   $('input',addr).value=here?t('Vezérlőpult\\')+here.name:t('Vezérlőpult');
   $('[data-action=back]',toolbar).disabled=!here;
   $('[data-action=up]',toolbar).disabled=!here;
-  sidebar.innerHTML=`<section class="explorer-panel"><h3>${esc(t('Vezérlőpult'))}</h3><div><button data-view="${classic?'category':'classic'}">${icon('control')} Váltás ${classic?t('kategórianézetre'):t('klasszikus nézetre')}</button>${here?`<button data-view="home">${icon('back')} Vissza a kategóriákhoz</button>`:''}</div></section><section class="explorer-panel"><h3>${esc(t('Lásd még'))}</h3><div><button data-side="update">${icon('refresh')} Windows Update</button><button data-side="help">${icon('help')} Súgó és támogatás</button><button data-side="explorer">${icon('computer')} Sajátgép</button></div></section>`;
+  sidebar.innerHTML=`<section class="explorer-panel"><h3>${esc(t('Vezérlőpult'))}</h3><div><button data-view="${classic?'category':'classic'}">${icon('control')} ${esc(t('Váltás {view}',{view:classic?t('kategórianézetre'):t('klasszikus nézetre')}))}</button>${here?`<button data-view="home">${icon('back')} ${esc(t('Vissza a kategóriákhoz'))}</button>`:''}</div></section><section class="explorer-panel"><h3>${esc(t('Lásd még'))}</h3><div><button data-side="update">${icon('refresh')} Windows Update</button><button data-side="help">${icon('help')} ${esc(t('Súgó és támogatás'))}</button><button data-side="explorer">${icon('computer')} ${esc(t('Sajátgép'))}</button></div></section>`;
   if(here){
    files.className='explorer-files control-files';
    files.innerHTML=`<h1 class="control-title">${esc(here.name)}</h1><p class="control-lead">${esc(here.hint)}</p><h2 class="control-sub">${esc(t('Válasszon egy Vezérlőpult-ikont'))}</h2><div class="file-grid">${here.items.map(id=>`<button class="file-item" data-applet="${id}">${icon(applets[id].icon)}<span>${esc(applets[id].name)}</span></button>`).join('')}</div>`;
@@ -420,7 +420,7 @@ register('control',()=>{
   }
   files.className='explorer-files control-files category-view';
   files.innerHTML=`<h1 class="control-title">${esc(t('Válasszon kategóriát'))}</h1><div class="control-categories">${categories.map(c=>`<button class="control-category" data-category="${c.id}">${icon(c.icon)}<span><strong>${esc(c.name)}</strong>${esc(c.hint)}</span></button>`).join('')}</div>`;
-  bar.firstElementChild.textContent=`${categories.length} kategória`;
+  bar.firstElementChild.textContent=t('{count} kategória',{count:categories.length});
  }
  toolbar.onclick=e=>{
   const action=e.target.closest('[data-action]')?.dataset.action;
@@ -473,13 +473,13 @@ function userAccounts(){
    :`<h1>${esc(t('Válasszon egy feladatot:'))}</h1><ul class="account-tasks">${ownTasks}</ul><h2>${esc(t('vagy válasszon egy fiókot a módosításhoz'))}</h2>`;
   const pages={
    home:`${ownBlock}<div class="account-list">${ownTile()}${asGuest()?'':guestTile()}</div>`,
-   pick:asGuest()?`${ownBlock}<div class="account-list">${ownTile()}</div>`:`<h1>Mit szeretne módosítani a(z) ${esc(state.user)} fiókján?</h1><ul class="account-tasks">${ownTasks}</ul><div class="account-list">${ownTile()}</div>`,
+   pick:asGuest()?`${ownBlock}<div class="account-list">${ownTile()}</div>`:`<h1>${esc(t('Mit szeretne módosítani a(z) {name} fiókján?',{name:state.user}))}</h1><ul class="account-tasks">${ownTasks}</ul><div class="account-list">${ownTile()}</div>`,
    guest:guest().enabled
     ?`<h1>${esc(t('Mit szeretne módosítani a Vendég fiókon?'))}</h1><p>${esc(t('A Vendég a saját asztalán dolgozhat, de nem telepíthet programokat, és nem módosíthatja a rendszerbeállításokat. A képe a Windows állandó Vendég-képe.'))}</p><ul class="account-tasks"><li><button data-guest="off">${esc(t('A Vendég fiók kikapcsolása'))}</button></li></ul><div class="account-list">${guestTile()}</div>`
     :`<h1>${esc(t('Szeretné bekapcsolni a Vendég fiókot?'))}</h1><p>${esc(t('A Vendég fiókkal azok is használhatják a számítógépet, akiknek nincs saját fiókjuk a gépen. A Vendég nem telepíthet programokat, és nem módosíthatja a rendszerbeállításokat.'))}</p><p>${esc(t('Bekapcsolás után a Vendég megjelenik a bejelentkezési képernyőn, és a saját asztalán dolgozhat.'))}</p><div class="account-buttons"><button class="xp-button primary" data-guest="on">${esc(t('A Vendég fiók bekapcsolása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`,
-   name:`<h1>Adjon új nevet a(z) ${esc(state.user)} fióknak</h1><p>${esc(t('A név a bejelentkezési képernyőn és a Start menü tetején jelenik meg.'))}</p><label class="settings-field"><input type="text" name="account-name" maxlength="32" value="${esc(draftName)}"></label><div class="account-buttons"><button class="xp-button primary" data-save="name">${esc(t('Név megváltoztatása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`,
-   picture:`<h1>Válasszon új képet a(z) ${esc(state.user)} fiókhoz</h1><p>${esc(t('A kép a bejelentkezési képernyőn és a Start menüben jelenik meg.'))}</p><div class="picture-grid">${pictures.map(([key,label])=>`<button class="picture-choice ${key===draftPicture?'selected':''}" data-picture="${key}" title="${esc(label)}" aria-label="${esc(label)}">${XP.avatar(key)}</button>`).join('')}</div><div class="account-buttons"><button class="xp-button primary" data-save="picture">${esc(t('Kép megváltoztatása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`,
-   type:`<h1>Válassza ki az új fióktípust a(z) ${esc(state.user)} fiókhoz</h1><label class="settings-field"><input type="radio" name="account-type" value="admin" ${draftType==='admin'?'checked':''}> <b>${esc(t('Számítógép rendszergazdája'))}</b><br><small>${esc(t('Programokat telepíthet, minden fájlt elérhet és módosíthatja a rendszerbeállításokat.'))}</small></label><label class="settings-field"><input type="radio" name="account-type" value="limited" ${draftType==='limited'?'checked':''}> <b>${esc(t('Korlátozott'))}</b><br><small>${esc(t('Módosíthatja a saját jelszavát és képét, de nem telepíthet programokat.'))}</small></label><div class="account-buttons"><button class="xp-button primary" data-save="type">${esc(t('Fióktípus megváltoztatása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`
+   name:`<h1>${esc(t('Adjon új nevet a(z) {name} fióknak',{name:state.user}))}</h1><p>${esc(t('A név a bejelentkezési képernyőn és a Start menü tetején jelenik meg.'))}</p><label class="settings-field"><input type="text" name="account-name" maxlength="32" value="${esc(draftName)}"></label><div class="account-buttons"><button class="xp-button primary" data-save="name">${esc(t('Név megváltoztatása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`,
+   picture:`<h1>${esc(t('Válasszon új képet a(z) {name} fiókhoz',{name:state.user}))}</h1><p>${esc(t('A kép a bejelentkezési képernyőn és a Start menüben jelenik meg.'))}</p><div class="picture-grid">${pictures.map(([key,label])=>`<button class="picture-choice ${key===draftPicture?'selected':''}" data-picture="${key}" title="${esc(label)}" aria-label="${esc(label)}">${XP.avatar(key)}</button>`).join('')}</div><div class="account-buttons"><button class="xp-button primary" data-save="picture">${esc(t('Kép megváltoztatása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`,
+   type:`<h1>${esc(t('Válassza ki az új fióktípust a(z) {name} fiókhoz',{name:state.user}))}</h1><label class="settings-field"><input type="radio" name="account-type" value="admin" ${draftType==='admin'?'checked':''}> <b>${esc(t('Számítógép rendszergazdája'))}</b><br><small>${esc(t('Programokat telepíthet, minden fájlt elérhet és módosíthatja a rendszerbeállításokat.'))}</small></label><label class="settings-field"><input type="radio" name="account-type" value="limited" ${draftType==='limited'?'checked':''}> <b>${esc(t('Korlátozott'))}</b><br><small>${esc(t('Módosíthatja a saját jelszavát és képét, de nem telepíthet programokat.'))}</small></label><div class="account-buttons"><button class="xp-button primary" data-save="type">${esc(t('Fióktípus megváltoztatása'))}</button><button class="xp-button" data-go="back">${esc(t('Mégse'))}</button></div>`
   };
   body.innerHTML=`<header class="accounts-head">${icon('user')}<div><h1>${esc(t('Felhasználói fiókok'))}</h1><p>${esc(state.user)} – ${accountType()}</p></div></header><nav class="accounts-nav"><button class="nav-back" data-nav="back" ${trail.length?'':'disabled'}>${icon('back')}<span>${esc(t('Vissza'))}</span></button><span class="nav-gap"></span><button data-nav="home" title="${esc(t('Kezdőlap'))}" aria-label="${esc(t('Kezdőlap'))}">${icon('home')}</button><button data-nav="help" title="${esc(t('Súgó'))}" aria-label="${esc(t('Súgó'))}">${icon('help')}</button></nav><div class="accounts-main"><aside class="accounts-side"><h2>${esc(t('Kapcsolódó témakörök'))}</h2><ul><li><button data-side="control">${esc(t('Vezérlőpult'))}</button></li><li><button data-side="logoff">${esc(t('Kijelentkezés'))}</button></li><li><button data-side="help">${esc(t('Súgó és támogatás'))}</button></li></ul></aside><section class="accounts-page">${pages[view]||pages.home}</section></div>`;
   const input=$('[name=account-name]',body);if(input)setTimeout(()=>{input.focus();input.select();},0);
@@ -506,7 +506,7 @@ function userAccounts(){
   if(action==='name'){
    const next=XP.fileName($('[name=account-name]',body).value).slice(0,32).trim();
    if(!next){XP.sound('error');XP.dialog(t('Felhasználói fiókok'),t('Adj meg egy nevet a fiókhoz.'),{icon:'error'});return;}
-   draftName=next;save();home();notify(t('Felhasználói fiókok'),`A fiók új neve: ${next}`);return;
+   draftName=next;save();home();notify(t('Felhasználói fiókok'),t('A fiók új neve: {name}',{name:next}));return;
   }
   if(action==='picture'){save();home();return;}
   if(action==='type'){draftType=$('[name=account-type]:checked',body)?.value||'admin';save();home();return;}
@@ -574,13 +574,13 @@ register('network',()=>{
  if(XP.singleton('network'))return;const w=createWindow({title:t('Hálózati kapcsolatok'),icon:'network',app:'network',width:530,height:330});w.body.innerHTML=`<div class="network-body"><h2 style="font-size:16px;color:#214f98">${esc(t('Helyi kapcsolat'))}</h2><div class="network-connection">${icon('network')}<div><b>${esc(t('Csatlakoztatva a helyi webhez'))}</b><br>${esc(t('Sebesség: 100,0 Mbps'))}<br>${esc(t('Állapot: csatlakoztatva'))}</div></div><p>${esc(t('A kapcsolat a helyi hálózaton él. Az Internet Explorer a számítógépen tárolt oldalakat nyitja meg.'))}</p><button class="xp-button" data-open="ie">${esc(t('Böngésző megnyitása'))}</button></div>`;return w;
 });
 register('image',(id,source,title)=>{
- const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file&&!source)return;const src=file?.content||source,name=file?.name||title||t('Kép');const w=createWindow({title:`${name} – Windows kép- és faxmegjelenítő`,icon:'pictures',app:'image',width:730,height:510});menubar(w,{[t('Fájl')]:[{label:t('Letöltés'),action:()=>{const a=document.createElement('a');a.href=src;a.download=XP.fileName(name)+(name.includes('.')?'':'.'+(src.endsWith('.bmp')?'bmp':'jpg'));a.click();}},{label:t('Szerkesztés a Paintben'),disabled:!file,action:()=>XP.open('paint',id)},{label:t('Bezárás'),action:()=>w.close()}],[t('Nézet')]:[{label:t('Teljes méret'),action:()=>XP.maximize(w)}]});const body=document.createElement('div');body.className='image-viewer';const img=document.createElement('img');img.src=src;img.alt=name;body.append(img);w.body.append(body);status(w,name);return w;
+ const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file&&!source)return;const src=file?.content||source,name=file?.name||title||t('Kép');const w=createWindow({title:t('{name} – Windows kép- és faxmegjelenítő',{name}),icon:'pictures',app:'image',width:730,height:510});menubar(w,{[t('Fájl')]:[{label:t('Letöltés'),action:()=>{const a=document.createElement('a');a.href=src;a.download=XP.fileName(name)+(name.includes('.')?'':'.'+(src.endsWith('.bmp')?'bmp':'jpg'));a.click();}},{label:t('Szerkesztés a Paintben'),disabled:!file,action:()=>XP.open('paint',id)},{label:t('Bezárás'),action:()=>w.close()}],[t('Nézet')]:[{label:t('Teljes méret'),action:()=>XP.maximize(w)}]});const body=document.createElement('div');body.className='image-viewer';const img=document.createElement('img');img.src=src;img.alt=name;body.append(img);w.body.append(body);status(w,name);return w;
 });
 register('search',()=>{
  const w=createWindow({title:t('Keresés'),icon:'search',app:'search',width:600,height:395});const body=document.createElement('div');body.className='help-content';body.innerHTML=`<div class="help-banner">${icon('search')}<div><h1>${esc(t('Mit keresel?'))}</h1><p>${esc(t('Keress a saját dokumentumaid között.'))}</p></div></div><form style="display:flex;gap:8px;margin:18px 0"><input type="text" name="q" aria-label="${esc(t('Fájlkeresés'))}" placeholder="${esc(t('Fájlnév vagy szövegrészlet'))}" style="flex:1"><button class="xp-button">${esc(t('Keresés'))}</button></form><div class="file-search-results"></div>`;w.body.append(body);$('form',body).onsubmit=e=>{e.preventDefault();const q=$('input',body).value.toLocaleLowerCase(locale());const found=state.files.filter(f=>!f.deleted&&(f.name.toLocaleLowerCase(locale()).includes(q)||(f.type==='text'&&f.content.toLocaleLowerCase(locale()).includes(q))));$('.file-search-results',body).innerHTML=`<p>${esc(t('{count} találat',{count:found.length}))}</p>${found.map(f=>`<button class="start-item" data-found="${esc(f.id)}">${icon(XP.fileIcon(f))}${esc(f.name)}</button>`).join('')}`;};body.onclick=e=>{const b=e.target.closest('[data-found]');if(b)XP.openFile(b.dataset.found);};setTimeout(()=>$('input',body).focus(),0);return w;
 });
 register('run',async()=>{
- const result=await XP.prompt('Futtatás',t('Írd be egy program vagy mappa nevét, és a Windows megnyitja azt.'),'');if(!result)return;const value=result.trim().toLowerCase().replace(/\.exe$/,'');const map={notepad:'notepad',jegyzettömb:'notepad',mspaint:'paint',paint:'paint',calc:'calculator',cmd:'cmd',iexplore:'ie',msimn:'outlook',outlook:'outlook',taskmgr:'taskmgr',compmgmt:'compmgmt','compmgmt.msc':'compmgmt',explorer:'explorer',control:'control',winmine:'mines',minesweeper:'mines',sol:'solitaire',pinball:'pinball',freecell:'freecell',spider:'spider',pókpasziánsz:'spider',mshearts:'hearts',hearts:'hearts',wmplayer:'player',wscui:'security','wscui.cpl':'security',sysdm:'system',desk:'display',mmsys:'sounds',nusrmgr:'profile',winver:'system'};if(map[value])XP.open(map[value]);else if(value.includes('.')||value.includes('://'))XP.open('ie',result);else{const f=state.files.find(f=>!f.deleted&&f.name.toLowerCase()===value);if(f)XP.openFile(f.id);else{XP.sound('error');XP.dialog(t('Futtatás'),`A Windows nem találja ezt: „${result}”.\nPróbáld például: notepad, mspaint, calc, cmd, winmine vagy iexplore.`,{icon:'error'});}}
+ const result=await XP.prompt(t('Futtatás'),t('Írd be egy program vagy mappa nevét, és a Windows megnyitja azt.'),'');if(!result)return;const value=result.trim().toLowerCase().replace(/\.exe$/,'');const map={notepad:'notepad',jegyzettömb:'notepad',mspaint:'paint',paint:'paint',calc:'calculator',cmd:'cmd',iexplore:'ie',msimn:'outlook',outlook:'outlook',taskmgr:'taskmgr',compmgmt:'compmgmt','compmgmt.msc':'compmgmt',explorer:'explorer',control:'control',winmine:'mines',minesweeper:'mines',sol:'solitaire',pinball:'pinball',freecell:'freecell',spider:'spider',pókpasziánsz:'spider',mshearts:'hearts',hearts:'hearts',wmplayer:'player',wscui:'security','wscui.cpl':'security',sysdm:'system',desk:'display',mmsys:'sounds',nusrmgr:'profile',winver:'system'};if(map[value])XP.open(map[value]);else if(value.includes('.')||value.includes('://'))XP.open('ie',result);else{const f=state.files.find(f=>!f.deleted&&f.name.toLowerCase()===value);if(f)XP.openFile(f.id);else{XP.sound('error');XP.dialog(t('Futtatás'),t('A Windows nem találja ezt: „{name}”.\nPróbáld például: notepad, mspaint, calc, cmd, winmine vagy iexplore.',{name:result}),{icon:'error'});}}
 });
 register('security',()=>{
  if(XP.singleton('security'))return;
@@ -597,11 +597,11 @@ register('security',()=>{
   {id:'virus',name:t('Vírusvédelem'),on:null,
    bad:t('A Windows nem talált vírusvédelmi programot ezen a számítógépen, vagy a program állapotát nem tudja figyelni.\n\nA Microsoft azt javasolja, hogy telepíts vírusvédelmi programot, és tartsd naprakészen.')}
  ];
- const label=part=>part.on===null?t('NEM TALÁLHATÓ'):part.on?'BEKAPCSOLVA':'KIKAPCSOLVA';
+ const label=part=>part.on===null?t('NEM TALÁLHATÓ'):part.on?t('BEKAPCSOLVA'):t('KIKAPCSOLVA');
  const body=document.createElement('div');body.className='security-body';w.body.append(body);
  function render(){
   const list=parts(),warn=list.filter(p=>p.on!==true);
-  body.innerHTML=`<div class="security-head">${icon('security')}<div><h1>${esc(t('Windows Biztonsági központ'))}</h1><p>${esc(t('Segítünk a számítógép védelmében'))}</p></div></div><div class="security-main"><aside class="security-side"><h2>${esc(t('Erőforrások'))}</h2><ul><li><button data-link="update">${esc(t('A legfrissebb javítások keresése a Windows Update-tel'))}</button></li><li><button data-link="ie">${esc(t('Internet-beállítások módosítása'))}</button></li><li><button data-link="help">${esc(t('Súgó a biztonsági kérdésekhez'))}</button></li><li><button data-link="about">${esc(t('A Biztonsági központról'))}</button></li></ul></aside><section class="security-panels"><div class="security-note ${warn.length?'warn':'ok'}">${warn.length?`A számítógép védelme figyelmet igényel: ${warn.map(p=>p.name.toLowerCase()).join(', ')}. A részletekért nyisd le az alábbi sorokat.`:t('A biztonsági alapelemek be vannak kapcsolva. A Biztonsági központ szól, ha ez megváltozik.')}</div><h2>${esc(t('Biztonsági alapelemek'))}</h2>${list.map(part=>`<div class="security-item"><button class="security-row" data-panel="${part.id}" aria-expanded="${opened===part.id}"><span class="security-name">${part.name}</span><span class="security-state ${part.on===null?'missing':part.on?'on':'off'}">${label(part)}</span><i class="security-chevron"></i></button><div class="security-detail" ${opened===part.id?'':'hidden'}><p>${part.on?part.good:part.bad}</p>${part.on===null?'':`<button class="xp-button" data-toggle="${part.id}">${part.on?t('Kikapcsolás'):t('Bekapcsolás')}</button>`}</div></div>`).join('')}<div class="security-manage"><span>${esc(t('Biztonsági beállítások kezelése:'))}</span><div>${[['ie',t('Internet-beállítások'),'ie'],['refresh',t('Automatikus frissítések'),'updates'],['security',t('Windows tűzfal'),'firewall']].map(([ic,title,target])=>`<button data-manage="${target}">${icon(ic)}<span>${title}</span></button>`).join('')}</div></div></section></div>`;
+  body.innerHTML=`<div class="security-head">${icon('security')}<div><h1>${esc(t('Windows Biztonsági központ'))}</h1><p>${esc(t('Segítünk a számítógép védelmében'))}</p></div></div><div class="security-main"><aside class="security-side"><h2>${esc(t('Erőforrások'))}</h2><ul><li><button data-link="update">${esc(t('A legfrissebb javítások keresése a Windows Update-tel'))}</button></li><li><button data-link="ie">${esc(t('Internet-beállítások módosítása'))}</button></li><li><button data-link="help">${esc(t('Súgó a biztonsági kérdésekhez'))}</button></li><li><button data-link="about">${esc(t('A Biztonsági központról'))}</button></li></ul></aside><section class="security-panels"><div class="security-note ${warn.length?'warn':'ok'}">${warn.length?esc(t('A számítógép védelme figyelmet igényel: {parts}. A részletekért nyisd le az alábbi sorokat.',{parts:warn.map(p=>p.name.toLowerCase()).join(', ')})):t('A biztonsági alapelemek be vannak kapcsolva. A Biztonsági központ szól, ha ez megváltozik.')}</div><h2>${esc(t('Biztonsági alapelemek'))}</h2>${list.map(part=>`<div class="security-item"><button class="security-row" data-panel="${part.id}" aria-expanded="${opened===part.id}"><span class="security-name">${part.name}</span><span class="security-state ${part.on===null?'missing':part.on?'on':'off'}">${label(part)}</span><i class="security-chevron"></i></button><div class="security-detail" ${opened===part.id?'':'hidden'}><p>${part.on?part.good:part.bad}</p>${part.on===null?'':`<button class="xp-button" data-toggle="${part.id}">${part.on?t('Kikapcsolás'):t('Bekapcsolás')}</button>`}</div></div>`).join('')}<div class="security-manage"><span>${esc(t('Biztonsági beállítások kezelése:'))}</span><div>${[['ie',t('Internet-beállítások'),'ie'],['refresh',t('Automatikus frissítések'),'updates'],['security',t('Windows tűzfal'),'firewall']].map(([ic,title,target])=>`<button data-manage="${target}">${icon(ic)}<span>${title}</span></button>`).join('')}</div></div></section></div>`;
  }
  body.onclick=e=>{
   const button=e.target.closest('button');if(!button)return;
