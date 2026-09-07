@@ -2,7 +2,7 @@
 
 ![Windows XP szimulátor – asztal és Internet Explorer](docs/screenshot.jpg)
 
-Függőségek nélküli, magyar nyelvű Windows XP-élmény HTML, CSS és JavaScript használatával.
+Függőségek nélküli, magyarul, angolul és németül beszélő Windows XP-élmény HTML, CSS és JavaScript használatával.
 
 **[Live demo – próbáld ki a böngészőben](https://windows-xp.levente.net/)**
 
