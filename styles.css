@@ -316,3 +316,12 @@ input[type=range]::-moz-range-thumb{width:9px;height:17px;border-radius:0;backgr
 input[type=range][orient=vertical]{width:21px}
 input[type=range][orient=vertical]::-webkit-slider-runnable-track{width:4px;height:auto}
 input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;margin-top:0;margin-left:-8px}
+
+.popup-menu .submenu-arrow{margin-left:auto;padding-left:14px;font-size:8px;line-height:1}
+.popup-menu button:hover:not(:disabled) .submenu-arrow{color:white}
+.popup-menu.submenu{z-index:15001}
+
+.menu-folder{position:relative}
+.menu-folder>.folder-menu{display:none;position:absolute;left:calc(100% - 3px);top:-3px;min-width:190px}
+.menu-folder:hover>.folder-menu,.menu-folder:focus-within>.folder-menu{display:block}
+.programs-menu .start-item.folder .submenu-arrow{margin-left:auto;font-size:8px;padding-left:10px}
