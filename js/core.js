@@ -169,7 +169,7 @@ window.XP = (() => {
     }catch(error){return Promise.resolve(failed(error));}
   }
   function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="Értesítés bezárása">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
-  function focus(win){if(!win || (modalDepth&&!win.modal))return;active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
+  function focus(win){if(!win || (modalDepth&&!win.modal))return;if(win.minimized&&!win.parked)sound('restore');active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
   function frontmost(){const next=[...windows.values()].filter(w=>!w.minimized).sort((a,b)=>Number(b.el.style.zIndex)-Number(a.el.style.zIndex))[0];active=null;if(next)focus(next);else renderTasks();}
   function renderTasks(){const container=$('#task-buttons');container.replaceChildren();for(const w of windows.values()){if(w.modal)continue;const b=document.createElement('button');b.className=`task-button ${w.id===active&&!w.minimized?'active':''}`;b.title=w.title;b.setAttribute('aria-label',w.title);b.innerHTML=`${icon(w.icon)}<span>${esc(w.title)}</span>`;b.onclick=()=>{if(modalDepth)return;if(w.id===active&&!w.minimized)minimize(w);else focus(w);};
     b.oncontextmenu=event=>{
@@ -186,8 +186,8 @@ window.XP = (() => {
     };
     container.append(b);}}
   function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
-  function minimize(win){if(win.modal)return;win.minimized=true;win.el.hidden=true;frontmost();}
-  function maximize(win){if(win.fixed)return;win.maximized=!win.maximized;win.el.classList.toggle('maximized',win.maximized);if(win.maximized){win.restore={left:win.el.style.left,top:win.el.style.top,width:win.el.style.width,height:win.el.style.height};Object.assign(win.el.style,{left:'0px',top:'0px',width:'100%',height:'100%'});}else Object.assign(win.el.style,win.restore);focus(win);}
+  function minimize(win,quiet){if(win.modal)return;if(!quiet)sound('minimize');win.minimized=true;win.el.hidden=true;frontmost();}
+  function maximize(win){if(win.fixed)return;sound('restore');win.maximized=!win.maximized;win.el.classList.toggle('maximized',win.maximized);if(win.maximized){win.restore={left:win.el.style.left,top:win.el.style.top,width:win.el.style.width,height:win.el.style.height};Object.assign(win.el.style,{left:'0px',top:'0px',width:'100%',height:'100%'});}else Object.assign(win.el.style,win.restore);focus(win);}
   function resizeBox(dir,rect,dx,dy,limits){
     const {minWidth,minHeight,width:areaWidth,height:areaHeight}=limits;
     let left=rect.left,top=rect.top,width=rect.width,height=rect.height;
@@ -365,7 +365,8 @@ window.XP = (() => {
   // Letting go: the bin deletes, a folder takes the file in, the desktop keeps the spot.
   function applyDrop(target,id,point,copy){
     if(!target||!state.files.some(f=>f.id===id&&!f.deleted))return false;
-    if(target.type==='recycle'){deleteFile(id);return true;}
+    // Dropping on the bin asks too; saying no puts the icon back where it was.
+    if(target.type==='recycle'){trashFile(id).then(done=>{if(!done)document.dispatchEvent(new CustomEvent('xp-files-changed'));});return true;}
     const parent=target.type==='desktop'?'desktop':target.id;
     if(copy)return !!copyInto(id,parent);
     if(target.type==='desktop'&&point)state.iconPositions={...state.iconPositions,[id]:{x:point.x,y:point.y}};
@@ -377,6 +378,14 @@ window.XP = (() => {
   }
   function saveFile(file){const i=state.files.findIndex(f=>f.id===file.id);const next={...file,modified:Date.now()};if(i<0)state.files.push(next);else state.files[i]=next;const ok=persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));return ok;}
   function descendants(id){const ids=[id];for(let i=0;i<ids.length;i++)state.files.filter(f=>f.parent===ids[i]).forEach(f=>ids.push(f.id));return ids;}
+  async function trashFile(id){
+    const file=state.files.find(f=>f.id===id&&!f.deleted);
+    if(!file)return false;
+    const answer=await dialog(file.type==='folder'?'Mappa törlésének megerősítése':'Fájl törlésének megerősítése',
+      `Biztosan a Lomtárba helyezi ezt: „${file.name}”?`,{icon:'recycle',buttons:['Igen','Nem']});
+    if(!answer)return false;
+    deleteFile(id);return true;
+  }
   function deleteFile(id){const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))f.deleted=true;});persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   async function emptyTrash(){
     if(!state.files.some(f=>f.deleted))return false;
@@ -409,5 +418,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

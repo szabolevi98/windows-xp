@@ -104,3 +104,29 @@ test('A parked program keeps to itself while somebody else works',()=>{
  // The Task Manager lists the other session as disconnected.
  assert.match(read('js/taskmgr.js'),/account\.active\?'Aktív':'Leválasztva'/);
 });
+
+test('The bin asks before it takes anything, and the windows sound like XP',()=>{
+ const core=read('js/core.js');
+ // XP never binned a file without asking first.
+ assert.match(core,/async function trashFile\(id\)/);
+ assert.match(core,/Biztosan a Lomtárba helyezi ezt/);
+ assert.match(core,/'Mappa törlésének megerősítése':'Fájl törlésének megerősítése'/);
+ assert.match(core,/if\(!answer\)return false;/,'saying no leaves the file alone');
+ assert.match(core,/if\(target\.type==='recycle'\)\{trashFile\(id\)/,'dropping on the bin asks too');
+ const start=read('js/start.js');
+ assert.match(start,/XP\.trashFile\(item\.file\)/);
+ assert.doesNotMatch(start,/XP\.deleteFile\(item\.file\)/,'nothing on the desktop deletes silently');
+ assert.match(read('js/explorer.js'),/await XP\.trashFile\(f\.id\)/);
+
+ // The events the default sound scheme covered.
+ assert.match(core,/function minimize\(win,quiet\)\{if\(win\.modal\)return;if\(!quiet\)sound\('minimize'\)/);
+ assert.match(core,/function maximize\(win\)\{if\(win\.fixed\)return;sound\('restore'\)/);
+ assert.match(core,/if\(win\.minimized&&!win\.parked\)sound\('restore'\)/,'restoring from the taskbar sounds too');
+ // Show desktop is one gesture, so it makes one sound.
+ assert.match(start,/XP\.sound\('minimize'\);hiddenWindows\.forEach\(id=>XP\.minimize\(XP\.windows\.get\(id\),true\)\)/);
+ // Logging off and shutting down were two different sounds.
+ assert.match(start,/if\(a==='logoff'\)\{XP\.sound\('logoff'\)/);
+ assert.match(start,/if\(a==='shutdown'\)\{closeAll\(\);XP\.closeParked\(\);XP\.sound\('shutdown'\)/);
+ for(const file of ['minimize','restore','logoff'])
+  assert.match(read('assets/sources.json'),new RegExp(`sounds/${file}\\.wav`),`${file}.wav is credited`);
+});

@@ -110,7 +110,7 @@ register('explorer',(initial='computer')=>{
       if(await XP.confirm('Fájl végleges törlése',`Végleg törlöd ezt: „${f.name}”?`)){
         const ids=XP.descendants(f.id);state.files=state.files.filter(f=>!ids.includes(f.id));persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));
       }
-    }else XP.deleteFile(f.id);
+    }else await XP.trashFile(f.id);
     selected=null;
   }
   // New items land in the folder on screen, unless it is one that holds no files of its own.
