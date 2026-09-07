@@ -5,23 +5,31 @@
     if(XP.singleton('pinball'))return;
     const w=createWindow({title:'3D Pinball – Space Cadet',icon:'pinball',app:'pinball',width:720,height:650,minWidth:380,minHeight:400,className:'pinball-window'});
     const channel='xp-space-cadet';
-    let ready=false,manualPause=false,muted=false,disposed=false,lastState='';
+    let ready=false,manualPause=false,muted=false,disposed=false,lastState='',focusFrame=0;
     const send=(type,extra={})=>frame.contentWindow?.postMessage({channel,type,...extra},location.origin==='null'?'*':location.origin);
     const blocked=()=>w.minimized||XP.active!==w.id||document.hidden;
     const volume=()=>state.sounds&&!muted?Math.max(0,Math.min(100,Number(state.volume)||0))/100:0;
-    function sync(){
+    function sync(forceFocus=false){
       if(!ready||disposed)return;
       const paused=manualPause||blocked();
       const next={paused,volume:volume(),focus:!blocked()};
       const serialized=JSON.stringify(next);
-      if(lastState!==serialized){lastState=serialized;send('state',next);}
+      if(lastState!==serialized||forceFocus){lastState=serialized;send('state',next);}
       pauseButton.textContent=manualPause?'Folytatás (F3)':'Szünet (F3)';
       pauseButton.setAttribute('aria-pressed',String(manualPause));
       status.textContent=paused?'Szüneteltetve':'Z / C: karok · Szóköz: golyókilövés · X: asztallökés';
     }
-    function newGame(){if(!ready)return;manualPause=false;send('new');lastState='';sync();}
-    function pause(){if(!ready)return;manualPause=!manualPause;sync();}
-    function sound(){muted=!muted;sync();}
+    function restoreFocus(){
+      cancelAnimationFrame(focusFrame);
+      focusFrame=requestAnimationFrame(()=>{
+        // Wait until the clicked button's default focus action and any opened menus finish.
+        if(!blocked()&&!XP.modal&&$('#context-menu').hidden&&$('#start-menu').hidden)sync(true);
+      });
+    }
+    w.onFocus=()=>{sync();restoreFocus();};
+    function newGame(){if(!ready)return;manualPause=false;sync(true);send('new');restoreFocus();}
+    function pause(){if(!ready)return;manualPause=!manualPause;sync(true);restoreFocus();}
+    function sound(){muted=!muted;sync();restoreFocus();}
     function help(){XP.dialog('Space Cadet – Irányítás','Bal kar: Z vagy bal nyíl\nJobb kar: C, / vagy jobb nyíl\nKilövés: tartsd nyomva, majd engedd fel a Szóközt\nAsztallökés: X, . vagy fel nyíl (túl sok lökés: TILT!)\n\nF2: új játék · F3: szünet / folytatás\nÉrintőképernyőn használd az alsó gombokat.\n\nTaláld el a célpontokat, teljesíts küldetéseket és szerezz magasabb rangot! Három golyóval indulsz. A rekordok és a játék beállításai ebben a böngészőben mentődnek.');}
     menubar(w,{
       'Játék':()=>[{label:'Új játék',shortcut:'F2',disabled:!ready,action:newGame},{label:manualPause?'Folytatás':'Szünet',shortcut:'F3',disabled:!ready,action:pause},null,{label:'Kilépés',action:()=>w.close()}],
@@ -31,6 +39,9 @@
     const stage=document.createElement('div');stage.className='pinball-stage';
     const frame=document.createElement('iframe');frame.className='pinball-frame';frame.title='Space Cadet játéktábla';frame.setAttribute('allow','autoplay');
     stage.append(frame);w.body.append(stage);
+    // Activate before a control sends its key, so the first click on an inactive window also works.
+    w.el.addEventListener('pointerdown',()=>{if(XP.active!==w.id)w.focus();sync(true);},true);
+    w.el.addEventListener('click',event=>{if(!event.target.closest('.window-controls,.menu-bar'))restoreFocus();});
     const controls=document.createElement('div');controls.className='pinball-controls';
     controls.innerHTML='<div class="pinball-actions"><button class="xp-button" data-new disabled>Új játék (F2)</button><button class="xp-button" data-pause disabled>Szünet (F3)</button><button class="xp-button" data-help>Súgó</button></div><div class="pinball-touch"><button class="xp-button" data-key="KeyZ" disabled>Bal kar <kbd>Z</kbd></button><button class="xp-button" data-key="Space" disabled>Kilövés <kbd>Szóköz</kbd></button><button class="xp-button" data-key="Slash" disabled>Jobb kar <kbd>C</kbd></button></div>';
     w.body.append(controls);
@@ -41,7 +52,7 @@
       let pressedAt=0,releaseTimer;
       const release=(event)=>{
         clearTimeout(releaseTimer);releaseTimer=0;
-        const delay=button.dataset.key==='Space'&&event?.type==='pointerup'?Math.max(0,600-(performance.now()-pressedAt)):0;
+        const delay=button.dataset.key==='Space'&&event?.type==='pointerup'?Math.max(0,1000-(performance.now()-pressedAt)):0;
         const finish=()=>{releaseTimer=0;send('key',{code:button.dataset.key,down:false});button.classList.remove('pressed');};
         if(delay)releaseTimer=setTimeout(finish,delay);else finish();
       };
@@ -67,18 +78,27 @@
       if(data.type==='error'){ready=false;status.textContent='Nem sikerült elindítani a játékot. Zárd be, majd nyisd meg újra.';controls.querySelectorAll('button:not([data-help])').forEach(button=>button.disabled=true);}
     }
     window.addEventListener('message',message);
-    const observer=new MutationObserver(sync);observer.observe(w.el,{attributes:true,attributeFilter:['hidden','class']});
+    const observer=new MutationObserver(()=>sync());observer.observe(w.el,{attributes:true,attributeFilter:['hidden','class']});
     document.addEventListener('visibilitychange',sync);document.addEventListener('xp-volume-changed',sync);document.addEventListener('xp-settings-changed',sync);
-    w.el.addEventListener('keydown',event=>{if(event.key==='F2'||event.key==='F3'){event.preventDefault();if(!event.repeat)(event.key==='F2'?newGame:pause)();}});
+    const controlCodes={KeyZ:'KeyZ',KeyC:'Slash',Slash:'Slash',ArrowLeft:'KeyZ',ArrowRight:'Slash',Space:'Space',KeyX:'KeyX',Period:'Period',ArrowUp:'ArrowUp'};
+    const keyHandler=type=>event=>{
+      if(disposed||XP.active!==w.id||XP.modal)return;
+      if(event.target?.closest?.('input,textarea,select,[data-key]')||event.ctrlKey||event.altKey||event.metaKey)return;
+      if(event.key==='F2'||event.key==='F3'){event.preventDefault();if(type==='keydown'&&!event.repeat)(event.key==='F2'?newGame:pause)();return;}
+      const code=controlCodes[event.code];if(!code||blocked())return;
+      event.preventDefault();sync(true);send('key',{code,down:type==='keydown'});
+    };
+    const keyListeners=['keydown','keyup'].map(type=>{const fn=keyHandler(type);document.addEventListener(type,fn);return [type,fn];});
     w.cleanup.push(()=>{
       // Synchronous teardown ensures the last score/settings write is saved before removing the iframe.
       frame.contentWindow?.dispatchEvent(new Event('pagehide'));
       try{const ini=frame.contentWindow?.FS?.readFile('/libsdl/SpaceCadetPinball/imgui_pb.ini',{encoding:'utf8'});if(typeof ini==='string'&&ini.length<100000){state.pinballIni=ini;XP.persist();}}catch{}
-      disposed=true;observer.disconnect();window.removeEventListener('message',message);
+      disposed=true;cancelAnimationFrame(focusFrame);w.onFocus=null;observer.disconnect();window.removeEventListener('message',message);
+      keyListeners.forEach(([type,fn])=>document.removeEventListener(type,fn));
       document.removeEventListener('visibilitychange',sync);document.removeEventListener('xp-volume-changed',sync);document.removeEventListener('xp-settings-changed',sync);
       frame.remove();
     });
-    frame.src='assets/pinball/index.html';
+    frame.src='assets/pinball/index.html?v=3';
     return w;
   });
 })();

@@ -80,7 +80,7 @@ window.XP = (() => {
     }catch(error){return Promise.resolve(failed(error));}
   }
   function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="Értesítés bezárása">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
-  function focus(win){if(!win || (modalDepth&&!win.modal))return;active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();}
+  function focus(win){if(!win || (modalDepth&&!win.modal))return;active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
   function frontmost(){const next=[...windows.values()].filter(w=>!w.minimized).sort((a,b)=>Number(b.el.style.zIndex)-Number(a.el.style.zIndex))[0];active=null;if(next)focus(next);else renderTasks();}
   function renderTasks(){const container=$('#task-buttons');container.replaceChildren();for(const w of windows.values()){if(w.modal)continue;const b=document.createElement('button');b.className=`task-button ${w.id===active&&!w.minimized?'active':''}`;b.title=w.title;b.setAttribute('aria-label',w.title);b.innerHTML=`${icon(w.icon)}<span>${esc(w.title)}</span>`;b.onclick=()=>{if(modalDepth)return;if(w.id===active&&!w.minimized)minimize(w);else focus(w);};container.append(b);}}
   function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
@@ -113,7 +113,7 @@ window.XP = (() => {
     el.addEventListener('pointerdown',()=>focus(win));$('.close',el).onclick=()=>close(win);
     if(!options.modal){$('.minimize',el).onclick=()=>minimize(win);$('.maximize',el).onclick=()=>maximize(win);}
     const bar=$('.title-bar',el);bar.ondblclick=e=>{if(!e.target.closest('button'))maximize(win);};
-    bar.onpointerdown=e=>{if(e.button!==0||e.target.closest('button')||win.maximized)return;focus(win);e.preventDefault();const rect=el.getBoundingClientRect(),sx=e.clientX,sy=e.clientY;bar.setPointerCapture(e.pointerId);bar.onpointermove=ev=>{el.style.left=`${Math.max(-width+100,Math.min(bounds.width-90,rect.left+ev.clientX-sx))}px`;el.style.top=`${Math.max(0,Math.min(bounds.height-29,rect.top+ev.clientY-sy))}px`;};bar.onpointerup=()=>{bar.onpointermove=null;};bar.onlostpointercapture=()=>bar.onpointermove=null;};
+    bar.onpointerdown=e=>{if(e.button!==0||e.target.closest('button')||win.maximized)return;focus(win);e.preventDefault();const rect=el.getBoundingClientRect(),dragBounds=$('#desktop').getBoundingClientRect(),sx=e.clientX,sy=e.clientY;bar.setPointerCapture(e.pointerId);bar.onpointermove=ev=>{el.style.left=`${Math.max(-rect.width+100,Math.min(dragBounds.width-90,rect.left+ev.clientX-sx))}px`;el.style.top=`${Math.max(0,Math.min(dragBounds.height-29,rect.top+ev.clientY-sy))}px`;};bar.onpointerup=()=>{bar.onpointermove=null;};bar.onlostpointercapture=()=>bar.onpointermove=null;};
     // Every edge and corner resizes; dragging the top or left edge moves the window as it shrinks.
     for(const grip of $$('[data-resize]',el))grip.onpointerdown=e=>{
       if(e.button!==0||win.maximized)return;

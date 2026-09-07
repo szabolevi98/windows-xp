@@ -19,7 +19,7 @@ var Module;
     Object.defineProperty(event,'pinballForwarded',{value:true});
     canvas.dispatchEvent(event);
   }
-  function tap(code){key(code,true);setTimeout(()=>key(code,false),80);}
+  function tap(code){if(held.has(code))key(code,false);key(code,true);setTimeout(()=>key(code,false),80);}
   function release(){for(const code of [...held])key(code,false);}
   function save(){
     if(!ready||typeof FS==='undefined')return;
@@ -70,8 +70,9 @@ var Module;
     const data=event.data;
     if(data.type==='init')start(data);
     if(data.type==='state'){
+      // SDL stops drawing on browser-frame blur. Restore focus before queueing resume or input.
+      if(data.focus&&ready){window.focus();canvas.focus();}
       volume=Math.max(0,Math.min(1,Number(data.volume)||0));setPaused(!!data.paused);audio();
-      if(data.focus&&ready)canvas.focus();
     }
     if(data.type==='key'&&!paused)key(data.code,!!data.down);
     if(data.type==='new'&&ready){release();if(paused){setPaused(false);}tap('F2');canvas.focus();}

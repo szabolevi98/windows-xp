@@ -517,5 +517,53 @@
     "file": "wallpapers/windows-xp.jpg",
     "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Wallpapers/Windows XP/Desktop/Windows XP.jpg",
     "bytes": 56772
+  },
+  {
+    "file": "wmp9/transports_down.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "transports_down.bmp",
+    "bytes": 12296
+  },
+  {
+    "file": "wmp9/transports_hover.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "transports_hover.bmp",
+    "bytes": 12296
+  },
+  {
+    "file": "wmp9/transports_pause_down.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "transports_pause_down.bmp",
+    "bytes": 2816
+  },
+  {
+    "file": "wmp9/transports_pause_hover.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "transports_pause_hover.bmp",
+    "bytes": 2816
+  },
+  {
+    "file": "wmp9/transports_pause.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "transports_pause.bmp",
+    "bytes": 2816
+  },
+  {
+    "file": "wmp9/transports.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "transports.bmp",
+    "bytes": 12296
+  },
+  {
+    "file": "wmp9/volume_bar_filled.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "volume_bar_filled.bmp",
+    "bytes": 3728
+  },
+  {
+    "file": "wmp9/volume_slider.bmp",
+    "url": "https://archive.org/download/windowsmediaplayerskinscollection/9SeriesDefault.wmz",
+    "archiveMember": "volume_slider.bmp",
+    "bytes": 632
   }
 ]
