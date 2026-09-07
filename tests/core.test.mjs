@@ -483,7 +483,8 @@ test('The logon screen is laid out the way XP laid it out',()=>{
   const found=css.match(rule)[0];
   assert.match(found,/linear-gradient\(90deg,#[0-9a-f]{6}00 0,/,'it fades in');
   assert.match(found,/#[0-9a-f]{6}00 100%\)/,'it fades out');
-  assert.match(found,/clip-path:polygon/,'and thins at the ends');
+  // A sloped clip over a couple of pixels of height stair-steps across a full screen.
+  assert.doesNotMatch(found,/clip-path/,'the ends fade in colour, not by being cut on a slope');
  }
  assert.match(css,/\.welcome-divider\{[^}]*linear-gradient\(#ffffff00/,'the divider fades at both ends');
 });
