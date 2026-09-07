@@ -36,10 +36,10 @@ test('The taskbar answers a right click, on the buttons and on the bar itself',(
  const start=read('js/start.js');
  assert.match(start,/\$\('#taskbar'\)\.oncontextmenu/);
  for(const label of ['Ablakok lépcsőzetesen','Ablakok mozaikszerűen vízszintesen','Ablakok mozaikszerűen függőlegesen','Az összes ablak kis mérete','A Tálca rögzítése'])
-  assert.ok(start.includes(`label:'${label}'`),`the taskbar menu offers ${label}`);
+  assert.ok(start.includes(`label:t('${label}')`),`the taskbar menu offers ${label}`);
  // Right-clicking Start gives its own menu instead of the taskbar's.
  assert.match(start,/e\.target\.closest\('#start-button'\)/);
- assert.match(start,/label:'Az Intéző megnyitása'/);
+ assert.match(start,/label:t\('Az Intéző megnyitása'\)/);
  // Cascade and tile arrange the real windows, never the dialogs.
  assert.match(start,/function arrange\(mode\)/);
  assert.match(start,/filter\(w=>!w\.modal&&!w\.fixed\)/);
@@ -104,9 +104,9 @@ test('Menus cascade, and Send To reaches the desktop from a file as well',()=>{
 
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  for(const label of ['Rendezés ikonok szerint','Név','Típus','Módosítás dátuma','Automatikus elrendezés'])
-  assert.ok(start.includes(`label:'${label}'`),`the desktop sorts by ${label}`);
- assert.match(start,/\{label:'Új',items:\[\{label:'Mappa'/,'New cascades too');
- assert.match(start,/\{label:'Küldés',items:\[/);
+  assert.ok(start.includes(`label:t('${label}')`),`the desktop sorts by ${label}`);
+ assert.match(start,/\{label:t\('Új'\),items:\[\{label:t\('Mappa'\)/,'New cascades too');
+ assert.match(start,/\{label:t\('Küldés'\),items:\[/);
  assert.match(start,/XP\.shortcutToFile\(item\.file\)/);
  assert.match(readFileSync(new URL('js/explorer.js',root),'utf8'),/XP\.shortcutToFile\(chosen\.id\)/,'Explorer sends to the desktop as well');
 
@@ -198,7 +198,7 @@ test('The Folders button swaps the task pane for the tree',()=>{
 test('My Computer carries its whole menu, Manage included',()=>{
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  for(const label of ['Az Intéző megnyitása','Keresés…','Kezelés','Csatlakoztatás hálózati meghajtóhoz…','Hálózati meghajtó leválasztása…'])
-  assert.ok(start.includes(`label:'${label}'`),`the icon offers ${label}`);
+  assert.ok(start.includes(`label:t('${label}')`),`the icon offers ${label}`);
  assert.match(start,/item\.id==='computer'\?\[/,'and only that icon does');
  assert.match(start,/XP\.open\('compmgmt'\)/);
 
@@ -240,5 +240,5 @@ test('User Accounts has a way back, and no account picture stands in for an icon
   assert.ok(existsSync(new URL(`assets/icons/${name}.png`,root)),`${name}.png is bundled`);
  assert.match(readFileSync(new URL('assets/sources.json',root),'utf8'),/XP\/UserAccounts\.png/);
  assert.match(readFileSync(new URL('js/outlook.js',root),'utf8'),/data-mail="addresses">\$\{icon\('addressbook'\)\}/);
- assert.match(readFileSync(new URL('js/start.js',root),'utf8'),/icon\('switchuser'\)\} Felhasználóváltás/);
+ assert.match(readFileSync(new URL('js/start.js',root),'utf8'),/icon\('switchuser'\)\} \$\{t\('Felhasználóváltás'\)\}/);
 });
