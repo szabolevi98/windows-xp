@@ -32,7 +32,7 @@ test('The taskbar answers a right click, on the buttons and on the bar itself',(
  // The window menu XP showed on a task button, with the states it greyed out.
  assert.match(core,/b\.oncontextmenu=event=>/);
  for(const label of ['Visszaállítás','Áthelyezés','Méret','Kis méret','Teljes méret','Bezárás'])
-  assert.ok(core.includes(`label:'${label}'`),`the task button menu offers ${label}`);
+  assert.ok(core.includes(`label:t('${label}')`),`the task button menu offers ${label}`);
  const start=read('js/start.js');
  assert.match(start,/\$\('#taskbar'\)\.oncontextmenu/);
  for(const label of ['Ablakok lépcsőzetesen','Ablakok mozaikszerűen vízszintesen','Ablakok mozaikszerűen függőlegesen','Az összes ablak kis mérete','A Tálca rögzítése'])
@@ -100,7 +100,7 @@ test('Menus cascade, and Send To reaches the desktop from a file as well',()=>{
  assert.match(core,/hideMenus\(\)\{ closeSubmenus\(\)/);
  // A shortcut can point at a file, showing that file's icon and opening it.
  assert.match(core,/function shortcutToFile\(id,parent='desktop'\)/);
- assert.match(core,/– parancsikon/);
+ assert.match(core,/\{name\} – parancsikon/);
 
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  for(const label of ['Rendezés ikonok szerint','Név','Típus','Módosítás dátuma','Automatikus elrendezés'])

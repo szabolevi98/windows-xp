@@ -109,8 +109,8 @@ test('The bin asks before it takes anything, and the windows sound like XP',()=>
  const core=read('js/core.js');
  // XP never binned a file without asking first.
  assert.match(core,/async function trashFile\(id\)/);
- assert.match(core,/Biztosan a Lomtárba helyezi ezt/);
- assert.match(core,/'Mappa törlésének megerősítése':'Fájl törlésének megerősítése'/);
+ assert.match(core,/Biztosan a Lomtárba helyezi ezt: „\{name\}”\?/);
+ assert.match(core,/t\('Mappa törlésének megerősítése'\):t\('Fájl törlésének megerősítése'\)/);
  assert.match(core,/if\(!answer\)return false;/,'saying no leaves the file alone');
  assert.match(core,/if\(target\.type==='recycle'\)\{trashFile\(id\)/,'dropping on the bin asks too');
  const start=read('js/start.js');
@@ -139,8 +139,8 @@ test('The taskbar groups a crowded program, and every window carries its own men
  assert.match(core,/const grouping=list\.length>fits/);
  assert.match(core,/function groupButton\(app,family\)/);
  assert.match(core,/const label=`\$\{family\.length\} \$\{programName\(family\[0\]\)\}`/);
- assert.match(core,/label:'Csoport kis mérete'/);
- assert.match(core,/label:'Csoport bezárása'/);
+ assert.match(core,/label:t\('Csoport kis mérete'\)/);
+ assert.match(core,/label:t\('Csoport bezárása'\)/);
  assert.match(core,/const PROGRAMS=\{notepad:'Jegyzettömb'/,'the group knows the program name');
  // The window menu lives in one place and is reached three ways.
  assert.match(core,/function windowMenu\(win\)/);
