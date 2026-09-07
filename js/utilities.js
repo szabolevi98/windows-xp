@@ -415,7 +415,11 @@ function userAccounts(){
  const accountType=()=>typeName(state.accountType);
  const guest=()=>XP.accountInfo('guest');
  const asGuest=()=>XP.session==='guest';
- let view='home',draftName=state.user,draftPicture=state.avatar,draftType=state.accountType||'admin';
+ let view='home',trail=[],draftName=state.user,draftPicture=state.avatar,draftType=state.accountType||'admin';
+ // XP kept a way back: a green Back arrow above the page, with Home and Help beside it.
+ const go=next=>{if(next!==view){trail.push(view);view=next;}render();};
+ const back=()=>{view=trail.pop()||'home';render();};
+ const home=()=>{trail=[];view='home';render();};
  const body=document.createElement('div');body.className='accounts-body';w.body.append(body);
  const tile=(info,go,note)=>`<button class="account-tile ${info.enabled?'':'off'}" data-go="${go}">${XP.avatar(info.avatar)}<span><b>${esc(info.name)}</b>${note||typeName(info.type)}</span></button>`;
  const ownTile=()=>tile({...XP.accountInfo(XP.session),type:state.accountType},'pick');
@@ -432,35 +436,40 @@ function userAccounts(){
    pick:asGuest()?`${ownBlock}<div class="account-list">${ownTile()}</div>`:`<h1>Mit szeretne módosítani a(z) ${esc(state.user)} fiókján?</h1><ul class="account-tasks">${ownTasks}</ul><div class="account-list">${ownTile()}</div>`,
    guest:guest().enabled
     ?`<h1>Mit szeretne módosítani a Vendég fiókon?</h1><p>A Vendég a saját asztalán dolgozhat, de nem telepíthet programokat, és nem módosíthatja a rendszerbeállításokat. A képe a Windows állandó Vendég-képe.</p><ul class="account-tasks"><li><button data-guest="off">A Vendég fiók kikapcsolása</button></li></ul><div class="account-list">${guestTile()}</div>`
-    :`<h1>Szeretné bekapcsolni a Vendég fiókot?</h1><p>A Vendég fiókkal azok is használhatják a számítógépet, akiknek nincs saját fiókjuk a gépen. A Vendég nem telepíthet programokat, és nem módosíthatja a rendszerbeállításokat.</p><p>Bekapcsolás után a Vendég megjelenik a bejelentkezési képernyőn, és a saját asztalán dolgozhat.</p><div class="account-buttons"><button class="xp-button primary" data-guest="on">A Vendég fiók bekapcsolása</button><button class="xp-button" data-go="home">Mégse</button></div>`,
-   name:`<h1>Adjon új nevet a(z) ${esc(state.user)} fióknak</h1><p>A név a bejelentkezési képernyőn és a Start menü tetején jelenik meg.</p><label class="settings-field"><input type="text" name="account-name" maxlength="32" value="${esc(draftName)}"></label><div class="account-buttons"><button class="xp-button primary" data-save="name">Név megváltoztatása</button><button class="xp-button" data-go="home">Mégse</button></div>`,
-   picture:`<h1>Válasszon új képet a(z) ${esc(state.user)} fiókhoz</h1><p>A kép a bejelentkezési képernyőn és a Start menüben jelenik meg.</p><div class="picture-grid">${pictures.map(([key,label])=>`<button class="picture-choice ${key===draftPicture?'selected':''}" data-picture="${key}" title="${esc(label)}" aria-label="${esc(label)}">${XP.avatar(key)}</button>`).join('')}</div><div class="account-buttons"><button class="xp-button primary" data-save="picture">Kép megváltoztatása</button><button class="xp-button" data-go="home">Mégse</button></div>`,
-   type:`<h1>Válassza ki az új fióktípust a(z) ${esc(state.user)} fiókhoz</h1><label class="settings-field"><input type="radio" name="account-type" value="admin" ${draftType==='admin'?'checked':''}> <b>Számítógép rendszergazdája</b><br><small>Programokat telepíthet, minden fájlt elérhet és módosíthatja a rendszerbeállításokat.</small></label><label class="settings-field"><input type="radio" name="account-type" value="limited" ${draftType==='limited'?'checked':''}> <b>Korlátozott</b><br><small>Módosíthatja a saját jelszavát és képét, de nem telepíthet programokat.</small></label><div class="account-buttons"><button class="xp-button primary" data-save="type">Fióktípus megváltoztatása</button><button class="xp-button" data-go="home">Mégse</button></div>`
+    :`<h1>Szeretné bekapcsolni a Vendég fiókot?</h1><p>A Vendég fiókkal azok is használhatják a számítógépet, akiknek nincs saját fiókjuk a gépen. A Vendég nem telepíthet programokat, és nem módosíthatja a rendszerbeállításokat.</p><p>Bekapcsolás után a Vendég megjelenik a bejelentkezési képernyőn, és a saját asztalán dolgozhat.</p><div class="account-buttons"><button class="xp-button primary" data-guest="on">A Vendég fiók bekapcsolása</button><button class="xp-button" data-go="back">Mégse</button></div>`,
+   name:`<h1>Adjon új nevet a(z) ${esc(state.user)} fióknak</h1><p>A név a bejelentkezési képernyőn és a Start menü tetején jelenik meg.</p><label class="settings-field"><input type="text" name="account-name" maxlength="32" value="${esc(draftName)}"></label><div class="account-buttons"><button class="xp-button primary" data-save="name">Név megváltoztatása</button><button class="xp-button" data-go="back">Mégse</button></div>`,
+   picture:`<h1>Válasszon új képet a(z) ${esc(state.user)} fiókhoz</h1><p>A kép a bejelentkezési képernyőn és a Start menüben jelenik meg.</p><div class="picture-grid">${pictures.map(([key,label])=>`<button class="picture-choice ${key===draftPicture?'selected':''}" data-picture="${key}" title="${esc(label)}" aria-label="${esc(label)}">${XP.avatar(key)}</button>`).join('')}</div><div class="account-buttons"><button class="xp-button primary" data-save="picture">Kép megváltoztatása</button><button class="xp-button" data-go="back">Mégse</button></div>`,
+   type:`<h1>Válassza ki az új fióktípust a(z) ${esc(state.user)} fiókhoz</h1><label class="settings-field"><input type="radio" name="account-type" value="admin" ${draftType==='admin'?'checked':''}> <b>Számítógép rendszergazdája</b><br><small>Programokat telepíthet, minden fájlt elérhet és módosíthatja a rendszerbeállításokat.</small></label><label class="settings-field"><input type="radio" name="account-type" value="limited" ${draftType==='limited'?'checked':''}> <b>Korlátozott</b><br><small>Módosíthatja a saját jelszavát és képét, de nem telepíthet programokat.</small></label><div class="account-buttons"><button class="xp-button primary" data-save="type">Fióktípus megváltoztatása</button><button class="xp-button" data-go="back">Mégse</button></div>`
   };
-  body.innerHTML=`<header class="accounts-head">${icon('user')}<div><h1>Felhasználói fiókok</h1><p>${esc(state.user)} – ${accountType()}</p></div></header><div class="accounts-main"><aside class="accounts-side"><h2>Kapcsolódó témakörök</h2><ul><li><button data-side="control">Vezérlőpult</button></li><li><button data-side="logoff">Kijelentkezés</button></li><li><button data-side="help">Súgó és támogatás</button></li></ul></aside><section class="accounts-page">${pages[view]||pages.home}</section></div>`;
+  body.innerHTML=`<header class="accounts-head">${icon('user')}<div><h1>Felhasználói fiókok</h1><p>${esc(state.user)} – ${accountType()}</p></div></header><nav class="accounts-nav"><button class="nav-back" data-nav="back" ${trail.length?'':'disabled'}>${icon('back')}<span>Vissza</span></button><span class="nav-gap"></span><button data-nav="home" title="Kezdőlap" aria-label="Kezdőlap">${icon('home')}</button><button data-nav="help" title="Súgó" aria-label="Súgó">${icon('help')}</button></nav><div class="accounts-main"><aside class="accounts-side"><h2>Kapcsolódó témakörök</h2><ul><li><button data-side="control">Vezérlőpult</button></li><li><button data-side="logoff">Kijelentkezés</button></li><li><button data-side="help">Súgó és támogatás</button></li></ul></aside><section class="accounts-page">${pages[view]||pages.home}</section></div>`;
   const input=$('[name=account-name]',body);if(input)setTimeout(()=>{input.focus();input.select();},0);
  }
  body.onclick=e=>{
   const button=e.target.closest('button');if(!button)return;
+  const nav=button.dataset.nav;
+  if(nav==='back'){back();return;}
+  if(nav==='home'){home();return;}
+  if(nav==='help'){XP.open('help');return;}
+  if(button.dataset.go==='back'){back();return;}
   if(button.dataset.go){
    if(button.dataset.go==='picture')draftPicture=state.avatar;
-   view=button.dataset.go;render();return;
+   go(button.dataset.go);return;
   }
   if(button.dataset.guest){
    const on=button.dataset.guest==='on';
    if(!XP.setGuest(on)){XP.sound('error');XP.dialog('Felhasználói fiókok','A Vendég fiókot csak a rendszergazda kapcsolhatja ki.',{icon:'error'});return;}
    notify('Felhasználói fiókok',on?'A Vendég fiók bekapcsolva. A bejelentkezési képernyőn már választható.':'A Vendég fiók kikapcsolva.');
-   view=on?'guest':'home';render();return;
+   if(on)go('guest');else home();return;
   }
   if(button.dataset.picture){draftPicture=button.dataset.picture;render();return;}
   const action=button.dataset.save;
   if(action==='name'){
    const next=XP.fileName($('[name=account-name]',body).value).slice(0,32).trim();
    if(!next){XP.sound('error');XP.dialog('Felhasználói fiókok','Adj meg egy nevet a fiókhoz.',{icon:'error'});return;}
-   draftName=next;save();view='home';render();notify('Felhasználói fiókok',`A fiók új neve: ${next}`);return;
+   draftName=next;save();home();notify('Felhasználói fiókok',`A fiók új neve: ${next}`);return;
   }
-  if(action==='picture'){save();view='home';render();return;}
-  if(action==='type'){draftType=$('[name=account-type]:checked',body)?.value||'admin';save();view='home';render();return;}
+  if(action==='picture'){save();home();return;}
+  if(action==='type'){draftType=$('[name=account-type]:checked',body)?.value||'admin';save();home();return;}
   const side=button.dataset.side;
   if(side==='control')XP.open('control');
   if(side==='help')XP.open('help');
