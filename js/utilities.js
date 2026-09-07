@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-const {$,$$,esc,icon,state,register,createWindow,menubar,status,persist,notify}=XP;
+const {$,$$,esc,icon,state,register,createWindow,menubar,status,persist,notify,t}=XP;
 // --- Képernyőkímélő ------------------------------------------------------
 const saver={el:null,stop:null,at:0};
 const saverSettings=()=>({name:state.screensaver?.name||'none',minutes:Math.max(1,Number(state.screensaver?.minutes)||10)});
@@ -133,6 +133,40 @@ register('drive',(which='disk')=>{
   apply(){}
  });
 });
+// --- Területi és nyelvi beállítások (intl.cpl) ---------------------------
+register('regional',()=>{
+ // XP itt tartotta a nyelvet: a lista a felület nyelvét váltja.
+ const draft={language:XP.language};
+ const SAMPLES={hu:['2026. szeptember 7.','13:45:20','1 234 567,89 Ft'],
+   en:['Monday, 07 September 2026','1:45:20 PM','$1,234,567.89'],
+   de:['Montag, 7. September 2026','13:45:20','1.234.567,89 €']};
+ const REGIONS={hu:'Magyar (Magyarország)',en:'English (United States)',de:'Deutsch (Deutschland)'};
+ return propertySheet({
+  app:'regional',title:t('Területi és nyelvi beállítások'),icon:'datetime',width:420,height:460,initial:'formats',
+  tabs:[['formats',t('Területi beállítások')],['languages',t('Nyelvek')],['advanced',t('Speciális')]],
+  read(tab,panel){const box=$('[name=language]',panel);if(box)draft.language=box.value;},
+  draw(tab,panel){
+   const samples=SAMPLES[draft.language]||SAMPLES.hu;
+   if(tab==='formats')panel.innerHTML=`<fieldset><legend>${esc(t('Szabványok és formátumok'))}</legend>
+     <p class="settings-note">${esc(t('A programok ebben a formában mutatják a számokat, a pénznemet, a dátumot és az időt.'))}</p>
+     <label class="settings-field"><select name="language">${XP.languages.map(item=>`<option value="${item.code}" ${item.code===draft.language?'selected':''}>${esc(REGIONS[item.code]||item.label)}</option>`).join('')}</select></label>
+     <dl class="disk-facts"><dt>${esc(t('Dátum'))}:</dt><dd>${esc(samples[0])}</dd><dt>${esc(t('Idő'))}:</dt><dd>${esc(samples[1])}</dd><dt>${esc(t('Pénznem'))}:</dt><dd>${esc(samples[2])}</dd></dl></fieldset>
+     <fieldset><legend>${esc(t('Hely'))}</legend><p class="settings-note">${esc(t('A helyi híreket és időjárást kínáló szolgáltatások ezt használják.'))}</p></fieldset>`;
+   if(tab==='languages')panel.innerHTML=`<fieldset><legend>${esc(t('A felület nyelve'))}</legend>
+     <p class="settings-note">${esc(t('Ezen a nyelven jelennek meg a menük, a párbeszédablakok és a programok feliratai.'))}</p>
+     <label class="settings-field"><select name="language">${XP.languages.map(item=>`<option value="${item.code}" ${item.code===draft.language?'selected':''}>${esc(item.label)}</option>`).join('')}</select></label></fieldset>
+     <fieldset><legend>${esc(t('Szövegbeviteli szolgáltatások'))}</legend><p class="settings-note">${esc(t('A telepített billentyűzetkiosztás a felület nyelvét követi.'))}</p></fieldset>`;
+   if(tab==='advanced')panel.innerHTML=`<fieldset><legend>${esc(t('Nem Unicode-os programok nyelve'))}</legend>
+     <p class="settings-note">${esc(t('A régebbi programok ezt a nyelvet használják a szövegek megjelenítéséhez.'))}</p>
+     <label class="settings-field"><select disabled><option>${esc(REGIONS[draft.language]||'')}</option></select></label></fieldset>`;
+  },
+  apply(){
+   if(!XP.setLanguage(draft.language))return;
+   XP.dialog(t('Területi és nyelvi beállítások'),t('A felület nyelve megváltozott. A már megnyitott programok a következő indításukkor követik.'),{icon:'info'});
+  }
+ });
+});
+
 register('printers',()=>XP.dialog('Nyomtatók és faxok','Nincs telepítve nyomtató.\n\nNyomtató üzembe helyezéséhez indítsd el a Nyomtató hozzáadása varázslót, vagy csatlakoztass egy Plug and Play nyomtatót – a Windows automatikusan felismeri.',{icon:'printers'}));
 register('taskbar',(initial='taskbar')=>{
  const draft={...{locked:true,clock:true,quickLaunch:true},...(state.taskbar||{})};
@@ -325,6 +359,7 @@ register('control',()=>{
   cleanup:{name:'Lemezkarbantartó',icon:'disk',hint:'Hely felszabadítása a lemezen',open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog('Lemezkarbantartó – C:',`A Lemezkarbantartó a következő fájlokat távolíthatja el:\n\nIdeiglenes internetfájlok        3,17 MB\nLetöltött programfájlok          0,00 MB\nLomtár                           ${(trash*0.06).toFixed(2)} MB (${trash} elem)\nIdeiglenes fájlok                0,84 MB\n\nÖsszesen felszabadítható: ${(4.01+trash*0.06).toFixed(2)} MB\n\nA Lomtár tartalmát a Lomtár ablakában ürítheted ki.`);}},
   printers:{name:'Nyomtatók és faxok',icon:'printers',hint:'Telepített nyomtatók',open:()=>XP.open('printers')},
   profile:{name:'Felhasználói fiókok',icon:'user',hint:'A fiók neve, képe és típusa',open:()=>XP.open('profile')},
+  regional:{name:'Területi és nyelvi beállítások',icon:'datetime',hint:'A felület nyelve és a formátumok',open:()=>XP.open('regional')},
   datetime:{name:'Dátum és idő',icon:'datetime',hint:'Naptár és pontos idő',open:()=>XP.open('calendar')},
   accessibility:{name:'Kisegítő lehetőségek',icon:'accessibility',hint:'Billentyűzet, hang és megjelenítés',open:note('Kisegítő lehetőségek','A Windows billentyűzetről is végig vezérelhető:\n\nTab – léptetés a vezérlők között\nEnter – a kijelölt elem megnyitása\nAlt+F4 – az aktív ablak bezárása\nCtrl+Esc – a Start menü megnyitása\nAlt+Tab – váltás a futó programok között\nF1 – Súgó és támogatás')},
   security:{name:'Biztonsági központ',icon:'security',hint:'Tűzfal, frissítések és vírusvédelem',open:()=>XP.open('security')}
@@ -337,7 +372,7 @@ register('control',()=>{
   {id:'performance',name:'Teljesítmény és karbantartás',icon:'computer',hint:'Rendszeradatok és a lemez karbantartása',items:['system','cleanup']},
   {id:'hardware',name:'Nyomtatók és egyéb hardver',icon:'printers',hint:'Nyomtatók, faxok és eszközök',items:['printers']},
   {id:'accounts',name:'Felhasználói fiókok',icon:'user',hint:'A felhasználóneved és a profilod',items:['profile']},
-  {id:'datetime',name:'Dátum, idő, nyelv és területi beállítások',icon:'datetime',hint:'Naptár, pontos idő és a magyar beállítások',items:['datetime']},
+  {id:'datetime',name:'Dátum, idő, nyelv és területi beállítások',icon:'datetime',hint:'Naptár, pontos idő és a nyelvi beállítások',items:['datetime','regional']},
   {id:'access',name:'Kisegítő lehetőségek',icon:'accessibility',hint:'Billentyűzetes használat és láthatóság',items:['accessibility']},
   {id:'security',name:'Biztonsági központ',icon:'security',hint:'Tűzfal, automatikus frissítések és vírusvédelem',items:['security']}
  ];

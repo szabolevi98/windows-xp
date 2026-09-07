@@ -10,6 +10,12 @@ Függőségek nélküli, magyar nyelvű Windows XP-élmény HTML, CSS és JavaSc
 
 Az `index.html` közvetlen megnyitása is működik. A mentések az adott böngészőhöz és címhez tartoznak; következetesen ugyanazon a címen használd. Nincs build, npm-telepítés vagy CDN.
 
+## Nyelvek
+
+A felület magyarul, angolul és németül beszél. Alapból a böngésző nyelve dönt; ha az nem valamelyik ezek közül, angolul indul. A választás a Vezérlőpult → Dátum, idő, nyelv és területi beállítások → **Területi és nyelvi beállítások** ablakában módosítható, és megmarad a következő indításig.
+
+A szövegek forrása maga a magyar mondat: a kódban `t('Megnyitás')` áll, a `lang/en.js` és a `lang/de.js` pedig magyar → idegen nyelvű szótár. Ha egy mondat fordítása hiányzik, a magyar szöveg marad a képernyőn — nem törik el semmi, és rögtön látszik, mi maradt ki. Új nyelvhez egy új `lang/<kód>.js` és egy sor a `js/lang.js` listájában elég.
+
 ## Használat
 
 - XP betöltés, bejelentkezés a névre kattintva, üdvözlés, kijelentkezés, felhasználóváltás, készenlét, kikapcsolás, újraindítás.

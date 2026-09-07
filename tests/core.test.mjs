@@ -473,7 +473,7 @@ test('The logon screen is laid out the way XP laid it out',()=>{
  assert.match(start,/class="welcome-power"/);
  assert.match(start,/Vezérlőpultot.*Felhasználói fiókok/s);
  // The plain welcome step keeps that band empty.
- assert.match(start,/<span>Üdvözöljük<\/span>';\$\('\.welcome-bottom'\)\.innerHTML='';/);
+ assert.match(start,/<span>\$\{esc\(t\('Üdvözöljük'\)\)\}<\/span>`;\$\('\.welcome-bottom'\)\.innerHTML='';/);
 
  const css=readFileSync(new URL('styles.css',root),'utf8');
  const band=name=>Number(css.match(new RegExp(`\\.welcome-${name}\\{height:([\\d.]+)%`))[1]);
