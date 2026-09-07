@@ -425,3 +425,19 @@ test('Account pictures come from the bundled tiles, and a name from elsewhere ca
  // The picker offers exactly the bundled tiles, so no entry can point at a missing file.
  assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/const pictures=XP\.avatars\.map/);
 });
+
+test('The Start menu header opens the account, and its amber rule stops short of the edge',()=>{
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ // Clicking the name or the picture goes to User Accounts, the way XP did it.
+ assert.match(start,/<button class="start-user" data-open="profile"/);
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ const header=css.slice(css.indexOf('.start-header{'),css.indexOf('.start-user{'));
+ // The rule is a tapering strip, not a border running the whole width.
+ assert.doesNotMatch(header,/border-bottom:2px solid #e7952b/);
+ assert.match(header,/\.start-header:after\{[^}]*clip-path:polygon/);
+ const strip=header.slice(header.indexOf('.start-header:after{'));
+ const width=strip.match(/width:(\d+)%/);
+ assert.ok(width&&Number(width[1])<100,'it ends before the right edge');
+ // The classic theme never had it.
+ assert.match(css,/body\[data-theme=classic\] \.start-header:after\{display:none\}/);
+});
