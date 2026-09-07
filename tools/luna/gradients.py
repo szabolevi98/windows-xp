@@ -111,12 +111,12 @@ def main():
     for theme in luna.THEMES:
         print('\n===== %s =====' % theme)
 
-        # The taskbar is a 4px sizing bar over a background whose 15 + 11 fixed
-        # bands exactly fill the remaining 26px, so its stretch band never shows.
-        bar = luna.bitmap('TASKBARSIZINGBARBOTTOM_BMP', theme)
+        # A locked taskbar shows no sizing bar, so the background alone fills all
+        # 30px: its own top 15 and bottom 11 rows keep their pixels and the two
+        # rows between them stretch. That puts the bright edge at the very top,
+        # where XP has it, rather than a few pixels down.
         bg = luna.bitmap('TASKBARBACKGROUND_BMP', theme)
-        rows = [bar.getpixel((7, y)) for y in range(4)] + ramp(bg, 25, 26, 15, 11)
-        print('#taskbar        %s' % gradient(rows)[0])
+        print('#taskbar        %s' % gradient(ramp(bg, 25, 30, 15, 11))[0])
 
         tray = luna.bitmap('TASKBARTRAY_BMP', theme, key=luna.RED)
         rows = ramp(tray, 70, 30, 12, 12)
@@ -140,8 +140,10 @@ def main():
             cols = [frame[i].getpixel((x, 15)) for x in range(frame[i].width)]
             print('%s border-color: %s' % (label, hexed(mean(cols[1:]))))
 
+        # Row 0 of the user pane is the panel's own border, which #start-menu
+        # already draws, so it is dropped rather than painted twice.
         print('.start-header   %s' % gradient(
-            ramp(luna.bitmap('STARTUSERPANEL_BMP', theme), 59, 66, 62, 0))[0])
+            ramp(luna.bitmap('STARTUSERPANEL_BMP', theme), 59, 66, 62, 0)[1:])[0])
         print('.start-footer   %s' % gradient(
             ramp(luna.bitmap('STARTPANELLOGOFFBACKGROUND_BMP', theme), 49, 44, 0, 38))[0])
 
