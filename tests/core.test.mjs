@@ -461,3 +461,29 @@ test('The web catalogue is a favourite, and older desktops gain it exactly once'
  trimmed.favorites=trimmed.favorites.filter(f=>f.url!=='about:offline');
  assert.equal(boot(trimmed).xp.state.favorites.some(f=>f.url==='about:offline'),false);
 });
+
+test('The logon screen is laid out the way XP laid it out',()=>{
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ // One builder feeds both routes into the logon screen.
+ assert.equal(start.split('function loginMarkup(').length-1,1);
+ assert.equal(start.split('showLogin()').length-1,3,'both entry points call it');
+ // The prompt belongs under the logo, not beside the account.
+ assert.match(start,/<div class="welcome-brand">.*windows-brand.*welcome-hint.*<\/div><i class="welcome-divider">/s);
+ // The band underneath carries the power button and the note about changing the account.
+ assert.match(start,/class="welcome-power"/);
+ assert.match(start,/Vezérlőpultot.*Felhasználói fiókok/s);
+ // The plain welcome step keeps that band empty.
+ assert.match(start,/<span>Üdvözöljük<\/span>';\$\('\.welcome-bottom'\)\.innerHTML='';/);
+
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ const band=name=>Number(css.match(new RegExp(`\\.welcome-${name}\\{height:([\\d.]+)%`))[1]);
+ assert.ok(band('top')<15&&band('bottom')<15,'the dark bands are shallower than they were');
+ // Both rules run out at each end instead of meeting the edges.
+ for(const rule of [/\.welcome-top:after\{[^}]*\}/,/\.welcome-bottom:before\{[^}]*\}/]){
+  const found=css.match(rule)[0];
+  assert.match(found,/linear-gradient\(90deg,#[0-9a-f]{6}00 0,/,'it fades in');
+  assert.match(found,/#[0-9a-f]{6}00 100%\)/,'it fades out');
+  assert.match(found,/clip-path:polygon/,'and thins at the ends');
+ }
+ assert.match(css,/\.welcome-divider\{[^}]*linear-gradient\(#ffffff00/,'the divider fades at both ends');
+});
