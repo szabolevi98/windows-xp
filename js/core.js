@@ -19,7 +19,7 @@ window.XP = (() => {
     {id:'welcome',name:t('Üdv a Windows XP-ben.txt'),type:'text',parent:'documents',content:t('Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n'),modified:Date.now()},
     {id:'todo',name:t('Teendők.txt'),type:'text',parent:'documents',content:t('Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n'),modified:Date.now()},
     {id:'folder-personal',name:t('Személyes'),type:'folder',parent:'documents',modified:Date.now()}
-  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:true},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:t('Webkatalógus'),url:'about:offline'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
+  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:true},favorites:[{title:t('Google'),url:'google.hu'},{title:t('Wikipédia'),url:'hu.wikipedia.org'},{title:t('Webkatalógus'),url:'about:offline'},{title:t('Windows XP'),url:'www.microsoft.com/windowsxp'}],mineBest:null});
   let state;
   try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
   let storageWarned=false;
@@ -48,7 +48,7 @@ window.XP = (() => {
     const existing=state.files.find(f=>f.type==='shortcut'&&f.app==='pinball');
     const otherGame=state.files.find(f=>f.type==='shortcut'&&['mines','solitaire'].includes(f.app));
     const folder=state.files.find(f=>f.type==='folder'&&f.id===(otherGame?.parent||'folder-games'));
-    if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:'3D Pinball – Space Cadet',type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
+    if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:t('3D Pinball – Space Cadet'),type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
     state.pinballAdded=true;
   }
   // The web catalogue joins the favourites of desktops that were set up before it existed.
@@ -69,7 +69,7 @@ window.XP = (() => {
   seedProfile();
   persist();
   const MACHINE=['version','computerName','security','profiles','session','guest'];
-  const ACCOUNTS={admin:{name:'Adminisztrátor',avatar:'chess',type:'admin'},guest:{name:'Vendég',avatar:'guest',type:'guest'}};
+  const ACCOUNTS={admin:{name:t('Adminisztrátor'),avatar:'chess',type:'admin'},guest:{name:t('Vendég'),avatar:'guest',type:'guest'}};
   const personal=source=>Object.fromEntries(Object.entries(source).filter(([key])=>!MACHINE.includes(key)));
   if(!state.profiles||typeof state.profiles!=='object')state.profiles={};
   if(!state.guest||typeof state.guest!=='object')state.guest={enabled:true};
@@ -390,7 +390,7 @@ window.XP = (() => {
   }
   function dialog(title,message,{input,value='',buttons=['OK'],icon:ic='info'}={}){return new Promise(resolve=>{const w=createWindow({title,icon:ic,width:420,height:input?192:175,fixed:true,modal:true});w.body.innerHTML=`<div class="dialog-body">${icon(ic)}<div class="dialog-copy"><p>${esc(message).replace(/\n/g,'<br>')}</p>${input?`<input type="text" aria-label="${esc(input)}" value="${esc(value)}" maxlength="160">`:''}</div></div><div class="button-row"></div>`;let answered=false;const finish=(button)=>{if(answered)return;answered=true;const val=input?$('input',w.body).value:button;close(w);resolve(button===buttons[0]?val:null);};buttons.forEach((label,i)=>{const b=document.createElement('button');b.className=`xp-button ${i===0?'primary':''}`;b.textContent=label;b.onclick=()=>finish(label);$('.button-row',w.body).append(b);});fitDialog(w);w.onClose=()=>{if(!answered){answered=true;resolve(null);}};w.el.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();finish('');}if(e.key==='Enter'){e.preventDefault();finish(buttons[0]);}if(e.key==='Tab'){const controls=$$('input,button:not(.window-control)',w.body);let idx=controls.indexOf(document.activeElement);idx=(idx+(e.shiftKey?-1:1)+controls.length)%controls.length;controls[idx]?.focus();e.preventDefault();}});setTimeout(()=>{const first=$('input',w.body)||$('.button-row button',w.body);first.focus();first.select?.();},0);});}
   const prompt=(title,message,value='')=>dialog(title,message,{input:'Fájlnév',value,buttons:['OK',t('Mégse')]});
-  const confirm=(title,message)=>dialog(title,message,{buttons:['Igen','Nem']});
+  const confirm=(title,message)=>dialog(title,message,{buttons:[t('Igen'),t('Nem')]});
   function fileName(name){return String(name||'').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'').trim().slice(0,100);}
   function uniqueName(name,parent,ignoreId){
     const taken=candidate=>state.files.some(f=>f.id!==ignoreId&&f.parent===parent&&!f.deleted&&f.name===candidate);
@@ -482,7 +482,7 @@ window.XP = (() => {
     const file=state.files.find(f=>f.id===id&&!f.deleted);
     if(!file)return false;
     const answer=await dialog(file.type==='folder'?t('Mappa törlésének megerősítése'):t('Fájl törlésének megerősítése'),
-      t('Biztosan a Lomtárba helyezi ezt: „{name}”?',{name:file.name}),{icon:'recycle',buttons:['Igen','Nem']});
+      t('Biztosan a Lomtárba helyezi ezt: „{name}”?',{name:file.name}),{icon:'recycle',buttons:[t('Igen'),t('Nem')]});
     if(!answer)return false;
     deleteFile(id);return true;
   }

@@ -102,7 +102,7 @@ test('A parked program keeps to itself while somebody else works',()=>{
  assert.match(read('js/player.js'),/w\.onPark=\(\)=>\{playingWhenParked=!media\.paused&&!media\.ended;media\.pause\(\);\}/);
  assert.match(read('js/player.js'),/w\.onUnpark=\(\)=>\{if\(playingWhenParked\)play\(\);\}/);
  // The Task Manager lists the other session as disconnected.
- assert.match(read('js/taskmgr.js'),/account\.active\?'Aktív':'Leválasztva'/);
+ assert.match(read('js/taskmgr.js'),/account\.active\?t\('Aktív'\):t\('Leválasztva'\)/);
 });
 
 test('The bin asks before it takes anything, and the windows sound like XP',()=>{

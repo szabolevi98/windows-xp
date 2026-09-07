@@ -1,100 +1,100 @@
 'use strict';
 (() => {
-  const {$,$$,esc,icon,state}=XP;
+  const {$,$$,esc,icon,state,t}=XP;
   // A Számítógép-kezelés konzol fája: csomópont, cím, ikon, gyerekek.
-  const TREE=['root','Számítógép-kezelés (helyi)','computer',[
-    ['tools','Rendszereszközök','folder',[
-      ['events','Eseménynapló','folder',[
-        ['event-app','Alkalmazás','documents',[]],
-        ['event-sec','Biztonság','security',[]],
-        ['event-sys','Rendszer','computer',[]]
+  const TREE=['root',t('Számítógép-kezelés (helyi)'),'computer',[
+    ['tools',t('Rendszereszközök'),'folder',[
+      ['events',t('Eseménynapló'),'folder',[
+        ['event-app',t('Alkalmazás'),'documents',[]],
+        ['event-sec',t('Biztonság'),'security',[]],
+        ['event-sys',t('Rendszer'),'computer',[]]
       ]],
-      ['shares','Megosztott mappák','folder',[]],
-      ['accounts','Helyi felhasználók és csoportok','user',[
-        ['user-list','Felhasználók','user',[]],
-        ['group-list','Csoportok','user',[]]
+      ['shares',t('Megosztott mappák'),'folder',[]],
+      ['accounts',t('Helyi felhasználók és csoportok'),'user',[
+        ['user-list',t('Felhasználók'),'user',[]],
+        ['group-list',t('Csoportok'),'user',[]]
       ]],
-      ['perf','Teljesítménynaplók és riasztások','taskmgr',[]],
-      ['devices','Eszközkezelő','computer',[]]
+      ['perf',t('Teljesítménynaplók és riasztások'),'taskmgr',[]],
+      ['devices',t('Eszközkezelő'),'computer',[]]
     ]],
-    ['storage','Tárolás','disk',[
-      ['media','Cserélhető adathordozó','cd',[]],
-      ['defrag','Lemeztöredezettség-mentesítő','disk',[]],
-      ['diskmgmt','Lemezkezelés','disk',[]]
+    ['storage',t('Tárolás'),'disk',[
+      ['media',t('Cserélhető adathordozó'),'cd',[]],
+      ['defrag',t('Lemeztöredezettség-mentesítő'),'disk',[]],
+      ['diskmgmt',t('Lemezkezelés'),'disk',[]]
     ]],
-    ['apps','Szolgáltatások és alkalmazások','control',[
-      ['service-list','Szolgáltatások','control',[]],
-      ['wmi','WMI-vezérlő','control',[]],
-      ['index','Indexelő szolgáltatás','search',[]]
+    ['apps',t('Szolgáltatások és alkalmazások'),'control',[
+      ['service-list',t('Szolgáltatások'),'control',[]],
+      ['wmi',t('WMI-vezérlő'),'control',[]],
+      ['index',t('Indexelő szolgáltatás'),'search',[]]
     ]]
   ]];
   const DESCRIPTIONS={
-    tools:'A gép állapotát és a helyi fiókokat kezelő eszközök.',
-    events:'A Windows és a programok által naplózott események.',
-    storage:'A lemezek és a cserélhető adathordozók kezelése.',
-    apps:'A gépen futó szolgáltatások és kiszolgálóalkalmazások.',
-    shares:'A gépen megosztott mappák, a nyitott munkamenetek és fájlok.',
-    accounts:'A gépen létrehozott felhasználói fiókok és csoportok.',
-    perf:'Teljesítményszámlálók naplózása és riasztások beállítása.',
-    devices:'A gépbe épített eszközök és az illesztőprogramjaik.',
-    media:'A cserélhető adathordozók és a hozzájuk tartozó könyvtárak.',
-    defrag:'A köteten lévő fájlok töredezettségének megszüntetése.',
-    diskmgmt:'A lemezek particionálása és a kötetek karbantartása.',
-    wmi:'A Windows felügyeleti eszközeinek beállításai.',
-    index:'A gyorsabb kereséshez indexelt mappák és katalógusok.'
+    tools:t('A gép állapotát és a helyi fiókokat kezelő eszközök.'),
+    events:t('A Windows és a programok által naplózott események.'),
+    storage:t('A lemezek és a cserélhető adathordozók kezelése.'),
+    apps:t('A gépen futó szolgáltatások és kiszolgálóalkalmazások.'),
+    shares:t('A gépen megosztott mappák, a nyitott munkamenetek és fájlok.'),
+    accounts:t('A gépen létrehozott felhasználói fiókok és csoportok.'),
+    perf:t('Teljesítményszámlálók naplózása és riasztások beállítása.'),
+    devices:t('A gépbe épített eszközök és az illesztőprogramjaik.'),
+    media:t('A cserélhető adathordozók és a hozzájuk tartozó könyvtárak.'),
+    defrag:t('A köteten lévő fájlok töredezettségének megszüntetése.'),
+    diskmgmt:t('A lemezek particionálása és a kötetek karbantartása.'),
+    wmi:t('A Windows felügyeleti eszközeinek beállításai.'),
+    index:t('A gyorsabb kereséshez indexelt mappák és katalógusok.')
   };
   const SERVICES=[
-    ['Automatikus frissítések','Elindítva','Automatikus','Helyi rendszer'],
-    ['Beépülő eszközök támogatása (Plug and Play)','Elindítva','Automatikus','Helyi rendszer'],
-    ['Eseménynapló','Elindítva','Automatikus','Helyi rendszer'],
-    ['Hálózati kapcsolatok','Elindítva','Kézi','Helyi rendszer'],
-    ['Nyomtatásisor-kezelő','Elindítva','Automatikus','Helyi rendszer'],
-    ['Súgó és támogatás','Elindítva','Automatikus','Helyi rendszer'],
-    ['Számítógépböngésző','Elindítva','Automatikus','Helyi rendszer'],
-    ['Windows Audio','Elindítva','Automatikus','Helyi rendszer'],
-    ['Windows tűzfal / Internetkapcsolat megosztása','Elindítva','Automatikus','Helyi rendszer'],
-    ['Telnet','Leállítva','Letiltva','Helyi szolgáltatás']
+    [t('Automatikus frissítések'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    [t('Beépülő eszközök támogatása (Plug and Play)'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    [t('Eseménynapló'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    [t('Hálózati kapcsolatok'),t('Elindítva'),t('Kézi'),t('Helyi rendszer')],
+    [t('Nyomtatásisor-kezelő'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    [t('Súgó és támogatás'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    [t('Számítógépböngésző'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    ['Windows Audio',t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    [t('Windows tűzfal / Internetkapcsolat megosztása'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
+    ['Telnet',t('Leállítva'),t('Letiltva'),t('Helyi szolgáltatás')]
   ];
   const DEVICES=[
-    ['Billentyűzetek','Szabványos 101/102 gombos billentyűzet'],
-    ['DVD/CD-ROM-meghajtók','HL-DT-ST DVD-ROM GDR8162B'],
-    ['Egerek és egyéb mutatóeszközök','PS/2 kompatibilis egér'],
-    ['Hang-, videó- és játékvezérlők','Realtek AC97 Audio'],
-    ['Hálózati kártyák','Realtek RTL8139 Family PCI Fast Ethernet NIC'],
-    ['Képernyőadapterek','NVIDIA GeForce4 MX 440'],
-    ['Lemezmeghajtók','ST340016A'],
-    ['Processzorok','Intel Pentium 4 1.80 GHz']
+    [t('Billentyűzetek'),t('Szabványos 101/102 gombos billentyűzet')],
+    [t('DVD/CD-ROM-meghajtók'),'HL-DT-ST DVD-ROM GDR8162B'],
+    [t('Egerek és egyéb mutatóeszközök'),t('PS/2 kompatibilis egér')],
+    [t('Hang-, videó- és játékvezérlők'),'Realtek AC97 Audio'],
+    [t('Hálózati kártyák'),'Realtek RTL8139 Family PCI Fast Ethernet NIC'],
+    [t('Képernyőadapterek'),'NVIDIA GeForce4 MX 440'],
+    [t('Lemezmeghajtók'),'ST340016A'],
+    [t('Processzorok'),'Intel Pentium 4 1.80 GHz']
   ];
   const EVENTS={
     'event-app':[
-      ['Tájékoztatás','2026. 09. 07.','13:58','Windows Media Player','Nincs','101'],
-      ['Tájékoztatás','2026. 09. 07.','13:41','MsiInstaller','Nincs','11707'],
-      ['Figyelmeztetés','2026. 09. 06.','21:12','Application Hang','(101)','1002']
+      [t('Tájékoztatás'),'2026. 09. 07.','13:58','Windows Media Player',t('Nincs'),'101'],
+      [t('Tájékoztatás'),'2026. 09. 07.','13:41','MsiInstaller',t('Nincs'),'11707'],
+      [t('Figyelmeztetés'),'2026. 09. 06.','21:12','Application Hang','(101)','1002']
     ],
     'event-sec':[
-      ['Sikeres naplózás','2026. 09. 07.','13:38','Security','Bejelentkezés/kijelentkezés','528'],
-      ['Sikeres naplózás','2026. 09. 07.','13:38','Security','Fiókkezelés','642'],
-      ['Sikertelen naplózás','2026. 09. 05.','08:02','Security','Bejelentkezés/kijelentkezés','529']
+      [t('Sikeres naplózás'),'2026. 09. 07.','13:38','Security',t('Bejelentkezés/kijelentkezés'),'528'],
+      [t('Sikeres naplózás'),'2026. 09. 07.','13:38','Security',t('Fiókkezelés'),'642'],
+      [t('Sikertelen naplózás'),'2026. 09. 05.','08:02','Security',t('Bejelentkezés/kijelentkezés'),'529']
     ],
     'event-sys':[
-      ['Tájékoztatás','2026. 09. 07.','13:37','eventlog','Nincs','6005'],
-      ['Tájékoztatás','2026. 09. 07.','13:37','Service Control Manager','Nincs','7035'],
-      ['Hiba','2026. 09. 06.','19:55','atapi','Nincs','9']
+      [t('Tájékoztatás'),'2026. 09. 07.','13:37','eventlog',t('Nincs'),'6005'],
+      [t('Tájékoztatás'),'2026. 09. 07.','13:37','Service Control Manager',t('Nincs'),'7035'],
+      [t('Hiba'),'2026. 09. 06.','19:55','atapi',t('Nincs'),'9']
     ]
   };
 
   XP.register('compmgmt',()=>{
     if(XP.singleton('compmgmt'))return;
-    const w=XP.createWindow({title:'Számítógép-kezelés',icon:'computer',app:'compmgmt',
+    const w=XP.createWindow({title:t('Számítógép-kezelés'),icon:'computer',app:'compmgmt',
       width:720,height:470,minWidth:520,minHeight:330});
     let selected='root';
     const expanded=new Set(['root','tools','storage','apps']);
 
     XP.menubar(w,{
-      'Fájl':[{label:'Bezárás',action:()=>w.close()}],
-      'Művelet':()=>[{label:'Frissítés',shortcut:'F5',action:render},{label:'Exportálás…',disabled:true}],
-      'Nézet':()=>[{label:'Nagy ikonok',disabled:true},{label:'Részletek',checked:true,disabled:true}],
-      'Súgó':[{label:'A Számítógép-kezelés névjegye',action:()=>XP.dialog('Számítógép-kezelés','Számítógép-kezelés\n\nA gép eszközeit, naplóit, helyi fiókjait, lemezeit és szolgáltatásait egy helyen kezeli.\n\nMegnyitás: a Sajátgép ikonjának helyi menüjéből, vagy a Futtatás ablakból: compmgmt.msc')}]
+      [t('Fájl')]:[{label:t('Bezárás'),action:()=>w.close()}],
+      [t('Művelet')]:()=>[{label:t('Frissítés'),shortcut:'F5',action:render},{label:t('Exportálás…'),disabled:true}],
+      [t('Nézet')]:()=>[{label:t('Nagy ikonok'),disabled:true},{label:t('Részletek'),checked:true,disabled:true}],
+      [t('Súgó')]:[{label:t('A Számítógép-kezelés névjegye'),action:()=>XP.dialog(t('Számítógép-kezelés'),t('Számítógép-kezelés\n\nA gép eszközeit, naplóit, helyi fiókjait, lemezeit és szolgáltatásait egy helyen kezeli.\n\nMegnyitás: a Sajátgép ikonjának helyi menüjéből, vagy a Futtatás ablakból: compmgmt.msc'))}]
     });
 
     const body=document.createElement('div');body.className='mmc';
@@ -118,47 +118,47 @@
 
     // Amit a jobb oldali panel mutat: a levelek a saját listájukat, a mappák a gyerekeiket.
     function paneFor(id){
-      if(EVENTS[id])return {count:EVENTS[id].length,html:table(['Típus','Dátum','Idő','Forrás','Kategória','Esemény'],EVENTS[id])};
-      if(id==='service-list')return {count:SERVICES.length,html:table(['Név','Állapot','Indítás típusa','Bejelentkezés'],SERVICES)};
-      if(id==='devices')return {count:DEVICES.length,html:table(['Eszközcsoport','Eszköz'],DEVICES.map(([group,device])=>[`${icon('computer')}${esc(group)}`,esc(device)]))};
+      if(EVENTS[id])return {count:EVENTS[id].length,html:table([t('Típus'),t('Dátum'),t('Idő'),t('Forrás'),t('Kategória'),t('Esemény')],EVENTS[id])};
+      if(id==='service-list')return {count:SERVICES.length,html:table([t('Név'),t('Állapot'),t('Indítás típusa'),t('Bejelentkezés')],SERVICES)};
+      if(id==='devices')return {count:DEVICES.length,html:table([t('Eszközcsoport'),t('Eszköz')],DEVICES.map(([group,device])=>[`${icon('computer')}${esc(group)}`,esc(device)]))};
       if(id==='user-list'){
         const rows=XP.accounts(true).map(account=>[`${XP.avatar(account.avatar)}${esc(account.name)}`,
-          account.id==='guest'?'Beépített fiók a gép vendégei számára':'Beépített fiók a gép felügyeletéhez',
-          account.id==='guest'?(account.enabled?'Bekapcsolva':'Kikapcsolva'):'Bekapcsolva']);
-        return {count:rows.length,html:table(['Név','Leírás','Állapot'],rows)};
+          account.id==='guest'?t('Beépített fiók a gép vendégei számára'):t('Beépített fiók a gép felügyeletéhez'),
+          account.id==='guest'?(account.enabled?t('Bekapcsolva'):t('Kikapcsolva')):t('Bekapcsolva')]);
+        return {count:rows.length,html:table([t('Név'),t('Leírás'),t('Állapot')],rows)};
       }
       if(id==='group-list'){
-        const rows=[['Rendszergazdák','A rendszergazdák teljes hozzáféréssel rendelkeznek a géphez'],
-          ['Felhasználók','A felhasználók nem végezhetnek rendszerszintű módosításokat'],
-          ['Vendégek','A vendégek alapértelmezés szerint a Felhasználók csoport jogait kapják'],
-          ['Biztonságimásolat-felelősök','Fájlok mentése és visszaállítása a jogosultságok megkerülésével']];
-        return {count:rows.length,html:table(['Név','Leírás'],rows)};
+        const rows=[[t('Rendszergazdák'),t('A rendszergazdák teljes hozzáféréssel rendelkeznek a géphez')],
+          [t('Felhasználók'),t('A felhasználók nem végezhetnek rendszerszintű módosításokat')],
+          [t('Vendégek'),t('A vendégek alapértelmezés szerint a Felhasználók csoport jogait kapják')],
+          [t('Biztonságimásolat-felelősök'),t('Fájlok mentése és visszaállítása a jogosultságok megkerülésével')]];
+        return {count:rows.length,html:table([t('Név'),t('Leírás')],rows)};
       }
       if(id==='shares'){
-        const rows=[['C$','C:\\','Windows-rendszermegosztás'],['ADMIN$','C:\\WINDOWS','Távoli felügyelet'],['IPC$','','Távoli IPC']];
-        return {count:rows.length,html:table(['Megosztás neve','Mappa útvonala','Megjegyzés'],rows)};
+        const rows=[['C$','C:\\',t('Windows-rendszermegosztás')],['ADMIN$','C:\\WINDOWS',t('Távoli felügyelet')],['IPC$','',t('Távoli IPC')]];
+        return {count:rows.length,html:table([t('Megosztás neve'),t('Mappa útvonala'),t('Megjegyzés')],rows)};
       }
       if(id==='diskmgmt'){
         const used=4283924480+state.files.filter(f=>!f.deleted).reduce((sum,f)=>sum+(f.content||'').length+1024,0);
         const capacity=40*1024**3-1_100_000_000;
         const gb=value=>`${(value/1024**3).toFixed(2).replace('.',',')} GB`;
-        const rows=[[`${icon('disk')}(C:)`,'Egyszerű','Alap','NTFS','Kifogástalan (rendszer)',gb(capacity),gb(capacity-used),`${Math.round((capacity-used)/capacity*100)} %`],
-          [`${icon('cd')}(D:)`,'Egyszerű','Alap','','Nincs adathordozó','0 GB','0 GB','0 %']];
-        return {count:rows.length,html:table(['Kötet','Elrendezés','Típus','Fájlrendszer','Állapot','Kapacitás','Szabad hely','% szabad'],rows)};
+        const rows=[[`${icon('disk')}(C:)`,t('Egyszerű'),t('Alap'),'NTFS',t('Kifogástalan (rendszer)'),gb(capacity),gb(capacity-used),`${Math.round((capacity-used)/capacity*100)} %`],
+          [`${icon('cd')}(D:)`,t('Egyszerű'),t('Alap'),'',t('Nincs adathordozó'),'0 GB','0 GB','0 %']];
+        return {count:rows.length,html:table([t('Kötet'),t('Elrendezés'),t('Típus'),t('Fájlrendszer'),t('Állapot'),t('Kapacitás'),t('Szabad hely'),'% szabad'],rows)};
       }
       const node=find(TREE,id);
       if(node&&node[3].length){
         const rows=node[3].map(child=>[`${icon(child[2])}${esc(child[1])}`,esc(DESCRIPTIONS[child[0]]||'')]);
-        return {count:rows.length,html:table(['Név','Leírás'],rows)};
+        return {count:rows.length,html:table([t('Név'),t('Leírás')],rows)};
       }
-      return {count:0,html:`<p class="mmc-note">${esc(DESCRIPTIONS[id]||'Ehhez az elemhez nincs megjeleníthető adat.')}</p>`};
+      return {count:0,html:`<p class="mmc-note">${esc(DESCRIPTIONS[id]||t('Ehhez az elemhez nincs megjeleníthető adat.'))}</p>`};
     }
 
     function render(){
       treeEl.innerHTML=branch(TREE,0);
       const node=find(TREE,selected),content=paneFor(selected);
       pane.innerHTML=`<header class="mmc-heading">${icon(node?.[2]||'computer')}${esc(node?.[1]||'')}</header>${content.html}`;
-      $('span',bar).textContent=content.count?`${content.count} elem`:'Kész';
+      $('span',bar).textContent=content.count?`${content.count} elem`:t('Kész');
     }
 
     body.onclick=event=>{

@@ -323,8 +323,8 @@ test('The Security Centre starts protected and remembers a switch that was turne
 test('The Security Centre is a window, reachable from the tray, the control panel and the prompt',()=>{
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  assert.match(utils,/register\('security'/);
- assert.match(utils,/title:'Windows Biztonsági központ'/);
- assert.match(utils,/security:\{name:'Biztonsági központ'[^}]*XP\.open\('security'\)/);
+ assert.match(utils,/title:t\('Windows Biztonsági központ'\)/);
+ assert.match(utils,/security:\{name:t\('Biztonsági központ'\)[^}]*XP\.open\('security'\)/);
  assert.match(utils,/wscui:'security'/);
  assert.match(readFileSync(new URL('js/apps.js',root),'utf8'),/wscui:'security'/);
  const start=readFileSync(new URL('js/start.js',root),'utf8');
@@ -336,8 +336,8 @@ test('The Security Centre is a window, reachable from the tray, the control pane
 test('Every control panel category leads to applets that exist, in both views',()=>{
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  const block=utils.slice(utils.indexOf('const applets={'),utils.indexOf('let classic='));
- const applets=new Set(Array.from(block.matchAll(/^\s*([a-z]+):\{name:/gm),m=>m[1]));
- const categories=Array.from(block.matchAll(/id:'([a-z]+)',name:'([^']+)'/g),m=>m[1]);
+ const applets=new Set(Array.from(block.matchAll(/^\s*([a-z]+):\{name:t\(/gm),m=>m[1]));
+ const categories=Array.from(block.matchAll(/id:'([a-z]+)',name:t\('([^']+)'\)/g),m=>m[1]);
  assert.ok(applets.size>=12,'the classic view lists the individual applets');
  assert.ok(categories.length>=9,'the category view keeps the original XP categories');
  const items=Array.from(block.matchAll(/items:\[([^\]]+)\]/g)).flatMap(m=>m[1].split(',').map(s=>s.trim().replace(/'/g,'')));
@@ -380,7 +380,7 @@ test('The settings sit where XP kept them, and one Service Pack is claimed every
  const labels=name=>{
   const block=utils.slice(utils.indexOf(name));
   const line=block.slice(block.indexOf('tabs:['));
-  return Array.from(line.slice(0,line.indexOf('\n')).matchAll(/\['[a-z]+','([^']+)'\]/g),m=>m[1]);
+  return Array.from(line.slice(0,line.indexOf('\n')).matchAll(/\['[a-z]+',t\('([^']+)'\)\]/g),m=>m[1]);
  };
  assert.deepEqual(labels('function displayProperties('),['Témák','Asztal','Képernyőkímélő','Megjelenés','Beállítások']);
  assert.deepEqual(labels('function systemProperties('),['Általános','Számítógépnév','Hardver','Speciális','Automatikus frissítések']);
