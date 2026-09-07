@@ -1,0 +1,27 @@
+/* Original Luna resources, at their native 21 × 21 size.
+   Columns: minimize, maximize, restore, close.
+   Rows: normal, hot, pressed, disabled, then those four inactive states. */
+body{--caption-sprite:url('assets/caption/blue.png')}
+body[data-theme=olive]{--caption-sprite:url('assets/caption/olive.png')}
+body[data-theme=silver]{--caption-sprite:url('assets/caption/silver.png')}
+body:not([data-theme=classic]) .window-controls{gap:2px;transform:translateY(1px)}
+body:not([data-theme=classic]) .window .window-controls .window-control{
+  --caption-x:0px;
+  --caption-y:0px;
+  width:21px;height:21px;min-width:21px;flex-shrink:0;
+  margin:0;padding:0;border:0;border-radius:0;box-shadow:none;
+  background:var(--caption-sprite) var(--caption-x) var(--caption-y)/84px 168px no-repeat;
+  filter:none;opacity:1;font-size:0;
+}
+body:not([data-theme=classic]) .window .window-controls .window-control::before,
+body:not([data-theme=classic]) .window .window-controls .window-control::after{content:none}
+body:not([data-theme=classic]) .window .window-controls .maximize{--caption-x:-21px}
+body:not([data-theme=classic]) .window.maximized .window-controls .maximize{--caption-x:-42px}
+body:not([data-theme=classic]) .window .window-controls .close{--caption-x:-63px}
+body:not([data-theme=classic]) .window .window-controls .window-control:hover{--caption-y:-21px}
+body:not([data-theme=classic]) .window .window-controls .window-control:active{--caption-y:-42px}
+body:not([data-theme=classic]) .window .window-controls .window-control:disabled{--caption-y:-63px}
+body:not([data-theme=classic]) .window.inactive .window-controls .window-control{--caption-y:-84px}
+body:not([data-theme=classic]) .window.inactive .window-controls .window-control:hover{--caption-y:-105px}
+body:not([data-theme=classic]) .window.inactive .window-controls .window-control:active{--caption-y:-126px}
+body:not([data-theme=classic]) .window.inactive .window-controls .window-control:disabled{--caption-y:-147px}
