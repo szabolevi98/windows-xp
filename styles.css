@@ -289,3 +289,5 @@ body.no-quick-launch .quick-launch{display:none}
 
 .account-tile.off{opacity:.72}
 .account-tile.off img{filter:grayscale(1)}
+
+.window.parked,.modal-shade.parked{display:none!important}

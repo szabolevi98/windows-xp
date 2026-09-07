@@ -19,6 +19,10 @@
     const input=document.createElement('input');input.type='file';input.accept='audio/*,video/*,.mp3,.wav,.ogg,.m4a,.mp4,.webm';input.multiple=true;input.hidden=true;
     const savePreferences=()=>{state.playerSettings={repeat,shuffle,visual};XP.persist();};
     function stop(){media.pause();media.currentTime=0;sync();}
+    // Somebody else's session should not have to listen to this account's music.
+    let playingWhenParked=false;
+    w.onPark=()=>{playingWhenParked=!media.paused&&!media.ended;media.pause();};
+    w.onUnpark=()=>{if(playingWhenParked)play();};
     async function play(){
       try{await media.play();if(disposed){media.pause();return;}startVisualization();}
       catch{if(!disposed)XP.notify('Windows Media Player','A fájl nem játszható le. Próbálj WAV, MP3, OGG, MP4 vagy WebM fájlt.');}
