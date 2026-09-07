@@ -497,6 +497,16 @@
     "bytes": 44136
   },
   {
+    "file": "sounds/logoff.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Logoff Sound.wav",
+    "bytes": 179704
+  },
+  {
+    "file": "sounds/minimize.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Minimize.wav",
+    "bytes": 22580
+  },
+  {
     "file": "sounds/notify.wav",
     "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Notify.wav",
     "bytes": 48988
@@ -505,6 +515,11 @@
     "file": "sounds/recycle.wav",
     "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Recycle.wav",
     "bytes": 22816
+  },
+  {
+    "file": "sounds/restore.wav",
+    "url": "https://raw.githubusercontent.com/bartekl1/windows-ui-assets/main/Sounds/Windows XP/Windows XP Restore.wav",
+    "bytes": 19458
   },
   {
     "file": "sounds/shutdown.wav",
