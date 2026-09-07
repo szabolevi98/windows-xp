@@ -187,7 +187,7 @@ register('explorer',(initial='computer')=>{
     const children=treeChildren(node.id);
     const open=expanded.has(node.id);
     return `<div class="tree-node" style="padding-left:${depth*15}px">
-      <button class="tree-twist" data-twist="${esc(node.id)}" aria-label="${open?esc(t('Összecsukás')):esc(t('Kibontás'))}">${children.length?(open?'−':'+'):''}</button>
+      <button class="tree-twist" data-twist="${esc(node.id)}" data-open="${open?1:0}" aria-label="${open?esc(t('Összecsukás')):esc(t('Kibontás'))}">${children.length?(open?'−':'+'):''}</button>
       <button class="tree-item ${folder===node.id?'selected':''}" data-folder="${esc(node.id)}">${icon(node.icon)}<span>${esc(node.name)}</span></button>
      </div>${open?children.map(child=>treeNode(child,depth+1)).join(''):''}`;
   }

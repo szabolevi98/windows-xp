@@ -74,6 +74,9 @@ Minden futtatáshoz szükséges fájl az `assets` mappában van. A CSP tiltja a 
 
 - `index.html`: alkalmazásváz és betöltési képernyők.
 - `styles.css`: klasszikus Luna felület és programok.
+- `caption-controls.css`, `tray-controls.css`, `scrollbar-controls.css`, `controls.css`:
+  a felület azon részei, amelyek az eredeti `luna.msstyles` bitképeit használják.
+  A klasszikus téma ezeket nem használja.
 - `js/core.js`: ablakkezelés, menük, párbeszédablakok, mentés, fájlműveletek.
 - `js/internet.js`: Internet Explorer, kereső és helyi web.
 - `js/web-pages.js` és `web-pages.css`: interaktív bemutatóoldalak és mentésük.
@@ -88,11 +91,22 @@ Minden futtatáshoz szükséges fájl az `assets` mappában van. A CSP tiltja a 
 - `js/compmgmt.js` és `compmgmt.css`: Számítógép-kezelés (a Sajátgép „Kezelés” menüpontja).
 - `js/desktop-grid.js`: ikonrács, foglalt helyek kezelése és átrendezés.
 - `js/start.js`: asztal, Start menü és munkamenet.
+- `tools/luna/`: a Luna témából képeket kibontó szkriptek. A szimulátor futtatásához
+  nem kell, a kibontott képek a repóban vannak. Részletek: `tools/luna/README.md`.
 
 ## Képek és hangok forrása
 
 Eredeti XP-s képi és hangelemeket töltöttünk le; nincs generált helyettesítő háttérkép vagy ikon. A források fájlonként az `assets/sources.json` fájlban szerepelnek.
 
+- [Windows XP `luna.msstyles`](https://github.com/robberphex/docker-wine-coolq/blob/master/luna.msstyles):
+  az eredeti Luna téma. Innen származnak a címsorgombok, a tálca rejtett ikonjait nyitó nyíl,
+  a görgetősávok és a közös vezérlők mind a három színsémában, natív méretben, újrarajzolás
+  nélkül. A nyújtás a témafájl saját `SizingMargins` értékeit követi. A témából
+  kibontottunk további részeket is – a címsort és a keretet, a Start gombot, a tálcát
+  és a Start menü paneljeit (`assets/frame/`, `assets/taskbar/`, `assets/start/`) –,
+  ezeket egyelőre nem használja stíluslap, de a repóban maradnak, hogy ne kelljen
+  újra kinyerni őket. Melyik van használatban, azt a `sources.json` `note` mezője és a
+  mappák `NOTICE.md` fájljai mondják meg.
 - [Windows UI assets – bartekl1](https://github.com/bartekl1/windows-ui-assets): eredeti Windows XP hátterek, hangok, egérmutatók (.cur), Lomtár-ikon.
 - [winXP – ShizukuIchi](https://github.com/ShizukuIchi/winXP): XP programikonok, eszköztárikonok és Aknakereső-elemek.
 - [Google régi logó](https://www.google.com/intl/en_ALL/images/logo.gif).

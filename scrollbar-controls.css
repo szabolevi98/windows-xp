@@ -1,0 +1,152 @@
+/* Original Luna scrollbars at their native 17px width.
+   The arrow sheet runs normal, hot, pressed, disabled across, and up, down, left,
+   right down. Luna paints a thumb in three pieces, so CSS does too: the two 5px
+   caps keep their pixels in a border-image, the middle stretches as a background
+   sized to the padding box, and the gripper rides centred on top. */
+body{
+  --sb-sprite:url('assets/scrollbar/blue/sprite.png');
+  --sb-track-v:url('assets/scrollbar/blue/track-v.png');
+  --sb-track-h:url('assets/scrollbar/blue/track-h.png');
+  --sb-grip-v:url('assets/scrollbar/blue/gripper-v.png');
+  --sb-grip-h:url('assets/scrollbar/blue/gripper-h.png');
+  --sb-mid-v:url('assets/scrollbar/blue/mid-v.png');
+  --sb-mid-h:url('assets/scrollbar/blue/mid-h.png');
+  --sb-cap-v:url('assets/scrollbar/blue/thumb-v-normal.png');
+  --sb-cap-v-hot:url('assets/scrollbar/blue/thumb-v-hot.png');
+  --sb-cap-v-pressed:url('assets/scrollbar/blue/thumb-v-pressed.png');
+  --sb-cap-h:url('assets/scrollbar/blue/thumb-h-normal.png');
+  --sb-cap-h-hot:url('assets/scrollbar/blue/thumb-h-hot.png');
+  --sb-cap-h-pressed:url('assets/scrollbar/blue/thumb-h-pressed.png');
+}
+body[data-theme=olive]{
+  --sb-sprite:url('assets/scrollbar/olive/sprite.png');
+  --sb-track-v:url('assets/scrollbar/olive/track-v.png');
+  --sb-track-h:url('assets/scrollbar/olive/track-h.png');
+  --sb-grip-v:url('assets/scrollbar/olive/gripper-v.png');
+  --sb-grip-h:url('assets/scrollbar/olive/gripper-h.png');
+  --sb-mid-v:url('assets/scrollbar/olive/mid-v.png');
+  --sb-mid-h:url('assets/scrollbar/olive/mid-h.png');
+  --sb-cap-v:url('assets/scrollbar/olive/thumb-v-normal.png');
+  --sb-cap-v-hot:url('assets/scrollbar/olive/thumb-v-hot.png');
+  --sb-cap-v-pressed:url('assets/scrollbar/olive/thumb-v-pressed.png');
+  --sb-cap-h:url('assets/scrollbar/olive/thumb-h-normal.png');
+  --sb-cap-h-hot:url('assets/scrollbar/olive/thumb-h-hot.png');
+  --sb-cap-h-pressed:url('assets/scrollbar/olive/thumb-h-pressed.png');
+}
+body[data-theme=silver]{
+  --sb-sprite:url('assets/scrollbar/silver/sprite.png');
+  --sb-track-v:url('assets/scrollbar/silver/track-v.png');
+  --sb-track-h:url('assets/scrollbar/silver/track-h.png');
+  --sb-grip-v:url('assets/scrollbar/silver/gripper-v.png');
+  --sb-grip-h:url('assets/scrollbar/silver/gripper-h.png');
+  --sb-mid-v:url('assets/scrollbar/silver/mid-v.png');
+  --sb-mid-h:url('assets/scrollbar/silver/mid-h.png');
+  --sb-cap-v:url('assets/scrollbar/silver/thumb-v-normal.png');
+  --sb-cap-v-hot:url('assets/scrollbar/silver/thumb-v-hot.png');
+  --sb-cap-v-pressed:url('assets/scrollbar/silver/thumb-v-pressed.png');
+  --sb-cap-h:url('assets/scrollbar/silver/thumb-h-normal.png');
+  --sb-cap-h-hot:url('assets/scrollbar/silver/thumb-h-hot.png');
+  --sb-cap-h-pressed:url('assets/scrollbar/silver/thumb-h-pressed.png');
+}
+
+body:not([data-theme=classic]) ::-webkit-scrollbar{width:17px;height:17px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-track:vertical{background:var(--sb-track-v) repeat-y}
+body:not([data-theme=classic]) ::-webkit-scrollbar-track:horizontal{background:var(--sb-track-h) repeat-x}
+body:not([data-theme=classic]) ::-webkit-scrollbar-corner{background:var(--sb-track-v) repeat}
+
+/* XP puts one arrow at each end, never the doubled pair Chrome offers. */
+body:not([data-theme=classic]) ::-webkit-scrollbar-button{
+  display:block;width:17px;height:17px;background:var(--sb-sprite) no-repeat;
+}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:start:increment,
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:end:decrement,
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:start:increment,
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:end:decrement{display:none}
+
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:decrement{background-position:0 0}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:decrement:hover{background-position:-17px 0}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:decrement:active{background-position:-34px 0}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:increment{background-position:0 -17px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:increment:hover{background-position:-17px -17px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:vertical:increment:active{background-position:-34px -17px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:decrement{background-position:0 -34px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:decrement:hover{background-position:-17px -34px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:decrement:active{background-position:-34px -34px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:increment{background-position:0 -51px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:increment:hover{background-position:-17px -51px}
+body:not([data-theme=classic]) ::-webkit-scrollbar-button:horizontal:increment:active{background-position:-34px -51px}
+
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb{
+  border-style:solid;border-color:transparent;
+  border-image-repeat:stretch;
+  background-repeat:no-repeat;
+  background-origin:padding-box;background-clip:padding-box;
+}
+/* The middle sheet holds the three states side by side, so a 300% width makes one
+   state exactly as wide as the thumb and the offsets land on 0%, 50% and 100%. */
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb:vertical{
+  border-width:5px 0;
+  border-image-slice:5 0;
+  border-image-source:var(--sb-cap-v);
+  background-image:var(--sb-grip-v),var(--sb-mid-v);
+  background-size:auto,300% 100%;
+  background-position:0 center,0% 0;
+}
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb:vertical:hover{
+  border-image-source:var(--sb-cap-v-hot);
+  background-position:-17px center,50% 0;
+}
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb:vertical:active{
+  border-image-source:var(--sb-cap-v-pressed);
+  background-position:-34px center,100% 0;
+}
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb:horizontal{
+  border-width:0 5px;
+  border-image-slice:0 5;
+  border-image-source:var(--sb-cap-h);
+  background-image:var(--sb-grip-h),var(--sb-mid-h);
+  background-size:auto,100% 300%;
+  background-position:center 0,0 0%;
+}
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb:horizontal:hover{
+  border-image-source:var(--sb-cap-h-hot);
+  background-position:center -17px,0 50%;
+}
+body:not([data-theme=classic]) ::-webkit-scrollbar-thumb:horizontal:active{
+  border-image-source:var(--sb-cap-h-pressed);
+  background-position:center -34px,0 100%;
+}
+
+/* Firefox has no scrollbar parts to paint; Chrome never reaches this block. */
+@supports not selector(::-webkit-scrollbar){
+  body:not([data-theme=classic]){scrollbar-color:#c6d5fd #f1f5fe}
+  body[data-theme=silver]{scrollbar-color:#cfd0da #f4f4f7}
+  body[data-theme=olive]{scrollbar-color:#c8d6a2 #f3f5ec}
+}
+
+/* The classic theme predates Luna, so it has no bitmap to borrow. It is drawn the
+   same way the rest of the classic chrome in this project is drawn: a dithered
+   track and buttons with the raised Windows 95 edge. */
+body[data-theme=classic] ::-webkit-scrollbar{width:16px;height:16px}
+body[data-theme=classic] ::-webkit-scrollbar-track,
+body[data-theme=classic] ::-webkit-scrollbar-corner{
+  background-color:#d4d0c8;
+  background-image:linear-gradient(45deg,#fff 25%,#0000 25% 75%,#fff 75%),linear-gradient(45deg,#fff 25%,#0000 25% 75%,#fff 75%);
+  background-size:2px 2px;background-position:0 0,1px 1px;
+}
+body[data-theme=classic] ::-webkit-scrollbar-thumb,
+body[data-theme=classic] ::-webkit-scrollbar-button{
+  background-color:#d4d0c8;background-repeat:no-repeat;background-position:center;
+  border:1px solid;border-color:#fff #000 #000 #fff;
+  box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf;
+}
+body[data-theme=classic] ::-webkit-scrollbar-button{display:block;width:16px;height:16px}
+body[data-theme=classic] ::-webkit-scrollbar-button:vertical:start:increment,
+body[data-theme=classic] ::-webkit-scrollbar-button:vertical:end:decrement,
+body[data-theme=classic] ::-webkit-scrollbar-button:horizontal:start:increment,
+body[data-theme=classic] ::-webkit-scrollbar-button:horizontal:end:decrement{display:none}
+body[data-theme=classic] ::-webkit-scrollbar-button:active{border-color:#000 #fff #fff #000;box-shadow:inset 1px 1px #808080}
+body[data-theme=classic] ::-webkit-scrollbar-button:vertical:decrement{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M3 0 6 4 0 4Z'/%3E%3C/svg%3E")}
+body[data-theme=classic] ::-webkit-scrollbar-button:vertical:increment{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0 6 0 3 4Z'/%3E%3C/svg%3E")}
+body[data-theme=classic] ::-webkit-scrollbar-button:horizontal:decrement{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7'%3E%3Cpath d='M0 3 4 0 4 6Z'/%3E%3C/svg%3E")}
+body[data-theme=classic] ::-webkit-scrollbar-button:horizontal:increment{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7'%3E%3Cpath d='M0 0 4 3 0 6Z'/%3E%3C/svg%3E")}
