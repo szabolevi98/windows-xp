@@ -96,6 +96,12 @@
     "note": "Az eredeti 48×48-as BMP PNG-ként mentve."
   },
   {
+    "file": "avatars/guest.png",
+    "url": "https://archive.org/download/windows-xp-user-account-pictures/guest%20XP.bmp",
+    "bytes": 4026,
+    "note": "Az eredeti 48×48-as BMP PNG-ként mentve. A Vendég fiók állandó képe."
+  },
+  {
     "file": "avatars/guitar.png",
     "url": "https://archive.org/download/windows-xp-user-account-pictures/guitar.bmp",
     "bytes": 4204,
