@@ -1362,4 +1362,49 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
   'Windows XP / Rendszerhangok': 'Windows XP / Systemsounds',
   'Helyi web': 'Lokales Web',
   '{count} helyi oldal vár felfedezésre. A keresőben címre, témára és kulcsszóra is kereshetsz.': '{count} lokale Seiten warten darauf, entdeckt zu werden. Die Suche berücksichtigt Titel, Themen und Stichwörter.',
+
+  // --- Parancssor, naptár, keresés ---
+  '„{text}” nem található.': '"{text}" wurde nicht gefunden.',
+  '\nPingelés: {host} [127.0.0.1] 32 bájt adattal:\n\n': '\nPing wird ausgeführt für {host} [127.0.0.1] mit 32 Bytes Daten:\n\n',
+  'Válasz 127.0.0.1: bájt=32 idő<1 ms TTL=128': 'Antwort von 127.0.0.1: Bytes=32 Zeit<1ms TTL=128',
+  '\n\n127.0.0.1 ping-statisztikája:\n    Csomagok: küldve = 4, fogadva = 4, elveszett = 0 (0% veszteség),\nAz oda-vissza út ideje ezredmásodpercben:\n    Minimum = 0 ms, Maximum = 0 ms, Átlag = 0 ms': '\n\nPing-Statistik für 127.0.0.1:\n    Pakete: Gesendet = 4, Empfangen = 4, Verloren = 0 (0% Verlust),\nCa. Zeitangaben in Millisek.:\n    Minimum = 0ms, Maximum = 0ms, Mittelwert = 0ms',
+  '\'{command}\' nem ismerhető fel belső vagy külső parancsként.\nA parancsok listájához írd be: help': '"{command}" ist entweder falsch geschrieben oder konnte nicht gefunden werden.\nGeben Sie help ein, um die Befehle zu sehen.',
+  'H': 'Mo',
+  'K': 'Di',
+  'P': 'Fr',
+  'V': 'So',
+  'Fájlkeresés': 'Nach Dateien suchen',
+  'Fájlnév vagy szövegrészlet': 'Dateiname oder ein Wort in der Datei',
+  '{count} találat': '{count} Ergebnisse',
+  'Vissza a Netkapuhoz': 'Zurück zum Netkapu',
+
+  // --- Képernyőolvasós feliratok ---
+  'Ecsetvastagság': 'Pinselbreite',
+  'Paint rajzvászon': 'Paint-Zeichenfläche',
+  'Szín {name}': 'Farbe {name}',
+  'Egyéni szín': 'Benutzerdefinierte Farbe',
+  'Parancs': 'Befehl',
+  'Internet Explorer címsor': 'Internet Explorer-Adressleiste',
+  'Zöld domb a kék ég alatt': 'Ein grüner Hügel unter blauem Himmel',
+  'Azul: tengerpart és pálmafa': 'Azul: Strand und Palme',
+  'Időjárás: város': 'Wetter: Ort',
+  'Indulási állomás': 'Abfahrtsbahnhof',
+  'Utazás napja': 'Reisetag',
+  'valaki@netkapu.hu': 'jemand@netkapu.hu',
+  'Üzenet szövege': 'Nachrichtentext',
+  'Media Player nézetek': 'Media Player-Ansichten',
+  'Zenei vizualizáció': 'Musikvisualisierung',
+  'Keresés a médiatárban': 'Medienbibliothek durchsuchen',
+  '{row}. sor {col}. oszlop, {state}': 'Zeile {row}, Spalte {col}, {state}',
+  'akna': 'Mine',
+  '{count} szomszédos akna': '{count} benachbarte Minen',
+  'Akna': 'Mine',
+  'Osztás a pakliból, {count} osztás maradt': 'Vom Stapel geben, noch {count} Runden',
+  'A te lapjaid': 'Ihre Karten',
+
+  // --- Jegyzettömb állapotsora ---
+  '{row}. sor, {col}. oszlop': 'Zeile {row}, Spalte {col}',
+
+  // --- Kötőszó a webkatalógusban ---
+  'vagy': 'oder',
 }});

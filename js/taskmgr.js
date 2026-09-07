@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-  const {$,$$,esc,icon,state,t}=XP;
+  const {$,$$,esc,icon,state,t,locale}=XP;
   // The image name each program would run under on a real machine.
   const EXE={notepad:'notepad.exe',paint:'mspaint.exe',calculator:'calc.exe',cmd:'cmd.exe',ie:'iexplore.exe',
     outlook:'msimn.exe',player:'wmplayer.exe',explorer:'explorer.exe',mines:'winmine.exe',solitaire:'sol.exe',
@@ -76,12 +76,12 @@
       if(tab==='processes'){
         panel.innerHTML=`<table class="taskmgr-table processes"><thead><tr><th>${esc(t('Képfájlnév'))}</th><th>${esc(t('Felhasználónév'))}</th><th>CPU</th><th>${esc(t('Memóriahasználat'))}</th></tr></thead><tbody>${list.map((process,index)=>{
           const share=process.name==='System Idle Process'?100-cpu:process.app?Math.max(0,Math.round(cpu/Math.max(1,running.length))):0;
-          return `<tr class="${index===selectedProcess?'selected':''}" data-process="${index}"><td>${esc(process.name)}</td><td>${esc(process.user)}</td><td>${String(share).padStart(2,'0')}</td><td>${process.memory.toLocaleString('hu-HU')} KB</td></tr>`;
+          return `<tr class="${index===selectedProcess?'selected':''}" data-process="${index}"><td>${esc(process.name)}</td><td>${esc(process.user)}</td><td>${String(share).padStart(2,'0')}</td><td>${process.memory.toLocaleString(locale())} KB</td></tr>`;
         }).join('')}</tbody></table>`;
         buttons.innerHTML=`<button class="xp-button" data-do="kill">${esc(t('Folyamat leállítása'))}</button>`;
       }
       if(tab==='performance'){
-        panel.innerHTML=`<div class="taskmgr-meters"><div><h3>${esc(t('CPU-használat'))}</h3><div class="meter-box"><b>${cpu}%</b></div></div><div class="taskmgr-graph"><h3>${esc(t('CPU-használat előzményei'))}</h3><canvas class="cpu-graph"></canvas></div></div><dl class="taskmgr-facts"><dt>${esc(t('Leírók'))}</dt><dd>${8214+list.length*37}</dd><dt>${esc(t('Szálak'))}</dt><dd>${312+list.length*9}</dd><dt>${esc(t('Folyamatok'))}</dt><dd>${list.length}</dd><dt>${esc(t('Fizikai memória összesen'))}</dt><dd>523 760 KB</dd><dt>${esc(t('Fizikai memória szabad'))}</dt><dd>${(268400-list.length*1800).toLocaleString('hu-HU')} KB</dd><dt>${esc(t('Véglegesített memória'))}</dt><dd>${(146200+list.length*2400).toLocaleString('hu-HU')} KB</dd></dl>`;
+        panel.innerHTML=`<div class="taskmgr-meters"><div><h3>${esc(t('CPU-használat'))}</h3><div class="meter-box"><b>${cpu}%</b></div></div><div class="taskmgr-graph"><h3>${esc(t('CPU-használat előzményei'))}</h3><canvas class="cpu-graph"></canvas></div></div><dl class="taskmgr-facts"><dt>${esc(t('Leírók'))}</dt><dd>${8214+list.length*37}</dd><dt>${esc(t('Szálak'))}</dt><dd>${312+list.length*9}</dd><dt>${esc(t('Folyamatok'))}</dt><dd>${list.length}</dd><dt>${esc(t('Fizikai memória összesen'))}</dt><dd>523 760 KB</dd><dt>${esc(t('Fizikai memória szabad'))}</dt><dd>${(268400-list.length*1800).toLocaleString(locale())} KB</dd><dt>${esc(t('Véglegesített memória'))}</dt><dd>${(146200+list.length*2400).toLocaleString(locale())} KB</dd></dl>`;
         graph($('.cpu-graph',panel),history,'#26ff5c');
         buttons.innerHTML='';
       }

@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-const {$,$$,esc,icon,state,register,createWindow,menubar,status,persist,notify,fileName,t}=XP;
+const {$,$$,esc,icon,state,register,createWindow,menubar,status,persist,notify,fileName,t,locale}=XP;
 
 // These entries belong to the simulated drive, never to the user's saved files.
 function systemDrive(){
@@ -155,8 +155,8 @@ register('explorer',(initial='computer')=>{
   const TYPES={folder:t('Fájlmappa'),text:t('Szöveges dokumentum'),image:t('Kép'),shortcut:t('Parancsikon')};
   const typeName=file=>TYPES[file.type]||t('Fájl');
   const sizeOf=file=>file.type==='folder'?null:Math.max(1,Math.ceil((file.content||'').length/1024));
-  const sizeText=file=>{const size=sizeOf(file);return size===null?'':`${size.toLocaleString('hu-HU')} KB`;};
-  const dateText=file=>file.modified?new Date(file.modified).toLocaleString('hu-HU',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+  const sizeText=file=>{const size=sizeOf(file);return size===null?'':`${size.toLocaleString(locale())} KB`;};
+  const dateText=file=>file.modified?new Date(file.modified).toLocaleString(locale(),{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
   const columns=file=>`<span class="col-size">${sizeText(file)}</span><span class="col-type">${esc(typeName(file))}</span><span class="col-date">${esc(dateText(file))}</span>`;
   // Clicking a column header sorts by it, and clicking it again turns the order around.
   const compare=(a,b)=>{
@@ -198,7 +198,7 @@ register('explorer',(initial='computer')=>{
     $('[data-action=back]',toolbar).disabled=!backStack.length;$('[data-action=forward]',toolbar).disabled=!forwardStack.length;
     $('[data-action=up]',toolbar).disabled=folder==='computer';$('[data-action=tree]',toolbar).classList.toggle('pressed',showTree);
     const actions=readOnly()?`<button data-side="system">${icon('computer')} ${esc(t('A számítógép adatainak megjelenítése'))}</button><button data-side="control">${icon('control')} ${esc(t('Vezérlőpult'))}</button>`:folder==='recycle'?`<button data-side="empty">${icon('recycle')} ${esc(t('Lomtár ürítése'))}</button><button data-side="restore" ${!selectedFile()?'disabled':''}>${icon('back')} ${esc(t('Kijelölt elem visszaállítása'))}</button>`:`<button data-side="new">${icon('folder')} ${esc(t('Új mappa létrehozása'))}</button><button data-side="notepad">${icon('notepad')} ${esc(t('Új dokumentum'))}</button>${canEdit()?`<button data-side="rename">${icon('documents')} ${esc(t('Elem átnevezése'))}</button><button data-side="delete">${icon('recycle')} ${esc(t('Elem törlése'))}</button>`:''}`;
-    if(showTree){sidebar.innerHTML=treeMarkup();sidebar.classList.add('tree-mode');}else{sidebar.classList.remove('tree-mode');sidebar.innerHTML=`<section class="explorer-panel"><h3>${readOnly()?t('Rendszerfeladatok'):folder==='recycle'?t('Lomtár-műveletek'):t('Fájl- és mappaműveletek')}</h3><div>${actions}</div></section><section class="explorer-panel"><h3>${esc(t('Egyéb helyek'))}</h3><div>${['computer','documents','pictures','music','recycle'].filter(f=>f!==folder).map(f=>`<button data-folder="${f}">${icon(folders[f].icon)} ${esc(t(folders[f].name))}</button>`).join('')}<button data-side="control">${icon('control')} ${esc(t('Vezérlőpult'))}</button></div></section><section class="explorer-panel"><h3>${esc(t('Részletek'))}</h3><div><b>${esc(details?t(details.name):t(info.name))}</b><p>${details?`${entryType(details)}${details.modified?`<br>${esc(t('Módosítva'))}: ${new Date(details.modified).toLocaleDateString('hu-HU')}`:''}`:readOnly()?t('Rendszermappa'):t('Itt találod a saját fájljaidat és mappáidat.')}${(details?.readOnly||readOnly())?`<br>${esc(t('Attribútumok: Csak olvasható'))}`:''}</p></div></section>`;}
+    if(showTree){sidebar.innerHTML=treeMarkup();sidebar.classList.add('tree-mode');}else{sidebar.classList.remove('tree-mode');sidebar.innerHTML=`<section class="explorer-panel"><h3>${readOnly()?t('Rendszerfeladatok'):folder==='recycle'?t('Lomtár-műveletek'):t('Fájl- és mappaműveletek')}</h3><div>${actions}</div></section><section class="explorer-panel"><h3>${esc(t('Egyéb helyek'))}</h3><div>${['computer','documents','pictures','music','recycle'].filter(f=>f!==folder).map(f=>`<button data-folder="${f}">${icon(folders[f].icon)} ${esc(t(folders[f].name))}</button>`).join('')}<button data-side="control">${icon('control')} ${esc(t('Vezérlőpult'))}</button></div></section><section class="explorer-panel"><h3>${esc(t('Részletek'))}</h3><div><b>${esc(details?t(details.name):t(info.name))}</b><p>${details?`${entryType(details)}${details.modified?`<br>${esc(t('Módosítva'))}: ${new Date(details.modified).toLocaleDateString(locale())}`:''}`:readOnly()?t('Rendszermappa'):t('Itt találod a saját fájljaidat és mappáidat.')}${(details?.readOnly||readOnly())?`<br>${esc(t('Attribútumok: Csak olvasható'))}`:''}</p></div></section>`;}
     if(keepFiles)return;
     if(!readOnly()&&(folder==='recycle'||['documents','pictures'].includes(folder)||!!savedFile(folder)))filesEl.dataset.dropFolder=folder;
     else delete filesEl.dataset.dropFolder;
