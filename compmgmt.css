@@ -1,0 +1,18 @@
+.mmc{flex:1;display:flex;min-height:0;background:#fff}
+.mmc-tree{width:230px;flex:none;overflow:auto;padding:4px 2px;border-right:1px solid #aca899;background:#fff}
+.mmc-node{display:flex;align-items:center;gap:2px;min-height:19px}
+.mmc-twist{width:13px;height:13px;flex:none;background:#fff;color:#333;font:11px/9px Tahoma,sans-serif;padding:0}
+.mmc-node .mmc-twist:not(:empty){border:1px solid #808080}
+.mmc-item{display:flex;align-items:center;gap:5px;background:none;padding:1px 4px;text-align:left;min-width:0;color:#111}
+.mmc-item img{width:16px;height:16px}
+.mmc-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mmc-item.selected{background:#316ac5;color:#fff}
+.mmc-pane{flex:1;min-width:0;overflow:auto;padding:0 0 8px}
+.mmc-heading{display:flex;align-items:center;gap:7px;padding:5px 8px;font-weight:bold;color:#333;background:#ece9d8;border-bottom:1px solid #aca899;position:sticky;top:0;z-index:1}
+.mmc-heading img{width:16px;height:16px}
+.mmc-table{width:100%;border-collapse:collapse;font:11px Tahoma,sans-serif}
+.mmc-table th{position:sticky;top:27px;background:linear-gradient(#fff,#e7ecf5);border:1px solid #c3cdde;border-top:0;padding:3px 6px;text-align:left;font-weight:normal;color:#333;white-space:nowrap}
+.mmc-table td{padding:2px 6px;border-bottom:1px solid #eef1f6;white-space:nowrap}
+.mmc-table td img{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+.mmc-table tr:hover td{background:#eef4fd}
+.mmc-note{margin:0;padding:14px;color:#555}
