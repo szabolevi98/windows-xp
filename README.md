@@ -13,7 +13,7 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 ## Használat
 
 - XP betöltés, bejelentkezés a névre kattintva, üdvözlés, kijelentkezés, felhasználóváltás, készenlét, kikapcsolás, újraindítás.
-- Adminisztrátor és Vendég fiók. A Vendég a Felhasználói fiókokban kapcsolható be, utána megjelenik a bejelentkezési képernyőn. Minden fiók saját asztalt, dokumentumokat, hátteret, kedvenceket és beállításokat kap; a gép neve, a biztonsági központ és maga a Vendég fiók állapota közös. A Vendég csak a saját képét módosíthatja.
+- Adminisztrátor és Vendég fiók. A Vendég alapból be van kapcsolva, és a Felhasználói fiókokban ki is kapcsolható. Minden fiók saját asztalt, dokumentumokat, hátteret, kedvenceket és beállításokat kap; a gép neve, a biztonsági központ és maga a Vendég fiók állapota közös. A Vendég csak a saját képét módosíthatja.
 - Rácsra igazodó asztali ikonok, ütközéskor helycsere. A Lomtár alapból jobb alul jelenik meg, szabadon áthelyezhető, és megjegyzi a helyét.
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
