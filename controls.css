@@ -1,0 +1,305 @@
+/* Original Luna common controls: buttons, boxes, tabs, toolbars, sliders,
+   status bars and the Explorer task pane. */
+body{
+  --ct-button-default:url('assets/controls/blue/button-default.png');
+  --ct-button-disabled:url('assets/controls/blue/button-disabled.png');
+  --ct-button-hot:url('assets/controls/blue/button-hot.png');
+  --ct-button-normal:url('assets/controls/blue/button-normal.png');
+  --ct-button-pressed:url('assets/controls/blue/button-pressed.png');
+  --ct-checkbox:url('assets/controls/blue/checkbox.png');
+  --ct-combo-disabled:url('assets/controls/blue/combo-disabled.png');
+  --ct-combo-hot:url('assets/controls/blue/combo-hot.png');
+  --ct-combo-normal:url('assets/controls/blue/combo-normal.png');
+  --ct-header-hot:url('assets/controls/blue/header-hot.png');
+  --ct-header-normal:url('assets/controls/blue/header-normal.png');
+  --ct-header-pressed:url('assets/controls/blue/header-pressed.png');
+  --ct-progress-chunk:url('assets/controls/blue/progress-chunk.png');
+  --ct-progress-track:url('assets/controls/blue/progress-track.png');
+  --ct-radio:url('assets/controls/blue/radio.png');
+  --ct-resize-grip:url('assets/controls/blue/resize-grip.png');
+  --ct-slider-thumb-disabled:url('assets/controls/blue/slider-thumb-disabled.png');
+  --ct-slider-thumb-hot:url('assets/controls/blue/slider-thumb-hot.png');
+  --ct-slider-thumb-normal:url('assets/controls/blue/slider-thumb-normal.png');
+  --ct-slider-thumb-pressed:url('assets/controls/blue/slider-thumb-pressed.png');
+  --ct-slider-thumb-v-normal:url('assets/controls/blue/slider-thumb-v-normal.png');
+  --ct-slider-track:url('assets/controls/blue/slider-track.png');
+  --ct-spin-down-normal:url('assets/controls/blue/spin-down-normal.png');
+  --ct-spin-up-normal:url('assets/controls/blue/spin-up-normal.png');
+  --ct-status:url('assets/controls/blue/status.png');
+  --ct-status-pane:url('assets/controls/blue/status-pane.png');
+  --ct-tab-hot:url('assets/controls/blue/tab-hot.png');
+  --ct-tab-normal:url('assets/controls/blue/tab-normal.png');
+  --ct-tab-pane:url('assets/controls/blue/tab-pane.png');
+  --ct-balloon-close:url('assets/controls/blue/balloon-close.png');
+  --ct-tab-selected:url('assets/controls/blue/tab-selected.png');
+  --ct-toolbar-hot:url('assets/controls/blue/toolbar-hot.png');
+  --ct-toolbar-pressed:url('assets/controls/blue/toolbar-pressed.png');
+  --ct-tree-glyph:url('assets/controls/blue/tree-glyph.png');
+}
+body[data-theme=olive]{
+  --ct-button-default:url('assets/controls/olive/button-default.png');
+  --ct-button-disabled:url('assets/controls/olive/button-disabled.png');
+  --ct-button-hot:url('assets/controls/olive/button-hot.png');
+  --ct-button-normal:url('assets/controls/olive/button-normal.png');
+  --ct-button-pressed:url('assets/controls/olive/button-pressed.png');
+  --ct-checkbox:url('assets/controls/olive/checkbox.png');
+  --ct-combo-disabled:url('assets/controls/olive/combo-disabled.png');
+  --ct-combo-hot:url('assets/controls/olive/combo-hot.png');
+  --ct-combo-normal:url('assets/controls/olive/combo-normal.png');
+  --ct-header-hot:url('assets/controls/olive/header-hot.png');
+  --ct-header-normal:url('assets/controls/olive/header-normal.png');
+  --ct-header-pressed:url('assets/controls/olive/header-pressed.png');
+  --ct-progress-chunk:url('assets/controls/olive/progress-chunk.png');
+  --ct-progress-track:url('assets/controls/olive/progress-track.png');
+  --ct-radio:url('assets/controls/olive/radio.png');
+  --ct-resize-grip:url('assets/controls/olive/resize-grip.png');
+  --ct-slider-thumb-disabled:url('assets/controls/olive/slider-thumb-disabled.png');
+  --ct-slider-thumb-hot:url('assets/controls/olive/slider-thumb-hot.png');
+  --ct-slider-thumb-normal:url('assets/controls/olive/slider-thumb-normal.png');
+  --ct-slider-thumb-pressed:url('assets/controls/olive/slider-thumb-pressed.png');
+  --ct-slider-thumb-v-normal:url('assets/controls/olive/slider-thumb-v-normal.png');
+  --ct-slider-track:url('assets/controls/olive/slider-track.png');
+  --ct-spin-down-normal:url('assets/controls/olive/spin-down-normal.png');
+  --ct-spin-up-normal:url('assets/controls/olive/spin-up-normal.png');
+  --ct-status:url('assets/controls/olive/status.png');
+  --ct-status-pane:url('assets/controls/olive/status-pane.png');
+  --ct-tab-hot:url('assets/controls/olive/tab-hot.png');
+  --ct-tab-normal:url('assets/controls/olive/tab-normal.png');
+  --ct-tab-pane:url('assets/controls/olive/tab-pane.png');
+  --ct-balloon-close:url('assets/controls/olive/balloon-close.png');
+  --ct-tab-selected:url('assets/controls/olive/tab-selected.png');
+  --ct-toolbar-hot:url('assets/controls/olive/toolbar-hot.png');
+  --ct-toolbar-pressed:url('assets/controls/olive/toolbar-pressed.png');
+  --ct-tree-glyph:url('assets/controls/olive/tree-glyph.png');
+}
+body[data-theme=silver]{
+  --ct-button-default:url('assets/controls/silver/button-default.png');
+  --ct-button-disabled:url('assets/controls/silver/button-disabled.png');
+  --ct-button-hot:url('assets/controls/silver/button-hot.png');
+  --ct-button-normal:url('assets/controls/silver/button-normal.png');
+  --ct-button-pressed:url('assets/controls/silver/button-pressed.png');
+  --ct-checkbox:url('assets/controls/silver/checkbox.png');
+  --ct-combo-disabled:url('assets/controls/silver/combo-disabled.png');
+  --ct-combo-hot:url('assets/controls/silver/combo-hot.png');
+  --ct-combo-normal:url('assets/controls/silver/combo-normal.png');
+  --ct-header-hot:url('assets/controls/silver/header-hot.png');
+  --ct-header-normal:url('assets/controls/silver/header-normal.png');
+  --ct-header-pressed:url('assets/controls/silver/header-pressed.png');
+  --ct-progress-chunk:url('assets/controls/silver/progress-chunk.png');
+  --ct-progress-track:url('assets/controls/silver/progress-track.png');
+  --ct-radio:url('assets/controls/silver/radio.png');
+  --ct-resize-grip:url('assets/controls/silver/resize-grip.png');
+  --ct-slider-thumb-disabled:url('assets/controls/silver/slider-thumb-disabled.png');
+  --ct-slider-thumb-hot:url('assets/controls/silver/slider-thumb-hot.png');
+  --ct-slider-thumb-normal:url('assets/controls/silver/slider-thumb-normal.png');
+  --ct-slider-thumb-pressed:url('assets/controls/silver/slider-thumb-pressed.png');
+  --ct-slider-thumb-v-normal:url('assets/controls/silver/slider-thumb-v-normal.png');
+  --ct-slider-track:url('assets/controls/silver/slider-track.png');
+  --ct-spin-down-normal:url('assets/controls/silver/spin-down-normal.png');
+  --ct-spin-up-normal:url('assets/controls/silver/spin-up-normal.png');
+  --ct-status:url('assets/controls/silver/status.png');
+  --ct-status-pane:url('assets/controls/silver/status-pane.png');
+  --ct-tab-hot:url('assets/controls/silver/tab-hot.png');
+  --ct-tab-normal:url('assets/controls/silver/tab-normal.png');
+  --ct-tab-pane:url('assets/controls/silver/tab-pane.png');
+  --ct-balloon-close:url('assets/controls/silver/balloon-close.png');
+  --ct-tab-selected:url('assets/controls/silver/tab-selected.png');
+  --ct-toolbar-hot:url('assets/controls/silver/toolbar-hot.png');
+  --ct-toolbar-pressed:url('assets/controls/silver/toolbar-pressed.png');
+  --ct-tree-glyph:url('assets/controls/silver/tree-glyph.png');
+}
+
+/* Every nine-slice below carries the SizingMargins its theme ini entry records,
+   written for CSS as top/right/bottom/left, with border-width left at 0 so the
+   artwork paints over the padding box without moving any content. */
+
+/* Push button: SizingMargins 8, 8, 9, 9. */
+body:not([data-theme=classic]) .xp-button{
+  background:none;border:0;border-radius:0;box-shadow:none;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-button-normal);
+  border-image-slice:9 8 fill;
+  border-image-width:9px 8px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) .xp-button:hover{box-shadow:none;border-image-source:var(--ct-button-hot)}
+body:not([data-theme=classic]) .xp-button:active{background:none;box-shadow:none;border-image-source:var(--ct-button-pressed)}
+body:not([data-theme=classic]) .xp-button:disabled{border-image-source:var(--ct-button-disabled);filter:none;opacity:1}
+body:not([data-theme=classic]) .xp-button.primary{box-shadow:none;border-image-source:var(--ct-button-default)}
+body:not([data-theme=classic]) .xp-button.primary:hover{border-image-source:var(--ct-button-hot)}
+
+/* Check boxes and radio buttons are true size: twelve and eight 13px states. */
+body:not([data-theme=classic]) input[type=checkbox],
+body:not([data-theme=classic]) input[type=radio]{
+  appearance:none;-webkit-appearance:none;
+  width:13px;height:13px;flex-shrink:0;
+  margin:0 3px 0 0;padding:0;border:0;border-radius:0;background-repeat:no-repeat;
+}
+body:not([data-theme=classic]) input[type=checkbox]{background-image:var(--ct-checkbox)}
+body:not([data-theme=classic]) input[type=radio]{background-image:var(--ct-radio)}
+body:not([data-theme=classic]) input[type=checkbox]:hover,
+body:not([data-theme=classic]) input[type=radio]:hover{background-position:0 -13px}
+body:not([data-theme=classic]) input[type=checkbox]:active,
+body:not([data-theme=classic]) input[type=radio]:active{background-position:0 -26px}
+body:not([data-theme=classic]) input[type=checkbox]:disabled,
+body:not([data-theme=classic]) input[type=radio]:disabled{background-position:0 -39px}
+body:not([data-theme=classic]) input[type=checkbox]:checked,
+body:not([data-theme=classic]) input[type=radio]:checked{background-position:0 -52px}
+body:not([data-theme=classic]) input[type=checkbox]:checked:hover,
+body:not([data-theme=classic]) input[type=radio]:checked:hover{background-position:0 -65px}
+body:not([data-theme=classic]) input[type=checkbox]:checked:active,
+body:not([data-theme=classic]) input[type=radio]:checked:active{background-position:0 -78px}
+body:not([data-theme=classic]) input[type=checkbox]:checked:disabled,
+body:not([data-theme=classic]) input[type=radio]:checked:disabled{background-position:0 -91px}
+body:not([data-theme=classic]) input[type=checkbox]:indeterminate{background-position:0 -104px}
+
+/* Combo boxes: the ini pairs a 15 x 16 button with its own glyph. */
+body:not([data-theme=classic]) select{
+  appearance:none;-webkit-appearance:none;
+  border:1px solid #7f9db9;border-radius:0;background-color:#fff;
+  background-image:var(--ct-combo-normal);
+  background-repeat:no-repeat;background-position:right 1px center;
+  padding:2px 20px 2px 4px;
+}
+body:not([data-theme=classic]) select:hover{background-image:var(--ct-combo-hot)}
+body:not([data-theme=classic]) select:disabled{background-image:var(--ct-combo-disabled)}
+
+/* Spin buttons: Luna stacks an up and a down background with their glyphs. */
+body:not([data-theme=classic]) input[type=number]::-webkit-inner-spin-button{
+  appearance:none;-webkit-appearance:none;opacity:1;
+  width:15px;align-self:stretch;margin:0;
+  background:var(--ct-spin-up-normal) top right no-repeat,var(--ct-spin-down-normal) bottom right no-repeat;
+}
+
+/* Progress: a tiled track with the chunk tiled inside it. */
+body:not([data-theme=classic]) .storage-meter{
+  border:0;background:none;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-progress-track);
+  border-image-slice:3 4 fill;
+  border-image-width:3px 4px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) .storage-meter span{
+  background:none;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-progress-chunk);
+  border-image-slice:6 0 5 0 fill;
+  border-image-width:6px 0 5px 0;
+  border-image-repeat:repeat;
+}
+
+/* Track bar: a 5 x 5 track and an 11 x 21 thumb, both at true size. */
+body:not([data-theme=classic]) input[type=range]::-webkit-slider-runnable-track{
+  height:5px;background:none;border:0;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-slider-track);
+  border-image-slice:2 fill;
+  border-image-width:2px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) input[type=range]::-webkit-slider-thumb{
+  width:11px;height:21px;margin-top:-8px;
+  background:var(--ct-slider-thumb-normal) no-repeat;
+  border:0;border-radius:0;box-shadow:none;
+}
+body:not([data-theme=classic]) input[type=range]:hover::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-hot)}
+body:not([data-theme=classic]) input[type=range]:active::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-pressed)}
+body:not([data-theme=classic]) input[type=range]:disabled::-webkit-slider-thumb{background-image:var(--ct-slider-thumb-disabled)}
+body:not([data-theme=classic]) input[type=range][orient=vertical]::-webkit-slider-runnable-track{width:5px;height:auto}
+body:not([data-theme=classic]) input[type=range][orient=vertical]::-webkit-slider-thumb{
+  width:21px;height:11px;margin-top:0;margin-left:-8px;
+  background-image:var(--ct-slider-thumb-v-normal);
+}
+
+/* Tree glyphs: two true-size 9 x 9 boxes, plus and minus. */
+body:not([data-theme=classic]) .tree-twist{
+  width:9px;height:9px;font-size:0;background:none;padding:0;
+}
+body:not([data-theme=classic]) .tree-node .tree-twist:not(:empty){
+  border:0;background:var(--ct-tree-glyph) no-repeat;
+}
+body:not([data-theme=classic]) .tree-twist[data-open="1"]{background-position:0 -9px}
+
+/* Tabs: five 18px states on the item, and the pane edge around the body. */
+body:not([data-theme=classic]) .tabs button{
+  background:none;border:0;border-radius:0;box-shadow:none;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-tab-normal);
+  border-image-slice:6 fill;
+  border-image-width:6px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) .tabs button:hover{border-image-source:var(--ct-tab-hot)}
+body:not([data-theme=classic]) .tabs button.active{background:none;box-shadow:none;border-image-source:var(--ct-tab-selected)}
+body:not([data-theme=classic]) .tab-panel{
+  background:none;border:0;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-tab-pane);
+  border-image-slice:2 4 4 2 fill;
+  border-image-width:2px 4px 4px 2px;
+  border-image-repeat:stretch;
+}
+
+/* Toolbar buttons: SizingMargins 4, 4, 4, 4. Luna paints nothing at rest. */
+body:not([data-theme=classic]) .toolbar button{
+  border-style:solid;border-width:0;border-radius:0;
+  border-image-slice:4 fill;
+  border-image-width:4px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) .toolbar button:hover{
+  background:none;border-color:transparent;border-image-source:var(--ct-toolbar-hot);
+}
+body:not([data-theme=classic]) .toolbar button:active{border-image-source:var(--ct-toolbar-pressed)}
+
+/* Column headers: SizingMargins 8, 8, 3, 4. */
+body:not([data-theme=classic]) .details-header button,
+body:not([data-theme=classic]) .taskmgr-table th,
+body:not([data-theme=classic]) .oe-list th,
+body:not([data-theme=classic]) .wmp-library th{
+  background:none;border:0;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-header-normal);
+  border-image-slice:3 8 4 8 fill;
+  border-image-width:3px 8px 4px 8px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) .details-header button:hover{border-image-source:var(--ct-header-hot)}
+body:not([data-theme=classic]) .details-header button:active{border-image-source:var(--ct-header-pressed)}
+
+/* Status bar: SizingMargins 50, 17, 5, 9, with its panes on top. */
+body:not([data-theme=classic]) .status-bar{
+  background:none;box-shadow:none;border-top:0;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-status);
+  border-image-slice:5 17 9 50 fill;
+  border-image-width:5px 17px 9px 50px;
+  border-image-repeat:stretch;
+}
+body:not([data-theme=classic]) .status-part{
+  border-left:0;box-shadow:none;
+  border-style:solid;border-width:0;
+  border-image-source:var(--ct-status-pane);
+  border-image-slice:2 2 2 0 fill;
+  border-image-width:2px 2px 2px 0;
+  border-image-repeat:stretch;
+}
+
+/* The size box, drawn at its true 16 x 17. Its colour key is red, not magenta. */
+body:not([data-theme=classic]) .resize-handle{
+  width:16px;height:17px;background:var(--ct-resize-grip) no-repeat right bottom;clip-path:none;
+}
+
+
+/* The Explorer bar is a plain vertical gradient in the ini, not a bitmap,
+   so its two colours are named here. */
+body:not([data-theme=classic]) .explorer-sidebar{background:linear-gradient(#8caae6,#6487dc)}
+
+/* Balloon close: three true-size 18 x 18 states in one column. */
+body:not([data-theme=classic]) #balloon button{
+  width:18px;height:18px;font-size:0;right:4px;top:4px;
+  background:var(--ct-balloon-close) no-repeat;
+}
+body:not([data-theme=classic]) #balloon button:hover{background-position:0 -18px}
+body:not([data-theme=classic]) #balloon button:active{background-position:0 -36px}

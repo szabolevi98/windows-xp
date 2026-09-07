@@ -856,5 +856,3230 @@
     ],
     "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
     "note": "Original Luna tray-chevron bitmap strips, placed side by side at native 19 x 20 pixels per state. Columns: collapsed, expanded. Rows: normal, hot, pressed. Original alpha and magenta color-key transparency preserved; no redrawing or scaling."
+  },
+  {
+    "file": "scrollbar/blue/sprite.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3922,
+    "resourceNames": [
+      "BLUE_SCROLLARROWS_BMP",
+      "BLUE_SCROLLARROWGLYPHS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna arrow buttons with their glyphs composited into the content box the theme ini defines. Columns: normal, hot, pressed, disabled. Rows: up, down, left, right. Native 17 x 17 per cell; nothing redrawn or scaled."
+  },
+  {
+    "file": "scrollbar/blue/track-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 109,
+    "resourceNames": [
+      "BLUE_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "One row of the original vertical shaft. The shaft is uniform along its axis, so tiling this row reproduces it exactly."
+  },
+  {
+    "file": "scrollbar/blue/track-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 111,
+    "resourceNames": [
+      "BLUE_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "One column of the original horizontal shaft. The shaft is uniform along its axis, so tiling this column reproduces it exactly."
+  },
+  {
+    "file": "scrollbar/blue/gripper-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 168,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBGRIPPERVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical-thumb grippers, each centred in a 17 x 17 cell so CSS can pick a state. Columns: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/blue/gripper-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 169,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBGRIPPERHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal-thumb grippers, each centred in a 17 x 17 cell so CSS can pick a state. Rows: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/blue/mid-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 439,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBVERTICAL_BMP",
+      "BLUE_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The stretching middle of the vertical thumb, the rows the theme ini leaves outside its 5px sizing margins, on its own shaft. Columns: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/blue/mid-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 478,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBHORIZONTAL_BMP",
+      "BLUE_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The stretching middle of the horizontal thumb, the columns the theme ini leaves outside its 5px sizing margins, on its own shaft. Rows: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/blue/thumb-v-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 389,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBVERTICAL_BMP",
+      "BLUE_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the normal state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/blue/thumb-v-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 349,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBVERTICAL_BMP",
+      "BLUE_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the hot state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/blue/thumb-v-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 514,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBVERTICAL_BMP",
+      "BLUE_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the pressed state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/blue/thumb-h-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 402,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBHORIZONTAL_BMP",
+      "BLUE_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the normal state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/blue/thumb-h-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 352,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBHORIZONTAL_BMP",
+      "BLUE_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the hot state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/blue/thumb-h-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 503,
+    "resourceNames": [
+      "BLUE_SCROLLTHUMBHORIZONTAL_BMP",
+      "BLUE_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the pressed state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/silver/sprite.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2566,
+    "resourceNames": [
+      "METALLIC_SCROLLARROWS_BMP",
+      "METALLIC_SCROLLARROWGLYPHS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna arrow buttons with their glyphs composited into the content box the theme ini defines. Columns: normal, hot, pressed, disabled. Rows: up, down, left, right. Native 17 x 17 per cell; nothing redrawn or scaled."
+  },
+  {
+    "file": "scrollbar/silver/track-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 108,
+    "resourceNames": [
+      "METALLIC_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "One row of the original vertical shaft. The shaft is uniform along its axis, so tiling this row reproduces it exactly."
+  },
+  {
+    "file": "scrollbar/silver/track-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 111,
+    "resourceNames": [
+      "METALLIC_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "One column of the original horizontal shaft. The shaft is uniform along its axis, so tiling this column reproduces it exactly."
+  },
+  {
+    "file": "scrollbar/silver/gripper-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 128,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBGRIPPERVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical-thumb grippers, each centred in a 17 x 17 cell so CSS can pick a state. Columns: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/silver/gripper-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 124,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBGRIPPERHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal-thumb grippers, each centred in a 17 x 17 cell so CSS can pick a state. Rows: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/silver/mid-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 468,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBVERTICAL_BMP",
+      "METALLIC_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The stretching middle of the vertical thumb, the rows the theme ini leaves outside its 5px sizing margins, on its own shaft. Columns: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/silver/mid-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 403,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBHORIZONTAL_BMP",
+      "METALLIC_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The stretching middle of the horizontal thumb, the columns the theme ini leaves outside its 5px sizing margins, on its own shaft. Rows: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/silver/thumb-v-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 335,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBVERTICAL_BMP",
+      "METALLIC_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the normal state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/silver/thumb-v-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 334,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBVERTICAL_BMP",
+      "METALLIC_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the hot state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/silver/thumb-v-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 352,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBVERTICAL_BMP",
+      "METALLIC_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the pressed state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/silver/thumb-h-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 307,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBHORIZONTAL_BMP",
+      "METALLIC_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the normal state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/silver/thumb-h-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 319,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBHORIZONTAL_BMP",
+      "METALLIC_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the hot state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/silver/thumb-h-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 342,
+    "resourceNames": [
+      "METALLIC_SCROLLTHUMBHORIZONTAL_BMP",
+      "METALLIC_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the pressed state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/olive/sprite.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3040,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLARROWS_BMP",
+      "HOMESTEAD_SCROLLARROWGLYPHS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna arrow buttons with their glyphs composited into the content box the theme ini defines. Columns: normal, hot, pressed, disabled. Rows: up, down, left, right. Native 17 x 17 per cell; nothing redrawn or scaled."
+  },
+  {
+    "file": "scrollbar/olive/track-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 109,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "One row of the original vertical shaft. The shaft is uniform along its axis, so tiling this row reproduces it exactly."
+  },
+  {
+    "file": "scrollbar/olive/track-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 111,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "One column of the original horizontal shaft. The shaft is uniform along its axis, so tiling this column reproduces it exactly."
+  },
+  {
+    "file": "scrollbar/olive/gripper-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 169,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBGRIPPERVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical-thumb grippers, each centred in a 17 x 17 cell so CSS can pick a state. Columns: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/olive/gripper-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 168,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBGRIPPERHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal-thumb grippers, each centred in a 17 x 17 cell so CSS can pick a state. Rows: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/olive/mid-v.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 435,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBVERTICAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The stretching middle of the vertical thumb, the rows the theme ini leaves outside its 5px sizing margins, on its own shaft. Columns: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/olive/mid-h.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 451,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBHORIZONTAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The stretching middle of the horizontal thumb, the columns the theme ini leaves outside its 5px sizing margins, on its own shaft. Rows: normal, hot, pressed."
+  },
+  {
+    "file": "scrollbar/olive/thumb-v-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 391,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBVERTICAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the normal state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/olive/thumb-v-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 381,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBVERTICAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the hot state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/olive/thumb-v-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 490,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBVERTICAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original vertical thumb in the pressed state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/olive/thumb-h-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 403,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBHORIZONTAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the normal state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/olive/thumb-h-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 391,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBHORIZONTAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the hot state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "scrollbar/olive/thumb-h-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 453,
+    "resourceNames": [
+      "HOMESTEAD_SCROLLTHUMBHORIZONTAL_BMP",
+      "HOMESTEAD_SCROLLSHAFTHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original horizontal thumb in the pressed state, centred on its own shaft at native size. Used as a border-image so the 5px Luna caps keep their pixels."
+  },
+  {
+    "file": "controls/blue/button-default.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 556,
+    "resourceNames": [
+      "BLUE_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, default state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/blue/button-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 219,
+    "resourceNames": [
+      "BLUE_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, disabled state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/blue/button-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 582,
+    "resourceNames": [
+      "BLUE_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, hot state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/blue/button-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 539,
+    "resourceNames": [
+      "BLUE_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, normal state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/blue/button-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 565,
+    "resourceNames": [
+      "BLUE_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, pressed state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/blue/checkbox.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1083,
+    "resourceNames": [
+      "BLUE_CHECKBOX13_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna 13 x 13 check box, all twelve states in one column: unchecked, checked and mixed, each normal, hot, pressed and disabled. Drawn at true size, as the ini asks."
+  },
+  {
+    "file": "controls/blue/combo-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 345,
+    "resourceNames": [
+      "BLUE_COMBOBUTTON_BMP",
+      "BLUE_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, disabled state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/blue/combo-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 480,
+    "resourceNames": [
+      "BLUE_COMBOBUTTON_BMP",
+      "BLUE_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, hot state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/blue/combo-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 487,
+    "resourceNames": [
+      "BLUE_COMBOBUTTON_BMP",
+      "BLUE_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, normal state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/blue/header-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 279,
+    "resourceNames": [
+      "BLUE_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, hot state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/blue/header-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 122,
+    "resourceNames": [
+      "BLUE_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, normal state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/blue/header-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 224,
+    "resourceNames": [
+      "BLUE_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, pressed state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/blue/progress-chunk.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 208,
+    "resourceNames": [
+      "BLUE_PROGRESSCHUNK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna progress bar chunk, native 10 x 12, tiled along the bar the way the ini asks."
+  },
+  {
+    "file": "controls/blue/progress-track.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 252,
+    "resourceNames": [
+      "BLUE_PROGRESSTRACK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna progress bar track, native 9 x 19, stretched along its 4, 4, 3, 3 sizing margins."
+  },
+  {
+    "file": "controls/blue/radio.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1798,
+    "resourceNames": [
+      "BLUE_RADIOBUTTON13_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna 13 x 13 radio button, all eight states in one column: unchecked and checked, each normal, hot, pressed and disabled."
+  },
+  {
+    "file": "controls/blue/resize-grip.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 135,
+    "resourceNames": [
+      "BLUE_RESIZEGRIP2_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna size box, the right aligned of its two 16 x 17 states, drawn at true size. Its colour key is red, not the theme magenta."
+  },
+  {
+    "file": "controls/blue/slider-thumb-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 296,
+    "resourceNames": [
+      "BLUE_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, disabled state, true size 11 x 21."
+  },
+  {
+    "file": "controls/blue/slider-thumb-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 296,
+    "resourceNames": [
+      "BLUE_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, hot state, true size 11 x 21."
+  },
+  {
+    "file": "controls/blue/slider-thumb-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 304,
+    "resourceNames": [
+      "BLUE_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, normal state, true size 11 x 21."
+  },
+  {
+    "file": "controls/blue/slider-thumb-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 305,
+    "resourceNames": [
+      "BLUE_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, pressed state, true size 11 x 21."
+  },
+  {
+    "file": "controls/blue/slider-thumb-v-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 299,
+    "resourceNames": [
+      "BLUE_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, normal state, true size 21 x 11."
+  },
+  {
+    "file": "controls/blue/slider-track.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 164,
+    "resourceNames": [
+      "BLUE_SLIDERTRACK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna track bar groove, native 5 x 5, stretched along its 2, 2, 2, 2 sizing margins."
+  },
+  {
+    "file": "controls/blue/spin-down-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 392,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "BLUE_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/blue/spin-up-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 356,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDUP_BMP",
+      "BLUE_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/blue/status-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 122,
+    "resourceNames": [
+      "BLUE_STATUSPANE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna status bar pane divider, native 3 x 15. Its colour key is red, not the theme magenta."
+  },
+  {
+    "file": "controls/blue/status.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 698,
+    "resourceNames": [
+      "BLUE_STATUSBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna status bar background, native 68 x 15, stretched along its 50, 17, 5, 9 sizing margins."
+  },
+  {
+    "file": "controls/blue/tab-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 320,
+    "resourceNames": [
+      "BLUE_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, hot state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/blue/tab-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 309,
+    "resourceNames": [
+      "BLUE_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, normal state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/blue/tab-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1108,
+    "resourceNames": [
+      "BLUE_TABPANEEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab pane edge, native 48 x 48, stretched along its 2, 4, 2, 4 sizing margins."
+  },
+  {
+    "file": "controls/blue/tab-selected.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 202,
+    "resourceNames": [
+      "BLUE_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, selected state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/blue/toolbar-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 340,
+    "resourceNames": [
+      "BLUE_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, hot state, native 20 x 23, stretched along its 4, 4, 4, 4 sizing margins. Luna paints nothing at rest."
+  },
+  {
+    "file": "controls/blue/toolbar-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 379,
+    "resourceNames": [
+      "BLUE_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, pressed state, native 20 x 23, stretched along its 4, 4, 4, 4 sizing margins. Luna paints nothing at rest."
+  },
+  {
+    "file": "controls/blue/tree-glyph.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 305,
+    "resourceNames": [
+      "BLUE_TREEEXPANDCOLLAPSE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tree view glyphs, the 9 x 9 plus and minus boxes, at true size."
+  },
+  {
+    "file": "controls/silver/button-default.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 531,
+    "resourceNames": [
+      "METALLIC_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, default state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/silver/button-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 214,
+    "resourceNames": [
+      "METALLIC_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, disabled state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/silver/button-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 571,
+    "resourceNames": [
+      "METALLIC_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, hot state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/silver/button-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 449,
+    "resourceNames": [
+      "METALLIC_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, normal state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/silver/button-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 484,
+    "resourceNames": [
+      "METALLIC_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, pressed state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/silver/checkbox.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1084,
+    "resourceNames": [
+      "METALLIC_CHECKBOX13_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna 13 x 13 check box, all twelve states in one column: unchecked, checked and mixed, each normal, hot, pressed and disabled. Drawn at true size, as the ini asks."
+  },
+  {
+    "file": "controls/silver/combo-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 339,
+    "resourceNames": [
+      "METALLIC_COMBOBUTTON_BMP",
+      "METALLIC_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, disabled state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/silver/combo-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 281,
+    "resourceNames": [
+      "METALLIC_COMBOBUTTON_BMP",
+      "METALLIC_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, hot state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/silver/combo-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 332,
+    "resourceNames": [
+      "METALLIC_COMBOBUTTON_BMP",
+      "METALLIC_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, normal state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/silver/header-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 262,
+    "resourceNames": [
+      "METALLIC_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, hot state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/silver/header-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 122,
+    "resourceNames": [
+      "METALLIC_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, normal state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/silver/header-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 217,
+    "resourceNames": [
+      "METALLIC_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, pressed state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/silver/progress-chunk.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 184,
+    "resourceNames": [
+      "METALLIC_PROGRESSCHUNK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna progress bar chunk, native 10 x 12, tiled along the bar the way the ini asks."
+  },
+  {
+    "file": "controls/silver/progress-track.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 252,
+    "resourceNames": [
+      "METALLIC_PROGRESSTRACK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna progress bar track, native 9 x 19, stretched along its 4, 4, 3, 3 sizing margins."
+  },
+  {
+    "file": "controls/silver/radio.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1798,
+    "resourceNames": [
+      "METALLIC_RADIOBUTTON13_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna 13 x 13 radio button, all eight states in one column: unchecked and checked, each normal, hot, pressed and disabled."
+  },
+  {
+    "file": "controls/silver/resize-grip.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 135,
+    "resourceNames": [
+      "METALLIC_RESIZEGRIP2_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna size box, the right aligned of its two 16 x 17 states, drawn at true size. Its colour key is red, not the theme magenta."
+  },
+  {
+    "file": "controls/silver/slider-thumb-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 295,
+    "resourceNames": [
+      "METALLIC_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, disabled state, true size 11 x 21."
+  },
+  {
+    "file": "controls/silver/slider-thumb-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 295,
+    "resourceNames": [
+      "METALLIC_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, hot state, true size 11 x 21."
+  },
+  {
+    "file": "controls/silver/slider-thumb-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 293,
+    "resourceNames": [
+      "METALLIC_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, normal state, true size 11 x 21."
+  },
+  {
+    "file": "controls/silver/slider-thumb-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 300,
+    "resourceNames": [
+      "METALLIC_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, pressed state, true size 11 x 21."
+  },
+  {
+    "file": "controls/silver/slider-thumb-v-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 297,
+    "resourceNames": [
+      "METALLIC_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, normal state, true size 21 x 11."
+  },
+  {
+    "file": "controls/silver/slider-track.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 164,
+    "resourceNames": [
+      "METALLIC_SLIDERTRACK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna track bar groove, native 5 x 5, stretched along its 2, 2, 2, 2 sizing margins."
+  },
+  {
+    "file": "controls/silver/spin-down-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 325,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "METALLIC_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/silver/spin-up-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 327,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDUP_BMP",
+      "METALLIC_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/silver/status-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 122,
+    "resourceNames": [
+      "METALLIC_STATUSPANE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna status bar pane divider, native 3 x 15. Its colour key is red, not the theme magenta."
+  },
+  {
+    "file": "controls/silver/status.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 602,
+    "resourceNames": [
+      "METALLIC_STATUSBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna status bar background, native 68 x 15, stretched along its 50, 17, 5, 9 sizing margins."
+  },
+  {
+    "file": "controls/silver/tab-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 249,
+    "resourceNames": [
+      "METALLIC_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, hot state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/silver/tab-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 271,
+    "resourceNames": [
+      "METALLIC_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, normal state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/silver/tab-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 233,
+    "resourceNames": [
+      "METALLIC_TABPANEEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab pane edge, native 48 x 48, stretched along its 2, 4, 2, 4 sizing margins."
+  },
+  {
+    "file": "controls/silver/tab-selected.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 199,
+    "resourceNames": [
+      "METALLIC_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, selected state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/silver/toolbar-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 340,
+    "resourceNames": [
+      "METALLIC_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, hot state, native 20 x 23, stretched along its 4, 4, 4, 4 sizing margins. Luna paints nothing at rest."
+  },
+  {
+    "file": "controls/silver/toolbar-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 379,
+    "resourceNames": [
+      "METALLIC_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, pressed state, native 20 x 23, stretched along its 4, 4, 4, 4 sizing margins. Luna paints nothing at rest."
+  },
+  {
+    "file": "controls/silver/tree-glyph.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 268,
+    "resourceNames": [
+      "METALLIC_TREEEXPANDCOLLAPSE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tree view glyphs, the 9 x 9 plus and minus boxes, at true size."
+  },
+  {
+    "file": "controls/olive/button-default.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 564,
+    "resourceNames": [
+      "HOMESTEAD_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, default state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/olive/button-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 188,
+    "resourceNames": [
+      "HOMESTEAD_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, disabled state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/olive/button-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 583,
+    "resourceNames": [
+      "HOMESTEAD_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, hot state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/olive/button-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 586,
+    "resourceNames": [
+      "HOMESTEAD_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, normal state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/olive/button-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 590,
+    "resourceNames": [
+      "HOMESTEAD_BUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna push button, pressed state, native 20 x 23, stretched along its 8, 8, 9, 9 sizing margins."
+  },
+  {
+    "file": "controls/olive/checkbox.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1083,
+    "resourceNames": [
+      "HOMESTEAD_CHECKBOX13_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna 13 x 13 check box, all twelve states in one column: unchecked, checked and mixed, each normal, hot, pressed and disabled. Drawn at true size, as the ini asks."
+  },
+  {
+    "file": "controls/olive/combo-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 345,
+    "resourceNames": [
+      "HOMESTEAD_COMBOBUTTON_BMP",
+      "HOMESTEAD_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, disabled state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/olive/combo-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 297,
+    "resourceNames": [
+      "HOMESTEAD_COMBOBUTTON_BMP",
+      "HOMESTEAD_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, hot state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/olive/combo-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 337,
+    "resourceNames": [
+      "HOMESTEAD_COMBOBUTTON_BMP",
+      "HOMESTEAD_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, normal state, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/olive/header-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 156,
+    "resourceNames": [
+      "HOMESTEAD_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, hot state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/olive/header-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 122,
+    "resourceNames": [
+      "HOMESTEAD_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, normal state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/olive/header-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 224,
+    "resourceNames": [
+      "HOMESTEAD_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, pressed state, native 18 x 18, stretched along its 8, 8, 3, 4 sizing margins. Its colour key is red."
+  },
+  {
+    "file": "controls/olive/progress-chunk.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 214,
+    "resourceNames": [
+      "HOMESTEAD_PROGRESSCHUNK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna progress bar chunk, native 10 x 12, tiled along the bar the way the ini asks."
+  },
+  {
+    "file": "controls/olive/progress-track.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 252,
+    "resourceNames": [
+      "HOMESTEAD_PROGRESSTRACK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna progress bar track, native 9 x 19, stretched along its 4, 4, 3, 3 sizing margins."
+  },
+  {
+    "file": "controls/olive/radio.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1798,
+    "resourceNames": [
+      "HOMESTEAD_RADIOBUTTON13_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna 13 x 13 radio button, all eight states in one column: unchecked and checked, each normal, hot, pressed and disabled."
+  },
+  {
+    "file": "controls/olive/resize-grip.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 135,
+    "resourceNames": [
+      "HOMESTEAD_RESIZEGRIP2_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna size box, the right aligned of its two 16 x 17 states, drawn at true size. Its colour key is red, not the theme magenta."
+  },
+  {
+    "file": "controls/olive/slider-thumb-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 298,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, disabled state, true size 11 x 21."
+  },
+  {
+    "file": "controls/olive/slider-thumb-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 299,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, hot state, true size 11 x 21."
+  },
+  {
+    "file": "controls/olive/slider-thumb-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 303,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, normal state, true size 11 x 21."
+  },
+  {
+    "file": "controls/olive/slider-thumb-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 308,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, pressed state, true size 11 x 21."
+  },
+  {
+    "file": "controls/olive/slider-thumb-v-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 298,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, normal state, true size 21 x 11."
+  },
+  {
+    "file": "controls/olive/slider-track.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 164,
+    "resourceNames": [
+      "HOMESTEAD_SLIDERTRACK_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna track bar groove, native 5 x 5, stretched along its 2, 2, 2, 2 sizing margins."
+  },
+  {
+    "file": "controls/olive/spin-down-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 300,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "HOMESTEAD_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/olive/spin-up-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 316,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDUP_BMP",
+      "HOMESTEAD_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, with its own glyph centred on the background at native 15 x 16."
+  },
+  {
+    "file": "controls/olive/status-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 122,
+    "resourceNames": [
+      "HOMESTEAD_STATUSPANE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna status bar pane divider, native 3 x 15. Its colour key is red, not the theme magenta."
+  },
+  {
+    "file": "controls/olive/status.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 948,
+    "resourceNames": [
+      "HOMESTEAD_STATUSBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna status bar background, native 68 x 15, stretched along its 50, 17, 5, 9 sizing margins."
+  },
+  {
+    "file": "controls/olive/tab-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 327,
+    "resourceNames": [
+      "HOMESTEAD_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, hot state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/olive/tab-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 340,
+    "resourceNames": [
+      "HOMESTEAD_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, normal state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/olive/tab-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1108,
+    "resourceNames": [
+      "HOMESTEAD_TABPANEEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab pane edge, native 48 x 48, stretched along its 2, 4, 2, 4 sizing margins."
+  },
+  {
+    "file": "controls/olive/tab-selected.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 158,
+    "resourceNames": [
+      "HOMESTEAD_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, selected state, native 18 x 18, stretched along its 6, 6, 6, 6 sizing margins."
+  },
+  {
+    "file": "controls/olive/toolbar-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 340,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, hot state, native 20 x 23, stretched along its 4, 4, 4, 4 sizing margins. Luna paints nothing at rest."
+  },
+  {
+    "file": "controls/olive/toolbar-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 379,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, pressed state, native 20 x 23, stretched along its 4, 4, 4, 4 sizing margins. Luna paints nothing at rest."
+  },
+  {
+    "file": "controls/olive/tree-glyph.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 289,
+    "resourceNames": [
+      "HOMESTEAD_TREEEXPANDCOLLAPSE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tree view glyphs, the 9 x 9 plus and minus boxes, at true size."
+  },
+  {
+    "file": "controls/blue/balloon-close.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1335,
+    "resourceNames": [
+      "BLUE_BALLOONCLOSE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna balloon close button, all three 18 x 18 states in one column, drawn at true size."
+  },
+  {
+    "file": "controls/silver/balloon-close.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1335,
+    "resourceNames": [
+      "METALLIC_BALLOONCLOSE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna balloon close button, all three 18 x 18 states in one column, drawn at true size."
+  },
+  {
+    "file": "controls/olive/balloon-close.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1335,
+    "resourceNames": [
+      "HOMESTEAD_BALLOONCLOSE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna balloon close button, all three 18 x 18 states in one column, drawn at true size."
+  },
+  {
+    "file": "taskbar/blue/start-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 4015,
+    "resourceNames": [
+      "BLUE_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the normal state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/start-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 4192,
+    "resourceNames": [
+      "BLUE_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the hot state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/start-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2969,
+    "resourceNames": [
+      "BLUE_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the pressed state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 187,
+    "resourceNames": [
+      "BLUE_TASKBARBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna taskbar background tile at its native 50 x 28, tiled horizontally as the ini asks. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/sizing-bar.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 92,
+    "resourceNames": [
+      "BLUE_TASKBARSIZINGBARBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna sizing bar for a taskbar docked at the bottom, native 15 x 4, tiled along the top edge. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/tray.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1505,
+    "resourceNames": [
+      "BLUE_TASKBARTRAY_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna notification area at its native 110 x 28, stretched along the 34, 10, 12, 12 sizing margins. The original red colour key is preserved as transparency. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/task-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 652,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the normal state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/task-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 615,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the hot state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/task-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 524,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the pressed state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/task-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 524,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the checked state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/task-active-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 536,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the hot checked state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/quick-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 609,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTONNOEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna quick launch button in the hot state, native 13 x 28. Luna draws nothing at rest, so only the lit states are kept. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/blue/quick-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 552,
+    "resourceNames": [
+      "BLUE_TASKBANDBUTTONNOEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna quick launch button in the pressed state, native 13 x 28. Luna draws nothing at rest, so only the lit states are kept. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/start-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3294,
+    "resourceNames": [
+      "METALLIC_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the normal state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/start-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3631,
+    "resourceNames": [
+      "METALLIC_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the hot state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/start-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 3303,
+    "resourceNames": [
+      "METALLIC_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the pressed state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 216,
+    "resourceNames": [
+      "METALLIC_TASKBARBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna taskbar background tile at its native 50 x 28, tiled horizontally as the ini asks. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/sizing-bar.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 93,
+    "resourceNames": [
+      "METALLIC_TASKBARSIZINGBARBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna sizing bar for a taskbar docked at the bottom, native 15 x 4, tiled along the top edge. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/tray.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 303,
+    "resourceNames": [
+      "METALLIC_TASKBARTRAY_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna notification area at its native 110 x 28, stretched along the 34, 10, 12, 12 sizing margins. The original red colour key is preserved as transparency. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/task-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 251,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the normal state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/task-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 218,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the hot state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/task-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 418,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the pressed state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/task-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 418,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the checked state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/task-active-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 418,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the hot checked state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/quick-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 245,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTONNOEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna quick launch button in the hot state, native 13 x 28. Luna draws nothing at rest, so only the lit states are kept. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/silver/quick-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 320,
+    "resourceNames": [
+      "METALLIC_TASKBANDBUTTONNOEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna quick launch button in the pressed state, native 13 x 28. Luna draws nothing at rest, so only the lit states are kept. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/start-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2268,
+    "resourceNames": [
+      "HOMESTEAD_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the normal state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/start-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2436,
+    "resourceNames": [
+      "HOMESTEAD_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the hot state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/start-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2264,
+    "resourceNames": [
+      "HOMESTEAD_STARTBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start button in the pressed state, at its native 99 x 33. Stretched in CSS along the 6, 52, 13, 14 sizing margins the theme ini gives it. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 199,
+    "resourceNames": [
+      "HOMESTEAD_TASKBARBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna taskbar background tile at its native 50 x 28, tiled horizontally as the ini asks. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/sizing-bar.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 93,
+    "resourceNames": [
+      "HOMESTEAD_TASKBARSIZINGBARBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna sizing bar for a taskbar docked at the bottom, native 15 x 4, tiled along the top edge. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/tray.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 302,
+    "resourceNames": [
+      "HOMESTEAD_TASKBARTRAY_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna notification area at its native 110 x 28, stretched along the 34, 10, 12, 12 sizing margins. The original red colour key is preserved as transparency. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/task-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 602,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the normal state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/task-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 532,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the hot state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/task-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 310,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the pressed state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/task-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 310,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the checked state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/task-active-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 511,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTON_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna task band button in the hot checked state, native 26 x 28, stretched along its 17, 5, 15, 8 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/quick-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 401,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTONNOEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna quick launch button in the hot state, native 13 x 28. Luna draws nothing at rest, so only the lit states are kept. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "taskbar/olive/quick-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 293,
+    "resourceNames": [
+      "HOMESTEAD_TASKBANDBUTTONNOEDGE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna quick launch button in the pressed state, native 13 x 28. Luna draws nothing at rest, so only the lit states are kept. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/blue/caption-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2056,
+    "resourceNames": [
+      "BLUE_FRAMECAPTION_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna window caption, active state, at its native 66 x 29. Stretched along the 28, 35, 9, 17 sizing margins the theme ini records. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/blue/maximized-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1973,
+    "resourceNames": [
+      "BLUE_FRAMEMAXIMIZED_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna caption for a maximized window, active state, native 66 x 29, same sizing margins as the ordinary caption. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/blue/frame-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 493,
+    "resourceNames": [
+      "BLUE_FRAMELEFT_BMP",
+      "BLUE_FRAMERIGHT_BMP",
+      "BLUE_FRAMEBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The three original Luna frame edges for the active state, laid into one sheet so a single border-image can carry them: the 5 x 31 left strip, the 5 x 31 right strip and the 49 x 5 bottom bar, each at native size in the position its own slice reads from. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/blue/caption-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1702,
+    "resourceNames": [
+      "BLUE_FRAMECAPTION_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna window caption, inactive state, at its native 66 x 29. Stretched along the 28, 35, 9, 17 sizing margins the theme ini records. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/blue/maximized-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1655,
+    "resourceNames": [
+      "BLUE_FRAMEMAXIMIZED_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna caption for a maximized window, inactive state, native 66 x 29, same sizing margins as the ordinary caption. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/blue/frame-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 194,
+    "resourceNames": [
+      "BLUE_FRAMELEFT_BMP",
+      "BLUE_FRAMERIGHT_BMP",
+      "BLUE_FRAMEBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The three original Luna frame edges for the inactive state, laid into one sheet so a single border-image can carry them: the 5 x 31 left strip, the 5 x 31 right strip and the 49 x 5 bottom bar, each at native size in the position its own slice reads from. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/silver/caption-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1244,
+    "resourceNames": [
+      "METALLIC_FRAMECAPTION_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna window caption, active state, at its native 66 x 29. Stretched along the 28, 35, 9, 17 sizing margins the theme ini records. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/silver/maximized-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 896,
+    "resourceNames": [
+      "METALLIC_FRAMEMAXIMIZED_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna caption for a maximized window, active state, native 66 x 29, same sizing margins as the ordinary caption. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/silver/frame-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 192,
+    "resourceNames": [
+      "METALLIC_FRAMELEFT_BMP",
+      "METALLIC_FRAMERIGHT_BMP",
+      "METALLIC_FRAMEBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The three original Luna frame edges for the active state, laid into one sheet so a single border-image can carry them: the 5 x 31 left strip, the 5 x 31 right strip and the 49 x 5 bottom bar, each at native size in the position its own slice reads from. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/silver/caption-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 499,
+    "resourceNames": [
+      "METALLIC_FRAMECAPTION_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna window caption, inactive state, at its native 66 x 29. Stretched along the 28, 35, 9, 17 sizing margins the theme ini records. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/silver/maximized-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 276,
+    "resourceNames": [
+      "METALLIC_FRAMEMAXIMIZED_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna caption for a maximized window, inactive state, native 66 x 29, same sizing margins as the ordinary caption. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/silver/frame-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 208,
+    "resourceNames": [
+      "METALLIC_FRAMELEFT_BMP",
+      "METALLIC_FRAMERIGHT_BMP",
+      "METALLIC_FRAMEBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The three original Luna frame edges for the inactive state, laid into one sheet so a single border-image can carry them: the 5 x 31 left strip, the 5 x 31 right strip and the 49 x 5 bottom bar, each at native size in the position its own slice reads from. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/olive/caption-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1791,
+    "resourceNames": [
+      "HOMESTEAD_FRAMECAPTION_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna window caption, active state, at its native 66 x 29. Stretched along the 28, 35, 9, 17 sizing margins the theme ini records. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/olive/maximized-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1824,
+    "resourceNames": [
+      "HOMESTEAD_FRAMEMAXIMIZED_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna caption for a maximized window, active state, native 66 x 29, same sizing margins as the ordinary caption. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/olive/frame-active.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 266,
+    "resourceNames": [
+      "HOMESTEAD_FRAMELEFT_BMP",
+      "HOMESTEAD_FRAMERIGHT_BMP",
+      "HOMESTEAD_FRAMEBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The three original Luna frame edges for the active state, laid into one sheet so a single border-image can carry them: the 5 x 31 left strip, the 5 x 31 right strip and the 49 x 5 bottom bar, each at native size in the position its own slice reads from. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/olive/caption-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1577,
+    "resourceNames": [
+      "HOMESTEAD_FRAMECAPTION_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna window caption, inactive state, at its native 66 x 29. Stretched along the 28, 35, 9, 17 sizing margins the theme ini records. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/olive/maximized-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 1543,
+    "resourceNames": [
+      "HOMESTEAD_FRAMEMAXIMIZED_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna caption for a maximized window, inactive state, native 66 x 29, same sizing margins as the ordinary caption. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "frame/olive/frame-inactive.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 337,
+    "resourceNames": [
+      "HOMESTEAD_FRAMELEFT_BMP",
+      "HOMESTEAD_FRAMERIGHT_BMP",
+      "HOMESTEAD_FRAMEBOTTOM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The three original Luna frame edges for the inactive state, laid into one sheet so a single border-image can carry them: the 5 x 31 left strip, the 5 x 31 right strip and the 49 x 5 bottom bar, each at native size in the position its own slice reads from. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/user-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 4179,
+    "resourceNames": [
+      "BLUE_STARTUSERPANEL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start panel user pane, native 120 x 63, stretched along its 59, 60, 62, 0 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/prog-list.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 269,
+    "resourceNames": [
+      "BLUE_STARTPANELMFUBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna background for the frequently used programs column, native 156 x 4. Its top rows carry the amber rule and its left column the panel border. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/places-list.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 392,
+    "resourceNames": [
+      "BLUE_STARTPANELPLACESBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna background for the places column, native 180 x 6, including the divider between the two columns and the amber rule. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/logoff.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2867,
+    "resourceNames": [
+      "BLUE_STARTPANELLOGOFFBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna log off strip, native 97 x 39, stretched along its 49, 47, 0, 38 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/logoff-buttons.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2881,
+    "resourceNames": [
+      "BLUE_STARTPANELLOGOFFBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna log off strip icons at true size: undock, log off and turn off in three 24 x 24 cells. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/logoff-buttons-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2571,
+    "resourceNames": [
+      "BLUE_STARTPANELLOGOFFBUTTONSHOT_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The lit version of the same three 24 x 24 icons. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/programs-separator.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 258,
+    "resourceNames": [
+      "BLUE_STARTPROGRAMSSEPARATOR_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna separator for the programs column, drawn at its true 172 x 2 size. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/places-separator.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 215,
+    "resourceNames": [
+      "BLUE_STARTPLACESSEPARATOR_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna separator for the places column, drawn at its true 134 x 2 size. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/more-arrow.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 760,
+    "resourceNames": [
+      "BLUE_STARTPANELMOREPROGARROW_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna All Programs arrow, true size 16 x 24. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/more-arrow-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 775,
+    "resourceNames": [
+      "BLUE_STARTPANELMOREPROGARROWHOT_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The lit version of the All Programs arrow. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/blue/user-tile.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 572,
+    "resourceNames": [
+      "BLUE_USERTILEBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna frame for an account picture, native 55 x 55, stretched along its 6, 10, 6, 10 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/user-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 8086,
+    "resourceNames": [
+      "METALLIC_STARTUSERPANEL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start panel user pane, native 120 x 63, stretched along its 59, 60, 62, 0 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/prog-list.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 501,
+    "resourceNames": [
+      "METALLIC_STARTPANELMFUBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna background for the frequently used programs column, native 156 x 4. Its top rows carry the amber rule and its left column the panel border. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/places-list.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 736,
+    "resourceNames": [
+      "METALLIC_STARTPANELPLACESBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna background for the places column, native 180 x 6, including the divider between the two columns and the amber rule. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/logoff.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 5078,
+    "resourceNames": [
+      "METALLIC_STARTPANELLOGOFFBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna log off strip, native 97 x 39, stretched along its 49, 47, 0, 38 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/logoff-buttons.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2881,
+    "resourceNames": [
+      "METALLIC_STARTPANELLOGOFFBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna log off strip icons at true size: undock, log off and turn off in three 24 x 24 cells. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/logoff-buttons-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2571,
+    "resourceNames": [
+      "METALLIC_STARTPANELLOGOFFBUTTONSHOT_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The lit version of the same three 24 x 24 icons. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/programs-separator.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 258,
+    "resourceNames": [
+      "METALLIC_STARTPROGRAMSSEPARATOR_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna separator for the programs column, drawn at its true 172 x 2 size. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/places-separator.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 208,
+    "resourceNames": [
+      "METALLIC_STARTPLACESSEPARATOR_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna separator for the places column, drawn at its true 134 x 2 size. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/more-arrow.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 760,
+    "resourceNames": [
+      "METALLIC_STARTPANELMOREPROGARROW_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna All Programs arrow, true size 16 x 24. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/more-arrow-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 775,
+    "resourceNames": [
+      "METALLIC_STARTPANELMOREPROGARROWHOT_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The lit version of the All Programs arrow. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/silver/user-tile.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 561,
+    "resourceNames": [
+      "METALLIC_USERTILEBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna frame for an account picture, native 55 x 55, stretched along its 6, 10, 6, 10 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/user-pane.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 5346,
+    "resourceNames": [
+      "HOMESTEAD_STARTUSERPANEL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Start panel user pane, native 120 x 63, stretched along its 59, 60, 62, 0 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/prog-list.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 337,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELMFUBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna background for the frequently used programs column, native 156 x 4. Its top rows carry the amber rule and its left column the panel border. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/places-list.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 551,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELPLACESBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna background for the places column, native 180 x 6, including the divider between the two columns and the amber rule. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/logoff.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2453,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELLOGOFFBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna log off strip, native 97 x 39, stretched along its 49, 47, 0, 38 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/logoff-buttons.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2876,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELLOGOFFBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna log off strip icons at true size: undock, log off and turn off in three 24 x 24 cells. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/logoff-buttons-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2571,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELLOGOFFBUTTONSHOT_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The lit version of the same three 24 x 24 icons. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/programs-separator.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 258,
+    "resourceNames": [
+      "HOMESTEAD_STARTPROGRAMSSEPARATOR_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna separator for the programs column, drawn at its true 172 x 2 size. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/places-separator.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 177,
+    "resourceNames": [
+      "HOMESTEAD_STARTPLACESSEPARATOR_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna separator for the places column, drawn at its true 134 x 2 size. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/more-arrow.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 760,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELMOREPROGARROW_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna All Programs arrow, true size 16 x 24. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/more-arrow-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 775,
+    "resourceNames": [
+      "HOMESTEAD_STARTPANELMOREPROGARROWHOT_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "The lit version of the All Programs arrow. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "start/olive/user-tile.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 571,
+    "resourceNames": [
+      "HOMESTEAD_USERTILEBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna frame for an account picture, native 55 x 55, stretched along its 6, 10, 6, 10 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/combo-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 513,
+    "resourceNames": [
+      "BLUE_COMBOBUTTON_BMP",
+      "BLUE_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/field-outline.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 116,
+    "resourceNames": [
+      "BLUE_FIELDOUTLINEBLUE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna field outline, native 14 x 7. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/group-background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 126,
+    "resourceNames": [
+      "BLUE_NORMALGROUPBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar group body, native 111 x 10, stretched along its 3, 3, 3, 3 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/group-head.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 205,
+    "resourceNames": [
+      "BLUE_NORMALGROUPHEAD_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar group head, native 111 x 21, stretched along its 3, 106, 3, 1 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/groupbox.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 185,
+    "resourceNames": [
+      "BLUE_GROUPBOX_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna group box frame, native 22 x 20, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/header-checked.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 101,
+    "resourceNames": [
+      "BLUE_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, checked state, native 18 x 18, sizing margins 8, 8, 3, 4. Its colour key is red. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/header-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 101,
+    "resourceNames": [
+      "BLUE_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, disabled state, native 18 x 18, sizing margins 8, 8, 3, 4. Its colour key is red. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/rebar.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2323,
+    "resourceNames": [
+      "BLUE_TOOLBARBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna rebar background, the band that holds an Explorer menu bar, toolbar and address bar together, native 320 x 13, sizing margins 0, 0, 0, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/resize-grip-left.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 127,
+    "resourceNames": [
+      "BLUE_RESIZEGRIP2_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna size box, the left aligned of its two 16 x 17 states. Its colour key is red, not the theme magenta. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/slider-thumb-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 249,
+    "resourceNames": [
+      "BLUE_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, focused state, true size 11 x 21. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/slider-thumb-v-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 294,
+    "resourceNames": [
+      "BLUE_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, disabled state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/slider-thumb-v-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 239,
+    "resourceNames": [
+      "BLUE_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, focused state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/slider-thumb-v-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 294,
+    "resourceNames": [
+      "BLUE_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, hot state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/slider-thumb-v-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 299,
+    "resourceNames": [
+      "BLUE_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, pressed state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/special-background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 170,
+    "resourceNames": [
+      "BLUE_SPECIALGROUPBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar body for a special group, native 111 x 10. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/special-head.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 884,
+    "resourceNames": [
+      "BLUE_SPECIALGROUPHEAD_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar head for a special group, native 111 x 21, the one whose caption the ini sets in white. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/spin-down-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 290,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "BLUE_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, disabled state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/spin-down-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 467,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "BLUE_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, hot state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/spin-down-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 509,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "BLUE_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/spin-up-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 280,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDUP_BMP",
+      "BLUE_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, disabled state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/spin-up-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 458,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDUP_BMP",
+      "BLUE_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, hot state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/spin-up-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 499,
+    "resourceNames": [
+      "BLUE_SPINBUTTONBACKGROUNDUP_BMP",
+      "BLUE_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/tab-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 179,
+    "resourceNames": [
+      "BLUE_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, disabled state, native 18 x 18, sizing margins 6, 6, 6, 6. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/tab-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 342,
+    "resourceNames": [
+      "BLUE_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, focused state, native 18 x 18, sizing margins 6, 6, 6, 6. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/toolbar-checked-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 325,
+    "resourceNames": [
+      "BLUE_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, checked-hot state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/toolbar-checked.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 222,
+    "resourceNames": [
+      "BLUE_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, checked state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/toolbar-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 80,
+    "resourceNames": [
+      "BLUE_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, disabled state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/blue/toolbar-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 80,
+    "resourceNames": [
+      "BLUE_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, normal state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/combo-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 314,
+    "resourceNames": [
+      "METALLIC_COMBOBUTTON_BMP",
+      "METALLIC_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/field-outline.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 116,
+    "resourceNames": [
+      "METALLIC_FIELDOUTLINEBLUE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna field outline, native 14 x 7. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/group-background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 130,
+    "resourceNames": [
+      "METALLIC_NORMALGROUPBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar group body, native 111 x 10, stretched along its 3, 3, 3, 3 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/group-head.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 201,
+    "resourceNames": [
+      "METALLIC_NORMALGROUPHEAD_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar group head, native 111 x 21, stretched along its 3, 106, 3, 1 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/groupbox.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 128,
+    "resourceNames": [
+      "METALLIC_GROUPBOX_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna group box frame, native 22 x 20, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/header-checked.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 101,
+    "resourceNames": [
+      "METALLIC_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, checked state, native 18 x 18, sizing margins 8, 8, 3, 4. Its colour key is red. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/header-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 101,
+    "resourceNames": [
+      "METALLIC_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, disabled state, native 18 x 18, sizing margins 8, 8, 3, 4. Its colour key is red. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/rebar.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2942,
+    "resourceNames": [
+      "METALLIC_TOOLBARBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna rebar background, the band that holds an Explorer menu bar, toolbar and address bar together, native 320 x 13, sizing margins 0, 0, 0, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/resize-grip-left.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 127,
+    "resourceNames": [
+      "METALLIC_RESIZEGRIP2_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna size box, the left aligned of its two 16 x 17 states. Its colour key is red, not the theme magenta. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/slider-thumb-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 249,
+    "resourceNames": [
+      "METALLIC_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, focused state, true size 11 x 21. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/slider-thumb-v-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 304,
+    "resourceNames": [
+      "METALLIC_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, disabled state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/slider-thumb-v-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 239,
+    "resourceNames": [
+      "METALLIC_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, focused state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/slider-thumb-v-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 304,
+    "resourceNames": [
+      "METALLIC_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, hot state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/slider-thumb-v-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 299,
+    "resourceNames": [
+      "METALLIC_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, pressed state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/special-background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 156,
+    "resourceNames": [
+      "METALLIC_SPECIALGROUPBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar body for a special group, native 111 x 10. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/special-head.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 165,
+    "resourceNames": [
+      "METALLIC_SPECIALGROUPHEAD_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar head for a special group, native 111 x 21, the one whose caption the ini sets in white. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/spin-down-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 286,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "METALLIC_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, disabled state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/spin-down-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 286,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "METALLIC_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, hot state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/spin-down-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 298,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "METALLIC_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/spin-up-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 281,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDUP_BMP",
+      "METALLIC_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, disabled state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/spin-up-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 292,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDUP_BMP",
+      "METALLIC_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, hot state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/spin-up-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 320,
+    "resourceNames": [
+      "METALLIC_SPINBUTTONBACKGROUNDUP_BMP",
+      "METALLIC_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/tab-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 178,
+    "resourceNames": [
+      "METALLIC_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, disabled state, native 18 x 18, sizing margins 6, 6, 6, 6. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/tab-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 246,
+    "resourceNames": [
+      "METALLIC_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, focused state, native 18 x 18, sizing margins 6, 6, 6, 6. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/toolbar-checked-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 322,
+    "resourceNames": [
+      "METALLIC_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, checked-hot state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/toolbar-checked.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 217,
+    "resourceNames": [
+      "METALLIC_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, checked state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/toolbar-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 80,
+    "resourceNames": [
+      "METALLIC_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, disabled state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/silver/toolbar-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 80,
+    "resourceNames": [
+      "METALLIC_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, normal state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/combo-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 387,
+    "resourceNames": [
+      "HOMESTEAD_COMBOBUTTON_BMP",
+      "HOMESTEAD_COMBOBUTTONGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna combo box drop down button, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/field-outline.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 116,
+    "resourceNames": [
+      "HOMESTEAD_FIELDOUTLINEBLUE_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna field outline, native 14 x 7. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/group-background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 132,
+    "resourceNames": [
+      "HOMESTEAD_NORMALGROUPBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar group body, native 111 x 10, stretched along its 3, 3, 3, 3 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/group-head.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 240,
+    "resourceNames": [
+      "HOMESTEAD_NORMALGROUPHEAD_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar group head, native 111 x 21, stretched along its 3, 106, 3, 1 sizing margins. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/groupbox.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 185,
+    "resourceNames": [
+      "HOMESTEAD_GROUPBOX_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna group box frame, native 22 x 20, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/header-checked.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 101,
+    "resourceNames": [
+      "HOMESTEAD_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, checked state, native 18 x 18, sizing margins 8, 8, 3, 4. Its colour key is red. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/header-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 101,
+    "resourceNames": [
+      "HOMESTEAD_LISTVIEWHEADER_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna list view column header, disabled state, native 18 x 18, sizing margins 8, 8, 3, 4. Its colour key is red. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/rebar.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 2323,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna rebar background, the band that holds an Explorer menu bar, toolbar and address bar together, native 320 x 13, sizing margins 0, 0, 0, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/resize-grip-left.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 127,
+    "resourceNames": [
+      "HOMESTEAD_RESIZEGRIP2_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna size box, the left aligned of its two 16 x 17 states. Its colour key is red, not the theme magenta. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/slider-thumb-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 249,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARHORIZONTAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna horizontal track bar thumb, focused state, true size 11 x 21. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/slider-thumb-v-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 294,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, disabled state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/slider-thumb-v-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 240,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, focused state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/slider-thumb-v-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 294,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, hot state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/slider-thumb-v-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 305,
+    "resourceNames": [
+      "HOMESTEAD_TRACKBARVERTICAL_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna vertical track bar thumb, pressed state, true size 21 x 11. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/special-background.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 164,
+    "resourceNames": [
+      "HOMESTEAD_SPECIALGROUPBACKGROUND_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar body for a special group, native 111 x 10. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/special-head.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 645,
+    "resourceNames": [
+      "HOMESTEAD_SPECIALGROUPHEAD_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna Explorer bar head for a special group, native 111 x 21, the one whose caption the ini sets in white. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/spin-down-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 290,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "HOMESTEAD_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, disabled state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/spin-down-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 272,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "HOMESTEAD_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, hot state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/spin-down-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 370,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDDOWN_BMP",
+      "HOMESTEAD_SPINDOWNGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, down, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/spin-up-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 280,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDUP_BMP",
+      "HOMESTEAD_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, disabled state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/spin-up-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 275,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDUP_BMP",
+      "HOMESTEAD_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, hot state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/spin-up-pressed.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 393,
+    "resourceNames": [
+      "HOMESTEAD_SPINBUTTONBACKGROUNDUP_BMP",
+      "HOMESTEAD_SPINUPGLYPH_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna spin button, up, pressed state, with its own glyph centred on the background at native 15 x 16. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/tab-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 178,
+    "resourceNames": [
+      "HOMESTEAD_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, disabled state, native 18 x 18, sizing margins 6, 6, 6, 6. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/tab-focused.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 358,
+    "resourceNames": [
+      "HOMESTEAD_TABITEM_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna tab item, focused state, native 18 x 18, sizing margins 6, 6, 6, 6. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/toolbar-checked-hot.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 325,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, checked-hot state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/toolbar-checked.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 222,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, checked state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/toolbar-disabled.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 80,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, disabled state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
+  },
+  {
+    "file": "controls/olive/toolbar-normal.png",
+    "url": "https://raw.githubusercontent.com/robberphex/docker-wine-coolq/master/luna.msstyles",
+    "bytes": 80,
+    "resourceNames": [
+      "HOMESTEAD_TOOLBARBUTTONS_BMP"
+    ],
+    "sourceSha256": "c1d68af043a8431650dee22d4064b4e523309f00fb1c1cfa174ebd86e2125019",
+    "note": "Original Luna toolbar button, normal state, native 20 x 23, sizing margins 4, 4, 4, 4. Extracted from the theme but not currently painted by any stylesheet; kept so it does not have to be pulled out again."
   }
 ]
