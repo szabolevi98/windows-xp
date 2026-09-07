@@ -14,7 +14,7 @@ window.XP = (() => {
     {id:'welcome',name:'Üdv a Windows XP-ben.txt',type:'text',parent:'documents',content:'Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n',modified:Date.now()},
     {id:'todo',name:'Teendők.txt',type:'text',parent:'documents',content:'Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n',modified:Date.now()},
     {id:'folder-personal',name:'Személyes',type:'folder',parent:'documents',modified:Date.now()}
-  ],security:{firewall:true,updates:true},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
+  ],security:{firewall:true,updates:true},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Webkatalógus',url:'about:offline'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
   let state;
   try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
   let storageWarned=false;
@@ -44,6 +44,12 @@ window.XP = (() => {
     const folder=state.files.find(f=>f.type==='folder'&&f.id===(otherGame?.parent||'folder-games'));
     if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:'3D Pinball – Space Cadet',type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
     state.pinballAdded=true;
+  }
+  // The web catalogue joins the favourites of desktops that were set up before it existed.
+  if(!state.catalogueFavourite){
+    if(!Array.isArray(state.favorites))state.favorites=defaults().favorites;
+    if(!state.favorites.some(f=>f.url==='about:offline'))state.favorites.push({title:'Webkatalógus',url:'about:offline'});
+    state.catalogueFavourite=true;
   }
   if(!state.cardGamesAdded){
     const anchor=state.files.find(f=>f.type==='shortcut'&&['mines','solitaire','pinball'].includes(f.app));

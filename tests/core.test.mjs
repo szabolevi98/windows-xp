@@ -447,3 +447,17 @@ test('The Start menu header opens the account, and its amber rule stops short of
  // The classic theme never had it.
  assert.match(css,/body\[data-theme=classic\] \.start-header:after\{display:none\}/);
 });
+
+test('The web catalogue is a favourite, and older desktops gain it exactly once',()=>{
+ const {xp,storage}=boot();
+ const catalogue=xp.state.favorites.filter(f=>f.url==='about:offline');
+ assert.equal(catalogue.length,1);
+ assert.equal(catalogue[0].title,'Webkatalógus');
+ // A save from before the catalogue existed picks it up, keeping the favourites already there.
+ const older=boot({version:1,user:'Teszt',files:[],favorites:[{title:'Google',url:'google.hu'}]}).xp;
+ assert.deepEqual(Array.from(older.state.favorites,f=>f.url),['google.hu','about:offline']);
+ // Removing it later is respected: the migration does not run again.
+ const trimmed=JSON.parse(storage.get('windows-xp-simulator-v1'));
+ trimmed.favorites=trimmed.favorites.filter(f=>f.url!=='about:offline');
+ assert.equal(boot(trimmed).xp.state.favorites.some(f=>f.url==='about:offline'),false);
+});
