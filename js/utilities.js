@@ -83,6 +83,25 @@ function propertySheet({app,title,icon:ic,tabs,initial,width=470,height=515,read
 const monitor=inner=>`<div class="monitor-preview"><div class="monitor-screen">${inner||''}</div></div>`;
 const wallpaperStyle=(name,fit)=>name==='none'?'background:#3a6ea5':`background:#3a6ea5 url('${XP.wallpaperPath(name)}') ${fit==='tile'?'left top/auto repeat':fit==='center'?'center/auto no-repeat':'center/cover no-repeat'}`;
 
+// --- Tálca és Start menü tulajdonságai -----------------------------------
+register('taskbar',(initial='taskbar')=>{
+ const draft={...{locked:true,clock:true,quickLaunch:true},...(state.taskbar||{})};
+ const check=(key,label)=>`<label class="settings-check"><input type="checkbox" data-key="${key}" ${draft[key]?'checked':''}> ${esc(label)}</label>`;
+ return propertySheet({
+  app:'taskbar',title:'A Tálca és a Start menü tulajdonságai',icon:'control',initial,width:400,height:430,
+  tabs:[['taskbar','Tálca'],['start','Start menü']],
+  read(tab,panel){$$('[data-key]',panel).forEach(box=>draft[box.dataset.key]=box.checked);},
+  draw(tab,panel){
+   panel.innerHTML=tab==='taskbar'
+    ?`<div class="preview-taskbar-strip"><span class="strip-start">start</span><span class="strip-task">Jegyzettömb</span><span class="strip-tray">${(new Date()).toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'})}</span></div>
+       <fieldset><legend>A Tálca megjelenése</legend>${check('locked','A Tálca rögzítése')}${check('quickLaunch','A Gyorsindítás eszköztár megjelenítése')}</fieldset>
+       <fieldset><legend>Az értesítési terület</legend>${check('clock','Az óra megjelenítése')}<p class="settings-note">Az inaktív ikonokat a Tálca a nyíl mögé rejti.</p></fieldset>`
+    :`<fieldset><legend>A Start menü stílusa</legend><label class="settings-check"><input type="radio" name="start-style" checked> Start menü</label><p class="settings-note">Ez a stílus a leggyakrabban használt programokat kínálja, és közvetlen elérést ad az internethez és az e-mailhez.</p><label class="settings-check"><input type="radio" name="start-style" disabled> Klasszikus Start menü</label><p class="settings-note">A Windows korábbi verzióinak megjelenését és működését adja vissza.</p></fieldset>`;
+  },
+  apply(){state.taskbar={...state.taskbar,...draft};persist();XP.applySettings();}
+ });
+});
+
 // --- Megjelenítés tulajdonságai (desk.cpl) -------------------------------
 register('display',()=>displayProperties());
 register('screensaver',()=>displayProperties('screensaver'));

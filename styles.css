@@ -271,3 +271,17 @@ body[data-theme=classic] .explorer-panel{background:#d4d0c8;border-radius:0;colo
 body[data-theme=classic] .explorer-sidebar{background:#d4d0c8}
 @media(min-width:1600px){.google-home{padding-top:64px}.google-footer{margin-top:45px}}
 @media(max-width:700px){.quick-launch{display:none}#start-button{width:106px;min-width:106px}#start-menu{width:min(390px,100vw)}.tray{padding:0 4px}.tray>button[data-open],.tray>button[data-tray],.tray .tray-toggle,.tray-hidden{display:none}.window{min-width:260px}.toolbar{gap:0;padding:2px}.toolbar button{padding:4px}.toolbar .toolbar-label{display:none}.advanced-links{display:none}.google-home{padding:35px 14px 20px}.google-form{width:95%}.google-logo{width:220px;height:88px}.google-footer{margin-top:30px}.google-nav{gap:10px}.google-nav .right{display:none}.explorer-sidebar{width:145px;padding:8px}.window .explorer-files{padding:9px}.welcome-login{gap:20px;flex-direction:column}.welcome-login .windows-brand{border:0;padding-right:0;margin-left:0}.help-cards{grid-template-columns:1fr}.solitaire-body{padding:10px}.card-slot,.playing-card,.card-column{width:45px}.card-top,.solitaire-columns{gap:6px}.playing-card{font-size:14px}.playing-card .big-suit{font-size:22px;right:5px}.google-search-line input{font-size:15px}.search-header{padding:12px;gap:10px}.search-header img{width:85px}.search-header form{flex-wrap:wrap}.boot-bottom{left:20px;right:20px}.windows-brand{font-size:30px}}
+
+body.no-clock #clock{display:none}
+body.no-quick-launch .quick-launch{display:none}
+.settings-check{display:flex;align-items:center;gap:7px;margin:7px 0}
+.settings-note{margin:2px 0 10px 23px;color:#555}
+.preview-taskbar-strip{display:flex;align-items:center;gap:6px;height:30px;padding:0 4px 0 0;margin-bottom:14px;border:1px inset #d4d0c8;background:linear-gradient(#1f6fd8,#1152c2 12%,#2b7ae4 88%,#0d3fa5)}
+.preview-taskbar-strip .strip-start{height:26px;display:flex;align-items:center;padding:0 16px 0 8px;color:#fff;font-weight:bold;font-style:italic;border-radius:0 8px 8px 0;background:linear-gradient(#4f9b45,#317a27 20%,#3d8a31 90%,#1e5c17)}
+.preview-taskbar-strip .strip-task{flex:1;height:22px;display:flex;align-items:center;padding:0 8px;color:#fff;border-radius:2px;background:#3c81e4}
+.preview-taskbar-strip .strip-tray{height:26px;display:flex;align-items:center;padding:0 8px;color:#fff;background:#12a3d8}
+
+.desktop-icon.shortcut,.file-item.shortcut{position:relative}
+.desktop-icon.shortcut:before,.file-item.shortcut:before{content:'';position:absolute;width:11px;height:11px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.6 1.2v5l1.9-1.9 3 3 1.4-1.4-3-3 1.9-1.9z' fill='%23000'/%3E%3C/svg%3E") center/8px no-repeat;border:1px solid #7a7a7a;box-shadow:0 1px 1px #0003}
+.desktop-icon.shortcut:before{left:calc(50% - 16px);top:26px}
+.file-item.shortcut:before{left:calc(50% - 18px);top:29px}
