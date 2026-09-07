@@ -121,17 +121,17 @@ test('Menus cascade, and Send To reaches the desktop from a file as well',()=>{
 
 test('Explorer shows the views XP had, Details with sortable columns',()=>{
  const ex=readFileSync(new URL('js/explorer.js',root),'utf8');
- assert.match(ex,/const VIEWS=\[\['tiles','Mozaik'\],\['icons','Ikonok'\],\['list','Lista'\],\['details','Részletek'\]\]/);
+ assert.match(ex,/const VIEWS=\[\['tiles',t\('Mozaik'\)\],\['icons',t\('Ikonok'\)\],\['list',t\('Lista'\)\],\['details',t\('Részletek'\)\]\]/);
  assert.doesNotMatch(ex,/listView/,'the two-view toggle is gone');
  // The columns Details showed, and what they say about an entry.
- assert.match(ex,/\['name','Név'\],\['size','Méret'\],\['type','Típus'\],\['modified','Módosítva'\]/);
- assert.match(ex,/TYPES=\{folder:'Fájlmappa',text:'Szöveges dokumentum'/);
+ assert.match(ex,/\['name',t\('Név'\)\],\['size',t\('Méret'\)\],\['type',t\('Típus'\)\],\['modified',t\('Módosítva'\)\]/);
+ assert.match(ex,/TYPES=\{folder:t\('Fájlmappa'\),text:t\('Szöveges dokumentum'\)/);
  assert.match(ex,/const sizeOf=file=>file\.type==='folder'\?null:/,'folders have no size');
  // Clicking a header sorts, clicking it again turns the order around.
  assert.match(ex,/sort=sort\.key===key\?\{key,dir:-sort\.dir\}:\{key,dir:1\}/);
  assert.match(ex,/const folders=\(b\.type==='folder'\)-\(a\.type==='folder'\)/,'folders still come first');
  // Both the menu and the toolbar button offer the same list.
- assert.match(ex,/'Nézet':\(\)=>\[\.\.\.viewItems\(\)/);
+ assert.match(ex,/\[t\('Nézet'\)\]:\(\)=>\[\.\.\.viewItems\(\)/);
  assert.match(ex,/if\(action==='view'\)\{const box=/);
  const css=readFileSync(new URL('styles.css',root),'utf8');
  assert.match(css,/\.details-header button\{/);
@@ -179,13 +179,13 @@ test('A drive has the properties sheet XP drew, pie and all',()=>{
 
 test('The Folders button swaps the task pane for the tree',()=>{
  const ex=readFileSync(new URL('js/explorer.js',root),'utf8');
- assert.match(ex,/<button data-action="tree">\$\{icon\('folder'\)\}<span class="toolbar-label">Mappák<\/span><\/button>/);
+ assert.match(ex,/<button data-action="tree">\$\{icon\('folder'\)\}<span class="toolbar-label">\$\{esc\(t\('Mappák'\)\)\}<\/span><\/button>/);
  assert.doesNotMatch(ex,/toolbar-label">Új mappa/,'the toolbar matches XP, which had no New Folder button');
  assert.match(ex,/if\(action==='tree'\)\{showTree=!showTree;render\(\);\}/);
  // The desktop is the root, with My Computer, the drives and the user's own folders under it.
  assert.match(ex,/function treeChildren\(id\)/);
  assert.match(ex,/\{id:'disk',name:'Helyi lemez \(C:\)',icon:'disk'\}/);
- assert.match(ex,/name:`\$\{state\.user\} dokumentumai`/,'the user folder is named, not repeated');
+ assert.match(ex,/name:t\('\{user\} dokumentumai',\{user:state\.user\}\)/,'the user folder is named, not repeated');
  assert.match(ex,/\{id:'recycle',name:'Lomtár'/);
  // The little box opens a branch; walking into a folder opens its own.
  assert.match(ex,/if\(b\.dataset\.twist\)\{const id=b\.dataset\.twist;expanded\.has\(id\)\?expanded\.delete\(id\):expanded\.add\(id\);render\(true\);return;\}/);
