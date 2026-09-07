@@ -88,7 +88,7 @@ register('taskbar',(initial='taskbar')=>{
  const draft={...{locked:true,clock:true,quickLaunch:true},...(state.taskbar||{})};
  const check=(key,label)=>`<label class="settings-check"><input type="checkbox" data-key="${key}" ${draft[key]?'checked':''}> ${esc(label)}</label>`;
  return propertySheet({
-  app:'taskbar',title:'A Tálca és a Start menü tulajdonságai',icon:'control',initial,width:400,height:430,
+  app:'taskbar',title:'A Tálca és a Start menü tulajdonságai',icon:'taskbar',initial,width:400,height:430,
   tabs:[['taskbar','Tálca'],['start','Start menü']],
   read(tab,panel){$$('[data-key]',panel).forEach(box=>draft[box.dataset.key]=box.checked);},
   draw(tab,panel){
