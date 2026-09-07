@@ -20,7 +20,7 @@ test('Any program can be sent from the Start menu to the desktop as a shortcut',
  assert.match(core,/if\(target\)openFile\(target\.id\)/,'a file shortcut opens what it points at');
  assert.match(core,/A parancsikon hivatkozása nem érhető el/,'and says so when the target is gone');
  assert.match(core,/function shortcutTo\(app,name,iconName,parent='desktop'\)/);
- assert.match(core,/download,openFile,rememberDocument,shortcutTo,shortcutToFile,onFiles/,'other programs can make shortcuts too');
+ assert.match(core,/download,openFile,shortcutTo,shortcutToFile,onFiles/,'other programs can make shortcuts too');
  // The little arrow badge marks a shortcut on the desktop and in Explorer.
  assert.match(start,/item\.shortcut\?' shortcut':''/);
  assert.match(read('js/explorer.js'),/f\.type==='shortcut'\?'shortcut':''/);
@@ -139,22 +139,22 @@ test('Explorer shows the views XP had, Details with sortable columns',()=>{
  assert.match(css,/\.tiles-view \.file-item\{display:grid/);
 });
 
-test('The Start menu remembers the programs used and the documents opened',()=>{
+test('The Start menu fills its own list of programs',()=>{
  const core=readFileSync(new URL('js/core.js',root),'utf8');
  // Opening a program counts, but only the ones that belong on that list.
  assert.match(core,/if\(PROGRAMS\[app\]\)\{state\.programUse=\{\.\.\.state\.programUse,\[app\]:\(state\.programUse\?\.\[app\]\|\|0\)\+1\}/);
- assert.match(core,/function rememberDocument\(id\)/);
- assert.match(core,/state\.recentDocs=\[id,\.\.\.\(state\.recentDocs\|\|\[\]\)\.filter\(other=>other!==id\)\]\.slice\(0,15\)/);
- assert.match(core,/if\(!file\|\|file\.type==='folder'\|\|file\.type==='shortcut'\)return;/,'folders and shortcuts are not documents');
 
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  assert.match(start,/function frequentPrograms\(\)/);
  assert.match(start,/app!=='ie'&&app!=='outlook'/,'the pinned pair keeps out of the list below');
- assert.match(start,/\.slice\(0,6\)/,'six entries, as XP showed');
+ assert.match(start,/\.slice\(0,5\)/,'five entries, so the menu stays the height XP had');
  assert.match(start,/const DEFAULT_FREQUENT=\['player','notepad','paint','calculator','mines'\]/,'a fresh desktop still has a list');
- assert.match(start,/function recentMarkup\(\)/);
- assert.match(start,/Legutóbbi dokumentumok/);
- assert.match(start,/A lista törlése/);
+ // Explorer belongs under Accessories, not among the frequently used programs.
+ assert.doesNotMatch(start,/explorer:\['Windows Intéző','folder'\]/);
+ assert.match(start,/\['Windows Intéző','folder','explorer'\]/,'but All Programs still lists it');
+ // Recent Documents took a row the menu could not spare.
+ assert.doesNotMatch(start,/Legutóbbi dokumentumok/);
+ assert.doesNotMatch(core,/recentDocs/);
  assert.match(start,/startItem\('Nyomtatók és faxok','printers','printers'/);
  assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/register\('printers'/,'so the folder has somewhere to open');
 });
