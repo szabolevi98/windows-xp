@@ -52,7 +52,7 @@ test('Outlook Express is a program of its own, reachable the way XP offered it',
 });
 
 test('Every program the Start menu lists is one the desktop can actually open',()=>{
- const sources=['apps','cardgames','explorer','games','internet','outlook','pinball','player','start','utilities']
+ const sources=['apps','cardgames','explorer','games','internet','outlook','pinball','player','start','taskmgr','utilities']
   .map(name=>readFileSync(new URL(`js/${name}.js`,root),'utf8')).join('\n');
  const registered=new Set(Array.from(sources.matchAll(/register\('([a-z0-9-]+)'/g),m=>m[1]));
  const start=readFileSync(new URL('js/start.js',root),'utf8');
