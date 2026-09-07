@@ -251,7 +251,7 @@ async function enterDesktop(){
   return;
  }
  bootPhase='desktop';$('#welcome-screen').hidden=true;$('#boot-screen').hidden=true;$('#off-screen').hidden=true;
- if(playback==='error')notify('Bejelentkezési hang',t('A bejelentkezési hangot nem sikerült lejátszani.'));
+ if(playback==='error')notify(t('Bejelentkezési hang'),t('A bejelentkezési hangot nem sikerült lejátszani.'));
  // The tip is for the first arrival; after that the desktop speaks for itself.
  else if(state.showWelcome){state.showWelcome=false;persist();notify(t('Üdv a Windows XP-ben!'), t('Az ikonokat dupla kattintással nyithatod meg. Kezdj a Start menüvel, és fedezd fel a régi kedvenceket! Az igazi élményhez az F11 billentyűvel válthatsz teljes képernyőre.'));}
 }

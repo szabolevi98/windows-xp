@@ -50,7 +50,7 @@ register('freecell',()=>{
   if(moves&&!finished)record(false);
   number=Math.min(1000000,Math.max(1,Math.floor(next)||1));columns=rules.freecellColumns(number);
   cells=[null,null,null,null];foundations=[[],[],[],[]];selected=null;moves=0;snapshots=[];finished=false;
-  w.setTitle(`FreeCell – ${number}. játék`);render();
+  w.setTitle(t('FreeCell – {n}. játék',{n:number}));render();
  }
  function saveMove(){snapshots.push(JSON.stringify({columns,cells,foundations,moves}));if(snapshots.length>200)snapshots.shift();}
  function undo(){if(!snapshots.length)return;({columns,cells,foundations,moves}=JSON.parse(snapshots.pop()));selected=null;render();}
@@ -59,7 +59,7 @@ register('freecell',()=>{
   if(answer!==null&&String(answer).trim())reset(Number(String(answer).trim()));
  }
  menubar(w,{
-  [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:t('Játék száma…'),shortcut:'F3',action:pick},{label:t('Ugyanez újra'),action:()=>reset(number)},null,{label:t('Visszavonás'),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t('Automatikus gyűjtés'),action:()=>{collect(true);render();}},null,{label:t('Statisztika…'),action:()=>{const s=stats();XP.dialog('FreeCell – Statisztika',`Lejátszott játékok: ${s.played}\nMegnyert játékok: ${s.won}\nNyerési arány: ${s.played?Math.round(s.won/s.played*100):0}%\nJelenlegi sorozat: ${s.streak}\nLeghosszabb sorozat: ${s.best}`);}},null,{label:t('Kilépés'),action:()=>w.close()}],
+  [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:t('Játék száma…'),shortcut:'F3',action:pick},{label:t('Ugyanez újra'),action:()=>reset(number)},null,{label:t('Visszavonás'),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t('Automatikus gyűjtés'),action:()=>{collect(true);render();}},null,{label:t('Statisztika…'),action:()=>{const s=stats();XP.dialog(t('FreeCell – Statisztika'),t('Lejátszott játékok: {played}\nMegnyert játékok: {won}\nNyerési arány: {rate}%\nJelenlegi sorozat: {streak}\nLeghosszabb sorozat: {best}',{played:s.played,won:s.won,rate:s.played?Math.round(s.won/s.played*100):0,streak:s.streak,best:s.best}));}},null,{label:t('Kilépés'),action:()=>w.close()}],
   [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog('FreeCell',t('Cél: mind az 52 lapot ásztól királyig a jobb felső gyűjtőhelyekre rakni.\n\nAz oszlopokban csökkenő sorrendben, váltakozó színnel építkezhetsz.\nA bal felső négy szabad helyre laponként egy lap tehető le.\nÜres oszlopba bármelyik lap kerülhet.\n\nEgyszerre annyi lapot mozgathatsz, amennyi a szabad helyekre és üres oszlopokba beférne: (szabad helyek + 1) × 2 ^ üres oszlopok.\n\nKattints a lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre rakás.\nMinden leosztás számozott, és a 617-es játék mindig ugyanaz.'))}]
  });
  const body=document.createElement('div');body.className='solitaire-body freecell-body';w.body.append(body);
@@ -94,7 +94,7 @@ register('freecell',()=>{
    saveMove();detach();pile.push(...cards);
   }
   moves++;selected=null;collect(false);render();
-  if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),`Kiraktad a(z) ${number}. játékot ${moves} lépésből!`);}
+  if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),t('Kiraktad a(z) {n}. játékot {moves} lépésből!',{n:number,moves}));}
   return true;
  }
  function collect(all){
@@ -110,11 +110,11 @@ register('freecell',()=>{
     foundations[c.suit].push(c);changed=true;break;
    }
   }
-  if(all&&foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),`Kiraktad a(z) ${number}. játékot ${moves} lépésből!`);}
+  if(all&&foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),t('Kiraktad a(z) {n}. játékot {moves} lépésből!',{n:number,moves}));}
  }
  function render(){
   const chosen=(kind,a,b)=>selected?.kind===kind&&(kind==='column'?selected.col===a:selected.index===a);
-  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${i+1}. szabad hely"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${SUITS[i]} gyűjtőhely">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t('Kattints egy lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre.'))}</div>`;
+  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${esc(t('{n}. szabad hely',{n:i+1}))}"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${esc(t('{suit} gyűjtőhely',{suit:SUITS[i]}))}">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t('{n}. oszlop',{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t('Kattints egy lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre.'))}</div>`;
   $('span',bar).textContent=t('Lépések: ')+moves;
   $('.status-part',bar).textContent=`Szabad helyek: ${freeCount()} · Egyszerre ${rules.freecellCapacity(freeCount(),emptyCount(),false)} lap`;
   const max=Math.max(1,...columns.map(c=>c.length));
@@ -176,7 +176,7 @@ register('spider',()=>{
  function reset(count=suitCount){
   suitCount=count;const deal=rules.spiderDeal(count);
   columns=deal.columns;stock=deal.stock;done=0;selected=null;score=500;moves=0;snapshots=[];
-  w.setTitle(`Pókpasziánsz – ${count} szín`);render();
+  w.setTitle(t('Pókpasziánsz – {count} szín',{count}));render();
  }
  function saveMove(){snapshots.push(JSON.stringify({columns,stock,done,score,moves}));if(snapshots.length>200)snapshots.shift();}
  function undo(){if(!snapshots.length)return;({columns,stock,done,score,moves}=JSON.parse(snapshots.pop()));selected=null;render();}
@@ -198,7 +198,7 @@ register('spider',()=>{
    col.splice(at);done++;score+=100;
    const top=col.at(-1);if(top&&!top.face)top.face=true;
   });
-  if(done===8){XP.sound('notify');notify(t('Gratulálunk!'),`Kiraktad a pókpasziánszt ${suitCount} színnel! Pontszám: ${score}`);}
+  if(done===8){XP.sound('notify');notify(t('Gratulálunk!'),t('Kiraktad a pókpasziánszt {count} színnel! Pontszám: {score}',{count:suitCount,score}));}
  }
  function moveTo(target){
   if(!selected||selected.col===target)return false;
@@ -214,10 +214,10 @@ register('spider',()=>{
   let offsets;
   body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="${esc(t('Osztás a pakliból, {count} osztás maradt',{count:Math.ceil(stock.length/10)}))}"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t('Elfogyott a pakli'))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
    let y=0;offsets=col.map(card=>{const at=y;y+=card.face?20:8;return at;});
-   return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
+   return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t('{n}. oszlop',{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
   }).join('')}</div>`;
   $('span',bar).textContent=t('Pontszám: ')+score;
-  $('.status-part',bar).textContent=`Kész sorok: ${done} / 8`;
+  $('.status-part',bar).textContent=t('Kész sorok: {done} / 8',{done});
   const max=Math.max(1,...columns.map(col=>col.reduce((y,card)=>y+(card.face?20:8),0)));
   $$('.card-column',body).forEach(el=>el.style.minHeight=Math.max(230,max+60)+'px');
  }
@@ -346,7 +346,7 @@ register('hearts',()=>{
   phase='over';render();
   const done=Math.max(...scores)>=100;
   const title=done?t('Hearts – vége'):t('Hearts – kör vége');
-  const message=(moon>=0?`${names[moon]} bevitte az összes lapot – „lövés a Holdra”!\n\n`:'')+lines+(done?`\n\nGyőztes: ${names[scores.indexOf(Math.min(...scores))]}`:'');
+  const message=(moon>=0?t('{name} bevitte az összes lapot – „lövés a Holdra”!\n\n',{name:names[moon]}):'')+lines+(done?t('\n\nGyőztes: {name}',{name:names[scores.indexOf(Math.min(...scores))]}):'');
   XP.sound(done?'notify':'ding');
   XP.dialog(title,message).then(()=>{
    if(done){over=true;render();return;}
@@ -378,7 +378,7 @@ register('hearts',()=>{
   const playable=new Set(legal.map(key));
   const table=trick.map(t=>`<div class="hearts-play play-${seats[t.player]}">${cardHtml(t.card)}</div>`).join('');
   const centre=phase==='pass'
-   ?`<div class="hearts-centre"><p>Válassz ki három lapot, és add át ${directions[passIndex%4].label}.</p><button class="xp-button primary" data-pass ${chosen.length===3?'':'disabled'}>Átadás (${chosen.length}/3)</button></div>`
+   ?`<div class="hearts-centre"><p>${esc(t('Válassz ki három lapot, és add át {direction}.',{direction:directions[passIndex%4].label}))}</p><button class="xp-button primary" data-pass ${chosen.length===3?'':'disabled'}>${esc(t('Átadás ({count}/3)',{count:chosen.length}))}</button></div>`
    :over?`<div class="hearts-centre"><p>${esc(t('A játszma véget ért. Új játszma: F2.'))}</p></div>`
    :`<div class="hearts-table">${table}</div>`;
   body.innerHTML=`<div class="hearts-top">${seatHtml(2)}</div><div class="hearts-middle">${seatHtml(1)}${centre}${seatHtml(3)}</div><div class="hearts-hand" aria-label="${esc(t('A te lapjaid'))}">${hands[0].map((c,i)=>cardHtml(c,`data-card="${key(c)}"`,chosen.some(x=>key(x)===key(c)),`--card-i:${i}`)+'').join('')}</div>`;

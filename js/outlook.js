@@ -95,7 +95,7 @@
     }
     function compose({to='',subject='',quote=null}={}){
       const c=XP.createWindow({title:t('Új üzenet'),icon:'mail',app:'outlook-compose',className:'outlook-window',width:560,height:430,minWidth:380,minHeight:280});
-      const quoted=quote?`\n\n\n----- Eredeti üzenet -----\nFeladó: ${quote.from} <${quote.address}>\nTárgy: ${quote.subject}\n\n${quote.body}`:'';
+      const quoted=quote?t('\n\n\n----- Eredeti üzenet -----\nFeladó: {from} <{address}>\nTárgy: {subject}\n\n{body}',{from:quote.from,address:quote.address,subject:quote.subject,body:quote.body}):'';
       const form=document.createElement('div');form.className='oe-compose';
       form.innerHTML=`<label><span>${esc(t('Címzett:'))}</span><input type="text" name="to" value="${esc(to)}" placeholder="${esc(t('valaki@netkapu.hu'))}"></label><label><span>${esc(t('Tárgy:'))}</span><input type="text" name="subject" value="${esc(subject)}"></label><textarea name="body" aria-label="${esc(t('Üzenet szövege'))}">${esc(quoted)}</textarea><div class="button-row"><button class="xp-button primary" data-send>${esc(t('Küldés'))}</button><button class="xp-button" data-draft>${esc(t('Mentés piszkozatként'))}</button><button class="xp-button" data-cancel>${esc(t('Mégse'))}</button></div>`;
       c.body.append(form);
@@ -135,10 +135,10 @@
         :`<p class="oe-empty">${esc(t('Ebben a mappában nincs üzenet.'))}</p>`;
       const message=current();
       $('.oe-preview',shell).innerHTML=message
-        ?`<header><b>${esc(message.subject)}</b><span>Feladó: ${esc(message.from)} &lt;${esc(message.address)}&gt;</span><span>Dátum: ${stamp(message.date)}</span></header><pre>${esc(message.body)}</pre>`
+        ?`<header><b>${esc(message.subject)}</b><span>${esc(t('Feladó: {name} <{address}>',{name:message.from,address:message.address}))}</span><span>${esc(t('Dátum: {date}',{date:stamp(message.date)}))}</span></header><pre>${esc(message.body)}</pre>`
         :`<p class="oe-empty">${esc(t('Jelöljön ki egy üzenetet az elolvasásához.'))}</p>`;
       const inbox=totals[folder]||{total:0,unread:0};
-      $('span',bar).textContent=`${inbox.total} üzenet, ${inbox.unread} olvasatlan`;
+      $('span',bar).textContent=t('{total} üzenet, {unread} olvasatlan',{total:inbox.total,unread:inbox.unread});
       $('.status-part',bar).textContent=t('Kapcsolódva: mail.netkapu.hu');
     }
 

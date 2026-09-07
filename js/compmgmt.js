@@ -158,7 +158,7 @@
       treeEl.innerHTML=branch(TREE,0);
       const node=find(TREE,selected),content=paneFor(selected);
       pane.innerHTML=`<header class="mmc-heading">${icon(node?.[2]||'computer')}${esc(node?.[1]||'')}</header>${content.html}`;
-      $('span',bar).textContent=content.count?`${content.count} elem`:t('Kész');
+      $('span',bar).textContent=content.count?t('{count} elem',{count:content.count}):t('Kész');
     }
 
     body.onclick=event=>{
