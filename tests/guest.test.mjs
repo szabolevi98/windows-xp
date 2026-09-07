@@ -76,15 +76,19 @@ test('The Guest may not switch itself off, and the machine keeps what belongs to
  assert.equal(xp.switchUser('guest'),false,'and the account is out of reach again');
 });
 
-test('The administrator can set the Guest picture without signing in as the Guest',()=>{
+test('The Guest wears the suitcase picture XP gave it, and cannot be talked out of it',()=>{
  const {xp}=boot();
- assert.equal(xp.setAccountAvatar('guest','frog'),true);
- assert.equal(xp.accountInfo('guest').avatar,'frog');
- assert.equal(xp.state.avatar,'chess','the administrator keeps their own picture');
+ assert.equal(xp.accountInfo('guest').avatar,'guest');
+ assert.match(xp.avatarPath('guest'),/avatars\/guest\.png$/,'it has a picture file of its own');
  xp.switchUser('guest');
- assert.equal(xp.state.avatar,'frog','the guest signs in with it');
- // Nonsense pictures are refused.
- assert.equal(xp.setAccountAvatar('guest','nincs-ilyen'),false);
+ assert.equal(xp.state.avatar,'guest');
+ // Even a profile that saved another picture signs in with the suitcase.
+ xp.state.avatar='frog';xp.persist();
+ xp.switchUser('admin');
+ assert.equal(xp.accountInfo('guest').avatar,'guest');
+ xp.switchUser('guest');
+ assert.equal(xp.state.avatar,'guest');
+ assert.equal(xp.state.user,'Vendég');
 });
 
 test('The logon screen, the power dialog and User Accounts all know about the Guest',()=>{
@@ -102,8 +106,9 @@ test('The logon screen, the power dialog and User Accounts all know about the Gu
  assert.match(utils,/A Vendég fiók bekapcsolása/);
  assert.match(utils,/A Vendég fiók kikapcsolása/);
  assert.match(utils,/A Vendég fiók ki van kapcsolva/);
- // A guest is offered their picture and nothing else.
+ // A guest is told the account is not theirs to change.
  assert.match(utils,/const asGuest=\(\)=>XP\.session==='guest'/);
- assert.match(utils,/asGuest\(\)\s*\n?\s*\?`<li><button data-go="picture" data-for="self">A képem megváltoztatása<\/button><\/li>`/);
+ assert.match(utils,/A fiók nevét, képét és beállításait a számítógép rendszergazdája kezeli/);
+ assert.doesNotMatch(utils,/data-for="guest"/,'nobody edits the Guest picture');
  assert.match(utils,/typeName=type=>type==='guest'\?'Vendég fiók'/);
 });

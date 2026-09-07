@@ -7,7 +7,7 @@ window.XP = (() => {
   const icon = (name, cls='') => `<img class="${cls}" src="${iconPath(name)}" alt="" draggable="false">`;
   // The genuine Windows XP account tiles, in the order the Control Panel showed them.
   const avatars = ['chess','guitar','ball','butterfly','fish','frog','dog','cat','duck','horses','car','airplane','astronaut','beach','palm-tree','red-flower','pink-flower','snowflake','skater','kick','dirt-bike','giraffe','drip','africa','lift-off'];
-  const avatarPath = name => `assets/avatars/${avatars.includes(name)?name:'chess'}.png`;
+  const avatarPath = name => `assets/avatars/${avatars.includes(name)||name==='guest'?name:'chess'}.png`;
   const avatar = (name, cls='') => `<img class="account-picture ${cls}" src="${avatarPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
   const defaults = () => ({version:1,user:'Adminisztrátor',wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,taskbar:{locked:true,clock:true,quickLaunch:true},iconPositions:{},draft:'',files:[
@@ -21,7 +21,7 @@ window.XP = (() => {
   function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{if(!storageWarned){storageWarned=true;setTimeout(()=>notify('A mentés nem sikerült','A böngésző tárhelye megtelt vagy nem elérhető. Töltsd le a fontos dokumentumokat a Fájl menüből.'),0);}return false;}}
   function seedProfile(){
   if(!state.iconPositions||typeof state.iconPositions!=='object'||Array.isArray(state.iconPositions))state.iconPositions={};
-  if(!avatars.includes(state.avatar))state.avatar='chess';
+  if(!avatars.includes(state.avatar)&&state.avatar!=='guest')state.avatar='chess';
   // Apply the new desktop arrangement once, without discarding personal files or settings.
   if(state.desktopLayoutVersion!==2){
     for(const id of ['computer','internet','documents','recycle','network','notepad','paint','player','mines','solitaire'])delete state.iconPositions[id];
@@ -64,7 +64,7 @@ window.XP = (() => {
   seedProfile();
   persist();
   const MACHINE=['version','computerName','security','profiles','session','guest'];
-  const ACCOUNTS={admin:{name:'Adminisztrátor',avatar:'chess',type:'admin'},guest:{name:'Vendég',avatar:'beach',type:'guest'}};
+  const ACCOUNTS={admin:{name:'Adminisztrátor',avatar:'chess',type:'admin'},guest:{name:'Vendég',avatar:'guest',type:'guest'}};
   const personal=source=>Object.fromEntries(Object.entries(source).filter(([key])=>!MACHINE.includes(key)));
   if(!state.profiles||typeof state.profiles!=='object')state.profiles={};
   if(!state.guest||typeof state.guest!=='object')state.guest={enabled:true};
@@ -73,7 +73,7 @@ window.XP = (() => {
   function accountInfo(id){
     const saved=stored(id),base=ACCOUNTS[id];
     if(!base)return null;
-    return {id,name:saved?.user||base.name,avatar:saved?.avatar||base.avatar,type:base.type,
+    return {id,name:saved?.user||base.name,avatar:id==='guest'?base.avatar:saved?.avatar||base.avatar,type:base.type,
       active:id===state.session,enabled:id!=='guest'||!!state.guest?.enabled};
   }
   // The Guest only shows up once somebody has switched it on, exactly as XP kept it.
@@ -82,13 +82,6 @@ window.XP = (() => {
     if(state.session==='guest')return false;
     state.guest={...state.guest,enabled:!!enabled};persist();
     document.dispatchEvent(new CustomEvent('xp-settings-changed'));
-    return true;
-  }
-  function setAccountAvatar(id,picture){
-    if(!ACCOUNTS[id]||!avatars.includes(picture))return false;
-    if(id===state.session)state.avatar=picture;
-    else state.profiles={...state.profiles,[id]:{...state.profiles[id],avatar:picture}};
-    persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));
     return true;
   }
   // Signing in as somebody else puts this desk away and unpacks theirs.
@@ -102,6 +95,7 @@ window.XP = (() => {
     Object.assign(state,{...personal(defaults()),user:ACCOUNTS[id].name,avatar:ACCOUNTS[id].avatar,
       accountType:ACCOUNTS[id].type,...(saved||{})});
     state.session=id;
+    if(id==='guest')state.avatar='guest';
     if(!complete)seedProfile();
     persist();applySettings();
     document.dispatchEvent(new CustomEvent('xp-settings-changed'));
@@ -324,5 +318,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,accounts,accountInfo,switchUser,setGuest,setAccountAvatar,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,accounts,accountInfo,switchUser,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();
