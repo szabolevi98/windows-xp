@@ -84,6 +84,7 @@ const monitor=inner=>`<div class="monitor-preview"><div class="monitor-screen">$
 const wallpaperStyle=(name,fit)=>name==='none'?'background:#3a6ea5':`background:#3a6ea5 url('${XP.wallpaperPath(name)}') ${fit==='tile'?'left top/auto repeat':fit==='center'?'center/auto no-repeat':'center/cover no-repeat'}`;
 
 // --- Tálca és Start menü tulajdonságai -----------------------------------
+register('printers',()=>XP.dialog('Nyomtatók és faxok','Nincs telepítve nyomtató.\n\nNyomtató üzembe helyezéséhez indítsd el a Nyomtató hozzáadása varázslót, vagy csatlakoztass egy Plug and Play nyomtatót – a Windows automatikusan felismeri.',{icon:'printers'}));
 register('taskbar',(initial='taskbar')=>{
  const draft={...{locked:true,clock:true,quickLaunch:true},...(state.taskbar||{})};
  const check=(key,label)=>`<label class="settings-check"><input type="checkbox" data-key="${key}" ${draft[key]?'checked':''}> ${esc(label)}</label>`;
@@ -273,7 +274,7 @@ register('control',()=>{
   player:{name:'Hangeszközök',icon:'player',hint:'Lejátszás és hangfájlok',open:()=>XP.open('player')},
   system:{name:'Rendszer',icon:'computer',hint:'Rendszerinformációk és tárhely',open:()=>XP.open('system')},
   cleanup:{name:'Lemezkarbantartó',icon:'disk',hint:'Hely felszabadítása a lemezen',open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog('Lemezkarbantartó – C:',`A Lemezkarbantartó a következő fájlokat távolíthatja el:\n\nIdeiglenes internetfájlok        3,17 MB\nLetöltött programfájlok          0,00 MB\nLomtár                           ${(trash*0.06).toFixed(2)} MB (${trash} elem)\nIdeiglenes fájlok                0,84 MB\n\nÖsszesen felszabadítható: ${(4.01+trash*0.06).toFixed(2)} MB\n\nA Lomtár tartalmát a Lomtár ablakában ürítheted ki.`);}},
-  printers:{name:'Nyomtatók és faxok',icon:'printers',hint:'Telepített nyomtatók',open:note('Nyomtatók és faxok','Nincs telepítve nyomtató.\n\nNyomtató üzembe helyezéséhez indítsd el a Nyomtató hozzáadása varázslót, vagy csatlakoztass egy Plug and Play nyomtatót – a Windows automatikusan felismeri.')},
+  printers:{name:'Nyomtatók és faxok',icon:'printers',hint:'Telepített nyomtatók',open:()=>XP.open('printers')},
   profile:{name:'Felhasználói fiókok',icon:'user',hint:'A fiók neve, képe és típusa',open:()=>XP.open('profile')},
   datetime:{name:'Dátum és idő',icon:'datetime',hint:'Naptár és pontos idő',open:()=>XP.open('calendar')},
   accessibility:{name:'Kisegítő lehetőségek',icon:'accessibility',hint:'Billentyűzet, hang és megjelenítés',open:note('Kisegítő lehetőségek','A Windows billentyűzetről is végig vezérelhető:\n\nTab – léptetés a vezérlők között\nEnter – a kijelölt elem megnyitása\nAlt+F4 – az aktív ablak bezárása\nCtrl+Esc – a Start menü megnyitása\nAlt+Tab – váltás a futó programok között\nF1 – Súgó és támogatás')},

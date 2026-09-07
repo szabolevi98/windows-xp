@@ -73,6 +73,27 @@ function renderIcons(){
  };el.append(b);
  });
 }
+// Everything the frequent list may show, with the name and icon it wears there.
+const PROGRAM_ITEMS={
+ player:['Windows Media Player','player'],notepad:['Jegyzettömb','notepad'],paint:['Paint','paint'],
+ calculator:['Számológép','calculator'],mines:['Aknakereső','mines'],solitaire:['Pasziánsz','solitaire'],
+ freecell:['FreeCell','freecell'],spider:['Pókpasziánsz','spider'],hearts:['Hearts','hearts'],
+ pinball:['3D Pinball – Space Cadet','pinball'],cmd:['Parancssor','cmd'],explorer:['Windows Intéző','folder'],
+ taskmgr:['Feladatkezelő','taskmgr'],help:['Súgó és támogatás','help'],ie:['Internet Explorer','ie'],outlook:['Outlook Express','mail']
+};
+const DEFAULT_FREQUENT=['player','notepad','paint','calculator','mines'];
+// Internet and E-mail are pinned above, so they never take a place in the list below.
+function frequentPrograms(){
+ const used=Object.entries(state.programUse||{})
+  .filter(([app])=>PROGRAM_ITEMS[app]&&app!=='ie'&&app!=='outlook')
+  .sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))
+  .map(([app])=>app);
+ const list=[...used,...DEFAULT_FREQUENT.filter(app=>!used.includes(app))];
+ return list.slice(0,6);
+}
+function recentDocuments(){
+ return (state.recentDocs||[]).map(id=>state.files.find(f=>f.id===id&&!f.deleted)).filter(Boolean);
+}
 const programsMenu=[
  ['Kellékek','programs',[
   ['Jegyzettömb','notepad','notepad'],['Paint','paint','paint'],['Parancssor','cmd','cmd'],
@@ -88,6 +109,15 @@ const programsMenu=[
  ['Súgó és támogatás','help','help']
 ];
 // A folder opens its own little menu beside itself, like every cascading menu in XP.
+// What you opened last, in a little menu of its own — empty until there is something to show.
+function recentMarkup(){
+ const docs=recentDocuments();
+ const items=docs.length
+  ?docs.map(f=>`<button class="start-item" data-file="${esc(f.id)}">${icon(XP.fileIcon(f))}<span>${esc(f.name)}</span></button>`).join('')
+   +`<div class="start-separator"></div><button class="start-item" data-recent="clear"><span>A lista törlése</span></button>`
+  :'<button class="start-item" disabled><span>(üres)</span></button>';
+ return `<div class="menu-folder"><button class="start-item">${icon('documents')}<span>Legutóbbi dokumentumok</span><b class="submenu-arrow">▶</b></button><div class="popup-menu folder-menu">${items}</div></div>`;
+}
 function programsMarkup(entries){
  return entries.map(entry=>{
   if(entry===null)return '<div class="start-separator"></div>';
@@ -97,7 +127,12 @@ function programsMarkup(entries){
  }).join('');
 }
 function startItem(label,ic,app,subtitle='',minor=false){return `<button class="start-item ${minor?'minor':''}" data-open="${app}" data-label="${esc(label)}" data-icon="${ic}">${icon(ic)}<span>${subtitle?`<b>${label}</b><small>${subtitle}</small>`:label}</span></button>`;}
-function renderStart(){const el=$('#start-menu');el.innerHTML=`<header class="start-header"><button class="start-user" data-open="profile" title="Felhasználói fiókok"><img class="start-avatar" src="${XP.avatarPath(state.avatar)}" alt="Felhasználói kép"><span>${esc(state.user)}</span></button></header><div class="start-columns"><div class="start-left">${startItem('Internet','ie','ie','Internet Explorer')}${startItem('Email','mail','outlook','Outlook Express')}<div class="start-separator"></div>${startItem('Windows Media Player','player','player')}${startItem('Jegyzettömb','notepad','notepad')}${startItem('Paint','paint','paint')}${startItem('Számológép','calculator','calculator')}${startItem('Aknakereső','mines','mines')}<div class="start-separator"></div><button class="start-item all-programs" id="all-programs">Minden program <b>▶</b></button></div><div class="start-right">${startItem('Dokumentumok','documents','documents')}${startItem('Képek','pictures','pictures')}${startItem('Zene','music','music')}${startItem('Sajátgép','computer','computer')}<div class="start-separator"></div>${startItem('Vezérlőpult','control','control','',true)}${startItem('Hálózati kapcsolatok','network','network','',true)}<div class="start-separator"></div>${startItem('Súgó és támogatás','help','help','',true)}${startItem('Keresés','search','search','',true)}${startItem('Futtatás…','run','run','',true)}</div></div><footer class="start-footer"><button data-open="logoff">${icon('logoff')} Kijelentkezés</button><button data-open="power">${icon('shutdown')} Kikapcsolás</button></footer><div class="programs-menu popup-menu" hidden>${programsMarkup(programsMenu)}</div>`;$('#all-programs').onclick=e=>{e.stopPropagation();$('.programs-menu',el).hidden=!$('.programs-menu',el).hidden;};}
+function renderStart(){const el=$('#start-menu');el.innerHTML=`<header class="start-header"><button class="start-user" data-open="profile" title="Felhasználói fiókok"><img class="start-avatar" src="${XP.avatarPath(state.avatar)}" alt="Felhasználói kép"><span>${esc(state.user)}</span></button></header><div class="start-columns"><div class="start-left">${startItem('Internet','ie','ie','Internet Explorer')}${startItem('Email','mail','outlook','Outlook Express')}<div class="start-separator"></div>${frequentPrograms().map(app=>startItem(PROGRAM_ITEMS[app][0],PROGRAM_ITEMS[app][1],app)).join('')}<div class="start-separator"></div><button class="start-item all-programs" id="all-programs">Minden program <b>▶</b></button></div><div class="start-right">${startItem('Dokumentumok','documents','documents')}${recentMarkup()}${startItem('Képek','pictures','pictures')}${startItem('Zene','music','music')}${startItem('Sajátgép','computer','computer')}<div class="start-separator"></div>${startItem('Vezérlőpult','control','control','',true)}${startItem('Nyomtatók és faxok','printers','printers','',true)}${startItem('Hálózati kapcsolatok','network','network','',true)}<div class="start-separator"></div>${startItem('Súgó és támogatás','help','help','',true)}${startItem('Keresés','search','search','',true)}${startItem('Futtatás…','run','run','',true)}</div></div><footer class="start-footer"><button data-open="logoff">${icon('logoff')} Kijelentkezés</button><button data-open="power">${icon('shutdown')} Kikapcsolás</button></footer><div class="programs-menu popup-menu" hidden>${programsMarkup(programsMenu)}</div>`;el.onclick=e=>{
+  const file=e.target.closest('[data-file]');
+  if(file){XP.hideMenus();XP.openFile(file.dataset.file);return;}
+  if(e.target.closest('[data-recent=clear]')){state.recentDocs=[];persist();renderStart();}
+ };
+ $('#all-programs').onclick=e=>{e.stopPropagation();$('.programs-menu',el).hidden=!$('.programs-menu',el).hidden;};}
 $('#start-button').onclick=e=>{e.stopPropagation();if(XP.modal)return;const el=$('#start-menu');if(el.hidden){renderStart();el.hidden=false;$('#start-button').classList.add('active');$('#start-button').setAttribute('aria-expanded','true');}else XP.hideMenus();};
 $('#start-menu').oncontextmenu=e=>{
  const button=e.target.closest('.start-item[data-open]');if(!button)return;
