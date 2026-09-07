@@ -7,7 +7,7 @@
     freecell:'freecell.exe',spider:'spider.exe',hearts:'mshearts.exe',pinball:'pinball.exe',taskmgr:'taskmgr.exe',
     help:'helpctr.exe',search:'search.exe',image:'shimgvw.exe',accounts:'nusrmgr.exe',control:'control.exe',
     security:'wscui.exe',network:'netcfg.exe',calendar:'timedate.exe',volume:'sndvol32.exe',settings:'rundll32.exe',
-    display:'rundll32.exe',system:'rundll32.exe',sounds:'rundll32.exe','outlook-compose':'msimn.exe'};
+    taskbar:'rundll32.exe',display:'rundll32.exe',system:'rundll32.exe',sounds:'rundll32.exe','outlook-compose':'msimn.exe'};
   const SYSTEM=[
     ['System Idle Process','SYSTEM',28],['System','SYSTEM',236],['smss.exe','SYSTEM',388],
     ['csrss.exe','SYSTEM',4128],['winlogon.exe','SYSTEM',3512],['services.exe','SYSTEM',4020],

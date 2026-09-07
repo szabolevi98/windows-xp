@@ -1,0 +1,62 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const root=new URL('../',import.meta.url);
+const read=name=>readFileSync(new URL(name,root),'utf8');
+
+test('Any program can be sent from the Start menu to the desktop as a shortcut',()=>{
+ const start=read('js/start.js');
+ // Every Start menu entry carries its name and icon, so a shortcut of it can be built.
+ assert.match(start,/data-label="\$\{esc\(label\)\}" data-icon="\$\{ic\}"/);
+ assert.match(start,/\$\('#start-menu'\)\.oncontextmenu/,'right-clicking an entry opens a menu');
+ assert.match(start,/Küldés az asztalra \(parancsikon\)/);
+ assert.match(start,/XP\.shortcutTo\(app,label,ic\)/,'the menu makes the shortcut');
+ // Programs already sitting on the desktop are not offered a second time.
+ assert.match(start,/const already=baseIcons\.some\(i=>i\.app===app\)\|\|state\.files\.some\(/);
+ const core=read('js/core.js');
+ // A shortcut keeps its own icon and opens whatever program it points at.
+ assert.match(core,/file\.type==='shortcut'\?\(file\.icon\|\|shortcutApps\[file\.app\]\|\|'help'\)/);
+ assert.match(core,/else if\(file\.type==='shortcut'\)\{if\(apps\[file\.app\]\)open\(file\.app\);\}/);
+ assert.match(core,/function shortcutTo\(app,name,iconName,parent='desktop'\)/);
+ assert.match(core,/download,openFile,shortcutTo,onFiles/,'other programs can make shortcuts too');
+ // The little arrow badge marks a shortcut on the desktop and in Explorer.
+ assert.match(start,/item\.shortcut\?' shortcut':''/);
+ assert.match(read('js/explorer.js'),/f\.type==='shortcut'\?'shortcut':''/);
+ assert.match(read('styles.css'),/\.desktop-icon\.shortcut:before,\.file-item\.shortcut:before/);
+});
+
+test('The taskbar answers a right click, on the buttons and on the bar itself',()=>{
+ const core=read('js/core.js');
+ // The window menu XP showed on a task button, with the states it greyed out.
+ assert.match(core,/b\.oncontextmenu=event=>/);
+ for(const label of ['Visszaállítás','Áthelyezés','Méret','Kis méret','Teljes méret','Bezárás'])
+  assert.ok(core.includes(`label:'${label}'`),`the task button menu offers ${label}`);
+ const start=read('js/start.js');
+ assert.match(start,/\$\('#taskbar'\)\.oncontextmenu/);
+ for(const label of ['Ablakok lépcsőzetesen','Ablakok mozaikszerűen vízszintesen','Ablakok mozaikszerűen függőlegesen','Az összes ablak kis mérete','A Tálca rögzítése'])
+  assert.ok(start.includes(`label:'${label}'`),`the taskbar menu offers ${label}`);
+ // Right-clicking Start gives its own menu instead of the taskbar's.
+ assert.match(start,/e\.target\.closest\('#start-button'\)/);
+ assert.match(start,/label:'Az Intéző megnyitása'/);
+ // Cascade and tile arrange the real windows, never the dialogs.
+ assert.match(start,/function arrange\(mode\)/);
+ assert.match(start,/filter\(w=>!w\.modal&&!w\.fixed\)/);
+ assert.match(core,/minWidth:options\.minWidth\|\|300,minHeight:options\.minHeight\|\|180/,'a window remembers how small it may get');
+});
+
+test('The taskbar has properties of its own, and they hold',()=>{
+ const utils=read('js/utilities.js');
+ assert.match(utils,/register\('taskbar'/);
+ assert.match(utils,/A Tálca és a Start menü tulajdonságai/);
+ for(const label of ['A Tálca rögzítése','A Gyorsindítás eszköztár megjelenítése','Az óra megjelenítése'])
+  assert.ok(utils.includes(label),`the sheet offers ${label}`);
+ assert.match(utils,/state\.taskbar=\{\.\.\.state\.taskbar,\.\.\.draft\};persist\(\);XP\.applySettings\(\)/);
+ const core=read('js/core.js');
+ assert.match(core,/taskbar:\{locked:true,clock:true,quickLaunch:true\}/,'the settings start out the way XP had them');
+ // Hiding the clock or the Quick Launch bar has to actually hide them.
+ assert.match(core,/classList\.toggle\('no-clock',taskbar\.clock===false\)/);
+ assert.match(core,/classList\.toggle\('no-quick-launch',taskbar\.quickLaunch===false\)/);
+ const css=read('styles.css');
+ assert.match(css,/body\.no-clock #clock\{display:none\}/);
+ assert.match(css,/body\.no-quick-launch \.quick-launch\{display:none\}/);
+});
