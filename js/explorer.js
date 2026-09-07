@@ -72,6 +72,8 @@ register('explorer',(initial='computer')=>{
   }
   function properties(id){
     const f=entry(id);if(!f)return;
+    // A drive has a sheet of its own, with the pie XP drew of it.
+    if(id==='disk'||id==='dvd'){XP.open('drive',id);return;}
     XP.dialog(f.name,`${entryType(f)}\nHely: ${f.path||folderPath(f.parent||folder)}${f.readOnly?'\nAttribútumok: Csak olvasható':''}`,{icon:f.icon||XP.fileIcon(f)});
   }
   function openEntry(id){

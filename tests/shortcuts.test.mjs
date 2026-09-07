@@ -158,3 +158,21 @@ test('The Start menu remembers the programs used and the documents opened',()=>{
  assert.match(start,/startItem\('Nyomtatók és faxok','printers','printers'/);
  assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/register\('printers'/,'so the folder has somewhere to open');
 });
+
+test('A drive has the properties sheet XP drew, pie and all',()=>{
+ const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
+ assert.match(utils,/register\('drive',\(which='disk'\)=>/);
+ assert.match(utils,/Helyi lemez \(C:\)/);
+ assert.match(utils,/tabs:\[\['general','Általános'\],\['tools','Eszközök'\],\['hardware','Hardver'\]\]/);
+ // The used slice grows with what the account actually keeps on the machine.
+ assert.match(utils,/const own=state\.files\.filter\(f=>!f\.deleted\)\.reduce/);
+ assert.match(utils,/conic-gradient\(#1b3fa0 0 \$\{percent\}%,#c832c8 \$\{percent\}% 100%\)/);
+ assert.match(utils,/Használt terület:/);
+ assert.match(utils,/Szabad terület:/);
+ assert.match(utils,/Fájlrendszer:<\/dt><dd>NTFS/);
+ assert.match(utils,/Lemezkarbantartó/);
+ // An empty drive says so instead of showing a pie of nothing.
+ assert.match(utils,/Nincs lemez a meghajtóban/);
+ assert.match(readFileSync(new URL('js/explorer.js',root),'utf8'),/if\(id==='disk'\|\|id==='dvd'\)\{XP\.open\('drive',id\);return;\}/);
+ assert.match(readFileSync(new URL('styles.css',root),'utf8'),/\.disk-pie\{width:96px;height:96px;border-radius:50%/);
+});
