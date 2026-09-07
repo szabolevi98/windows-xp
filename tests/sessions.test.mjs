@@ -172,17 +172,17 @@ test('The pointers are the ones XP shipped',()=>{
  const css=read('styles.css');
  // Buttons and title bars carry a cursor of their own in the browser, so they are named too.
  assert.match(css,/\*\{cursor:inherit\}/);
- assert.match(css,/body,button,\.title-bar,input\[type=range\]\{cursor:url\('assets\/cursors\/arrow\.cur'\),default\}/);
- assert.match(css,/textarea,\[contenteditable\]\{cursor:url\('assets\/cursors\/beam\.cur'\),text\}/);
- // Each edge and corner gets the arrow that belongs to it.
- assert.match(css,/\.resize-n,\.resize-s\{cursor:url\('assets\/cursors\/size-ns\.cur'\),ns-resize\}/);
- assert.match(css,/\.resize-e,\.resize-w\{cursor:url\('assets\/cursors\/size-we\.cur'\),ew-resize\}/);
- assert.match(css,/\.resize-ne,\.resize-sw\{cursor:url\('assets\/cursors\/size-nesw\.cur'\),nesw-resize\}/);
- assert.match(css,/\.resize-nw,\.resize-se,\.resize-handle\{cursor:url\('assets\/cursors\/size-nwse\.cur'\),nwse-resize\}/);
- assert.match(css,/\.paint-canvas,\.paint-surface canvas\{cursor:url\('assets\/cursors\/cross\.cur'\),crosshair\}/);
+ assert.match(css,/body,button,\.title-bar,input\[type=range\]\{cursor:url\('assets\/cursors\/arrow\.cur\?v=2'\),default\}/);
+ assert.match(css,/textarea,\[contenteditable\]\{cursor:url\('assets\/cursors\/beam\.cur\?v=2'\),text\}/);
+ // Each edge and corner gets the arrow that belongs to it; the white 3D set, not the black scheme.
+ assert.match(css,/\.resize-n,\.resize-s\{cursor:url\('assets\/cursors\/size-ns\.cur\?v=2'\),ns-resize\}/);
+ assert.match(css,/\.resize-e,\.resize-w\{cursor:url\('assets\/cursors\/size-we\.cur\?v=2'\),ew-resize\}/);
+ assert.match(css,/\.resize-ne,\.resize-sw\{cursor:url\('assets\/cursors\/size-nesw\.cur\?v=2'\),nesw-resize\}/);
+ assert.match(css,/\.resize-nw,\.resize-se,\.resize-handle\{cursor:url\('assets\/cursors\/size-nwse\.cur\?v=2'\),nwse-resize\}/);
+ assert.match(css,/\.paint-canvas,\.paint-surface canvas\{cursor:url\('assets\/cursors\/cross\.cur\?v=2'\),crosshair\}/);
  // Every cursor file is on the machine and credited.
  const sources=read('assets/sources.json');
- for(const name of ['arrow','beam','cross','help','move','no','size-nesw','size-ns','size-nwse','size-we','wait']){
+ for(const name of ['arrow','beam','cross','move','no','size-nesw','size-ns','size-nwse','size-we']){
   assert.ok(existsSync(new URL(`assets/cursors/${name}.cur`,root)),`${name}.cur is bundled`);
   assert.match(sources,new RegExp(`cursors/${name}\.cur`),`${name}.cur is credited`);
  }

@@ -394,11 +394,11 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
 
 /* Az eredeti XP-mutatók: a .cur fájl viszi magával a saját forrópontját. */
 *{cursor:inherit}
-body,button,.title-bar,input[type=range]{cursor:url('assets/cursors/arrow.cur'),default}
-input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,[contenteditable]{cursor:url('assets/cursors/beam.cur'),text}
-.resize-n,.resize-s{cursor:url('assets/cursors/size-ns.cur'),ns-resize}
-.resize-e,.resize-w{cursor:url('assets/cursors/size-we.cur'),ew-resize}
-.resize-ne,.resize-sw{cursor:url('assets/cursors/size-nesw.cur'),nesw-resize}
-.resize-nw,.resize-se,.resize-handle{cursor:url('assets/cursors/size-nwse.cur'),nwse-resize}
-.paint-canvas,.paint-surface canvas{cursor:url('assets/cursors/cross.cur'),crosshair}
-button:disabled,.start-item:disabled{cursor:url('assets/cursors/arrow.cur'),default}
+body,button,.title-bar,input[type=range]{cursor:url('assets/cursors/arrow.cur?v=2'),default}
+input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,[contenteditable]{cursor:url('assets/cursors/beam.cur?v=2'),text}
+.resize-n,.resize-s{cursor:url('assets/cursors/size-ns.cur?v=2'),ns-resize}
+.resize-e,.resize-w{cursor:url('assets/cursors/size-we.cur?v=2'),ew-resize}
+.resize-ne,.resize-sw{cursor:url('assets/cursors/size-nesw.cur?v=2'),nesw-resize}
+.resize-nw,.resize-se,.resize-handle{cursor:url('assets/cursors/size-nwse.cur?v=2'),nwse-resize}
+.paint-canvas,.paint-surface canvas{cursor:url('assets/cursors/cross.cur?v=2'),crosshair}
+button:disabled,.start-item:disabled{cursor:url('assets/cursors/arrow.cur?v=2'),default}
