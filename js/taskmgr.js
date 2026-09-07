@@ -68,7 +68,7 @@
       const running=others(),list=rows();
       if(tab==='apps'){
         panel.innerHTML=running.length
-          ?`<table class="taskmgr-table"><thead><tr><th>Feladat</th><th>${esc(t('Állapot'))}</th></tr></thead><tbody>${running.map(win=>
+          ?`<table class="taskmgr-table"><thead><tr><th>${esc(t('Feladat'))}</th><th>${esc(t('Állapot'))}</th></tr></thead><tbody>${running.map(win=>
              `<tr class="${win.id===selectedTask?'selected':''}" data-task="${win.id}"><td>${icon(win.icon)}${esc(win.title)}</td><td>${win.minimized?t('Fut'):t('Fut')}</td></tr>`).join('')}</tbody></table>`
           :`<p class="taskmgr-empty">${esc(t('Nincs futó alkalmazás.'))}</p>`;
         buttons.innerHTML=`<button class="xp-button" data-do="end">${esc(t('Feladat befejezése'))}</button><button class="xp-button" data-do="switch">${esc(t('Váltás'))}</button><button class="xp-button" data-do="new">${esc(t('Új feladat…'))}</button>`;
@@ -81,12 +81,12 @@
         buttons.innerHTML=`<button class="xp-button" data-do="kill">${esc(t('Folyamat leállítása'))}</button>`;
       }
       if(tab==='performance'){
-        panel.innerHTML=`<div class="taskmgr-meters"><div><h3>${esc(t('CPU-használat'))}</h3><div class="meter-box"><b>${cpu}%</b></div></div><div class="taskmgr-graph"><h3>${esc(t('CPU-használat előzményei'))}</h3><canvas class="cpu-graph"></canvas></div></div><dl class="taskmgr-facts"><dt>${esc(t('Leírók'))}</dt><dd>${8214+list.length*37}</dd><dt>${esc(t('Szálak'))}</dt><dd>${312+list.length*9}</dd><dt>Folyamatok</dt><dd>${list.length}</dd><dt>${esc(t('Fizikai memória összesen'))}</dt><dd>523 760 KB</dd><dt>${esc(t('Fizikai memória szabad'))}</dt><dd>${(268400-list.length*1800).toLocaleString('hu-HU')} KB</dd><dt>${esc(t('Véglegesített memória'))}</dt><dd>${(146200+list.length*2400).toLocaleString('hu-HU')} KB</dd></dl>`;
+        panel.innerHTML=`<div class="taskmgr-meters"><div><h3>${esc(t('CPU-használat'))}</h3><div class="meter-box"><b>${cpu}%</b></div></div><div class="taskmgr-graph"><h3>${esc(t('CPU-használat előzményei'))}</h3><canvas class="cpu-graph"></canvas></div></div><dl class="taskmgr-facts"><dt>${esc(t('Leírók'))}</dt><dd>${8214+list.length*37}</dd><dt>${esc(t('Szálak'))}</dt><dd>${312+list.length*9}</dd><dt>${esc(t('Folyamatok'))}</dt><dd>${list.length}</dd><dt>${esc(t('Fizikai memória összesen'))}</dt><dd>523 760 KB</dd><dt>${esc(t('Fizikai memória szabad'))}</dt><dd>${(268400-list.length*1800).toLocaleString('hu-HU')} KB</dd><dt>${esc(t('Véglegesített memória'))}</dt><dd>${(146200+list.length*2400).toLocaleString('hu-HU')} KB</dd></dl>`;
         graph($('.cpu-graph',panel),history,'#26ff5c');
         buttons.innerHTML='';
       }
       if(tab==='network'){
-        panel.innerHTML=`<div class="taskmgr-graph wide"><h3>Helyi kapcsolat</h3><canvas class="net-graph"></canvas></div><table class="taskmgr-table"><thead><tr><th>Adapter</th><th>${esc(t('Hálózat kihasználtsága'))}</th><th>${esc(t('Kapcsolat sebessége'))}</th><th>${esc(t('Állapot'))}</th></tr></thead><tbody><tr><td>Helyi kapcsolat</td><td>${(net.at(-1)/10).toFixed(2)} %</td><td>100 Mbps</td><td>${esc(t('Működik'))}</td></tr></tbody></table>`;
+        panel.innerHTML=`<div class="taskmgr-graph wide"><h3>Helyi kapcsolat</h3><canvas class="net-graph"></canvas></div><table class="taskmgr-table"><thead><tr><th>${esc(t('Adapter'))}</th><th>${esc(t('Hálózat kihasználtsága'))}</th><th>${esc(t('Kapcsolat sebessége'))}</th><th>${esc(t('Állapot'))}</th></tr></thead><tbody><tr><td>Helyi kapcsolat</td><td>${(net.at(-1)/10).toFixed(2)} %</td><td>100 Mbps</td><td>${esc(t('Működik'))}</td></tr></tbody></table>`;
         graph($('.net-graph',panel),net,'#ffd23f');
         buttons.innerHTML='';
       }

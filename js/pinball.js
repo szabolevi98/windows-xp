@@ -43,7 +43,7 @@
     w.el.addEventListener('pointerdown',()=>{if(XP.active!==w.id)w.focus();sync(true);},true);
     w.el.addEventListener('click',event=>{if(!event.target.closest('.window-controls,.menu-bar'))restoreFocus();});
     const controls=document.createElement('div');controls.className='pinball-controls';
-    controls.innerHTML=`<div class="pinball-actions"><button class="xp-button" data-new disabled>${esc(t('Új játék (F2)'))}</button><button class="xp-button" data-pause disabled>${esc(t('Szünet (F3)'))}</button><button class="xp-button" data-help>${esc(t('Súgó'))}</button></div><div class="pinball-touch"><button class="xp-button" data-key="KeyZ" disabled>Bal kar <kbd>Z</kbd></button><button class="xp-button" data-key="Space" disabled>${esc(t('Kilövés'))} <kbd>${esc(t('Szóköz'))}</kbd></button><button class="xp-button" data-key="Slash" disabled>Jobb kar <kbd>C</kbd></button></div>`;
+    controls.innerHTML=`<div class="pinball-actions"><button class="xp-button" data-new disabled>${esc(t('Új játék (F2)'))}</button><button class="xp-button" data-pause disabled>${esc(t('Szünet (F3)'))}</button><button class="xp-button" data-help>${esc(t('Súgó'))}</button></div><div class="pinball-touch"><button class="xp-button" data-key="KeyZ" disabled>${esc(t('Bal kar'))} <kbd>Z</kbd></button><button class="xp-button" data-key="Space" disabled>${esc(t('Kilövés'))} <kbd>${esc(t('Szóköz'))}</kbd></button><button class="xp-button" data-key="Slash" disabled>${esc(t('Jobb kar'))} <kbd>C</kbd></button></div>`;
     w.body.append(controls);
     const status=XP.status(w,t('A Space Cadet betöltése…')).firstElementChild;
     const pauseButton=$('[data-pause]',controls);
