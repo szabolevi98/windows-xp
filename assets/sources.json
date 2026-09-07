@@ -417,9 +417,9 @@
   },
   {
     "file": "icons/taskmgr.png",
-    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/TaskManager.png",
-    "bytes": 5120,
-    "note": "1024×1024-es forrás 48×48-ra kicsinyítve."
+    "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6CXhaiuCjeqi13_cWh-pIUwCDAihXgYgcNTVZDBW2lg",
+    "bytes": 692,
+    "note": "A taskmgr.exe eredeti 32×32-es ikonja. A talált kép egy 447×447-es nagyítás volt, ebből állítottuk vissza a pontos 32×32-es rácsot, és tettük átlátszóvá a fehér hátteret."
   },
   {
     "file": "icons/up.png",
