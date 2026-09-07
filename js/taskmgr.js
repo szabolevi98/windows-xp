@@ -24,7 +24,7 @@
 
   XP.register('taskmgr',()=>{
     if(XP.singleton('taskmgr'))return;
-    const w=XP.createWindow({title:'Windows Feladatkezelő',icon:'computer',app:'taskmgr',className:'taskmgr-window',
+    const w=XP.createWindow({title:'Windows Feladatkezelő',icon:'taskmgr',app:'taskmgr',className:'taskmgr-window',
       width:520,height:500,minWidth:400,minHeight:340});
     const TABS=[['apps','Alkalmazások'],['processes','Folyamatok'],['performance','Teljesítmény'],['network','Hálózat'],['users','Felhasználók']];
     let tab='apps',selectedTask=null,selectedProcess=null,cpu=3,history=Array(60).fill(3),net=Array(60).fill(0);

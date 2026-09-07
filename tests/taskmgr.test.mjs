@@ -47,7 +47,7 @@ test('The Task Manager is a program of its own, reachable the way XP offered it'
  // Every tab XP had.
  for(const tab of ['Alkalmazások','Folyamatok','Teljesítmény','Hálózat','Felhasználók'])
   assert.ok(source.includes(tab),`the ${tab} tab is there`);
- assert.match(readFileSync(new URL('js/start.js',root),'utf8'),/\['Feladatkezelő','computer','taskmgr'\]/,'it is listed under All Programs');
+ assert.match(readFileSync(new URL('js/start.js',root),'utf8'),/\['Feladatkezelő','taskmgr','taskmgr'\]/,'it is listed under All Programs');
  // Both the Run box and the command prompt know its executable name.
  assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/taskmgr:'taskmgr'/);
  assert.match(readFileSync(new URL('js/apps.js',root),'utf8'),/taskmgr:'taskmgr'/);

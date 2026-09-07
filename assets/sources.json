@@ -410,6 +410,18 @@
     "bytes": 829
   },
   {
+    "file": "icons/taskbar.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/TaskbarandStartMenu.png",
+    "bytes": 3884,
+    "note": "1024×1024-es forrás 48×48-ra kicsinyítve."
+  },
+  {
+    "file": "icons/taskmgr.png",
+    "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/TaskManager.png",
+    "bytes": 5120,
+    "note": "1024×1024-es forrás 48×48-ra kicsinyítve."
+  },
+  {
     "file": "icons/up.png",
     "url": "https://raw.githubusercontent.com/ShizukuIchi/winXP/master/src/assets/windowsIcons/up.png",
     "bytes": 1273
