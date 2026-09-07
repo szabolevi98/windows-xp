@@ -14,6 +14,8 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 
 A felület magyarul, angolul és németül beszél. Alapból a böngésző nyelve dönt; ha az nem valamelyik ezek közül, angolul indul. A választás a Vezérlőpult → Dátum, idő, nyelv és területi beállítások → **Területi és nyelvi beállítások** ablakában módosítható, és megmarad a következő indításig.
 
+A nyelvvel együtt a dátumok, az órák és a számok formátuma is vált: a hétfő németül `Montag, 7. September 2026`, angolul `Monday, September 7, 2026`. Az első indításkor létrejövő dokumentumok és mappák is a gép nyelvén kapnak nevet.
+
 A szövegek forrása maga a magyar mondat: a kódban `t('Megnyitás')` áll, a `lang/en.js` és a `lang/de.js` pedig magyar → idegen nyelvű szótár. Ha egy mondat fordítása hiányzik, a magyar szöveg marad a képernyőn — nem törik el semmi, és rögtön látszik, mi maradt ki. Új nyelvhez egy új `lang/<kód>.js` és egy sor a `js/lang.js` listájában elég.
 
 ## Használat
