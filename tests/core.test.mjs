@@ -487,3 +487,19 @@ test('The logon screen is laid out the way XP laid it out',()=>{
  }
  assert.match(css,/\.welcome-divider\{[^}]*linear-gradient\(#ffffff00/,'the divider fades at both ends');
 });
+
+test('Turning off from the logon screen offers the same three choices XP did',()=>{
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ const panel=start.slice(start.indexOf('function logonPower('),start.indexOf('function loginMarkup('));
+ assert.ok(panel,'the logon screen has its own power panel');
+ for(const choice of ['standby','shutdown','restart','cancel'])
+  assert.match(panel,new RegExp(`data-power="${choice}"`),`${choice} is offered`);
+ // It belongs to the logon screen, which covers every window.
+ assert.match(panel,/\$\('#welcome-screen'\)/);
+ assert.match(panel,/screen\.append\(panel\)/);
+ // Waking from standby goes back to the logon screen, not to a desktop nobody signed into.
+ assert.match(panel,/bootPhase='standby'[\s\S]*loginScreen\(\)/);
+ assert.match(start,/\$\('\.welcome-power'\)\.onclick=logonPower;/,'the button opens the panel');
+ const css=readFileSync(new URL('styles.css',root),'utf8');
+ assert.match(css,/\.logon-power\{[^}]*position:absolute[^}]*\}/,'the panel sits inside the screen');
+});
