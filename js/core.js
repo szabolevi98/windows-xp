@@ -14,11 +14,12 @@ window.XP = (() => {
     {id:'welcome',name:'Üdv a Windows XP-ben.txt',type:'text',parent:'documents',content:'Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n',modified:Date.now()},
     {id:'todo',name:'Teendők.txt',type:'text',parent:'documents',content:'Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n',modified:Date.now()},
     {id:'folder-personal',name:'Személyes',type:'folder',parent:'documents',modified:Date.now()}
-  ],security:{firewall:true,updates:true},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Webkatalógus',url:'about:offline'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
+  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:false},favorites:[{title:'Google',url:'google.hu'},{title:'Wikipédia',url:'hu.wikipedia.org'},{title:'Webkatalógus',url:'about:offline'},{title:'Windows XP',url:'www.microsoft.com/windowsxp'}],mineBest:null});
   let state;
   try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
   let storageWarned=false;
   function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{if(!storageWarned){storageWarned=true;setTimeout(()=>notify('A mentés nem sikerült','A böngésző tárhelye megtelt vagy nem elérhető. Töltsd le a fontos dokumentumokat a Fájl menüből.'),0);}return false;}}
+  function seedProfile(){
   if(!state.iconPositions||typeof state.iconPositions!=='object'||Array.isArray(state.iconPositions))state.iconPositions={};
   if(!avatars.includes(state.avatar))state.avatar='chess';
   // Apply the new desktop arrangement once, without discarding personal files or settings.
@@ -59,7 +60,54 @@ window.XP = (() => {
     }
     state.cardGamesAdded=true;
   }
+  }
+  seedProfile();
   persist();
+  const MACHINE=['version','computerName','security','profiles','session','guest'];
+  const ACCOUNTS={admin:{name:'Adminisztrátor',avatar:'chess',type:'admin'},guest:{name:'Vendég',avatar:'beach',type:'guest'}};
+  const personal=source=>Object.fromEntries(Object.entries(source).filter(([key])=>!MACHINE.includes(key)));
+  if(!state.profiles||typeof state.profiles!=='object')state.profiles={};
+  if(!state.guest||typeof state.guest!=='object')state.guest={enabled:false};
+  if(!ACCOUNTS[state.session])state.session='admin';
+  const stored=id=>id===state.session?state:state.profiles[id];
+  function accountInfo(id){
+    const saved=stored(id),base=ACCOUNTS[id];
+    if(!base)return null;
+    return {id,name:saved?.user||base.name,avatar:saved?.avatar||base.avatar,type:base.type,
+      active:id===state.session,enabled:id!=='guest'||!!state.guest?.enabled};
+  }
+  // The Guest only shows up once somebody has switched it on, exactly as XP kept it.
+  const accounts=(all=false)=>Object.keys(ACCOUNTS).map(accountInfo).filter(info=>all||info.enabled);
+  function setGuest(enabled){
+    if(state.session==='guest')return false;
+    state.guest={...state.guest,enabled:!!enabled};persist();
+    document.dispatchEvent(new CustomEvent('xp-settings-changed'));
+    return true;
+  }
+  function setAccountAvatar(id,picture){
+    if(!ACCOUNTS[id]||!avatars.includes(picture))return false;
+    if(id===state.session)state.avatar=picture;
+    else state.profiles={...state.profiles,[id]:{...state.profiles[id],avatar:picture}};
+    persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));
+    return true;
+  }
+  // Signing in as somebody else puts this desk away and unpacks theirs.
+  function switchUser(id){
+    if(!ACCOUNTS[id]||id===state.session)return false;
+    if(id==='guest'&&!state.guest?.enabled)return false;
+    for(const win of [...windows.values()])close(win);
+    state.profiles={...state.profiles,[state.session]:personal(state)};
+    const saved=state.profiles[id],complete=saved&&Array.isArray(saved.files);
+    for(const key of Object.keys(state))if(!MACHINE.includes(key))delete state[key];
+    Object.assign(state,{...personal(defaults()),user:ACCOUNTS[id].name,avatar:ACCOUNTS[id].avatar,
+      accountType:ACCOUNTS[id].type,...(saved||{})});
+    state.session=id;
+    if(!complete)seedProfile();
+    persist();applySettings();
+    document.dispatchEvent(new CustomEvent('xp-settings-changed'));
+    document.dispatchEvent(new CustomEvent('xp-files-changed'));
+    return true;
+  }
   const shortcutApps={mines:'mines',solitaire:'solitaire',pinball:'pinball',freecell:'freecell',spider:'spider',hearts:'hearts'};
   const recycleIcon=()=>state.files.some(f=>f.deleted)?'recycle-full':'recycle';
   const fileIcon=file=>file.type==='folder'?'folder':file.type==='image'?'pictures':file.type==='shortcut'?(file.icon||shortcutApps[file.app]||'help'):'notepad';
@@ -276,5 +324,5 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,accounts,accountInfo,switchUser,setGuest,setAccountAvatar,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

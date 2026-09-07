@@ -12,11 +12,15 @@ Az `index.html` közvetlen megnyitása is működik. A mentések az adott böng�
 
 ## Használat
 
-- XP betöltés, bejelentkezés a névre kattintva, üdvözlés, kijelentkezés, készenlét, kikapcsolás, újraindítás.
+- XP betöltés, bejelentkezés a névre kattintva, üdvözlés, kijelentkezés, felhasználóváltás, készenlét, kikapcsolás, újraindítás.
+- Adminisztrátor és Vendég fiók. A Vendég a Felhasználói fiókokban kapcsolható be, utána megjelenik a bejelentkezési képernyőn. Minden fiók saját asztalt, dokumentumokat, hátteret, kedvenceket és beállításokat kap; a gép neve, a biztonsági központ és maga a Vendég fiók állapota közös. A Vendég csak a saját képét módosíthatja.
 - Rácsra igazodó asztali ikonok, ütközéskor helycsere. A Lomtár alapból jobb alul jelenik meg, szabadon áthelyezhető, és megjegyzi a helyét.
 - Játékok mappa az asztalon, benne az Aknakereső, a Pasziánsz, a FreeCell, a Pókpasziánsz, a Hearts és a 3D Pinball – Space Cadet parancsikonja.
 - Mozgatható ablakok: bármelyik szélüknél és sarkuknál átméretezhetők, a bal és a felső élnél húzva együtt mozdulnak. Teljes méret, kis méret, tálca, Start menü, helyi menük.
 - Tálca: gyorsindítás az Asztal megjelenítése gombbal, futó ablakok, értesítési terület órával, hangerővel, hálózattal és biztonsági központtal. A « gomb kinyitja a rejtett ikonokat.
+- Tálca jobb gombbal: ablakok lépcsőzetes és mozaikszerű elrendezése, az összes ablak kis mérete, Feladatkezelő, a Tálca rögzítése és a Tálca tulajdonságai, ahol az óra és a Gyorsindítás elrejthető. A tálcagombokon ablakmenü, a start gombon saját menü.
+- Feladatkezelő (Ctrl+Shift+Esc vagy Ctrl+Alt+Del): alkalmazások, folyamatok, élő CPU- és hálózatgrafikon, felhasználók. Feladat befejezése, váltás, új feladat, folyamat leállítása — rendszerfolyamat nem állítható le.
+- A Start menü bármelyik programja jobb gombbal kitehető az asztalra parancsikonként, a megszokott kis nyíllal a sarkában.
 - Outlook Express: helyi mappák olvasatlan-számlálóval, olvasóablak, levélírás, válasz és továbbítás, törlés és Küldés/fogadás. Az elolvasott, elküldött és törölt levelek megmaradnak.
 - Internet Explorer: régi Google, kulcsszavas helyi keresés, 20 beépített oldal, címsor, előzmények, hozzáadható/törölhető kedvencek, beállítható kezdőlap és oldalon belüli keresés. Az ismeretlen címek helyi hibaoldalt kapnak. A `www.jatekbarlang.hu` oldalról mind a hat játék elindítható.
 - Helyi web: Netkapu hírportál szavazással, PC-magazin, PC Bazár mentett kosárral, Netklub fórum menthető hozzászólásokkal, postafiók mintalevelekkel és levélpiszkozattal, városi időjárás és kereshető vasúti bemutatómenetrend. A háttérképgaléria az asztali hátteret is beállítja, a receptoldal adagokat számol, a HTML suli pedig honlapelőnézetet készít.
