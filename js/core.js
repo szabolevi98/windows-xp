@@ -169,7 +169,11 @@ window.XP = (() => {
     }catch(error){return Promise.resolve(failed(error));}
   }
   function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="Értesítés bezárása">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
-  function focus(win){if(!win || (modalDepth&&!win.modal))return;if(win.minimized&&!win.parked)sound('restore');active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
+  function focus(win){
+    if(!win || (modalDepth&&!win.modal))return;
+    const waking=win.minimized&&!win.parked;
+    if(waking){sound('restore');const from=taskRect(win);win.el.hidden=false;flyWindow(win,from,true);}
+    active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
   function frontmost(){const next=[...windows.values()].filter(w=>!w.minimized).sort((a,b)=>Number(b.el.style.zIndex)-Number(a.el.style.zIndex))[0];active=null;if(next)focus(next);else renderTasks();}
   // The name of the program behind a window, for the grouped taskbar buttons.
   const PROGRAMS={notepad:'Jegyzettömb',paint:'Paint',calculator:'Számológép',cmd:'Parancssor',ie:'Internet Explorer',
@@ -206,8 +210,31 @@ window.XP = (() => {
       }else container.append(taskButton(win));
     }
   }
+  const motionOff=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  const taskRect=win=>$(`[data-win="${win.id}"]`)?.getBoundingClientRect()||$('#task-buttons')?.getBoundingClientRect();
+  function flyWindow(win,rect,back){
+    const box=win.el.getBoundingClientRect();
+    if(motionOff()||!rect||!box.width||!box.height)return Promise.resolve();
+    const scaleX=Math.max(0.04,rect.width/box.width),scaleY=Math.max(0.04,rect.height/box.height);
+    const shift=`translate(${rect.left-box.left}px,${rect.top-box.top}px) scale(${scaleX},${scaleY})`;
+    const style=win.el.style;
+    style.transformOrigin='top left';
+    if(back){
+      // Start small, force the layout, then let it grow into place — a frame callback
+      // would never arrive while the page is hidden, leaving the window shrunk.
+      style.transition='none';style.transform=shift;style.opacity='0.4';
+      void win.el.offsetWidth;
+      style.transition='transform .16s ease-out,opacity .16s ease-out';style.transform='';style.opacity='';
+      return new Promise(done=>setTimeout(()=>{style.transition='';style.transformOrigin='';done();},170));
+    }
+    style.transition='transform .16s ease-in,opacity .16s ease-in';style.transform=shift;style.opacity='0.4';
+    return new Promise(done=>setTimeout(()=>{
+      style.transition='';style.transform='';style.opacity='';style.transformOrigin='';done();
+    },160));
+  }
   function taskButton(win){
     const b=document.createElement('button');
+    b.dataset.win=win.id;
     b.className=`task-button ${win.id===active&&!win.minimized?'active':''}`;
     b.title=win.title;b.setAttribute('aria-label',win.title);
     b.innerHTML=`${icon(win.icon)}<span>${esc(win.title)}</span>`;
@@ -239,7 +266,14 @@ window.XP = (() => {
     return b;
   }
   function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
-  function minimize(win,quiet){if(win.modal)return;if(!quiet)sound('minimize');win.minimized=true;win.el.hidden=true;frontmost();}
+  function minimize(win,quiet){
+    if(win.modal)return;
+    if(!quiet)sound('minimize');
+    const target=taskRect(win);
+    win.minimized=true;
+    flyWindow(win,target).then(()=>{if(win.minimized)win.el.hidden=true;});
+    frontmost();
+  }
   function maximize(win){if(win.fixed)return;sound('restore');win.maximized=!win.maximized;win.el.classList.toggle('maximized',win.maximized);if(win.maximized){win.restore={left:win.el.style.left,top:win.el.style.top,width:win.el.style.width,height:win.el.style.height};Object.assign(win.el.style,{left:'0px',top:'0px',width:'100%',height:'100%'});}else Object.assign(win.el.style,win.restore);focus(win);}
   function resizeBox(dir,rect,dx,dy,limits){
     const {minWidth,minHeight,width:areaWidth,height:areaHeight}=limits;

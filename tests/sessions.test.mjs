@@ -119,9 +119,10 @@ test('The bin asks before it takes anything, and the windows sound like XP',()=>
  assert.match(read('js/explorer.js'),/await XP\.trashFile\(f\.id\)/);
 
  // The events the default sound scheme covered.
- assert.match(core,/function minimize\(win,quiet\)\{if\(win\.modal\)return;if\(!quiet\)sound\('minimize'\)/);
+ assert.match(core,/if\(!quiet\)sound\('minimize'\);/,'minimizing has its sound');
  assert.match(core,/function maximize\(win\)\{if\(win\.fixed\)return;sound\('restore'\)/);
- assert.match(core,/if\(win\.minimized&&!win\.parked\)sound\('restore'\)/,'restoring from the taskbar sounds too');
+ assert.match(core,/const waking=win\.minimized&&!win\.parked;/);
+ assert.match(core,/if\(waking\)\{sound\('restore'\)/,'restoring from the taskbar sounds too');
  // Show desktop is one gesture, so it makes one sound.
  assert.match(start,/XP\.sound\('minimize'\);hiddenWindows\.forEach\(id=>XP\.minimize\(XP\.windows\.get\(id\),true\)\)/);
  // Logging off and shutting down were two different sounds.
@@ -146,4 +147,23 @@ test('The taskbar groups a crowded program, and every window carries its own men
  assert.match(core,/bar\.oncontextmenu=e=>\{[^}]*menu\(windowMenu\(win\)/,'title bar right click');
  assert.match(core,/\$\('img',bar\)\.onclick=/,'the title bar icon opens it too');
  assert.match(core,/if\(e\.altKey&&e\.key===' '&&active\)/,'and Alt+Space');
+});
+
+test('Windows fly to the taskbar and back, and the menus fade in',()=>{
+ const core=read('js/core.js');
+ // The window travels to its own task button, which it can only find if the button says so.
+ assert.match(core,/b\.dataset\.win=win\.id/);
+ assert.match(core,/const taskRect=win=>\$\(`\[data-win="\$\{win\.id\}"\]`\)/);
+ assert.match(core,/function flyWindow\(win,rect,back\)/);
+ assert.match(core,/flyWindow\(win,target\)\.then\(\(\)=>\{if\(win\.minimized\)win\.el\.hidden=true;\}\)/,'it hides only once it has arrived');
+ assert.match(core,/if\(waking\)\{sound\('restore'\);const from=taskRect\(win\);win\.el\.hidden=false;flyWindow\(win,from,true\);\}/);
+ // A frame callback never arrives in a hidden page, so the start state is forced by a reflow.
+ assert.match(core,/void win\.el\.offsetWidth;/);
+ assert.doesNotMatch(core,/requestAnimationFrame\(\(\)=>\{\s*style\.transition/);
+ // Somebody who asked for less motion gets none of it.
+ assert.match(core,/const motionOff=\(\)=>window\.matchMedia\?\.\('\(prefers-reduced-motion: reduce\)'\)\?\.matches/);
+ const css=read('styles.css');
+ for(const rule of ['menu-appear','start-appear','balloon-appear'])
+  assert.match(css,new RegExp(`@keyframes ${rule}`),`${rule} is defined`);
+ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 });

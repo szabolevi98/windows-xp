@@ -380,3 +380,14 @@ input[type=range][orient=vertical]::-webkit-slider-thumb{width:19px;height:11px;
 .tree-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tree-item.selected{background:#316ac5;color:#fff}
 .toolbar button.pressed{background:#e2e0d3;border-color:#b9b7ac;box-shadow:inset 1px 1px #b0aea2}
+
+@keyframes menu-appear{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+@keyframes start-appear{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes balloon-appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.popup-menu:not([hidden]){animation:menu-appear .13s ease-out}
+#start-menu:not([hidden]){animation:start-appear .16s ease-out;transform-origin:left bottom}
+#balloon:not([hidden]){animation:balloon-appear .2s ease-out}
+#volume-flyout:not([hidden]){animation:menu-appear .13s ease-out}
+@media(prefers-reduced-motion:reduce){
+ .popup-menu:not([hidden]),#start-menu:not([hidden]),#balloon:not([hidden]),#volume-flyout:not([hidden]){animation:none}
+}
