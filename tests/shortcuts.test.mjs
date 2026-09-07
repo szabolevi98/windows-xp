@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 const root=new URL('../',import.meta.url);
 const read=name=>readFileSync(new URL(name,root),'utf8');
 
@@ -219,4 +219,26 @@ test('My Computer carries its whole menu, Manage included',()=>{
  const html=readFileSync(new URL('index.html',root),'utf8');
  assert.match(html,/js\/compmgmt\.js/);
  assert.match(html,/compmgmt\.css/);
+});
+
+test('User Accounts has a way back, and no account picture stands in for an icon',()=>{
+ const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
+ // The green Back arrow, Home and Help, above every page.
+ assert.match(utils,/class="accounts-nav"/);
+ assert.match(utils,/data-nav="back" \$\{trail\.length\?'':'disabled'\}/,'Back is dead on the first page');
+ assert.match(utils,/data-nav="home"/);
+ assert.match(utils,/data-nav="help"/);
+ assert.match(utils,/const go=next=>\{if\(next!==view\)\{trail\.push\(view\);view=next;\}render\(\);\}/);
+ assert.match(utils,/const back=\(\)=>\{view=trail\.pop\(\)\|\|'home';render\(\);\}/);
+ // Cancel steps back where you came from; a change taken lands on the first page again.
+ assert.match(utils,/data-go="back">Mégse<\/button>/);
+ assert.doesNotMatch(utils,/data-go="home">Mégse/);
+ assert.doesNotMatch(utils,/save\(\);view='home';render\(\)/,'nothing jumps home without clearing the trail');
+
+ // icons/user.png was the chess photo; these three carry their own picture now.
+ for(const name of ['user','addressbook','switchuser'])
+  assert.ok(existsSync(new URL(`assets/icons/${name}.png`,root)),`${name}.png is bundled`);
+ assert.match(readFileSync(new URL('assets/sources.json',root),'utf8'),/XP\/UserAccounts\.png/);
+ assert.match(readFileSync(new URL('js/outlook.js',root),'utf8'),/data-mail="addresses">\$\{icon\('addressbook'\)\}/);
+ assert.match(readFileSync(new URL('js/start.js',root),'utf8'),/icon\('switchuser'\)\} Felhasználóváltás/);
 });

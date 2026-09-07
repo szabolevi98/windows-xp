@@ -402,3 +402,11 @@ input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea,[content
 .resize-nw,.resize-se,.resize-handle{cursor:url('assets/cursors/size-nwse.cur?v=2'),nwse-resize}
 .paint-canvas,.paint-surface canvas{cursor:url('assets/cursors/cross.cur?v=2'),crosshair}
 button:disabled,.start-item:disabled{cursor:url('assets/cursors/arrow.cur?v=2'),default}
+
+.accounts-nav{display:flex;align-items:center;gap:6px;padding:5px 12px;background:#eef3fd;border-bottom:1px solid #c4d3ea}
+.accounts-nav .nav-gap{flex:1}
+.accounts-nav button{display:flex;align-items:center;gap:5px;background:none;padding:3px 8px;border:1px solid transparent;border-radius:3px;color:#0b3d91}
+.accounts-nav button:hover:not(:disabled){background:#dbe7fb;border-color:#a8c3ea}
+.accounts-nav button:disabled{opacity:.45}
+.accounts-nav img{width:20px;height:20px}
+.accounts-nav .nav-back span{font-weight:bold}
