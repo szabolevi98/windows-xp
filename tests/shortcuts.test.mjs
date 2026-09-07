@@ -15,10 +15,12 @@ test('Any program can be sent from the Start menu to the desktop as a shortcut',
  assert.match(start,/const already=baseIcons\.some\(i=>i\.app===app\)\|\|state\.files\.some\(/);
  const core=read('js/core.js');
  // A shortcut keeps its own icon and opens whatever program it points at.
- assert.match(core,/file\.type==='shortcut'\?\(file\.icon\|\|shortcutApps\[file\.app\]\|\|'help'\)/);
- assert.match(core,/else if\(file\.type==='shortcut'\)\{if\(apps\[file\.app\]\)open\(file\.app\);\}/);
+ assert.match(core,/file\.type==='shortcut'\?\(file\.icon\|\|shortcutApps\[file\.app\]\|\|\(targetOf\(file\)\?fileIcon\(targetOf\(file\)\):'help'\)\)/,'a shortcut shows the icon of whatever it points at');
+ assert.match(core,/else if\(apps\[file\.app\]\)open\(file\.app\)/,'a program shortcut opens its program');
+ assert.match(core,/if\(target\)openFile\(target\.id\)/,'a file shortcut opens what it points at');
+ assert.match(core,/A parancsikon hivatkozása nem érhető el/,'and says so when the target is gone');
  assert.match(core,/function shortcutTo\(app,name,iconName,parent='desktop'\)/);
- assert.match(core,/download,openFile,shortcutTo,onFiles/,'other programs can make shortcuts too');
+ assert.match(core,/download,openFile,shortcutTo,shortcutToFile,onFiles/,'other programs can make shortcuts too');
  // The little arrow badge marks a shortcut on the desktop and in Explorer.
  assert.match(start,/item\.shortcut\?' shortcut':''/);
  assert.match(read('js/explorer.js'),/f\.type==='shortcut'\?'shortcut':''/);
@@ -86,4 +88,33 @@ test('The tray speaker opens the little slider, and two clicks the mixer',()=>{
  assert.doesNotMatch(utils,/volume-panel/,'the old one-slider window is gone');
  // Sliders wear the classic sunken groove instead of the browser's own.
  assert.match(readFileSync(new URL('styles.css',root),'utf8'),/input\[type=range\]::-webkit-slider-thumb/);
+});
+
+test('Menus cascade, and Send To reaches the desktop from a file as well',()=>{
+ const core=readFileSync(new URL('js/core.js',root),'utf8');
+ // An item with `items` opens a child menu beside itself.
+ assert.match(core,/function openSubmenu\(button,items\)/);
+ assert.match(core,/item\.items\?'<b class="submenu-arrow">▶<\/b>':''/);
+ assert.match(core,/const left=anchor\.right\+el\.offsetWidth\+2>innerWidth\?/,'it flips when the screen runs out');
+ assert.match(core,/function closeFrom\(depth\)/,'and a deeper level closes with its parent');
+ assert.match(core,/hideMenus\(\)\{ closeSubmenus\(\)/);
+ // A shortcut can point at a file, showing that file's icon and opening it.
+ assert.match(core,/function shortcutToFile\(id,parent='desktop'\)/);
+ assert.match(core,/– parancsikon/);
+
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ for(const label of ['Rendezés ikonok szerint','Név','Típus','Módosítás dátuma','Automatikus elrendezés'])
+  assert.ok(start.includes(`label:'${label}'`),`the desktop sorts by ${label}`);
+ assert.match(start,/\{label:'Új',items:\[\{label:'Mappa'/,'New cascades too');
+ assert.match(start,/\{label:'Küldés',items:\[/);
+ assert.match(start,/XP\.shortcutToFile\(item\.file\)/);
+ assert.match(readFileSync(new URL('js/explorer.js',root),'utf8'),/XP\.shortcutToFile\(chosen\.id\)/,'Explorer sends to the desktop as well');
+
+ // All Programs holds folders, the way XP grouped it.
+ assert.match(start,/const programsMenu=\[/);
+ assert.match(start,/\['Kellékek','programs',\[/);
+ assert.match(start,/\['Játékok','programs',\[/);
+ assert.match(start,/\['Rendszereszközök','folder',\[/,'and a folder inside a folder');
+ assert.match(start,/function programsMarkup\(entries\)/);
+ assert.match(readFileSync(new URL('styles.css',root),'utf8'),/\.menu-folder:hover>\.folder-menu/);
 });

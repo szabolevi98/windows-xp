@@ -233,6 +233,11 @@ register('explorer',(initial='computer')=>{
       const f=selectedFile();if(!f||readOnly())return;
       if(f.type==='image'){const a=document.createElement('a');a.href=f.content;a.download=f.name;a.click();}else XP.download(f.name,f.content);
     }}];
+    const chosen=selectedFile();
+    if(chosen&&!readOnly())actions.push(null,{label:'Küldés',items:[
+      {label:'Asztal (parancsikon létrehozása)',icon:'showdesktop',action:()=>{if(XP.shortcutToFile(chosen.id))XP.notify('Parancsikon',`A(z) „${chosen.name}” parancsikonja az asztalra került.`);}},
+      {label:'Dokumentumok',icon:'documents',action:()=>XP.copyInto(chosen.id,'documents')}
+    ]});
     XP.menu(actions,e.clientX,e.clientY);
   };
   w.el.addEventListener('keydown',e=>{

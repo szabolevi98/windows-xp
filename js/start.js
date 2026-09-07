@@ -29,7 +29,11 @@ function renderIcons(){
   if(e.key==='Delete'&&item.file)XP.deleteFile(item.file);
   if(e.ctrlKey){const key=e.key.toLowerCase();if(key==='v'){e.preventDefault();XP.paste('desktop');}if(item.file&&(key==='x'||key==='c')){e.preventDefault();XP.clip(item.file,key==='x');}}
  };
- b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));XP.menu([{label:'Megnyitás',icon:item.icon,action:()=>activateIcon(item)},...(item.id==='recycle'?[{label:'Lomtár ürítése',icon:'recycle',action:XP.emptyTrash,disabled:!state.files.some(f=>f.deleted)}]:[]),...(item.file?[null,{label:'Kivágás',shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:'Másolás',shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:'Átnevezés',action:async()=>{const name=XP.fileName(await XP.prompt('Átnevezés','Új név:',item.label));if(name){const f=state.files.find(f=>f.id===item.file);if(state.files.some(o=>o.id!==f.id&&o.parent===f.parent&&o.name===name&&!o.deleted)){notify('Átnevezés','Ez a név már foglalt.');return;}XP.saveFile({...f,name});}}},{label:'Törlés',icon:'recycle',action:()=>XP.deleteFile(item.file)}]:[]),null,{label:'Tulajdonságok',action:()=>item.id==='computer'?XP.open('system'):XP.dialog(item.label,`${item.label}\n${item.shortcut?'Parancsikon egy Windows XP programhoz.':item.file?'Saját fájl az asztalon.':'Windows XP alkalmazás vagy rendszermappa.'}`)}],e.clientX,e.clientY);};
+ b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));XP.menu([{label:'Megnyitás',icon:item.icon,action:()=>activateIcon(item)},...(item.id==='recycle'?[{label:'Lomtár ürítése',icon:'recycle',action:XP.emptyTrash,disabled:!state.files.some(f=>f.deleted)}]:[]),...(item.file?[null,{label:'Kivágás',shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:'Másolás',shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:'Küldés',items:[
+  {label:'Asztal (parancsikon létrehozása)',icon:'showdesktop',action:()=>{if(XP.shortcutToFile(item.file))notify('Parancsikon',`A(z) „${item.label}” parancsikonja elkészült.`);}},
+  {label:'Dokumentumok',icon:'documents',action:()=>{if(XP.copyInto(item.file,'documents'))notify('Küldés',`Másolat készült a Dokumentumokba: ${item.label}`);}}
+ ]},
+ {label:'Átnevezés',action:async()=>{const name=XP.fileName(await XP.prompt('Átnevezés','Új név:',item.label));if(name){const f=state.files.find(f=>f.id===item.file);if(state.files.some(o=>o.id!==f.id&&o.parent===f.parent&&o.name===name&&!o.deleted)){notify('Átnevezés','Ez a név már foglalt.');return;}XP.saveFile({...f,name});}}},{label:'Törlés',icon:'recycle',action:()=>XP.deleteFile(item.file)}]:[]),null,{label:'Tulajdonságok',action:()=>item.id==='computer'?XP.open('system'):XP.dialog(item.label,`${item.label}\n${item.shortcut?'Parancsikon egy Windows XP programhoz.':item.file?'Saját fájl az asztalon.':'Windows XP alkalmazás vagy rendszermappa.'}`)}],e.clientX,e.clientY);};
  b.onpointerdown=e=>{
   if(e.button!==0)return;
   const sx=e.clientX,sy=e.clientY,left=parseInt(b.style.left),top=parseInt(b.style.top);
@@ -69,8 +73,31 @@ function renderIcons(){
  };el.append(b);
  });
 }
+const programsMenu=[
+ ['Kellékek','programs',[
+  ['Jegyzettömb','notepad','notepad'],['Paint','paint','paint'],['Parancssor','cmd','cmd'],
+  ['Számológép','calculator','calculator'],['Windows Intéző','folder','explorer'],
+  ['Rendszereszközök','folder',[['Feladatkezelő','taskmgr','taskmgr'],['Vezérlőpult','control','control']]]
+ ]],
+ ['Játékok','programs',[
+  ['Aknakereső','mines','mines'],['FreeCell','freecell','freecell'],['Hearts','hearts','hearts'],
+  ['Pasziánsz','solitaire','solitaire'],['Pókpasziánsz','spider','spider'],['3D Pinball – Space Cadet','pinball','pinball']
+ ]],
+ null,
+ ['Internet Explorer','ie','ie'],['Outlook Express','mail','outlook'],['Windows Media Player','player','player'],
+ ['Súgó és támogatás','help','help']
+];
+// A folder opens its own little menu beside itself, like every cascading menu in XP.
+function programsMarkup(entries){
+ return entries.map(entry=>{
+  if(entry===null)return '<div class="start-separator"></div>';
+  const [label,ic,target]=entry;
+  if(!Array.isArray(target))return startItem(label,ic,target);
+  return `<div class="menu-folder"><button class="start-item folder">${icon(ic)}<span>${esc(label)}</span><b class="submenu-arrow">▶</b></button><div class="popup-menu folder-menu">${programsMarkup(target)}</div></div>`;
+ }).join('');
+}
 function startItem(label,ic,app,subtitle='',minor=false){return `<button class="start-item ${minor?'minor':''}" data-open="${app}" data-label="${esc(label)}" data-icon="${ic}">${icon(ic)}<span>${subtitle?`<b>${label}</b><small>${subtitle}</small>`:label}</span></button>`;}
-function renderStart(){const el=$('#start-menu');el.innerHTML=`<header class="start-header"><button class="start-user" data-open="profile" title="Felhasználói fiókok"><img class="start-avatar" src="${XP.avatarPath(state.avatar)}" alt="Felhasználói kép"><span>${esc(state.user)}</span></button></header><div class="start-columns"><div class="start-left">${startItem('Internet','ie','ie','Internet Explorer')}${startItem('Email','mail','outlook','Outlook Express')}<div class="start-separator"></div>${startItem('Windows Media Player','player','player')}${startItem('Jegyzettömb','notepad','notepad')}${startItem('Paint','paint','paint')}${startItem('Számológép','calculator','calculator')}${startItem('Aknakereső','mines','mines')}<div class="start-separator"></div><button class="start-item all-programs" id="all-programs">Minden program <b>▶</b></button></div><div class="start-right">${startItem('Dokumentumok','documents','documents')}${startItem('Képek','pictures','pictures')}${startItem('Zene','music','music')}${startItem('Sajátgép','computer','computer')}<div class="start-separator"></div>${startItem('Vezérlőpult','control','control','',true)}${startItem('Hálózati kapcsolatok','network','network','',true)}<div class="start-separator"></div>${startItem('Súgó és támogatás','help','help','',true)}${startItem('Keresés','search','search','',true)}${startItem('Futtatás…','run','run','',true)}</div></div><footer class="start-footer"><button data-open="logoff">${icon('logoff')} Kijelentkezés</button><button data-open="power">${icon('shutdown')} Kikapcsolás</button></footer><div class="programs-menu popup-menu" hidden>${[['Internet Explorer','ie','ie'],['Outlook Express','mail','outlook'],['Windows Media Player','player','player'],['Jegyzettömb','notepad','notepad'],['Paint','paint','paint'],['Számológép','calculator','calculator'],['Aknakereső','mines','mines'],['Pasziánsz','solitaire','solitaire'],['FreeCell','freecell','freecell'],['Pókpasziánsz','spider','spider'],['Hearts','hearts','hearts'],['3D Pinball – Space Cadet','pinball','pinball'],['Parancssor','cmd','cmd'],['Feladatkezelő','taskmgr','taskmgr'],['Windows Intéző','folder','explorer'],['Súgó és támogatás','help','help']].map(([label,ic,app])=>startItem(label,ic,app)).join('')}</div>`;$('#all-programs').onclick=e=>{e.stopPropagation();$('.programs-menu',el).hidden=!$('.programs-menu',el).hidden;};}
+function renderStart(){const el=$('#start-menu');el.innerHTML=`<header class="start-header"><button class="start-user" data-open="profile" title="Felhasználói fiókok"><img class="start-avatar" src="${XP.avatarPath(state.avatar)}" alt="Felhasználói kép"><span>${esc(state.user)}</span></button></header><div class="start-columns"><div class="start-left">${startItem('Internet','ie','ie','Internet Explorer')}${startItem('Email','mail','outlook','Outlook Express')}<div class="start-separator"></div>${startItem('Windows Media Player','player','player')}${startItem('Jegyzettömb','notepad','notepad')}${startItem('Paint','paint','paint')}${startItem('Számológép','calculator','calculator')}${startItem('Aknakereső','mines','mines')}<div class="start-separator"></div><button class="start-item all-programs" id="all-programs">Minden program <b>▶</b></button></div><div class="start-right">${startItem('Dokumentumok','documents','documents')}${startItem('Képek','pictures','pictures')}${startItem('Zene','music','music')}${startItem('Sajátgép','computer','computer')}<div class="start-separator"></div>${startItem('Vezérlőpult','control','control','',true)}${startItem('Hálózati kapcsolatok','network','network','',true)}<div class="start-separator"></div>${startItem('Súgó és támogatás','help','help','',true)}${startItem('Keresés','search','search','',true)}${startItem('Futtatás…','run','run','',true)}</div></div><footer class="start-footer"><button data-open="logoff">${icon('logoff')} Kijelentkezés</button><button data-open="power">${icon('shutdown')} Kikapcsolás</button></footer><div class="programs-menu popup-menu" hidden>${programsMarkup(programsMenu)}</div>`;$('#all-programs').onclick=e=>{e.stopPropagation();$('.programs-menu',el).hidden=!$('.programs-menu',el).hidden;};}
 $('#start-button').onclick=e=>{e.stopPropagation();if(XP.modal)return;const el=$('#start-menu');if(el.hidden){renderStart();el.hidden=false;$('#start-button').classList.add('active');$('#start-button').setAttribute('aria-expanded','true');}else XP.hideMenus();};
 $('#start-menu').oncontextmenu=e=>{
  const button=e.target.closest('.start-item[data-open]');if(!button)return;
@@ -111,8 +138,33 @@ const trayNotices={
 };
 $$('[data-tray]').forEach(button=>button.onclick=()=>{const notice=trayNotices[button.dataset.tray];if(notice)XP.dialog(notice[0],notice[1]);else XP.open(button.dataset.tray);});
 function updateClock(){const now=new Date();$('#clock').textContent=now.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});$('#clock').title=now.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
+// Sorting fills the columns in the order the chosen key gives, the way XP lined them up.
+function sortIcons(by){
+ const items=desktopItems(),file=id=>state.files.find(f=>f.id===id);
+ const rank={computer:0,internet:1,outlook:2,documents:3,notepad:4,paint:5,player:6,recycle:99};
+ const order=[...items].sort((a,b)=>{
+  const fa=file(a.file),fb=file(b.file);
+  if(!fa&&!fb)return (rank[a.id]??50)-(rank[b.id]??50);
+  if(!fa)return -1;
+  if(!fb)return 1;
+  if(by==='type')return (fa.type||'').localeCompare(fb.type||'','hu')||fa.name.localeCompare(fb.name,'hu');
+  if(by==='modified')return (fb.modified||0)-(fa.modified||0);
+  return fa.name.localeCompare(fb.name,'hu');
+ });
+ const grid=XP.DesktopGrid.create($('#desktop').clientWidth,$('#desktop').clientHeight,order.length);
+ state.iconPositions={};
+ if(by!=='grid')order.forEach((item,index)=>{state.iconPositions[item.id]={col:Math.floor(index/grid.rows),row:index%grid.rows};});
+ persist();renderIcons();
+}
 async function newDesktop(type){const result=await XP.prompt(type==='folder'?'Új mappa':'Új szöveges dokumentum','Név:',type==='folder'?'Új mappa':'Új dokumentum.txt');let name=XP.fileName(result);if(!name)return;if(type==='text'&&!name.endsWith('.txt'))name+='.txt';if(state.files.some(f=>f.parent==='desktop'&&f.name===name&&!f.deleted)){notify('Új elem','Ez a név már foglalt.');return;}XP.saveFile({id:XP.uniqueId(),name,type,parent:'desktop',content:''});}
-$('#desktop').oncontextmenu=e=>{if(e.target.closest('.window,.desktop-icon'))return;e.preventDefault();XP.menu([{label:'Ikonok rendezése',action:()=>{state.iconPositions={};persist();renderIcons();}},{label:'Frissítés',action:renderIcons},null,{label:'Új mappa',icon:'folder',action:()=>newDesktop('folder')},{label:'Új szöveges dokumentum',icon:'notepad',action:()=>newDesktop('text')},{label:'Beillesztés',shortcut:'Ctrl+V',action:()=>XP.paste('desktop'),disabled:!XP.canPaste()},null,{label:document.fullscreenElement?'Kilépés a teljes képernyőből':'Teljes képernyő',action:()=>{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p?.catch(()=>notify('Teljes képernyő','A teljes képernyőhöz az F11 billentyűt is használhatod.'));}},{label:'Tulajdonságok',icon:'control',action:()=>XP.open('display')}],e.clientX,e.clientY);};
+$('#desktop').oncontextmenu=e=>{if(e.target.closest('.window,.desktop-icon'))return;e.preventDefault();XP.menu([
+  {label:'Rendezés ikonok szerint',items:[
+   {label:'Név',action:()=>sortIcons('name')},{label:'Típus',action:()=>sortIcons('type')},
+   {label:'Módosítás dátuma',action:()=>sortIcons('modified')},null,
+   {label:'Automatikus elrendezés',action:()=>sortIcons('grid')}
+  ]},
+  {label:'Frissítés',action:renderIcons},null,
+  {label:'Új',items:[{label:'Mappa',icon:'folder',action:()=>newDesktop('folder')},{label:'Szöveges dokumentum',icon:'notepad',action:()=>newDesktop('text')}]},{label:'Beillesztés',shortcut:'Ctrl+V',action:()=>XP.paste('desktop'),disabled:!XP.canPaste()},null,{label:document.fullscreenElement?'Kilépés a teljes képernyőből':'Teljes képernyő',action:()=>{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p?.catch(()=>notify('Teljes képernyő','A teljes képernyőhöz az F11 billentyűt is használhatod.'));}},{label:'Tulajdonságok',icon:'control',action:()=>XP.open('display')}],e.clientX,e.clientY);};
 $('#desktop').addEventListener('pointerdown',e=>{if(e.target.closest('.window,.desktop-icon')||e.button!==0||XP.modal)return;selectedIcon=null;$$('.desktop-icon').forEach(b=>b.classList.remove('selected'));const box=$('#selection-box'),x=e.clientX,y=e.clientY;box.hidden=false;Object.assign(box.style,{left:x+'px',top:y+'px',width:'0px',height:'0px'});function move(ev){Object.assign(box.style,{left:Math.min(x,ev.clientX)+'px',top:Math.min(y,ev.clientY)+'px',width:Math.abs(x-ev.clientX)+'px',height:Math.abs(y-ev.clientY)+'px'});const r=box.getBoundingClientRect();$$('.desktop-icon').forEach(b=>{const br=b.getBoundingClientRect();b.classList.toggle('selected',br.left<r.right&&br.right>r.left&&br.top<r.bottom&&br.bottom>r.top);});}function up(){box.hidden=true;document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);});
 // Cascade and tile, both measured against the desktop the way the taskbar arranged them.
 function arrange(mode){

@@ -140,7 +140,9 @@ window.XP = (() => {
   }
   const shortcutApps={mines:'mines',solitaire:'solitaire',pinball:'pinball',freecell:'freecell',spider:'spider',hearts:'hearts'};
   const recycleIcon=()=>state.files.some(f=>f.deleted)?'recycle-full':'recycle';
-  const fileIcon=file=>file.type==='folder'?'folder':file.type==='image'?'pictures':file.type==='shortcut'?(file.icon||shortcutApps[file.app]||'help'):'notepad';
+  const targetOf=file=>file.target?state.files.find(f=>f.id===file.target&&!f.deleted):null;
+  const fileIcon=file=>file.type==='folder'?'folder':file.type==='image'?'pictures':
+    file.type==='shortcut'?(file.icon||shortcutApps[file.app]||(targetOf(file)?fileIcon(targetOf(file)):'help')):'notepad';
   const windows = new Map(), apps = {};
   let sequence=0,z=20,active=null,modalDepth=0;
   const uniqueId = () => `f-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
@@ -232,9 +234,50 @@ window.XP = (() => {
   function open(app,...args){hideMenus();if(modalDepth)return;const fn=apps[app];if(fn)return fn(...args);notify('A program nem található',app);}
   function register(name,fn){apps[name]=fn;}
   function singleton(app){const w=[...windows.values()].find(w=>w.app===app);if(w){focus(w);return w;}return null;}
-  function menu(items,x,y){const el=$('#context-menu');el.replaceChildren();items.forEach(item=>{if(item===null){el.append(document.createElement('hr'));return;}const b=document.createElement('button');b.setAttribute('role','menuitem');b.disabled=!!item.disabled;b.innerHTML=`${item.icon?icon(item.icon):`<span>${item.checked?'✓':''}</span>`}${esc(item.label)}${item.shortcut?`<kbd>${esc(item.shortcut)}</kbd>`:''}`;b.onclick=e=>{e.stopPropagation();hideMenus();item.action?.();};el.append(b);});el.hidden=false;el.style.left=Math.min(x,innerWidth-el.offsetWidth-3)+'px';el.style.top=Math.min(y,innerHeight-el.offsetHeight-32)+'px';el.style.left=Math.max(0,parseInt(el.style.left))+'px';el.style.top=Math.max(0,parseInt(el.style.top))+'px';}
+  // Menus cascade: an item with `items` opens a child menu beside itself.
+  const submenus=[];
+  const depthOf=el=>submenus.find(entry=>entry.el===el)?.depth??0;
+  function closeFrom(depth){while(submenus.length&&submenus.at(-1).depth>=depth)submenus.pop().el.remove();}
+  const closeSubmenus=parent=>closeFrom(parent?depthOf(parent)+1:0);
+  function paintMenu(el,items){
+    el.replaceChildren();
+    items.forEach(item=>{
+      if(item===null){el.append(document.createElement('hr'));return;}
+      const b=document.createElement('button');b.setAttribute('role','menuitem');b.disabled=!!item.disabled;
+      b.innerHTML=`${item.icon?icon(item.icon):`<span>${item.checked?'✓':''}</span>`}${esc(item.label)}${item.shortcut?`<kbd>${esc(item.shortcut)}</kbd>`:''}${item.items?'<b class="submenu-arrow">▶</b>':''}`;
+      if(item.items&&!item.disabled){
+        const open=()=>openSubmenu(b,item.items);
+        b.onpointerenter=open;b.onfocus=open;b.onclick=e=>{e.stopPropagation();open();};
+      }else{
+        b.onpointerenter=()=>closeSubmenus(el);
+        b.onclick=e=>{e.stopPropagation();hideMenus();item.action?.();};
+      }
+      el.append(b);
+    });
+  }
+  // The child hangs off its parent item, flipping to the left when the screen runs out.
+  function openSubmenu(button,items){
+    if(submenus.at(-1)?.owner===button)return;
+    const depth=depthOf(button.parentElement)+1;
+    closeFrom(depth);
+    const el=document.createElement('div');el.className='popup-menu submenu';el.setAttribute('role','menu');
+    document.body.append(el);submenus.push({owner:button,el,depth});
+    paintMenu(el,typeof items==='function'?items():items);
+    const anchor=button.getBoundingClientRect();
+    const left=anchor.right+el.offsetWidth+2>innerWidth?anchor.left-el.offsetWidth+2:anchor.right-2;
+    el.style.left=Math.max(0,left)+'px';
+    el.style.top=Math.max(0,Math.min(anchor.top-3,innerHeight-el.offsetHeight-32))+'px';
+  }
+  function menu(items,x,y){
+    const el=$('#context-menu');
+    closeFrom(0);
+    paintMenu(el,items);
+    el.hidden=false;
+    el.style.left=Math.min(x,innerWidth-el.offsetWidth-3)+'px';el.style.top=Math.min(y,innerHeight-el.offsetHeight-32)+'px';
+    el.style.left=Math.max(0,parseInt(el.style.left))+'px';el.style.top=Math.max(0,parseInt(el.style.top))+'px';
+  }
   function menubar(win,menus,logo=false){const bar=document.createElement('nav');bar.className='menu-bar';bar.setAttribute('aria-label','Alkalmazás menü');Object.entries(menus).forEach(([label,items])=>{const b=document.createElement('button');b.textContent=label;b.onclick=e=>{e.stopPropagation();const r=b.getBoundingClientRect();menu(typeof items==='function'?items():items,r.left,r.bottom);};bar.append(b);});if(logo){const span=document.createElement('span');span.className='toolbar-logo';span.innerHTML=icon('windows');bar.append(span);}win.body.append(bar);return bar;}
-  function hideMenus(){ $('#context-menu').hidden=true;$('#start-menu').hidden=true;$('#volume-flyout').hidden=true;$('#start-button').classList.remove('active');$('#start-button').setAttribute('aria-expanded','false'); }
+  function hideMenus(){ closeSubmenus();$('#context-menu').hidden=true;$('#start-menu').hidden=true;$('#volume-flyout').hidden=true;$('#start-button').classList.remove('active');$('#start-button').setAttribute('aria-expanded','false'); }
   // A dialog grows to its message: a fixed box let long text slide under the title bar
   // as soon as focusing the button scrolled the overflow into view.
   function fitDialog(win){
@@ -342,17 +385,29 @@ window.XP = (() => {
   }
   function restoreFile(id){const file=state.files.find(f=>f.id===id);if(!file)return;const parent=state.files.find(f=>f.id===file.parent);if(parent?.deleted)restoreFile(parent.id);const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))delete f.deleted;});persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   function download(name,content,type='text/plain;charset=utf-8'){const blob=content instanceof Blob?content:new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fileName(name)||'dokumentum.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  function shortcutToFile(id,parent='desktop'){
+    const source=state.files.find(f=>f.id===id&&!f.deleted);if(!source)return null;
+    const file={id:uniqueId(),name:uniqueName(`${source.name} – parancsikon`,parent)||source.name,
+      type:'shortcut',target:id,parent,modified:Date.now()};
+    saveFile(file);return file;
+  }
   function shortcutTo(app,name,iconName,parent='desktop'){
     if(state.files.some(f=>f.type==='shortcut'&&f.app===app&&f.parent===parent&&!f.deleted))return null;
     const file={id:uniqueId(),name:uniqueName(name,parent)||name,type:'shortcut',app,icon:iconName,parent,modified:Date.now()};
     saveFile(file);return file;
   }
-  function openFile(id){const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file)return;if(file.type==='folder')open('explorer',id);else if(file.type==='image')open('image',id);else if(file.type==='shortcut'){if(apps[file.app])open(file.app);}else open('notepad',id);}
+  function openFile(id){const file=state.files.find(f=>f.id===id&&!f.deleted);if(!file)return;if(file.type==='folder')open('explorer',id);else if(file.type==='image')open('image',id);else if(file.type==='shortcut'){
+      if(file.target){
+        const target=targetOf(file);
+        if(target)openFile(target.id);
+        else{sound('error');dialog('Hibás parancsikon','A parancsikon hivatkozása nem érhető el. Elképzelhető, hogy az elemet törölték.',{icon:'error'});}
+      }else if(apps[file.app])open(file.app);
+    }else open('notepad',id);}
   function onFiles(win,fn){const guarded=()=>{if(!win.parked)fn();};document.addEventListener('xp-files-changed',guarded);win.cleanup.push(()=>document.removeEventListener('xp-files-changed',guarded));}
   function status(win,text,extra=''){const bar=document.createElement('footer');bar.className='status-bar';bar.innerHTML=`<span>${esc(text)}</span>${extra?`<span class="status-part">${esc(extra)}</span>`:''}`;win.body.append(bar);return bar;}
-  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#context-menu,#start-menu,#start-button,.menu-bar,#volume-flyout,#volume-button'))hideMenus();});
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#context-menu,.submenu,#start-menu,#start-button,.menu-bar,#volume-flyout,#volume-button'))hideMenus();});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
-  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+  return {$,$$,esc,icon,iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();
