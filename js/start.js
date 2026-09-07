@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-const {$,$$,esc,icon,state,register,persist,notify,t}=XP;
+const {$,$$,esc,icon,state,register,persist,notify,t,locale}=XP;
 const baseIcons=[
  {id:'computer',label:'Sajátgép',icon:'computer',app:'computer'},
  {id:'internet',label:'Internet Explorer',icon:'ie',app:'ie'},
@@ -155,7 +155,7 @@ const trayNotices={
  mail:null
 };
 $$('[data-tray]').forEach(button=>button.onclick=()=>{const notice=trayNotices[button.dataset.tray];if(notice)XP.dialog(notice[0],notice[1]);else XP.open(button.dataset.tray);});
-function updateClock(){const now=new Date();$('#clock').textContent=now.toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});$('#clock').title=now.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
+function updateClock(){const now=new Date();$('#clock').textContent=now.toLocaleTimeString(locale(),{hour:'2-digit',minute:'2-digit'});$('#clock').title=now.toLocaleDateString(locale(),{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
 // Sorting fills the columns in the order the chosen key gives, the way XP lined them up.
 function sortIcons(by){
  const items=desktopItems(),file=id=>state.files.find(f=>f.id===id);

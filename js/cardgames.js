@@ -212,7 +212,7 @@ register('spider',()=>{
  }
  function render(){
   let offsets;
-  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="Osztás a pakliból, ${Math.ceil(stock.length/10)} osztás maradt"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t('Elfogyott a pakli'))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
+  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="${esc(t('Osztás a pakliból, {count} osztás maradt',{count:Math.ceil(stock.length/10)}))}"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t('Elfogyott a pakli'))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
    let y=0;offsets=col.map(card=>{const at=y;y+=card.face?20:8;return at;});
    return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${c+1}. oszlop"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
   }).join('')}</div>`;
@@ -381,7 +381,7 @@ register('hearts',()=>{
    ?`<div class="hearts-centre"><p>Válassz ki három lapot, és add át ${directions[passIndex%4].label}.</p><button class="xp-button primary" data-pass ${chosen.length===3?'':'disabled'}>Átadás (${chosen.length}/3)</button></div>`
    :over?`<div class="hearts-centre"><p>${esc(t('A játszma véget ért. Új játszma: F2.'))}</p></div>`
    :`<div class="hearts-table">${table}</div>`;
-  body.innerHTML=`<div class="hearts-top">${seatHtml(2)}</div><div class="hearts-middle">${seatHtml(1)}${centre}${seatHtml(3)}</div><div class="hearts-hand" aria-label="A te lapjaid">${hands[0].map((c,i)=>cardHtml(c,`data-card="${key(c)}"`,chosen.some(x=>key(x)===key(c)),`--card-i:${i}`)+'').join('')}</div>`;
+  body.innerHTML=`<div class="hearts-top">${seatHtml(2)}</div><div class="hearts-middle">${seatHtml(1)}${centre}${seatHtml(3)}</div><div class="hearts-hand" aria-label="${esc(t('A te lapjaid'))}">${hands[0].map((c,i)=>cardHtml(c,`data-card="${key(c)}"`,chosen.some(x=>key(x)===key(c)),`--card-i:${i}`)+'').join('')}</div>`;
   $$('.hearts-hand .playing-card',body).forEach((el,i)=>{
    const c=hands[0][i];
    el.classList.toggle('dimmed',phase==='play'&&!over&&turn===0&&trick.length<4&&!playable.has(key(c)));

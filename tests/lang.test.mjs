@@ -101,7 +101,7 @@ test('Every sentence the code asks for has a translation',()=>{
  vm.createContext(context);
  vm.runInContext(read('lang/en.js'),context);
  const en=context.window.XP_STRINGS.en;
- const call=/(?<![\w$.])t\('((?:[^'\\]|\\.)*)'/g;
+ const call=/(?<![\w$.])t\((?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")/g;
  const missing=[];
  let seen=0;
  for(const file of ['core','start','explorer','apps','utilities','internet','web-pages','outlook',
@@ -109,10 +109,24 @@ test('Every sentence the code asks for has a translation',()=>{
   const source=read(`js/${file}.js`);
   for(const match of source.matchAll(call)){
    seen++;
-   const key=match[1].replace(/\\(['"\\])/g,'$1').replace(/\\n/g,'\n');
+   const key=(match[1]??match[2]).replace(/\\(['"\\])/g,'$1').replace(/\\n/g,'\n');
    if(!(key in en)) missing.push(`${file}.js: ${key}`);
   }
  }
  assert.ok(seen>1000,`the programs speak through the translator (${seen} sentences)`);
  assert.deepEqual(missing,[],'no sentence is left without a translation');
+});
+
+test('Dates, clocks and numbers follow the chosen language',()=>{
+ assert.equal(boot({languages:['hu']}).i18n.locale,'hu-HU');
+ assert.equal(boot({languages:['en-GB']}).i18n.locale,'en-US');
+ assert.equal(boot({languages:['de']}).i18n.locale,'de-DE');
+ const {i18n}=boot({languages:['hu']});
+ i18n.setLanguage('de');
+ assert.equal(i18n.locale,'de-DE','the locale follows the switch');
+ // No program may pin the Hungarian format any more.
+ for(const file of ['core','start','explorer','apps','utilities','taskmgr','web-pages','outlook','player'])
+  // core.js keeps one, as the format it falls back on without the language layer.
+  assert.doesNotMatch(read(`js/${file}.js`).replace("locale:'hu-HU'",''),/'hu-HU'/,
+   `${file}.js formats through the locale`);
 });

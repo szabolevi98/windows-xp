@@ -97,7 +97,7 @@
       const c=XP.createWindow({title:t('Új üzenet'),icon:'mail',app:'outlook-compose',className:'outlook-window',width:560,height:430,minWidth:380,minHeight:280});
       const quoted=quote?`\n\n\n----- Eredeti üzenet -----\nFeladó: ${quote.from} <${quote.address}>\nTárgy: ${quote.subject}\n\n${quote.body}`:'';
       const form=document.createElement('div');form.className='oe-compose';
-      form.innerHTML=`<label><span>${esc(t('Címzett:'))}</span><input type="text" name="to" value="${esc(to)}" placeholder="valaki@netkapu.hu"></label><label><span>${esc(t('Tárgy:'))}</span><input type="text" name="subject" value="${esc(subject)}"></label><textarea name="body" aria-label="Üzenet szövege">${esc(quoted)}</textarea><div class="button-row"><button class="xp-button primary" data-send>${esc(t('Küldés'))}</button><button class="xp-button" data-draft>${esc(t('Mentés piszkozatként'))}</button><button class="xp-button" data-cancel>${esc(t('Mégse'))}</button></div>`;
+      form.innerHTML=`<label><span>${esc(t('Címzett:'))}</span><input type="text" name="to" value="${esc(to)}" placeholder="${esc(t('valaki@netkapu.hu'))}"></label><label><span>${esc(t('Tárgy:'))}</span><input type="text" name="subject" value="${esc(subject)}"></label><textarea name="body" aria-label="${esc(t('Üzenet szövege'))}">${esc(quoted)}</textarea><div class="button-row"><button class="xp-button primary" data-send>${esc(t('Küldés'))}</button><button class="xp-button" data-draft>${esc(t('Mentés piszkozatként'))}</button><button class="xp-button" data-cancel>${esc(t('Mégse'))}</button></div>`;
       c.body.append(form);
       const read=()=>({to:$('[name=to]',form).value.trim(),subject:$('[name=subject]',form).value.trim(),body:$('[name=body]',form).value});
       const put=(target)=>{

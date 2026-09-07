@@ -15,6 +15,9 @@ window.XP_I18N = (() => {
     {code: 'de', label: 'Deutsch'}
   ]);
   const FALLBACK = 'en';
+  // A dátumok, órák és számok is a nyelvhez igazodnak: az XP-ben ezt
+  // ugyanaz a Területi és nyelvi beállítások ablak döntötte el.
+  const LOCALES = {hu: 'hu-HU', en: 'en-US', de: 'de-DE'};
   const KEY = 'windows-xp-simulator-lang';
   const dictionaries = window.XP_STRINGS || {};
   const listeners = [];
@@ -70,7 +73,13 @@ window.XP_I18N = (() => {
     });
   }
 
+  // Az index.html feliratai is a választott nyelven jelennek meg: a fájl a
+  // `defer` miatt a kész dokumentumon fut, így itt már van mit lefordítani.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => applyToDom());
+  else applyToDom();
+
   return {t, setLanguage, applyToDom, languages: SUPPORTED,
+    get locale() { return LOCALES[current] || LOCALES[FALLBACK]; },
     onChange: fn => listeners.push(fn),
     get language() { return current; }};
 })();
