@@ -2,99 +2,99 @@
 (() => {
   const {$,$$,esc,icon,state,t}=XP;
   // A Számítógép-kezelés konzol fája: csomópont, cím, ikon, gyerekek.
-  const TREE=['root',t('Számítógép-kezelés (helyi)'),'computer',[
-    ['tools',t('Rendszereszközök'),'folder',[
-      ['events',t('Eseménynapló'),'folder',[
-        ['event-app',t('Alkalmazás'),'documents',[]],
-        ['event-sec',t('Biztonság'),'security',[]],
-        ['event-sys',t('Rendszer'),'computer',[]]
+  const TREE=['root',t("text_computer_management_local"),'computer',[
+    ['tools',t("text_system_tools"),'folder',[
+      ['events',t("text_event_viewer"),'folder',[
+        ['event-app',t("text_application"),'documents',[]],
+        ['event-sec',t("text_security"),'security',[]],
+        ['event-sys',t("text_system"),'computer',[]]
       ]],
-      ['shares',t('Megosztott mappák'),'folder',[]],
-      ['accounts',t('Helyi felhasználók és csoportok'),'user',[
-        ['user-list',t('Felhasználók'),'user',[]],
-        ['group-list',t('Csoportok'),'user',[]]
+      ['shares',t("text_shared_folders"),'folder',[]],
+      ['accounts',t("text_local_users_and_groups"),'user',[
+        ['user-list',t("text_users"),'user',[]],
+        ['group-list',t("text_groups"),'user',[]]
       ]],
-      ['perf',t('Teljesítménynaplók és riasztások'),'taskmgr',[]],
-      ['devices',t('Eszközkezelő'),'computer',[]]
+      ['perf',t("text_performance_logs_and_alerts"),'taskmgr',[]],
+      ['devices',t("text_device_manager"),'computer',[]]
     ]],
-    ['storage',t('Tárolás'),'disk',[
-      ['media',t('Cserélhető adathordozó'),'cd',[]],
-      ['defrag',t('Lemeztöredezettség-mentesítő'),'disk',[]],
-      ['diskmgmt',t('Lemezkezelés'),'disk',[]]
+    ['storage',t("text_storage"),'disk',[
+      ['media',t("text_removable_storage"),'cd',[]],
+      ['defrag',t("text_disk_defragmenter"),'disk',[]],
+      ['diskmgmt',t("text_disk_management"),'disk',[]]
     ]],
-    ['apps',t('Szolgáltatások és alkalmazások'),'control',[
-      ['service-list',t('Szolgáltatások'),'control',[]],
-      ['wmi',t('WMI-vezérlő'),'control',[]],
-      ['index',t('Indexelő szolgáltatás'),'search',[]]
+    ['apps',t("text_services_and_applications"),'control',[
+      ['service-list',t("text_services"),'control',[]],
+      ['wmi',t("text_wmi_control"),'control',[]],
+      ['index',t("text_indexing_service"),'search',[]]
     ]]
   ]];
   const DESCRIPTIONS={
-    tools:t('A gép állapotát és a helyi fiókokat kezelő eszközök.'),
-    events:t('A Windows és a programok által naplózott események.'),
-    storage:t('A lemezek és a cserélhető adathordozók kezelése.'),
-    apps:t('A gépen futó szolgáltatások és kiszolgálóalkalmazások.'),
-    shares:t('A gépen megosztott mappák, a nyitott munkamenetek és fájlok.'),
-    accounts:t('A gépen létrehozott felhasználói fiókok és csoportok.'),
-    perf:t('Teljesítményszámlálók naplózása és riasztások beállítása.'),
-    devices:t('A gépbe épített eszközök és az illesztőprogramjaik.'),
-    media:t('A cserélhető adathordozók és a hozzájuk tartozó könyvtárak.'),
-    defrag:t('A köteten lévő fájlok töredezettségének megszüntetése.'),
-    diskmgmt:t('A lemezek particionálása és a kötetek karbantartása.'),
-    wmi:t('A Windows felügyeleti eszközeinek beállításai.'),
-    index:t('A gyorsabb kereséshez indexelt mappák és katalógusok.')
+    tools:t("text_tools_for_the_state_of_the_machine_and_the_local_accounts"),
+    events:t("text_the_events_logged_by_windows_and_by_programs"),
+    storage:t("text_managing_the_disks_and_the_removable_media"),
+    apps:t("text_the_services_and_server_applications_running_on_this_machine"),
+    shares:t("text_shared_folders_open_sessions_and_open_files_on_this_machine"),
+    accounts:t("text_the_user_accounts_and_groups_created_on_this_machine"),
+    perf:t("text_logging_performance_counters_and_setting_up_alerts"),
+    devices:t("text_the_devices_in_this_machine_and_their_drivers"),
+    media:t("text_removable_media_and_the_libraries_that_hold_them"),
+    defrag:t("text_defragmenting_the_files_on_a_volume"),
+    diskmgmt:t("text_partitioning_disks_and_maintaining_volumes"),
+    wmi:t("text_settings_for_the_windows_management_tools"),
+    index:t("text_folders_and_catalogues_indexed_for_faster_searching")
   };
   const SERVICES=[
-    [t('Automatikus frissítések'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    [t('Beépülő eszközök támogatása (Plug and Play)'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    [t('Eseménynapló'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    [t('Hálózati kapcsolatok'),t('Elindítva'),t('Kézi'),t('Helyi rendszer')],
-    [t('Nyomtatásisor-kezelő'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    [t('Súgó és támogatás'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    [t('Számítógépböngésző'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    ['Windows Audio',t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    [t('Windows tűzfal / Internetkapcsolat megosztása'),t('Elindítva'),t('Automatikus'),t('Helyi rendszer')],
-    ['Telnet',t('Leállítva'),t('Letiltva'),t('Helyi szolgáltatás')]
+    [t("text_automatic_updates"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    [t("text_plug_and_play"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    [t("text_event_viewer"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    [t("text_network_connections"),t("text_started"),t("text_manual"),t("text_local_system")],
+    [t("text_print_spooler"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    [t("text_help_and_support"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    [t("text_computer_browser"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    ['Windows Audio',t("text_started"),t("text_automatic"),t("text_local_system")],
+    [t("text_windows_firewall_internet_connection_sharing"),t("text_started"),t("text_automatic"),t("text_local_system")],
+    ['Telnet',t("text_stopped"),t("text_disabled_5dd9d449"),t("text_local_service_d2fd265d")]
   ];
   const DEVICES=[
-    [t('Billentyűzetek'),t('Szabványos 101/102 gombos billentyűzet')],
-    [t('DVD/CD-ROM-meghajtók'),'HL-DT-ST DVD-ROM GDR8162B'],
-    [t('Egerek és egyéb mutatóeszközök'),t('PS/2 kompatibilis egér')],
-    [t('Hang-, videó- és játékvezérlők'),'Realtek AC97 Audio'],
-    [t('Hálózati kártyák'),'Realtek RTL8139 Family PCI Fast Ethernet NIC'],
-    [t('Képernyőadapterek'),'NVIDIA GeForce4 MX 440'],
-    [t('Lemezmeghajtók'),'ST340016A'],
-    [t('Processzorok'),'Intel Pentium 4 1.80 GHz']
+    [t("text_keyboards"),t("text_standard_101_102_key_keyboard")],
+    [t("text_dvd_cd_rom_drives"),'HL-DT-ST DVD-ROM GDR8162B'],
+    [t("text_mice_and_other_pointing_devices"),t("text_ps_2_compatible_mouse")],
+    [t("text_sound_video_and_game_controllers"),'Realtek AC97 Audio'],
+    [t("text_network_adapters"),'Realtek RTL8139 Family PCI Fast Ethernet NIC'],
+    [t("text_display_adapters"),'NVIDIA GeForce4 MX 440'],
+    [t("text_disk_drives"),'ST340016A'],
+    [t("text_processors"),'Intel Pentium 4 1.80 GHz']
   ];
   const EVENTS={
     'event-app':[
-      [t('Tájékoztatás'),'2026. 09. 07.','13:58','Windows Media Player',t('Nincs'),'101'],
-      [t('Tájékoztatás'),'2026. 09. 07.','13:41','MsiInstaller',t('Nincs'),'11707'],
-      [t('Figyelmeztetés'),'2026. 09. 06.','21:12','Application Hang','(101)','1002']
+      [t("text_information"),'2026. 09. 07.','13:58','Windows Media Player',t("text_none"),'101'],
+      [t("text_information"),'2026. 09. 07.','13:41','MsiInstaller',t("text_none"),'11707'],
+      [t("text_warning"),'2026. 09. 06.','21:12','Application Hang','(101)','1002']
     ],
     'event-sec':[
-      [t('Sikeres naplózás'),'2026. 09. 07.','13:38','Security',t('Bejelentkezés/kijelentkezés'),'528'],
-      [t('Sikeres naplózás'),'2026. 09. 07.','13:38','Security',t('Fiókkezelés'),'642'],
-      [t('Sikertelen naplózás'),'2026. 09. 05.','08:02','Security',t('Bejelentkezés/kijelentkezés'),'529']
+      [t("text_success_audit"),'2026. 09. 07.','13:38','Security',t("text_logon_logoff"),'528'],
+      [t("text_success_audit"),'2026. 09. 07.','13:38','Security',t("text_account_management"),'642'],
+      [t("text_failure_audit"),'2026. 09. 05.','08:02','Security',t("text_logon_logoff"),'529']
     ],
     'event-sys':[
-      [t('Tájékoztatás'),'2026. 09. 07.','13:37','eventlog',t('Nincs'),'6005'],
-      [t('Tájékoztatás'),'2026. 09. 07.','13:37','Service Control Manager',t('Nincs'),'7035'],
-      [t('Hiba'),'2026. 09. 06.','19:55','atapi',t('Nincs'),'9']
+      [t("text_information"),'2026. 09. 07.','13:37','eventlog',t("text_none"),'6005'],
+      [t("text_information"),'2026. 09. 07.','13:37','Service Control Manager',t("text_none"),'7035'],
+      [t("text_error"),'2026. 09. 06.','19:55','atapi',t("text_none"),'9']
     ]
   };
 
   XP.register('compmgmt',()=>{
     if(XP.singleton('compmgmt'))return;
-    const w=XP.createWindow({title:t('Számítógép-kezelés'),icon:'computer',app:'compmgmt',
+    const w=XP.createWindow({title:t("text_computer_management"),icon:'computer',app:'compmgmt',
       width:720,height:470,minWidth:520,minHeight:330});
     let selected='root';
     const expanded=new Set(['root','tools','storage','apps']);
 
     XP.menubar(w,{
-      [t('Fájl')]:[{label:t('Bezárás'),action:()=>w.close()}],
-      [t('Művelet')]:()=>[{label:t('Frissítés'),shortcut:'F5',action:render},{label:t('Exportálás…'),disabled:true}],
-      [t('Nézet')]:()=>[{label:t('Nagy ikonok'),disabled:true},{label:t('Részletek'),checked:true,disabled:true}],
-      [t('Súgó')]:[{label:t('A Számítógép-kezelés névjegye'),action:()=>XP.dialog(t('Számítógép-kezelés'),t('Számítógép-kezelés\n\nA gép eszközeit, naplóit, helyi fiókjait, lemezeit és szolgáltatásait egy helyen kezeli.\n\nMegnyitás: a Sajátgép ikonjának helyi menüjéből, vagy a Futtatás ablakból: compmgmt.msc'))}]
+      [t("text_file")]:[{label:t("text_close"),action:()=>w.close()}],
+      [t("text_action")]:()=>[{label:t("text_refresh"),shortcut:'F5',action:render},{label:t("text_export"),disabled:true}],
+      [t("text_view")]:()=>[{label:t("text_large_icons"),disabled:true},{label:t("text_details"),checked:true,disabled:true}],
+      [t("text_help")]:[{label:t("text_about_computer_management"),action:()=>XP.dialog(t("text_computer_management"),t("text_computer_management_the_devices_logs_local_accounts_disks_and_services_49ccd674"))}]
     });
 
     const body=document.createElement('div');body.className='mmc';
@@ -118,47 +118,47 @@
 
     // Amit a jobb oldali panel mutat: a levelek a saját listájukat, a mappák a gyerekeiket.
     function paneFor(id){
-      if(EVENTS[id])return {count:EVENTS[id].length,html:table([t('Típus'),t('Dátum'),t('Idő'),t('Forrás'),t('Kategória'),t('Esemény')],EVENTS[id])};
-      if(id==='service-list')return {count:SERVICES.length,html:table([t('Név'),t('Állapot'),t('Indítás típusa'),t('Bejelentkezés')],SERVICES)};
-      if(id==='devices')return {count:DEVICES.length,html:table([t('Eszközcsoport'),t('Eszköz')],DEVICES.map(([group,device])=>[`${icon('computer')}${esc(group)}`,esc(device)]))};
+      if(EVENTS[id])return {count:EVENTS[id].length,html:table([t("text_type"),t("text_date"),t("text_time"),t("text_source"),t("text_category"),t("text_event")],EVENTS[id])};
+      if(id==='service-list')return {count:SERVICES.length,html:table([t("text_name"),t("text_status"),t("text_startup_type"),t("text_log_on")],SERVICES)};
+      if(id==='devices')return {count:DEVICES.length,html:table([t("text_device_group"),t("text_device")],DEVICES.map(([group,device])=>[`${icon('computer')}${esc(group)}`,esc(device)]))};
       if(id==='user-list'){
         const rows=XP.accounts(true).map(account=>[`${XP.avatar(account.avatar)}${esc(account.name)}`,
-          account.id==='guest'?t('Beépített fiók a gép vendégei számára'):t('Beépített fiók a gép felügyeletéhez'),
-          account.id==='guest'?(account.enabled?t('Bekapcsolva'):t('Kikapcsolva')):t('Bekapcsolva')]);
-        return {count:rows.length,html:table([t('Név'),t('Leírás'),t('Állapot')],rows)};
+          account.id==='guest'?t("text_built_in_account_for_guest_access_to_the_computer"):t("text_built_in_account_for_administering_the_computer"),
+          account.id==='guest'?(account.enabled?t("text_enabled"):t("text_disabled")):t("text_enabled")]);
+        return {count:rows.length,html:table([t("text_name"),t("text_description"),t("text_status")],rows)};
       }
       if(id==='group-list'){
-        const rows=[[t('Rendszergazdák'),t('A rendszergazdák teljes hozzáféréssel rendelkeznek a géphez')],
-          [t('Felhasználók'),t('A felhasználók nem végezhetnek rendszerszintű módosításokat')],
-          [t('Vendégek'),t('A vendégek alapértelmezés szerint a Felhasználók csoport jogait kapják')],
-          [t('Biztonságimásolat-felelősök'),t('Fájlok mentése és visszaállítása a jogosultságok megkerülésével')]];
-        return {count:rows.length,html:table([t('Név'),t('Leírás')],rows)};
+        const rows=[[t("text_administrators"),t("text_administrators_have_complete_access_to_the_computer")],
+          [t("text_users"),t("text_users_cannot_make_system_wide_changes")],
+          [t("text_guests"),t("text_guests_have_the_rights_of_the_users_group_by_default")],
+          [t("text_backup_operators"),t("text_backing_up_and_restoring_files_past_the_permissions")]];
+        return {count:rows.length,html:table([t("text_name"),t("text_description")],rows)};
       }
       if(id==='shares'){
-        const rows=[['C$','C:\\',t('Windows-rendszermegosztás')],['ADMIN$','C:\\WINDOWS',t('Távoli felügyelet')],['IPC$','',t('Távoli IPC')]];
-        return {count:rows.length,html:table([t('Megosztás neve'),t('Mappa útvonala'),t('Megjegyzés')],rows)};
+        const rows=[['C$','C:\\',t("text_default_share")],['ADMIN$','C:\\WINDOWS',t("text_remote_admin")],['IPC$','',t("text_remote_ipc")]];
+        return {count:rows.length,html:table([t("text_shared_folder"),t("text_folder_path_f51d2a06"),t("text_comment")],rows)};
       }
       if(id==='diskmgmt'){
         const used=4283924480+state.files.filter(f=>!f.deleted).reduce((sum,f)=>sum+(f.content||'').length+1024,0);
         const capacity=40*1024**3-1_100_000_000;
         const gb=value=>`${(value/1024**3).toFixed(2).replace('.',',')} GB`;
-        const rows=[[`${icon('disk')}(C:)`,t('Egyszerű'),t('Alap'),'NTFS',t('Kifogástalan (rendszer)'),gb(capacity),gb(capacity-used),`${Math.round((capacity-used)/capacity*100)} %`],
-          [`${icon('cd')}(D:)`,t('Egyszerű'),t('Alap'),'',t('Nincs adathordozó'),'0 GB','0 GB','0 %']];
-        return {count:rows.length,html:table([t('Kötet'),t('Elrendezés'),t('Típus'),t('Fájlrendszer'),t('Állapot'),t('Kapacitás'),t('Szabad hely'),'% szabad'],rows)};
+        const rows=[[`${icon('disk')}(C:)`,t("text_simple"),t("text_basic"),'NTFS',t("text_healthy_system"),gb(capacity),gb(capacity-used),`${Math.round((capacity-used)/capacity*100)} %`],
+          [`${icon('cd')}(D:)`,t("text_simple"),t("text_basic"),'',t("text_no_media"),'0 GB','0 GB','0 %']];
+        return {count:rows.length,html:table([t("text_volume_fdb416ce"),t("text_layout"),t("text_type"),t("text_file_system"),t("text_status"),t("text_capacity"),t("text_free_space"),'% szabad'],rows)};
       }
       const node=find(TREE,id);
       if(node&&node[3].length){
         const rows=node[3].map(child=>[`${icon(child[2])}${esc(child[1])}`,esc(DESCRIPTIONS[child[0]]||'')]);
-        return {count:rows.length,html:table([t('Név'),t('Leírás')],rows)};
+        return {count:rows.length,html:table([t("text_name"),t("text_description")],rows)};
       }
-      return {count:0,html:`<p class="mmc-note">${esc(DESCRIPTIONS[id]||t('Ehhez az elemhez nincs megjeleníthető adat.'))}</p>`};
+      return {count:0,html:`<p class="mmc-note">${esc(DESCRIPTIONS[id]||t("text_there_is_nothing_to_show_for_this_item"))}</p>`};
     }
 
     function render(){
       treeEl.innerHTML=branch(TREE,0);
       const node=find(TREE,selected),content=paneFor(selected);
       pane.innerHTML=`<header class="mmc-heading">${icon(node?.[2]||'computer')}${esc(node?.[1]||'')}</header>${content.html}`;
-      $('span',bar).textContent=content.count?t('{count} elem',{count:content.count}):t('Kész');
+      $('span',bar).textContent=content.count?t("text_count_items",{count:content.count}):t("text_done");
     }
 
     body.onclick=event=>{

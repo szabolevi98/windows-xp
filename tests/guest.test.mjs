@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {installHungarian,key} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 const read=name=>readFileSync(new URL(name,root),'utf8');
 
@@ -14,7 +15,7 @@ function boot(saved){
   document:{documentElement:{dataset:{}},body:element(),addEventListener(){},dispatchEvent(){},querySelector:()=>element(),createElement:element},
   localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},
   setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console});
- vm.runInContext(read('js/core.js'),context);
+ installHungarian(context);vm.runInContext(read('js/core.js'),context);
  return {xp:context.window.XP,storage};
 }
 const plain=value=>JSON.parse(JSON.stringify(value));
@@ -99,17 +100,17 @@ test('The logon screen, the power dialog and User Accounts all know about the Gu
  assert.match(start,/function bindLogin\(after\)/);
  assert.match(start,/XP\.switchUser\(button\.dataset\.account\)/);
  // Fast user switching sits beside logging off: it parks the session instead of closing it.
- assert.match(start,/data-power="switch">\$\{icon\('switchuser'\)\} \$\{t\('Felhasználóváltás'\)\}/);
+ assert.ok(start.includes(`data-power="switch">\${icon('switchuser')} \${t("${key('Felhasználóváltás')}")}`));
  assert.match(start,/if\(a==='switch'\)\{XP\.sound\('logoff'\);XP\.parkSession\(\);loginScreen\(true\);\}/);
  assert.match(start,/if\(a==='logoff'\)\{XP\.sound\('logoff'\);loginScreen\(\);\}/);
 
  const utils=read('js/utilities.js');
- assert.match(utils,/A Vendég fiók bekapcsolása/);
- assert.match(utils,/A Vendég fiók kikapcsolása/);
- assert.match(utils,/A Vendég fiók ki van kapcsolva/);
+ assert.ok(utils.includes(key('A Vendég fiók bekapcsolása')));
+ assert.ok(utils.includes(key('A Vendég fiók kikapcsolása')));
+ assert.ok(utils.includes(key('A Vendég fiók ki van kapcsolva')));
  // A guest is told the account is not theirs to change.
  assert.match(utils,/const asGuest=\(\)=>XP\.session==='guest'/);
- assert.match(utils,/A fiók nevét, képét és beállításait a számítógép rendszergazdája kezeli/);
+ assert.ok(utils.includes(key('A Vendég fiókkal a saját asztalodon dolgozhatsz. A fiók nevét, képét és beállításait a számítógép rendszergazdája kezeli.')));
  assert.doesNotMatch(utils,/data-for="guest"/,'nobody edits the Guest picture');
- assert.match(utils,/typeName=type=>type==='guest'\?t\('Vendég fiók'\)/);
+ assert.ok(utils.includes(`typeName=type=>type==='guest'?t("${key('Vendég fiók')}")`));
 });

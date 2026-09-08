@@ -1,10 +1,8 @@
 'use strict';
 // Nyelvkezelés.
 //
-// A képernyőn megjelenő szövegek forrása maga a magyar mondat: a kódban
-// t('Megnyitás') áll, a lang/<nyelv>.js fájlok pedig magyar → idegen nyelvű
-// szótárak. Így egy hiányzó fordításnál a magyar mondat látszik, nem egy
-// kulcs, és a kódot olvasva is látni, mi kerül a képernyőre.
+// A program stabil text_* kulcsokat használ. Minden látható szöveg, a magyar
+// is, a lang/<nyelv>.js szótárakban él.
 //
 // A fájl a többi szkript ELŐTT fut, mert a rendszer a betöltéskor is szöveget
 // ír (fájlnevek, a fiók neve), és addigra kész kell lennie a szótárnak.
@@ -20,6 +18,7 @@ window.XP_I18N = (() => {
   const LOCALES = {hu: 'hu-HU', en: 'en-US', de: 'de-DE'};
   const KEY = 'windows-xp-simulator-lang';
   const dictionaries = window.XP_STRINGS || {};
+  const hungarianKeys = new Map(Object.entries(dictionaries.hu || {}).map(([key, value]) => [value, key]));
   const listeners = [];
 
   // Először a böngésző nyelve dönt, utána a felhasználó választása, mert azt
@@ -39,9 +38,12 @@ window.XP_I18N = (() => {
   let current = pick();
   document.documentElement.lang = current;
 
-  function t(text, params) {
+  function t(key, params) {
     const table = dictionaries[current] || {};
-    let out = table[text] ?? text;
+    // Régi mentések és néhány adatlista még tartalmazhat magyar címkéket.
+    // Ezeket is feloldjuk, miközben az alkalmazáskód már stabil kulcsokat kér.
+    const resolved = key in table ? key : hungarianKeys.get(key) || key;
+    let out = table[resolved] ?? dictionaries[FALLBACK]?.[resolved] ?? dictionaries.hu?.[resolved] ?? key;
     if (params) out = out.replace(/\{(\w+)\}/g, (all, name) => (
       params[name] === undefined ? all : String(params[name])
     ));
@@ -61,7 +63,7 @@ window.XP_I18N = (() => {
   }
 
   // A markupban `data-i18n` (szöveg) és `data-i18n-<attribútum>` jelöli a
-  // fordítandó helyeket, hogy az index.html olvasható maradjon.
+  // fordítandó helyeket; az értékük ugyanaz a stabil kulcs, mint a t() hívásoké.
   function applyToDom(root = document) {
     root.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
     root.querySelectorAll('*').forEach(el => {

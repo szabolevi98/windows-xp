@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {key} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 const read=name=>readFileSync(new URL(name,root),'utf8');
 
@@ -35,52 +36,53 @@ test('The browser decides the language, and English steps in when it is not one 
  assert.equal(i18n.setLanguage('klingon'),false,'an unknown language is refused');
 });
 
-test('A missing translation leaves the Hungarian sentence on screen',()=>{
+test('Stable keys resolve in every language and an unknown key remains readable',()=>{
  const {i18n}=boot({languages:['en']});
- assert.equal(i18n.t('Sajátgép'),'My Computer');
- assert.equal(i18n.t('Ilyen mondat nincs a szótárban'),'Ilyen mondat nincs a szótárban');
- // Substitution works in the translation and in the Hungarian fallback alike.
- assert.equal(i18n.t('{count} program fut',{count:2}),'2 programs running');
- assert.equal(i18n.t('Nincs ilyen: {name}',{name:'X'}),'Nincs ilyen: X');
+ assert.equal(i18n.t(key('Sajátgép')),'My Computer');
+ assert.equal(i18n.t('text_missing_example'),'text_missing_example');
+ assert.equal(i18n.t(key('{count} program fut'),{count:2}),'2 programs running');
  i18n.setLanguage('de');
- assert.equal(i18n.t('Sajátgép'),'Arbeitsplatz');
- assert.equal(i18n.t('Lomtár'),'Papierkorb');
+ assert.equal(i18n.t(key('Sajátgép')),'Arbeitsplatz');
+ assert.equal(i18n.t(key('Lomtár')),'Papierkorb');
  i18n.setLanguage('hu');
- assert.equal(i18n.t('Sajátgép'),'Sajátgép','in Hungarian the source sentence is the text');
+ assert.equal(i18n.t(key('Sajátgép')),'Sajátgép');
+ assert.equal(i18n.t('Sajátgép'),'Sajátgép','old saved Hungarian labels remain compatible');
 });
 
-test('The two dictionaries cover exactly the same sentences',()=>{
+test('All three dictionaries cover exactly the same stable keys',()=>{
  const {i18n}=boot();
  const context={window:{},document:{documentElement:{},querySelectorAll:()=>[]},navigator:{language:'hu',languages:['hu']},
   localStorage:{getItem:()=>null,setItem(){}},CustomEvent:class{},console};
  vm.createContext(context);
- vm.runInContext(read('lang/en.js'),context);
- vm.runInContext(read('lang/de.js'),context);
- const en=Object.keys(context.window.XP_STRINGS.en),de=Object.keys(context.window.XP_STRINGS.de);
+ vm.runInContext(read('lang/hu.js'),context);vm.runInContext(read('lang/en.js'),context);vm.runInContext(read('lang/de.js'),context);
+ const hu=Object.keys(context.window.XP_STRINGS.hu),en=Object.keys(context.window.XP_STRINGS.en),de=Object.keys(context.window.XP_STRINGS.de);
+ assert.deepEqual(hu,en,'Hungarian and English use the same keys');
  assert.deepEqual(en.filter(key=>!de.includes(key)),[],'what English has, German has');
  assert.deepEqual(de.filter(key=>!en.includes(key)),[],'and the other way round');
  assert.ok(en.length>100,'the system strings are in there');
  // No translation may be left empty.
- for(const table of [context.window.XP_STRINGS.en,context.window.XP_STRINGS.de])
+ for(const table of [context.window.XP_STRINGS.hu,context.window.XP_STRINGS.en,context.window.XP_STRINGS.de])
   for(const [key,value] of Object.entries(table)) assert.ok(value&&value.trim(),`empty translation: ${key}`);
+ assert.ok(hu.every(key=>/^text_[a-z0-9_]+$/.test(key)),'application text uses stable machine keys');
  assert.ok(i18n.languages.map(l=>l.code).join()==='hu,en,de');
 });
 
-test('The dictionaries load before the desktop, and the menu tables stay in the source language',()=>{
+test('The dictionaries load before the desktop, and markup uses stable keys',()=>{
  const html=read('index.html');
  for(const file of ['lang/hu.js','lang/en.js','lang/de.js','js/lang.js'])
   assert.ok(html.indexOf(file)>0&&html.indexOf(file)<html.indexOf('js/core.js'),`${file} loads before core.js`);
  // Static text is translated through data-i18n marks.
- assert.match(html,/data-i18n="A Windows betöltése…"/);
- assert.match(html,/data-i18n-title="Hangerő"/);
+ assert.match(html,/data-i18n="text_loading_windows"/);
+ assert.match(html,/data-i18n-title="text_volume"/);
  const core=read('js/core.js');
  assert.match(core,/const t = \(text, params\) => i18n\.t\(text, params\)/);
  assert.match(core,/window\.XP_I18N \|\| \{t:/,'it starts even without the language layer');
  const start=read('js/start.js');
- // The tables stay Hungarian; the translation happens as they are drawn.
+ // Older data tables are resolved when they are drawn; literal calls use keys.
  assert.match(start,/\{id:'computer',label:'Sajátgép'/);
  assert.match(start,/label:t\(i\.label\)/);
  assert.match(start,/function startItem\(label,ic,app,subtitle='',minor=false\)\{label=t\(label\);/);
+ assert.doesNotMatch(start,/(?<![\w$.])t\(\s*['"][ÁÉÍÓÖŐÚÜŰáéíóöőúüű]/,'literal calls do not use Hungarian text as identifiers');
  // The language is set from the Control Panel, where XP kept it.
  const utils=read('js/utilities.js');
  assert.match(utils,/register\('regional'/);
@@ -99,8 +101,8 @@ test('Every dictionary and the language layer load with a version',()=>{
 test('Every sentence the code asks for has a translation',()=>{
  const context={window:{},console};
  vm.createContext(context);
- vm.runInContext(read('lang/en.js'),context);
- const en=context.window.XP_STRINGS.en;
+ vm.runInContext(read('lang/hu.js'),context);vm.runInContext(read('lang/en.js'),context);vm.runInContext(read('lang/de.js'),context);
+ const dictionaries=context.window.XP_STRINGS;
  const call=/(?<![\w$.])t\((?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")/g;
  const missing=[];
  let seen=0;
@@ -110,8 +112,12 @@ test('Every sentence the code asks for has a translation',()=>{
   for(const match of source.matchAll(call)){
    seen++;
    const key=(match[1]??match[2]).replace(/\\(['"\\])/g,'$1').replace(/\\n/g,'\n');
-   if(!(key in en)) missing.push(`${file}.js: ${key}`);
+   if(!/^text_[a-z0-9_]+$/.test(key)||!['hu','en','de'].every(language=>key in dictionaries[language]))missing.push(`${file}.js: ${key}`);
   }
+ }
+ for(const match of read('index.html').matchAll(/data-i18n(?:-[\w-]+)?="([^"]+)"/g)){
+  seen++;const key=match[1];
+  if(!/^text_[a-z0-9_]+$/.test(key)||!['hu','en','de'].every(language=>key in dictionaries[language]))missing.push(`index.html: ${key}`);
  }
  assert.ok(seen>1000,`the programs speak through the translator (${seen} sentences)`);
  assert.deepEqual(missing,[],'no sentence is left without a translation');

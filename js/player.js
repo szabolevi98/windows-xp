@@ -10,12 +10,12 @@
   XP.playerNextTrack=nextTrack;
   XP.register('player',()=>{
     if(XP.singleton('player'))return;
-    const w=XP.createWindow({title:t('Windows Media Player'),icon:'player',app:'player',className:'player-window',width:760,height:540,minWidth:450,minHeight:340});
+    const w=XP.createWindow({title:t("text_windows_media_player"),icon:'player',app:'player',className:'player-window',width:760,height:540,minWidth:450,minHeight:340});
     const preferences=state.playerSettings||{};
     let tracks=['startup','shutdown','notify','ding'].map((name,index)=>({id:index,title:`Windows XP ${name[0].toUpperCase()+name.slice(1)}`,artist:'Microsoft Windows XP',album:'Windows rendszerhangok',src:`assets/sounds/${name}.wav`,video:false,duration:NaN}));
     let current=0,mode='now',repeat=!!preferences.repeat,shuffle=!!preferences.shuffle,visual=preferences.visual==='bars'?'bars':'waves',query='',disposed=false,muted=false,raf=0,analyser,context;
     const urls=[];
-    const media=document.createElement('video');media.preload='metadata';media.playsInline=true;media.className='wmp-video';media.setAttribute('aria-label',t('Videólejátszás'));
+    const media=document.createElement('video');media.preload='metadata';media.playsInline=true;media.className='wmp-video';media.setAttribute('aria-label',t("text_video_playback"));
     const input=document.createElement('input');input.type='file';input.accept='audio/*,video/*,.mp3,.wav,.ogg,.m4a,.mp4,.webm';input.multiple=true;input.hidden=true;
     const savePreferences=()=>{state.playerSettings={repeat,shuffle,visual};XP.persist();};
     function stop(){media.pause();media.currentTime=0;sync();}
@@ -25,7 +25,7 @@
     w.onUnpark=()=>{if(playingWhenParked)play();};
     async function play(){
       try{await media.play();if(disposed){media.pause();return;}startVisualization();}
-      catch{if(!disposed)XP.notify('Windows Media Player',t('A fájl nem játszható le. Próbálj WAV, MP3, OGG, MP4 vagy WebM fájlt.'));}
+      catch{if(!disposed)XP.notify('Windows Media Player',t("text_the_file_cannot_be_played_try_a_wav_mp3_ogg_mp4_or_webm_file"));}
     }
     function toggle(){if(media.paused)play();else media.pause();}
     function next(ended=false){const index=nextTrack(current,tracks.length,{repeat,shuffle,ended});if(index<0){sync();return;}load(index,true);}
@@ -34,18 +34,18 @@
     function toggleShuffle(){shuffle=!shuffle;savePreferences();sync();}
     function setVisual(value){visual=value;savePreferences();draw();}
     XP.menubar(w,{
-      [t('Fájl')]:[{label:t('Megnyitás…'),shortcut:'Ctrl+O',action:()=>input.click()},{label:t('Hozzáadás a lejátszási listához…'),action:()=>input.click()},null,{label:t('Kilépés'),action:()=>w.close()}],
-      [t('Nézet')]:()=>[{label:t('Most játszott'),checked:mode==='now',action:()=>show('now')},{label:t('Médiatár'),checked:mode==='library',action:()=>show('library')},null,{label:t('Vizualizáció: Alkímia'),checked:visual==='waves',action:()=>setVisual('waves')},{label:t('Vizualizáció: Sávok és hullámok'),checked:visual==='bars',action:()=>setVisual('bars')}],
-      [t('Lejátszás')]:()=>[{label:media.paused?t('Lejátszás'):t('Szünet'),shortcut:'Ctrl+P',action:toggle},{label:t('Leállítás'),shortcut:'Ctrl+S',action:stop},{label:t('Előző'),action:previous},{label:t('Következő'),action:()=>next()},null,{label:t('Véletlen sorrend'),checked:shuffle,action:toggleShuffle},{label:t('Ismétlés'),checked:repeat,action:toggleRepeat}],
-      [t('Eszközök')]:[{label:t('Hangok és audioeszközök…'),action:()=>XP.open('sounds')},{label:t('Fájl tulajdonságai'),action:()=>{const track=tracks[current];XP.dialog(t('Médiafájl tulajdonságai'),t('Cím: {title}\nElőadó: {artist}\nAlbum: {album}\nIdőtartam: {length}\nTípus: {kind}',{title:track.title,artist:track.artist,album:track.album,length:duration(track.duration),kind:track.video?t('Videó'):t('Hang')}));}}],
-      [t('Súgó')]:[{label:t('A Windows Media Player súgója'),action:()=>XP.dialog(t('Windows Media Player – Súgó'),t('A Megnyitás gombbal saját zenét vagy videót választhatsz. A listában kattintás indítja a lejátszást.\n\nCtrl+O: megnyitás · Ctrl+P: lejátszás/szünet\nCtrl+S: leállítás\n\nA saját médiafájlok az ablak bezárásáig érhetők el. Az ismétlés, a véletlen sorrend és a vizualizáció megmarad.'))},{label:t('A Windows Media Player névjegye'),action:()=>XP.dialog('Windows Media Player',t('Windows Media Player 9 Series\nVerzió: 9.00.00.4503\n\nCopyright © 1992–2003 Microsoft Corporation.\nMinden jog fenntartva.')) }]
+      [t("text_file")]:[{label:t("text_open_6eca8a50"),shortcut:'Ctrl+O',action:()=>input.click()},{label:t("text_add_to_playlist"),action:()=>input.click()},null,{label:t("text_exit"),action:()=>w.close()}],
+      [t("text_view")]:()=>[{label:t("text_now_playing"),checked:mode==='now',action:()=>show('now')},{label:t("text_media_library"),checked:mode==='library',action:()=>show('library')},null,{label:t("text_visualization_alchemy"),checked:visual==='waves',action:()=>setVisual('waves')},{label:t("text_visualization_bars_and_waves"),checked:visual==='bars',action:()=>setVisual('bars')}],
+      [t("text_play")]:()=>[{label:media.paused?t("text_play"):t("text_pause"),shortcut:'Ctrl+P',action:toggle},{label:t("text_shut_down"),shortcut:'Ctrl+S',action:stop},{label:t("text_previous"),action:previous},{label:t("text_next"),action:()=>next()},null,{label:t("text_shuffle"),checked:shuffle,action:toggleShuffle},{label:t("text_repeat"),checked:repeat,action:toggleRepeat}],
+      [t("text_tools")]:[{label:t("text_sounds_and_audio_devices"),action:()=>XP.open('sounds')},{label:t("text_file_properties"),action:()=>{const track=tracks[current];XP.dialog(t("text_media_file_properties"),t("text_title_title_artist_artist_album_album_length_length_type_kind",{title:track.title,artist:track.artist,album:track.album,length:duration(track.duration),kind:track.video?t("text_video"):t("text_audio")}));}}],
+      [t("text_help")]:[{label:t("text_windows_media_player_help"),action:()=>XP.dialog(t("text_windows_media_player_help_1869acbc"),t("text_open_picks_your_own_music_or_video_and_a_click_in_the_list_starts_it_c_ab713698"))},{label:t("text_about_windows_media_player"),action:()=>XP.dialog('Windows Media Player',t("text_windows_media_player_9_series_version_9_00_00_4503_copyright_1992_2003_23efbdc1")) }]
     });
     const shell=document.createElement('div');shell.className='wmp-shell';
-    const tabs=[['now',t('Most játszott')],['guide',t('Műsorfüzet')],['rip',t('Másolás CD-ről')],['library',t('Médiatár')],['radio',t('Rádióállomások')],['burn',t('Másolás CD-re')]];
-    shell.innerHTML=`<aside class="wmp-sidebar"><div class="wmp-brand">${icon('player')}<span>Windows<br><b>${esc(t('Media Player'))}</b><small>9 SERIES</small></span></div><nav aria-label="${esc(t('Media Player nézetek'))}">${tabs.map(([id,label])=>`<button data-mode="${id}"><span>›</span>${label}</button>`).join('')}</nav><button class="wmp-open xp-button" data-open-media>${esc(t('Fájl megnyitása…'))}</button></aside><section class="wmp-main"><header class="wmp-heading"><b>${esc(t('Most játszott'))}</b><span>Windows Media Player</span></header><div class="wmp-now"><div class="wmp-screen"><canvas aria-label="${esc(t('Zenei vizualizáció'))}"></canvas><div class="wmp-idle">${icon('player')}<span>Windows Media Player<small>9 SERIES</small></span></div><div class="wmp-screen-caption"></div></div><aside class="wmp-list"><header>${esc(t('Lejátszási lista'))}</header><div class="wmp-track-list"></div></aside></div><div class="wmp-page" hidden></div></section>`;
+    const tabs=[['now',t("text_now_playing")],['guide',t("text_media_guide")],['rip',t("text_copy_from_cd")],['library',t("text_media_library")],['radio',t("text_radio_tuner")],['burn',t("text_copy_to_cd")]];
+    shell.innerHTML=`<aside class="wmp-sidebar"><div class="wmp-brand">${icon('player')}<span>Windows<br><b>${esc(t("text_media_player"))}</b><small>9 SERIES</small></span></div><nav aria-label="${esc(t("text_media_player_views"))}">${tabs.map(([id,label])=>`<button data-mode="${id}"><span>›</span>${label}</button>`).join('')}</nav><button class="wmp-open xp-button" data-open-media>${esc(t("text_open_file"))}</button></aside><section class="wmp-main"><header class="wmp-heading"><b>${esc(t("text_now_playing"))}</b><span>Windows Media Player</span></header><div class="wmp-now"><div class="wmp-screen"><canvas aria-label="${esc(t("text_music_visualisation"))}"></canvas><div class="wmp-idle">${icon('player')}<span>Windows Media Player<small>9 SERIES</small></span></div><div class="wmp-screen-caption"></div></div><aside class="wmp-list"><header>${esc(t("text_playlist"))}</header><div class="wmp-track-list"></div></aside></div><div class="wmp-page" hidden></div></section>`;
     w.body.append(input,shell);$('.wmp-screen',shell).prepend(media);
     const controls=document.createElement('footer');controls.className='wmp-controls';
-    controls.innerHTML=`<div class="wmp-seek"><input type="range" min="0" max="1000" value="0" aria-label="${esc(t('Lejátszási pozíció'))}"><span class="wmp-time">0:00 / 0:00</span></div><div class="wmp-transport"><div class="wmp-transport-buttons"><button data-media="play" class="wmp-play" aria-label="${esc(t('Lejátszás'))}" title="${esc(t('Lejátszás'))}"></button><button data-media="stop" class="wmp-stop" aria-label="${esc(t('Leállítás'))}" title="${esc(t('Leállítás'))}"></button><button data-media="prev" class="wmp-prev" aria-label="${esc(t('Előző'))}" title="${esc(t('Előző'))}"></button><button data-media="next" class="wmp-next" aria-label="${esc(t('Következő'))}" title="${esc(t('Következő'))}"></button><button data-media="mute" class="wmp-mute" aria-label="${esc(t('Némítás'))}" title="${esc(t('Némítás'))}"></button></div><input class="wmp-volume" type="range" min="0" max="100" aria-label="${esc(t('Lejátszó hangereje'))}"><div class="wmp-track-caption"></div><button class="wmp-small" data-media="shuffle" title="${esc(t('Véletlen sorrend'))}" aria-label="${esc(t('Véletlen sorrend'))}">⇄</button><button class="wmp-small" data-media="repeat" title="${esc(t('Ismétlés'))}" aria-label="${esc(t('Ismétlés'))}">↻</button></div><div class="wmp-status" role="status">${esc(t('Kész'))}</div>`;
+    controls.innerHTML=`<div class="wmp-seek"><input type="range" min="0" max="1000" value="0" aria-label="${esc(t("text_playback_position"))}"><span class="wmp-time">0:00 / 0:00</span></div><div class="wmp-transport"><div class="wmp-transport-buttons"><button data-media="play" class="wmp-play" aria-label="${esc(t("text_play"))}" title="${esc(t("text_play"))}"></button><button data-media="stop" class="wmp-stop" aria-label="${esc(t("text_shut_down"))}" title="${esc(t("text_shut_down"))}"></button><button data-media="prev" class="wmp-prev" aria-label="${esc(t("text_previous"))}" title="${esc(t("text_previous"))}"></button><button data-media="next" class="wmp-next" aria-label="${esc(t("text_next"))}" title="${esc(t("text_next"))}"></button><button data-media="mute" class="wmp-mute" aria-label="${esc(t("text_mute"))}" title="${esc(t("text_mute"))}"></button></div><input class="wmp-volume" type="range" min="0" max="100" aria-label="${esc(t("text_player_volume"))}"><div class="wmp-track-caption"></div><button class="wmp-small" data-media="shuffle" title="${esc(t("text_shuffle"))}" aria-label="${esc(t("text_shuffle"))}">⇄</button><button class="wmp-small" data-media="repeat" title="${esc(t("text_repeat"))}" aria-label="${esc(t("text_repeat"))}">↻</button></div><div class="wmp-status" role="status">${esc(t("text_done"))}</div>`;
     w.body.append(controls);
     const now=$('.wmp-now',shell),page=$('.wmp-page',shell),canvas=$('canvas',shell),ctx=canvas.getContext('2d'),seek=$('.wmp-seek input',controls);
     function renderList(){
@@ -53,16 +53,16 @@
     }
     function library(){
       const found=tracks.map((track,i)=>({track,i})).filter(({track})=>`${track.title} ${track.artist} ${track.album}`.toLocaleLowerCase('hu').includes(query.toLocaleLowerCase('hu')));
-      return `<div class="wmp-library-tools"><label>${esc(t('Keresés:'))} <input data-library-query aria-label="${esc(t('Keresés a médiatárban'))}" value="${esc(query)}"></label><button class="xp-button" data-open-media>${esc(t('Hozzáadás…'))}</button></div><table class="wmp-library"><thead><tr><th>${esc(t('Cím'))}</th><th>${esc(t('Idő'))}</th><th>${esc(t('Előadó'))}</th></tr></thead><tbody>${found.map(({track,i})=>`<tr class="${i===current?'selected':''}"><td><button data-track="${i}">${esc(track.title)}</button></td><td>${duration(track.duration)}</td><td>${esc(track.artist)}</td></tr>`).join('')}</tbody></table><p>${esc(t('{count} elem a médiatárban.',{count:found.length}))}</p>`;
+      return `<div class="wmp-library-tools"><label>${esc(t("text_search_f2e38fbf"))} <input data-library-query aria-label="${esc(t("text_search_the_media_library"))}" value="${esc(query)}"></label><button class="xp-button" data-open-media>${esc(t("text_add"))}</button></div><table class="wmp-library"><thead><tr><th>${esc(t("text_address"))}</th><th>${esc(t("text_time"))}</th><th>${esc(t("text_artist"))}</th></tr></thead><tbody>${found.map(({track,i})=>`<tr class="${i===current?'selected':''}"><td><button data-track="${i}">${esc(track.title)}</button></td><td>${duration(track.duration)}</td><td>${esc(track.artist)}</td></tr>`).join('')}</tbody></table><p>${esc(t("text_count_items_in_the_library",{count:found.length}))}</p>`;
     }
     function show(value){
       mode=value;now.hidden=mode!=='now';page.hidden=mode==='now';
       $$('.wmp-sidebar [data-mode]',shell).forEach(b=>{b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode));});
-      $('.wmp-heading b',shell).textContent=tabs.find(tab=>tab[0]===mode)?.[1]||t('Most játszott');
+      $('.wmp-heading b',shell).textContent=tabs.find(tab=>tab[0]===mode)?.[1]||t("text_now_playing");
       if(mode==='library')page.innerHTML=library();
-      if(mode==='guide')page.innerHTML=`<div class="wmp-guide"><h1>${esc(t('Üdv a Műsorfüzetben!'))}</h1><p>${esc(t('Zene, videó és a kedvenc lejátszási listáid.'))}</p><h2>${esc(t('A Windows hangjai'))}</h2><p>${esc(t('Ismerős dallamok egy ismerős asztalról. Hallgasd meg a Windows XP rendszerhangjait!'))}</p><button class="xp-button" data-system-sounds>${esc(t('Lejátszás'))}</button><h2>${esc(t('A saját zenéid'))}</h2><p>${esc(t('Nyisd meg a gépeden tárolt zenéket és videókat, majd állíts össze egy listát.'))}</p><button class="xp-button" data-open-media>${esc(t('Médiafájlok megnyitása…'))}</button><hr><button class="web-link" data-music-site>${esc(t('Zeneszoba – albumok és zenetörténet'))}</button></div>`;
-      if(mode==='radio')page.innerHTML=`<div class="wmp-guide"><h1>${esc(t('Rádióállomások'))}</h1><p>${esc(t('Rendszerezd az állomásokat, és fedezd fel a ZeneSzoba műsorfüzetét.'))}</p><table class="wmp-library"><tr><th>${esc(t('Állomás'))}</th><th>${esc(t('Műfaj'))}</th><th>${esc(t('Állapot'))}</th></tr><tr><td>Retro FM</td><td>${esc(t('Slágerek'))}</td><td>${esc(t('Az adás nem érhető el'))}</td></tr><tr><td>${esc(t('Jazz Café'))}</td><td>Jazz</td><td>${esc(t('Az adás nem érhető el'))}</td></tr><tr><td>Classic Radio</td><td>${esc(t('Klasszikus'))}</td><td>${esc(t('Az adás nem érhető el'))}</td></tr></table><p><button class="xp-button" data-music-site>${esc(t('Műsorfüzet megnyitása'))}</button></p></div>`;
-      if(mode==='rip'||mode==='burn')page.innerHTML=`<div class="wmp-disc">${icon('cd')}<h2>${mode==='rip'?t('Másolás CD-ről'):t('Másolás CD-re vagy eszközre')}</h2><label>${esc(t('Meghajtó:'))} <select aria-label="${esc(t('CD-meghajtó'))}"><option>${esc(t('DVD-meghajtó (D:)'))}</option></select></label><p class="wmp-disc-status">${esc(t('Helyezzen be egy {kind} lemezt a D: meghajtóba.',{kind:mode==='rip'?t('zenei'):t('írható')}))}</p><button class="xp-button" data-disc-refresh>${esc(t('Frissítés'))}</button>${mode==='burn'?`<p>${esc(t('A médiatárban {count} fájl vár lejátszásra.',{count:tracks.length}))}</p>`:''}</div>`;
+      if(mode==='guide')page.innerHTML=`<div class="wmp-guide"><h1>${esc(t("text_welcome_to_the_media_guide"))}</h1><p>${esc(t("text_music_video_and_your_favourite_playlists"))}</p><h2>${esc(t("text_the_sounds_of_windows"))}</h2><p>${esc(t("text_familiar_tunes_from_a_familiar_desktop_listen_to_the_windows_xp_system_sounds"))}</p><button class="xp-button" data-system-sounds>${esc(t("text_play"))}</button><h2>${esc(t("text_your_own_music"))}</h2><p>${esc(t("text_open_the_music_and_video_on_your_machine_and_put_a_list_together"))}</p><button class="xp-button" data-open-media>${esc(t("text_open_media_files"))}</button><hr><button class="web-link" data-music-site>${esc(t("text_zeneszoba_albums_and_music_history"))}</button></div>`;
+      if(mode==='radio')page.innerHTML=`<div class="wmp-guide"><h1>${esc(t("text_radio_tuner"))}</h1><p>${esc(t("text_sort_the_stations_out_and_explore_the_zeneszoba_guide"))}</p><table class="wmp-library"><tr><th>${esc(t("text_station"))}</th><th>${esc(t("text_genre"))}</th><th>${esc(t("text_status"))}</th></tr><tr><td>Retro FM</td><td>${esc(t("text_hits"))}</td><td>${esc(t("text_the_broadcast_is_not_available"))}</td></tr><tr><td>${esc(t("text_jazz_cafe"))}</td><td>Jazz</td><td>${esc(t("text_the_broadcast_is_not_available"))}</td></tr><tr><td>Classic Radio</td><td>${esc(t("text_classic"))}</td><td>${esc(t("text_the_broadcast_is_not_available"))}</td></tr></table><p><button class="xp-button" data-music-site>${esc(t("text_open_the_media_guide"))}</button></p></div>`;
+      if(mode==='rip'||mode==='burn')page.innerHTML=`<div class="wmp-disc">${icon('cd')}<h2>${mode==='rip'?t("text_copy_from_cd"):t("text_copy_to_cd_or_device")}</h2><label>${esc(t("text_drive_2a84af67"))} <select aria-label="${esc(t("text_cd_drive"))}"><option>${esc(t("text_dvd_drive_d"))}</option></select></label><p class="wmp-disc-status">${esc(t("text_please_insert_a_kind_disc_into_drive_d",{kind:mode==='rip'?t("text_music"):t("text_writable")}))}</p><button class="xp-button" data-disc-refresh>${esc(t("text_refresh"))}</button>${mode==='burn'?`<p>${esc(t("text_count_files_in_the_library_are_waiting_to_be_played",{count:tracks.length}))}</p>`:''}</div>`;
       if(mode==='now')draw();
     }
     function load(index,start=false){
@@ -73,14 +73,14 @@
     function sync(){
       const playing=!media.paused&&!media.ended,track=tracks[current];
       $('[data-media=play]',controls).classList.toggle('playing',playing);
-      $('[data-media=play]',controls).setAttribute('aria-label',playing?t('Szünet'):t('Lejátszás'));
-      $('[data-media=play]',controls).title=playing?t('Szünet'):t('Lejátszás');
+      $('[data-media=play]',controls).setAttribute('aria-label',playing?t("text_pause"):t("text_play"));
+      $('[data-media=play]',controls).title=playing?t("text_pause"):t("text_play");
       $('.wmp-time',controls).textContent=`${duration(media.currentTime)} / ${Number.isFinite(media.duration)?duration(media.duration):'0:00'}`;
       seek.value=Number.isFinite(media.duration)&&media.duration>0?media.currentTime/media.duration*1000:0;seek.disabled=!Number.isFinite(media.duration);
       $('.wmp-track-caption',controls).textContent=track.title;
       $('.wmp-screen-caption',shell).textContent=playing?track.artist+' — '+track.title:'';
       $('.wmp-idle',shell).hidden=playing||track.video;
-      $('.wmp-status',controls).textContent=(playing?t('Lejátszás'):media.ended?t('Lejátszás befejezve'):media.currentTime?t('Szünet'):t('Leállítva'))+' · '+track.title;
+      $('.wmp-status',controls).textContent=(playing?t("text_play"):media.ended?t("text_playback_finished"):media.currentTime?t("text_pause"):t("text_stopped"))+' · '+track.title;
       for(const [action,on] of [['shuffle',shuffle],['repeat',repeat],['mute',muted]]){$(`[data-media=${action}]`,controls).classList.toggle('on',on);$(`[data-media=${action}]`,controls).setAttribute('aria-pressed',String(on));}
       if(!playing){cancelAnimationFrame(raf);draw();}
     }
@@ -105,7 +105,7 @@
     }
     input.onchange=()=>{
       const first=tracks.length;
-      for(const file of input.files){const src=URL.createObjectURL(file);urls.push(src);tracks.push({id:tracks.length,title:file.name,artist:t('Ismeretlen előadó'),album:t('Saját médiafájlok'),src,video:file.type.startsWith('video/')||/\.(mp4|webm|ogv)$/i.test(file.name),duration:NaN});}
+      for(const file of input.files){const src=URL.createObjectURL(file);urls.push(src);tracks.push({id:tracks.length,title:file.name,artist:t("text_unknown_artist"),album:t("text_my_media_files"),src,video:file.type.startsWith('video/')||/\.(mp4|webm|ogv)$/i.test(file.name),duration:NaN});}
       input.value='';if(tracks.length>first){show('now');load(first,true);}
     };
     shell.addEventListener('click',event=>{
@@ -115,7 +115,7 @@
       if(b.hasAttribute('data-system-sounds')){show('now');load(0,true);}
       if(b.hasAttribute('data-music-site'))XP.open('ie','www.zeneszoba.hu');
       if(b.hasAttribute('data-track'))load(Number(b.dataset.track),true);
-      if(b.hasAttribute('data-disc-refresh'))$('.wmp-disc-status',page).textContent=t('A meghajtóban nincs lemez. Helyezzen be egy lemezt a D: meghajtóba.');
+      if(b.hasAttribute('data-disc-refresh'))$('.wmp-disc-status',page).textContent=t("text_there_is_no_disc_in_the_drive_insert_one_in_drive_d");
     });
     function refreshLibrary(){
       if(mode!=='library')return;

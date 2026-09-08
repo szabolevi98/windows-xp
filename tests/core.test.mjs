@@ -2,12 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,statSync} from 'node:fs';
 import vm from 'node:vm';
+import {installHungarian,key} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 function boot(saved){
  const storage=new Map();if(saved)storage.set('windows-xp-simulator-v1',JSON.stringify(saved));
  // Enough of an element for the balloon notice, which refusals raise.
  const element={hidden:true,innerHTML:'',onclick:null,querySelector:()=>element};
  const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},dispatchEvent(){},querySelector:()=>element},localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console});
+ installHungarian(context);
  vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
  vm.runInContext(readFileSync(new URL('js/internet.js',root),'utf8'),context);
  return {xp:context.XP,storage,context};
@@ -323,8 +325,8 @@ test('The Security Centre starts protected and remembers a switch that was turne
 test('The Security Centre is a window, reachable from the tray, the control panel and the prompt',()=>{
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  assert.match(utils,/register\('security'/);
- assert.match(utils,/title:t\('Windows Biztonsági központ'\)/);
- assert.match(utils,/security:\{name:t\('Biztonsági központ'\)[^}]*XP\.open\('security'\)/);
+ assert.ok(utils.includes(`title:t("${key('Windows Biztonsági központ')}")`));
+ assert.match(utils,new RegExp(`security:\\{name:t\\("${key('Biztonsági központ')}"\\)[^}]*XP\\.open\\('security'\\)`));
  assert.match(utils,/wscui:'security'/);
  assert.match(readFileSync(new URL('js/apps.js',root),'utf8'),/wscui:'security'/);
  const start=readFileSync(new URL('js/start.js',root),'utf8');
@@ -337,7 +339,7 @@ test('Every control panel category leads to applets that exist, in both views',(
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  const block=utils.slice(utils.indexOf('const applets={'),utils.indexOf('let classic='));
  const applets=new Set(Array.from(block.matchAll(/^\s*([a-z]+):\{name:t\(/gm),m=>m[1]));
- const categories=Array.from(block.matchAll(/id:'([a-z]+)',name:t\('([^']+)'\)/g),m=>m[1]);
+ const categories=Array.from(block.matchAll(/id:'([a-z]+)',name:t\(["']([^"']+)["']\)/g),m=>m[1]);
  assert.ok(applets.size>=12,'the classic view lists the individual applets');
  assert.ok(categories.length>=9,'the category view keeps the original XP categories');
  const items=Array.from(block.matchAll(/items:\[([^\]]+)\]/g)).flatMap(m=>m[1].split(',').map(s=>s.trim().replace(/'/g,'')));
@@ -380,18 +382,18 @@ test('The settings sit where XP kept them, and one Service Pack is claimed every
  const labels=name=>{
   const block=utils.slice(utils.indexOf(name));
   const line=block.slice(block.indexOf('tabs:['));
-  return Array.from(line.slice(0,line.indexOf('\n')).matchAll(/\['[a-z]+',t\('([^']+)'\)\]/g),m=>m[1]);
+  return Array.from(line.slice(0,line.indexOf('\n')).matchAll(/\['[a-z]+',t\(["']([^"']+)["']\)\]/g),m=>m[1]);
  };
- assert.deepEqual(labels('function displayProperties('),['Témák','Asztal','Képernyőkímélő','Megjelenés','Beállítások']);
- assert.deepEqual(labels('function systemProperties('),['Általános','Számítógépnév','Hardver','Speciális','Automatikus frissítések']);
- assert.deepEqual(labels('function soundProperties('),['Hangerő','Hangok','Hang']);
+ assert.deepEqual(labels('function displayProperties('),['Témák','Asztal','Képernyőkímélő','Megjelenés','Beállítások'].map(key));
+ assert.deepEqual(labels('function systemProperties('),['Általános','Számítógépnév','Hardver','Speciális','Automatikus frissítések'].map(key));
+ assert.deepEqual(labels('function soundProperties('),['Hangerő','Hangok','Hang'].map(key));
  // Neither the account name nor the system facts belong on the display sheet.
  const display=utils.slice(utils.indexOf('function displayProperties('),utils.indexOf('function systemProperties('));
  assert.doesNotMatch(display,/Felhasználó neve/);
  assert.doesNotMatch(display,/system-facts/);
  // The name is changed where the account is.
  assert.match(utils,/function userAccounts\(\)/);
- assert.match(utils,/A fiók nevének megváltoztatása/);
+ assert.ok(utils.includes(key('A fiók nevének megváltoztatása')));
  const packs=new Set(Array.from(utils.matchAll(/Service Pack (\d)/g),m=>m[1]));
  assert.deepEqual(Array.from(packs),['3']);
 });
@@ -471,9 +473,9 @@ test('The logon screen is laid out the way XP laid it out',()=>{
  assert.match(start,/<div class="welcome-brand">.*windows-brand.*welcome-hint.*<\/div><i class="welcome-divider">/s);
  // The band underneath carries the power button and the note about changing the account.
  assert.match(start,/class="welcome-power"/);
- assert.match(start,/Vezérlőpultot.*Felhasználói fiókok/s);
+ assert.ok(start.includes(key('A fiók módosításához nyisd meg a Vezérlőpultot,'))&&start.includes(key('és kattints a Felhasználói fiókok elemre.')));
  // The plain welcome step keeps that band empty.
- assert.match(start,/<span>\$\{esc\(t\('Üdvözöljük'\)\)\}<\/span>`;\$\('\.welcome-bottom'\)\.innerHTML='';/);
+ assert.match(start,new RegExp(`<span>\\$\\{esc\\(t\\("${key('Üdvözöljük')}"\\)\\)\\}<\\/span>`+"`;\\$\\('\\.welcome-bottom'\\)\\.innerHTML='';"));
 
  const css=readFileSync(new URL('styles.css',root),'utf8');
  const band=name=>Number(css.match(new RegExp(`\\.welcome-${name}\\{height:([\\d.]+)%`))[1]);

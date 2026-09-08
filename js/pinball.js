@@ -3,7 +3,7 @@
   const {register,createWindow,menubar,state,$,t,esc}=XP;
   register('pinball',()=>{
     if(XP.singleton('pinball'))return;
-    const w=createWindow({title:t('3D Pinball – Space Cadet'),icon:'pinball',app:'pinball',width:720,height:650,minWidth:380,minHeight:400,className:'pinball-window'});
+    const w=createWindow({title:t("text_3d_pinball_space_cadet"),icon:'pinball',app:'pinball',width:720,height:650,minWidth:380,minHeight:400,className:'pinball-window'});
     const channel='xp-space-cadet';
     let ready=false,manualPause=false,muted=false,disposed=false,lastState='',focusFrame=0;
     const send=(type,extra={})=>frame.contentWindow?.postMessage({channel,type,...extra},location.origin==='null'?'*':location.origin);
@@ -15,9 +15,9 @@
       const next={paused,volume:volume(),focus:!blocked()};
       const serialized=JSON.stringify(next);
       if(lastState!==serialized||forceFocus){lastState=serialized;send('state',next);}
-      pauseButton.textContent=manualPause?t('Folytatás (F3)'):t('Szünet (F3)');
+      pauseButton.textContent=manualPause?t("text_resume_f3"):t("text_pause_f3");
       pauseButton.setAttribute('aria-pressed',String(manualPause));
-      status.textContent=paused?t('Szüneteltetve'):t('Z / C: karok · Szóköz: golyókilövés · X: asztallökés');
+      status.textContent=paused?t("text_paused"):t("text_z_c_flippers_space_launch_x_nudge");
     }
     function restoreFocus(){
       cancelAnimationFrame(focusFrame);
@@ -30,22 +30,22 @@
     function newGame(){if(!ready)return;manualPause=false;sync(true);send('new');restoreFocus();}
     function pause(){if(!ready)return;manualPause=!manualPause;sync(true);restoreFocus();}
     function sound(){muted=!muted;sync();restoreFocus();}
-    function help(){XP.dialog(t('Space Cadet – Irányítás'),t('Bal kar: Z vagy bal nyíl\nJobb kar: C, / vagy jobb nyíl\nKilövés: tartsd nyomva, majd engedd fel a Szóközt\nAsztallökés: X, . vagy fel nyíl (túl sok lökés: TILT!)\n\nF2: új játék · F3: szünet / folytatás\nÉrintőképernyőn használd az alsó gombokat.\n\nTaláld el a célpontokat, teljesíts küldetéseket és szerezz magasabb rangot! Három golyóval indulsz. A rekordok és a játék beállításai ebben a böngészőben mentődnek.'));}
+    function help(){XP.dialog(t("text_space_cadet_controls"),t("text_left_flipper_z_or_left_arrow_right_flipper_c_or_right_arrow_launch_hol_77e23489"));}
     menubar(w,{
-      [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',disabled:!ready,action:newGame},{label:manualPause?t('Folytatás'):t('Szünet'),shortcut:'F3',disabled:!ready,action:pause},null,{label:t('Kilépés'),action:()=>w.close()}],
-      [t('Beállítások')]:()=>[{label:t('Hangeffektusok'),checked:!muted,action:sound}],
-      [t('Súgó')]:[{label:t('Irányítás és játékszabályok'),action:help},{label:t('A Space Cadetről'),action:()=>XP.dialog('3D Pinball – Space Cadet',t('Az eredeti Space Cadet böngészős portja.\nJátékmotor: k4zmu2a / alula, MIT licenc.\nWebAssembly-csomag: Luciano Russo.\nEredeti játék: Cinematronics / Maxis / Microsoft.\n\nA játék minden szükséges fájlja helyben van.')) }]
+      [t("text_game")]:()=>[{label:t("text_new_game"),shortcut:'F2',disabled:!ready,action:newGame},{label:manualPause?t("text_resume"):t("text_pause"),shortcut:'F3',disabled:!ready,action:pause},null,{label:t("text_exit"),action:()=>w.close()}],
+      [t("text_options")]:()=>[{label:t("text_sound_effects"),checked:!muted,action:sound}],
+      [t("text_help")]:[{label:t("text_controls_and_rules"),action:help},{label:t("text_about_space_cadet"),action:()=>XP.dialog('3D Pinball – Space Cadet',t("text_a_browser_port_of_the_original_space_cadet_game_engine_k4zmu2a_alula_m_dc9cc249")) }]
     });
     const stage=document.createElement('div');stage.className='pinball-stage';
-    const frame=document.createElement('iframe');frame.className='pinball-frame';frame.title=t('Space Cadet játéktábla');frame.setAttribute('allow','autoplay');
+    const frame=document.createElement('iframe');frame.className='pinball-frame';frame.title=t("text_space_cadet_table");frame.setAttribute('allow','autoplay');
     stage.append(frame);w.body.append(stage);
     // Activate before a control sends its key, so the first click on an inactive window also works.
     w.el.addEventListener('pointerdown',()=>{if(XP.active!==w.id)w.focus();sync(true);},true);
     w.el.addEventListener('click',event=>{if(!event.target.closest('.window-controls,.menu-bar'))restoreFocus();});
     const controls=document.createElement('div');controls.className='pinball-controls';
-    controls.innerHTML=`<div class="pinball-actions"><button class="xp-button" data-new disabled>${esc(t('Új játék (F2)'))}</button><button class="xp-button" data-pause disabled>${esc(t('Szünet (F3)'))}</button><button class="xp-button" data-help>${esc(t('Súgó'))}</button></div><div class="pinball-touch"><button class="xp-button" data-key="KeyZ" disabled>${esc(t('Bal kar'))} <kbd>Z</kbd></button><button class="xp-button" data-key="Space" disabled>${esc(t('Kilövés'))} <kbd>${esc(t('Szóköz'))}</kbd></button><button class="xp-button" data-key="Slash" disabled>${esc(t('Jobb kar'))} <kbd>C</kbd></button></div>`;
+    controls.innerHTML=`<div class="pinball-actions"><button class="xp-button" data-new disabled>${esc(t("text_new_game_f2"))}</button><button class="xp-button" data-pause disabled>${esc(t("text_pause_f3"))}</button><button class="xp-button" data-help>${esc(t("text_help"))}</button></div><div class="pinball-touch"><button class="xp-button" data-key="KeyZ" disabled>${esc(t("text_left_flipper"))} <kbd>Z</kbd></button><button class="xp-button" data-key="Space" disabled>${esc(t("text_launch"))} <kbd>${esc(t("text_space"))}</kbd></button><button class="xp-button" data-key="Slash" disabled>${esc(t("text_right_flipper"))} <kbd>C</kbd></button></div>`;
     w.body.append(controls);
-    const status=XP.status(w,t('A Space Cadet betöltése…')).firstElementChild;
+    const status=XP.status(w,t("text_loading_space_cadet")).firstElementChild;
     const pauseButton=$('[data-pause]',controls);
     $('[data-new]',controls).onclick=newGame;pauseButton.onclick=pause;$('[data-help]',controls).onclick=help;
     controls.querySelectorAll('[data-key]').forEach(button=>{
@@ -75,7 +75,7 @@
       if(data.type==='new-request')newGame();if(data.type==='pause-request')pause();
       if(data.type==='help-request')help();if(data.type==='sound-request')sound();
       if(data.type==='shell-key'){if(data.key==='F4')w.close();else if(data.key==='Escape')$('#start-button').click();}
-      if(data.type==='error'){ready=false;status.textContent=t('Nem sikerült elindítani a játékot. Zárd be, majd nyisd meg újra.');controls.querySelectorAll('button:not([data-help])').forEach(button=>button.disabled=true);}
+      if(data.type==='error'){ready=false;status.textContent=t("text_the_game_could_not_be_started_close_it_and_open_it_again");controls.querySelectorAll('button:not([data-help])').forEach(button=>button.disabled=true);}
     }
     window.addEventListener('message',message);
     const observer=new MutationObserver(()=>sync());observer.observe(w.el,{attributes:true,attributeFilter:['hidden','class']});
