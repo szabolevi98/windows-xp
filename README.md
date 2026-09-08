@@ -16,7 +16,7 @@ A felület magyarul, angolul és németül beszél. Alapból a böngésző nyelv
 
 A nyelvvel együtt a dátumok, az órák és a számok formátuma is vált: a hétfő németül `Montag, 7. September 2026`, angolul `Monday, September 7, 2026`. Az első indításkor létrejövő dokumentumok és mappák is a gép nyelvén kapnak nevet.
 
-A szövegek forrása maga a magyar mondat: a kódban `t('Megnyitás')` áll, a `lang/en.js` és a `lang/de.js` pedig magyar → idegen nyelvű szótár. Ha egy mondat fordítása hiányzik, a magyar szöveg marad a képernyőn — nem törik el semmi, és rögtön látszik, mi maradt ki. Új nyelvhez egy új `lang/<kód>.js` és egy sor a `js/lang.js` listájában elég.
+A kód stabil `text_*` kulcsokat használ, például `t('text_open')`. A magyar, angol és német szöveg egyaránt a saját `lang/<kód>.js` szótárában él; a tesztek ellenőrzik, hogy mindhárom nyelv pontosan ugyanazokat a kulcsokat tartalmazza. Új nyelvhez egy új szótár és egy sor a `js/lang.js` listájában elég.
 
 ## Használat
 
@@ -45,10 +45,10 @@ A szövegek forrása maga a magyar mondat: a kódban `t('Megnyitás')` áll, a `
 - Böngészhető, csak olvasható C: meghajtó: WINDOWS, Program Files, Documents and Settings, Temp és almappák. A DVD-meghajtó kattintásra lemezt kér.
 - Paint: ceruza, ecset, radír, kitöltés, vonal, téglalap, ellipszis, szöveg, pipetta, paletta, visszavonás, PNG-mentés és letöltés.
 - Számológép: alapműveletek, százalék, gyök, reciprok, memória, billentyűzet.
-- Aknakereső: két nehézség, biztonságos első lépés, zászló, számláló, időmérő, eredmények.
-- Klondike Pasziánsz: szabályos lépések, lapcsoportok, gyűjtőhelyek, újraosztás, visszavonás, automatikus gyűjtés.
-- FreeCell: az eredeti, számozott leosztások (a 617-es játék itt is a 617-es), négy szabad hely, több lap együttes mozgatása, automatikus gyűjtés, visszavonás és nyerési statisztika.
-- Pókpasziánsz: egy, két vagy négy színnel, tíz oszlop, osztás a pakliból, kész sorok levétele és az eredeti 500 pontról induló pontozás.
+- Aknakereső: Kezdő 9×9/10, Haladó 16×16/40 és Profi 30×16/99 nehézség, egyéni 9–30 × 9–24-es pálya, biztonságos első mező, zászló–kérdőjel jelölés, két egérgombos környékfelfedés, számláló, időmérő és eredmények.
+- Klondike Pasziánsz: húzható lapok és lapcsoportok, kattintásos és dupla kattintásos kezelés, egyesével vagy hármasával húzás, klasszikus lépéspontozás, gyűjtőhelyek, újraosztás, visszavonás és automatikus gyűjtés.
+- FreeCell: az eredeti, számozott leosztások (a 617-es játék itt is a 617-es), húzható lapok és szabályos lapfolyamok, négy szabad hely, automatikus gyűjtés, visszavonás és nyerési statisztika.
+- Pókpasziánsz: húzható egyszínű lapfolyamok, egy, két vagy négy szín, tíz oszlop, osztás a pakliból, kész sorok levétele és az eredeti 500 pontról induló pontozás.
 - Hearts: három gépi ellenfél, lapátadás balra/jobbra/szemközt, treff 2 kezd, pikk dáma 13 pont, „lövés a Holdra”, 100 pontig tartó játszma.
 - 3D Pinball – Space Cadet: az eredeti asztal helyben futó WebAssembly-portja. Karok, kilövés, asztallökés billentyűzetről vagy érintőgombokkal, XP-menü, szünet, hangerő a rendszerbeállításból, helyben mentett rekordok.
 - Windows Media Player 9: ezüst-kék felület eredeti Microsoft lejátszógombokkal, kereshető médiatár, lejátszási lista, ismétlés, véletlen sorrend, két hangvezérelt vizualizáció, saját hang- és videófájlok megnyitása, hangerő és némítás.
@@ -126,7 +126,7 @@ Minden eszközfájl a repóban van, így a szimulátorhoz semmit nem kell letöl
 
 `node --test tests/*.test.mjs`
 
-A 68 automatikus teszt lefedi a dokumentumok és beállítások mentését, a fájlműveleteket, az ikonrácsot, az ablakméretezést, az indítást és a hangkezelést, a kártyajátékok szabályait, a Pinball szüneteltetését és fókuszát, az erőforrásokat és a CSP-t. Az új tesztek az összes helyi oldal képeit és belső linkjeit, a kosár és vendégkönyv mentését, a HTML-escape-elést, valamint a Media Player lejátszási sorrendjét is vizsgálják.
+A 114 automatikus teszt lefedi a dokumentumok és beállítások mentését, a fájlműveleteket, az ikonrácsot, az ablakméretezést, az indítást és a hangkezelést, a kártyajátékok szabályait, az Aknakereső pályaméreteit, a Pinball szüneteltetését és fókuszát, az erőforrásokat és a CSP-t. A tesztek az összes helyi oldal képeit és belső linkjeit, a kosár és vendégkönyv mentését, a HTML-escape-elést, valamint a Media Player lejátszási sorrendjét is vizsgálják.
 
 A betöltés 5,5 másodpercig tart, utána a bejelentkezőképernyő várakozik: az asztal mindig a névre kattintva nyílik meg, majd 2 másodperc üdvözlés következik. Ez a kattintás egyben az a gesztus is, amit a böngésző a hang lejátszásához vár. Ha a hangot mégis megtagadja, a képernyő a bejelentkezésnél marad, és az újabb kattintás ismét megpróbálja.
 
