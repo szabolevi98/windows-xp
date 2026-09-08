@@ -17,7 +17,7 @@ window.XP = (() => {
   const avatarPath = name => `assets/avatars/${avatars.includes(name)||name==='guest'?name:'chess'}.png`;
   const avatar = (name, cls='') => `<img class="account-picture ${cls}" src="${avatarPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
-  const defaults = () => ({version:1,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,taskbar:{locked:true,clock:true,quickLaunch:true},iconPositions:{},draft:'',files:[
+  const defaults = () => ({version:1,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,taskbar:{locked:true,clock:true,quickLaunch:true,edge:'bottom',horizontalSize:30,verticalSize:106},iconPositions:{},draft:'',files:[
     {id:'welcome',name:t("text_welcome_to_windows_xp_txt"),type:'text',parent:'documents',content:t("text_welcome_back_to_2001_this_is_your_own_windows_xp_living_in_a_browser_d_82cbf277"),modified:Date.now()},
     {id:'todo',name:t("text_to_do_txt"),type:'text',parent:'documents',content:t("text_things_to_do_today_rediscover_the_start_menu_draw_something_in_paint_w_ed89fdbb"),modified:Date.now()},
     {id:'folder-personal',name:t("text_personal"),type:'folder',parent:'documents',modified:Date.now()}
@@ -156,6 +156,12 @@ window.XP = (() => {
   let sequence=0,z=20,active=null,modalDepth=0;
   const uniqueId = () => `f-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
   const wallpaperPath = name => name==='bliss'?'assets/wallpapers/bliss-hd.jpg':name==='none'?'':name==='windows-xp'?'assets/wallpapers/windows-xp.jpg':`assets/wallpapers/${name==='autumn'?'autumn':'azul'}-1920.jpg`;
+  function taskbarMetrics(settings={},width=globalThis.innerWidth||1280,height=globalThis.innerHeight||720){
+    const edge=['top','right','bottom','left'].includes(settings.edge)?settings.edge:'bottom',horizontal=edge==='top'||edge==='bottom';
+    const minimum=horizontal?30:106,available=horizontal?height:width,maximum=Math.max(minimum,Math.floor(available/2));
+    const saved=Number(horizontal?settings.horizontalSize:settings.verticalSize);
+    return {edge,horizontal,size:Math.max(minimum,Math.min(maximum,Number.isFinite(saved)?Math.round(saved):minimum))};
+  }
   function applySettings(){
     document.body.dataset.theme=state.visualStyle==='classic'?'classic':state.theme;
     document.documentElement.dataset.cursors=state.cursors||'default';
@@ -167,6 +173,20 @@ window.XP = (() => {
     const taskbar=state.taskbar||{};
     document.body.classList.toggle('no-clock',taskbar.clock===false);
     document.body.classList.toggle('no-quick-launch',taskbar.quickLaunch===false);
+    document.body.classList.toggle('taskbar-locked',taskbar.locked!==false);
+    const layout=taskbarMetrics(taskbar);state.taskbar={...taskbar,edge:layout.edge,[layout.horizontal?'horizontalSize':'verticalSize']:layout.size};
+    document.body.dataset.taskbarEdge=layout.edge;
+    document.documentElement.style?.setProperty?.('--taskbar-size',layout.size+'px');
+    // Keep normal windows inside the newly available work area. Maximized windows
+    // already use 100% of #desktop and follow it without any extra work.
+    const areaWidth=desktop.clientWidth,areaHeight=desktop.clientHeight;
+    for(const win of windows.values()){
+      if(win.maximized)continue;
+      if(win.el.offsetWidth>areaWidth)win.el.style.width=areaWidth+'px';
+      if(win.el.offsetHeight>areaHeight)win.el.style.height=areaHeight+'px';
+      win.el.style.left=Math.max(0,Math.min(parseInt(win.el.style.left)||0,Math.max(0,areaWidth-100)))+'px';
+      win.el.style.top=Math.max(0,Math.min(parseInt(win.el.style.top)||0,Math.max(0,areaHeight-32)))+'px';
+    }
   }
   function sound(name){
     if(!state.sounds||state.volume<=0)return Promise.resolve('muted');
@@ -526,7 +546,7 @@ window.XP = (() => {
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key===' '&&active){e.preventDefault();const win=windows.get(active);if(win){const box=win.el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);}}
     if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
-  window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
+  window.addEventListener('resize',()=>{const area=$('#desktop'),width=area.clientWidth,height=area.clientHeight;applySettings();for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,width-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,height-32))+'px';if(w.el.offsetWidth>width)w.el.style.width=width+'px';if(w.el.offsetHeight>height)w.el.style.height=height+'px';}});
   return {$,$$,esc,icon,t,
-    get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,profileFiles,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+    get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,taskbarMetrics,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,profileFiles,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

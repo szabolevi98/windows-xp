@@ -138,9 +138,16 @@ function showVolume(){
  if(!shown||XP.modal)return;
  volumeDial.value=state.volume;volumeMute.checked=!state.sounds;
  volumeFlyout.hidden=false;
- // Anchored by its right edge, so it lands under the speaker without measuring itself.
- const button=$('#volume-button').getBoundingClientRect();
- volumeFlyout.style.right=Math.max(2,innerWidth-button.right)+'px';
+ const button=$('#volume-button').getBoundingClientRect(),bar=taskbar.getBoundingClientRect(),edge=XP.taskbarMetrics(state.taskbar).edge;
+ const width=volumeFlyout.offsetWidth||74,height=volumeFlyout.offsetHeight||150;
+ Object.assign(volumeFlyout.style,{left:'auto',right:'auto',top:'auto',bottom:'auto'});
+ if(edge==='bottom'||edge==='top'){
+  volumeFlyout.style.left=Math.max(2,Math.min(innerWidth-width-2,button.left+(button.width-width)/2))+'px';
+  volumeFlyout.style[edge==='bottom'?'bottom':'top']=(edge==='bottom'?innerHeight-bar.top:bar.bottom)+'px';
+ }else{
+  volumeFlyout.style.top=Math.max(2,Math.min(innerHeight-height-2,button.top+(button.height-height)/2))+'px';
+  volumeFlyout.style[edge==='left'?'left':'right']=(edge==='left'?bar.right:innerWidth-bar.left)+'px';
+ }
 }
 const volumeChanged=()=>{persist();document.dispatchEvent(new CustomEvent('xp-volume-changed'));document.dispatchEvent(new CustomEvent('xp-settings-changed'));};
 volumeDial.oninput=e=>{state.volume=Number(e.target.value);volumeChanged();};
@@ -203,6 +210,29 @@ function arrange(mode){
  });
  desktopShown=false;hiddenWindows=[];
 }
+const taskbar=$('#taskbar'),taskbarResize=$('#taskbar-resize-grip');
+const taskbarEdgeAt=(x,y)=>[['top',y],['right',innerWidth-x],['bottom',innerHeight-y],['left',x]].sort((a,b)=>a[1]-b[1])[0][0];
+function finishTaskbarChange(){persist();XP.applySettings();renderIcons();document.dispatchEvent(new CustomEvent('xp-settings-changed'));}
+taskbar.onpointerdown=e=>{
+ if(e.button!==0||(state.taskbar||{}).locked!==false)return;
+ const resizing=e.target===taskbarResize;
+ if(!resizing&&e.target!==taskbar&&e.target.id!=='taskbar-move-grip'&&e.target.id!=='task-buttons')return;
+ e.preventDefault();XP.hideMenus();const pointer=e.pointerId,startX=e.clientX,startY=e.clientY;let changed=false,active=true;
+ taskbar.setPointerCapture(pointer);taskbar.classList.add(resizing?'resizing':'moving');
+ taskbar.onpointermove=ev=>{
+  if(!active)return;
+  if(!changed&&Math.abs(ev.clientX-startX)+Math.abs(ev.clientY-startY)<4)return;
+  changed=true;
+  if(resizing){
+   const edge=XP.taskbarMetrics(state.taskbar).edge,raw=edge==='bottom'?innerHeight-ev.clientY:edge==='top'?ev.clientY:edge==='right'?innerWidth-ev.clientX:ev.clientX;
+   if(edge==='top'||edge==='bottom')state.taskbar.horizontalSize=Math.max(30,Math.round(raw/30)*30);
+   else state.taskbar.verticalSize=Math.max(106,Math.round(raw));
+  }else state.taskbar.edge=taskbarEdgeAt(ev.clientX,ev.clientY);
+  XP.applySettings();
+ };
+ const finish=()=>{if(!active)return;active=false;taskbar.onpointermove=taskbar.onpointerup=taskbar.onpointercancel=taskbar.onlostpointercapture=null;taskbar.classList.remove('moving','resizing');if(taskbar.hasPointerCapture(pointer))taskbar.releasePointerCapture(pointer);if(changed)finishTaskbarChange();};
+ taskbar.onpointerup=finish;taskbar.onpointercancel=finish;taskbar.onlostpointercapture=finish;
+};
 $('#taskbar').oncontextmenu=e=>{
  if(XP.modal||e.target.closest('.task-button'))return;
  e.preventDefault();
@@ -230,7 +260,7 @@ $('#taskbar').oncontextmenu=e=>{
   null,
   {label:t("text_task_manager"),icon:'taskmgr',action:()=>XP.open('taskmgr')},
   null,
-  {label:t("text_lock_the_taskbar"),checked:locked,action:()=>{state.taskbar={...state.taskbar,locked:!locked};persist();}},
+  {label:t("text_lock_the_taskbar"),checked:locked,action:()=>{state.taskbar={...state.taskbar,locked:!locked};finishTaskbarChange();}},
   {label:t("text_properties"),icon:'taskbar',action:()=>XP.open('taskbar')}
  ],e.clientX,e.clientY);
 };

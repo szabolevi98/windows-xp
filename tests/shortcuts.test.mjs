@@ -65,13 +65,22 @@ test('The taskbar has properties of its own, and they hold',()=>{
   assert.ok(utils.includes(key(label)),`the sheet offers ${label}`);
  assert.match(utils,/state\.taskbar=\{\.\.\.state\.taskbar,\.\.\.draft\};persist\(\);XP\.applySettings\(\)/);
  const core=read('js/core.js');
- assert.match(core,/taskbar:\{locked:true,clock:true,quickLaunch:true\}/,'the settings start out the way XP had them');
+ assert.match(core,/taskbar:\{locked:true,clock:true,quickLaunch:true,edge:'bottom',horizontalSize:30,verticalSize:106\}/,'the settings start out the way XP had them');
  // Hiding the clock or the Quick Launch bar has to actually hide them.
  assert.match(core,/classList\.toggle\('no-clock',taskbar\.clock===false\)/);
  assert.match(core,/classList\.toggle\('no-quick-launch',taskbar\.quickLaunch===false\)/);
  const css=read('styles.css');
  assert.match(css,/body\.no-clock #clock\{display:none\}/);
  assert.match(css,/body\.no-quick-launch \.quick-launch\{display:none\}/);
+ // Unlocking exposes separate move and resize targets; their result is persisted.
+ const html=readFileSync(new URL('index.html',root),'utf8');
+ assert.match(html,/id="taskbar-move-grip"/);
+ assert.match(html,/id="taskbar-resize-grip"/);
+ const start=readFileSync(new URL('js/start.js',root),'utf8');
+ assert.match(start,/taskbar\.onpointerdown=/);
+ assert.match(start,/taskbarEdgeAt\(ev\.clientX,ev\.clientY\)/);
+ assert.match(start,/function finishTaskbarChange\(\)\{persist\(\);XP\.applySettings\(\);renderIcons\(\)/);
+ for(const edge of ['top','right','bottom','left'])assert.ok(css.includes(`body[data-taskbar-edge=${edge}] #desktop`),`${edge} reserves its work area`);
 });
 
 test('The tray speaker opens the little slider, and two clicks the mixer',()=>{
@@ -80,9 +89,10 @@ test('The tray speaker opens the little slider, and two clicks the mixer',()=>{
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  assert.match(start,/\$\('#volume-button'\)\.onclick=e=>\{e\.stopPropagation\(\);showVolume\(\);\}/);
  assert.match(start,/\$\('#volume-button'\)\.ondblclick=\(\)=>\{XP\.hideMenus\(\);XP\.open\('volume'\);\}/);
- // Anchored by its right edge, so a stylesheet that has not landed yet cannot misplace it.
- assert.match(start,/volumeFlyout\.style\.right=/);
- assert.doesNotMatch(start,/volumeFlyout\.style\.left=/);
+ // The mixer follows the tray to any of the four screen edges.
+ assert.match(start,/edge=XP\.taskbarMetrics\(state\.taskbar\)\.edge/);
+ assert.match(start,/volumeFlyout\.style\[edge==='bottom'\?'bottom':'top'\]/);
+ assert.match(start,/volumeFlyout\.style\[edge==='left'\?'left':'right'\]/);
  // The clock followed the same rule: one click did nothing, two opened the panel.
  assert.match(start,/\$\('#clock'\)\.ondblclick=\(\)=>XP\.open\('calendar'\)/);
  assert.doesNotMatch(start,/\$\('#clock'\)\.onclick=/);
