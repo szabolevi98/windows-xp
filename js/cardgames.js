@@ -133,6 +133,7 @@ register('freecell',()=>{
  // Cards are redrawn on selection, so a double click is recognised from the second press instead of dblclick.
  let last={id:'',time:0};
  body.addEventListener('pointerdown',e=>{
+  if(e.button!==0)return;
   const b=e.target.closest('[data-col],[data-cell]');if(!b||b.classList.contains('card-slot'))return;
   const id=b.dataset.cell!==undefined?`cell${b.dataset.cell}`:`${b.dataset.col}:${b.dataset.index}`,now=Date.now();
   if(id===last.id&&now-last.time<350){

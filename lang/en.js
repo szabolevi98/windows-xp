@@ -310,6 +310,7 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {en: {
   "text_flag": "flag",
   "text_flag_819aae5e": "Flag",
   "text_flag_mode": "Flag mode: ",
+  "text_flag_mode_on": "Flag mode: on",
   "text_flag_mode_off": "Flag mode: off",
   "text_the_game_ends_at_100_points_the_lowest_score_wins": "\n\nThe game ends at 100 points; the lowest score wins.",
   "text_volume_in_drive_c_is_windows_xp": " Volume in drive C is WINDOWS_XP\n\n",

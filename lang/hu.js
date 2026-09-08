@@ -310,6 +310,7 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_flag": "zászló",
   "text_flag_819aae5e": "Zászló",
   "text_flag_mode": "Zászló mód: ",
+  "text_flag_mode_on": "Zászló mód: be",
   "text_flag_mode_off": "Zászló mód: ki",
   "text_the_game_ends_at_100_points_the_lowest_score_wins": "\n\nA játszma 100 pontnál ér véget, a legkevesebb pont nyer.",
   "text_volume_in_drive_c_is_windows_xp": " A C: meghajtó kötete: WINDOWS_XP\n\n",

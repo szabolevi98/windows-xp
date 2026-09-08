@@ -47,6 +47,16 @@ test('The taskbar answers a right click, on the buttons and on the bar itself',(
  assert.match(core,/minWidth:options\.minWidth\|\|300,minHeight:options\.minHeight\|\|180/,'a window remembers how small it may get');
 });
 
+test('Game right clicks stay inside the simulated application',()=>{
+ const core=read('js/core.js');
+ assert.match(core,/el\.addEventListener\('contextmenu',e=>e\.preventDefault\(\)\)/,'application windows suppress the host browser menu');
+ const games=read('js/games.js');
+ assert.match(games,/grid\.oncontextmenu=e=>\{e\.preventDefault\(\);e\.stopPropagation\(\);/,'a mine flag does not bubble into the desktop menu');
+ assert.match(games,/lastClick=\{key:'',time:0\};body\.addEventListener\('pointerdown',e=>\{if\(e\.button!==0\)return;/,'Solitaire counts only left presses toward a double click');
+ const cardgames=read('js/cardgames.js');
+ assert.match(cardgames,/let last=\{id:'',time:0\};\s*body\.addEventListener\('pointerdown',e=>\{\s*if\(e\.button!==0\)return;/,'FreeCell counts only left presses toward a double click');
+});
+
 test('The taskbar has properties of its own, and they hold',()=>{
  const utils=read('js/utilities.js');
  assert.match(utils,/register\('taskbar'/);

@@ -307,7 +307,10 @@ window.XP = (() => {
     win.setTitle=title=>{win.title=title;$('.window-title',el).textContent=title;el.setAttribute('aria-label',title);renderTasks();};win.setIcon=name=>{if(win.icon===name)return;win.icon=name;const img=$('.title-bar img',el);if(img)img.src=iconPath(name);renderTasks();};win.close=()=>close(win);win.focus=()=>focus(win);
     if(options.modal){modalDepth++;el.classList.add('dialog-window');el.setAttribute('aria-modal','true');const shade=document.createElement('div');shade.className='modal-shade';$('#windows').append(shade);win.shade=shade;}
     windows.set(id,win);$('#windows').append(el);
-    el.addEventListener('pointerdown',()=>focus(win));$('.close',el).onclick=()=>close(win);
+    el.addEventListener('pointerdown',()=>focus(win));
+    // Keep the host browser's modern context menu out of simulated application windows.
+    el.addEventListener('contextmenu',e=>e.preventDefault());
+    $('.close',el).onclick=()=>close(win);
     if(!options.modal){$('.minimize',el).onclick=()=>minimize(win);$('.maximize',el).onclick=()=>maximize(win);}
     const bar=$('.title-bar',el);bar.ondblclick=e=>{if(!e.target.closest('button'))maximize(win);};
     bar.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();if(!modalDepth||win.modal)menu(windowMenu(win),e.clientX,e.clientY);};
