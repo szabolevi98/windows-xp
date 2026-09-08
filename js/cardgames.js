@@ -9,8 +9,27 @@ const key=c=>`${c.rank}-${c.suit}`;
 const shuffle=deck=>{for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}return deck;};
 function cardHtml(c,attrs='',active=false,style=''){
  const shown=c.face!==false;
- return `<button class="playing-card ${shown?red(c)?'red':'':'back'} ${active?'selected':''}" ${attrs} style="${style}" aria-label="${shown?label(c):'Fedett lap'}">${shown?`${NAMES[c.rank]}<span class="suit">${SUITS[c.suit]}</span><span class="big-suit">${SUITS[c.suit]}</span>`:''}</button>`;
+ return `<button class="playing-card ${shown?red(c)?'red':'':'back'} ${active?'selected':''}" ${attrs} style="${style}" aria-label="${shown?label(c):esc(t("text_face_down_card"))}">${shown?`${NAMES[c.rank]}<span class="suit">${SUITS[c.suit]}</span><span class="big-suit">${SUITS[c.suit]}</span>`:''}</button>`;
 }
+// The old card games taught drag and drop. Keep click-to-select as a keyboard-friendly
+// alternative, but let the browser carry a real stack between valid piles as well.
+function enableCardDrag(body,{start,target,accept,drop,cancel}){
+ let source=[],hover=null,active=false,dropped=false,suppressClick=false;
+ const clearHover=()=>{hover?.classList.remove('card-drop-target');hover=null;};
+ const finish=success=>{clearHover();source.forEach(el=>el.classList.remove('drag-source'));source=[];if(active){suppressClick=true;setTimeout(()=>suppressClick=false,0);}active=false;if(!success)cancel?.();};
+ body.addEventListener('click',e=>{if(!suppressClick)return;suppressClick=false;e.preventDefault();e.stopImmediatePropagation();},true);
+ body.addEventListener('dragstart',e=>{
+  const card=e.target.closest?.('.playing-card[draggable="true"]');if(!card||!body.contains(card))return;
+  source=start(card)||[];if(!source.length){cancel?.();e.preventDefault();return;}
+  active=true;dropped=false;source.forEach(el=>el.classList.add('drag-source'));
+  e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','application/x-windows-xp-card');
+  const ghost=document.createElement('div');ghost.className='card-drag-ghost';source.slice(0,13).forEach((el,i)=>{const copy=el.cloneNode(true);copy.removeAttribute('draggable');copy.classList.remove('selected','drag-source');copy.style.cssText=`left:0;top:${i*18}px`;ghost.append(copy);});document.body.append(ghost);e.dataTransfer.setDragImage(ghost,22,15);setTimeout(()=>ghost.remove(),0);
+ });
+ body.addEventListener('dragover',e=>{if(!active)return;const destination=target(e.target);if(!destination||!accept(destination)){clearHover();return;}e.preventDefault();e.dataTransfer.dropEffect='move';const next=destination.el;if(next!==hover){clearHover();hover=next;hover?.classList.add('card-drop-target');}});
+ body.addEventListener('drop',e=>{if(!active)return;const destination=target(e.target);if(!destination||!accept(destination))return;e.preventDefault();dropped=!!drop(destination);finish(dropped);});
+ body.addEventListener('dragend',()=>{if(active)finish(dropped);});
+}
+XP.enableCardDrag=enableCardDrag;
 // The rules are kept free of the DOM so the regression tests can play whole hands without a browser.
 const rules={};
 XP.cardRules=rules;
@@ -59,11 +78,11 @@ register('freecell',()=>{
   if(answer!==null&&String(answer).trim())reset(Number(String(answer).trim()));
  }
  menubar(w,{
-  [t("text_game")]:()=>[{label:t("text_new_game"),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:t("text_select_game"),shortcut:'F3',action:pick},{label:t("text_restart_this_game"),action:()=>reset(number)},null,{label:t("text_undo"),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t("text_auto_collect"),action:()=>{collect(true);render();}},null,{label:t("text_statistics"),action:()=>{const s=stats();XP.dialog(t("text_freecell_statistics"),t("text_games_played_played_games_won_won_winning_percentage_rate_current_stre_eecc9d44",{played:s.played,won:s.won,rate:s.played?Math.round(s.won/s.played*100):0,streak:s.streak,best:s.best}));}},null,{label:t("text_exit"),action:()=>w.close()}],
+  [t("text_game")]:()=>[{label:t("text_new_game"),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*1000000))},{label:t("text_select_game"),shortcut:'F3',action:pick},{label:t("text_restart_this_game"),action:()=>reset(number)},null,{label:t("text_undo"),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t("text_auto_collect"),action:()=>{collect(true);render();}},null,{label:t("text_statistics"),action:()=>{const s=stats();XP.dialog(t("text_freecell_statistics"),t("text_games_played_played_games_won_won_winning_percentage_rate_current_stre_eecc9d44",{played:s.played,won:s.won,rate:s.played?Math.round(s.won/s.played*100):0,streak:s.streak,best:s.best}));}},null,{label:t("text_exit"),action:()=>w.close()}],
   [t("text_help")]:[{label:t("text_game_rules"),action:()=>XP.dialog('FreeCell',t("text_the_goal_is_to_move_all_52_cards_ace_to_king_to_the_four_home_cells_at_16020498"))}]
  });
  const body=document.createElement('div');body.className='solitaire-body freecell-body';w.body.append(body);
- const bar=status(w,t("text_moves_0"),'Szabad helyek: 4');
+ const bar=status(w,t("text_moves_0"),t("text_free_cells_count_move_count",{free:4,count:5}));
  function stack(){
   if(!selected)return[];
   if(selected.kind==='cell')return cells[selected.index]?[cells[selected.index]]:[];
@@ -75,24 +94,21 @@ register('freecell',()=>{
   else if(selected.kind==='foundation')foundations[selected.index].pop();
   else columns[selected.col].splice(selected.index);
  }
- function moveTo(kind,target){
+ function canMove(kind,target){
   const cards=stack();if(!cards.length)return false;
   const first=cards[0];
   if(kind==='cell'){
-   if(cards.length!==1||cells[target]||(selected.kind==='cell'&&selected.index===target))return false;
-   saveMove();detach();cells[target]=first;
+   return cards.length===1&&!cells[target]&&!(selected.kind==='cell'&&selected.index===target);
   }else if(kind==='foundation'){
-   if(cards.length!==1||first.suit!==target||first.rank!==foundations[target].length+1)return false;
-   if(selected.kind==='foundation'&&selected.index===target)return false;
-   saveMove();detach();foundations[target].push(first);
-  }else{
-   if(selected.kind==='column'&&selected.col===target)return false;
-   const pile=columns[target],last=pile.at(-1);
-   if(!rules.tableauRun(cards))return false;
-   if(last?last.rank!==first.rank+1||red(last)===red(first):false)return false;
-   if(cards.length>rules.freecellCapacity(freeCount(),emptyCount(),!pile.length))return false;
-   saveMove();detach();pile.push(...cards);
+   return cards.length===1&&first.suit===target&&first.rank===foundations[target].length+1&&!(selected.kind==='foundation'&&selected.index===target);
   }
+  if(selected.kind==='column'&&selected.col===target)return false;
+  const pile=columns[target],last=pile.at(-1);
+  return rules.tableauRun(cards)&&!(last&&(last.rank!==first.rank+1||red(last)===red(first)))&&cards.length<=rules.freecellCapacity(freeCount(),emptyCount(),!pile.length);
+ }
+ function moveTo(kind,target){
+  if(!canMove(kind,target))return false;const cards=stack();saveMove();detach();
+  if(kind==='cell')cells[target]=cards[0];else if(kind==='foundation')foundations[target].push(cards[0]);else columns[target].push(...cards);
   moves++;selected=null;collect(false);render();
   if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t("text_congratulations"),t("text_you_solved_game_n_in_moves_moves",{n:number,moves}));}
   return true;
@@ -114,9 +130,9 @@ register('freecell',()=>{
  }
  function render(){
   const chosen=(kind,a,b)=>selected?.kind===kind&&(kind==='column'?selected.col===a:selected.index===a);
-  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${esc(t("text_free_cell_n",{n:i+1}))}"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${esc(t("text_suit_foundation",{suit:SUITS[i]}))}">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t("text_column_n",{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t("text_click_a_card_then_its_destination_double_click_sends_it_home"))}</div>`;
+  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}" draggable="true"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${esc(t("text_free_cell_n",{n:i+1}))}"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}" draggable="true"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${esc(t("text_suit_foundation",{suit:SUITS[i]}))}">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t("text_column_n",{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}" draggable="true"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t("text_drag_or_click_a_card_then_its_destination_double_click_sends_it_home"))}</div>`;
   $('span',bar).textContent=t("text_moves")+moves;
-  $('.status-part',bar).textContent=`Szabad helyek: ${freeCount()} · Egyszerre ${rules.freecellCapacity(freeCount(),emptyCount(),false)} lap`;
+  $('.status-part',bar).textContent=t("text_free_cells_count_move_count",{free:freeCount(),count:rules.freecellCapacity(freeCount(),emptyCount(),false)});
   const max=Math.max(1,...columns.map(c=>c.length));
   $$('.card-column',body).forEach(el=>el.style.minHeight=Math.max(240,max*22+65)+'px');
  }
@@ -143,13 +159,18 @@ register('freecell',()=>{
   }
   last={id,time:now};
  });
+ enableCardDrag(body,{
+  start:b=>{last={id:'',time:0};if(b.dataset.cell!==undefined)selected={kind:'cell',index:Number(b.dataset.cell)};else if(b.dataset.foundation!==undefined)selected={kind:'foundation',index:Number(b.dataset.foundation)};else selected={kind:'column',col:Number(b.dataset.col),index:Number(b.dataset.index)};const cards=stack();if(!rules.tableauRun(cards))return[];return selected.kind==='column'?$$(`[data-col="${selected.col}"]`,body).filter(el=>Number(el.dataset.index)>=selected.index):[b];},
+  target:el=>{const cell=el.closest?.('[data-cell]');if(cell)return{kind:'cell',index:Number(cell.dataset.cell),el:cell};const foundation=el.closest?.('[data-foundation]');if(foundation)return{kind:'foundation',index:Number(foundation.dataset.foundation),el:foundation};const column=el.closest?.('.card-column');return column?{kind:'column',index:Number(column.dataset.column),el:column}:null;},
+  accept:destination=>canMove(destination.kind,destination.index),drop:destination=>moveTo(destination.kind,destination.index),cancel:()=>{selected=null;render();}
+ });
  w.el.addEventListener('keydown',e=>{
-  if(e.key==='F2'){e.preventDefault();reset(1+Math.floor(Math.random()*32000));}
+  if(e.key==='F2'){e.preventDefault();reset(1+Math.floor(Math.random()*1000000));}
   if(e.key==='F3'){e.preventDefault();pick();}
   if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}
  });
  w.onClose=()=>{if(moves&&!finished)record(false);};
- reset(1+Math.floor(Math.random()*32000));
+ reset(1+Math.floor(Math.random()*1000000));
  return w;
 });
 
@@ -201,12 +222,15 @@ register('spider',()=>{
   });
   if(done===8){XP.sound('notify');notify(t("text_congratulations"),t("text_you_solved_spider_solitaire_with_count_suit_s_score_score",{count:suitCount,score}));}
  }
- function moveTo(target){
+ function canMove(target){
   if(!selected||selected.col===target)return false;
   const cards=columns[selected.col].slice(selected.index);
   if(!rules.spiderRun(cards))return false;
   const last=columns[target].at(-1);
-  if(last&&last.rank!==cards[0].rank+1)return false;
+  return !last||last.rank===cards[0].rank+1;
+ }
+ function moveTo(target){
+  if(!canMove(target))return false;const cards=columns[selected.col].slice(selected.index);
   saveMove();columns[selected.col].splice(selected.index);
   const top=columns[selected.col].at(-1);if(top&&!top.face)top.face=true;
   columns[target].push(...cards);moves++;score--;selected=null;sweep();render();return true;
@@ -215,8 +239,8 @@ register('spider',()=>{
   let offsets;
   body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t("text_eight_finished_runs_win_the_game"))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="${esc(t("text_deal_from_the_stock_count_deals_left",{count:Math.ceil(stock.length/10)}))}"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t("text_the_stock_is_empty"))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
    let y=0;offsets=col.map(card=>{const at=y;y+=card.face?20:8;return at;});
-   return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t("text_column_n",{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
-  }).join('')}</div>`;
+   return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t("text_column_n",{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}" ${card.face?'draggable="true"':''}`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
+  }).join('')}</div><div class="solitaire-help">${esc(t("text_drag_or_click_a_same_suit_run_then_its_destination"))}</div>`;
   $('span',bar).textContent=t("text_score")+score;
   $('.status-part',bar).textContent=t("text_completed_runs_done_of_8",{done});
   const max=Math.max(1,...columns.map(col=>col.reduce((y,card)=>y+(card.face?20:8),0)));
@@ -232,6 +256,11 @@ register('spider',()=>{
   selected=selected?.col===col&&selected.index===idx?null:{col,index:idx};
   render();
  };
+ enableCardDrag(body,{
+  start:b=>{selected={col:Number(b.dataset.col),index:Number(b.dataset.index)};const cards=columns[selected.col].slice(selected.index);if(!rules.spiderRun(cards))return[];return $$(`[data-col="${selected.col}"]`,body).filter(el=>Number(el.dataset.index)>=selected.index);},
+  target:el=>{const column=el.closest?.('.card-column');return column?{index:Number(column.dataset.column),el:column}:null;},
+  accept:destination=>canMove(destination.index),drop:destination=>moveTo(destination.index),cancel:()=>{selected=null;render();}
+ });
  w.el.addEventListener('keydown',e=>{
   if(e.key==='F2'){e.preventDefault();reset();}
   if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}
@@ -303,7 +332,7 @@ register('hearts',()=>{
  const names=[state.user||t("text_you"),t("text_west"),t("text_north"),t("text_east")];
  const seats=['south','west','north','east'];
  let hands=[],scores=[0,0,0,0],taken=[0,0,0,0],trick=[],turn=0,leader=0,tricks=0,broken=false,phase='pass',passIndex=0,chosen=[],queenGone=false,over=false;
- const directions=[{label:'balra',shift:1},{label:'jobbra',shift:3},{label:t("text_across"),shift:2},{label:t("text_no_pass"),shift:0}];
+ const directions=[{label:t("text_left"),shift:1},{label:t("text_right"),shift:3},{label:t("text_across"),shift:2},{label:t("text_no_pass"),shift:0}];
  const timers=new Set();
  const later=(fn,ms)=>{const id=setTimeout(()=>{timers.delete(id);fn();},ms);timers.add(id);return id;};
  w.cleanup.push(()=>{timers.forEach(clearTimeout);timers.clear();});
@@ -365,14 +394,14 @@ register('hearts',()=>{
   },650);
  }
  menubar(w,{
-  [t("text_game")]:()=>[{label:t("text_new_game_21f91607"),shortcut:'F2',action:()=>reset(true)},null,{label:t("text_score_c23c6e9e"),action:()=>XP.dialog(t("text_hearts_score"),names.map((n,i)=>`${n}: ${scores[i]} pont`).join('\n')+t("text_the_game_ends_at_100_points_the_lowest_score_wins"))},null,{label:t("text_exit"),action:()=>w.close()}],
+  [t("text_game")]:()=>[{label:t("text_new_game_21f91607"),shortcut:'F2',action:()=>reset(true)},null,{label:t("text_score_c23c6e9e"),action:()=>XP.dialog(t("text_hearts_score"),names.map((n,i)=>t("text_name_points",{name:n,points:scores[i]})).join('\n')+t("text_the_game_ends_at_100_points_the_lowest_score_wins"))},null,{label:t("text_exit"),action:()=>w.close()}],
   [t("text_help")]:[{label:t("text_game_rules"),action:()=>XP.dialog('Hearts',t("text_four_players_thirteen_cards_each_at_the_start_of_a_hand_you_pass_three_8bdd53e5"))}]
  });
  const body=document.createElement('div');body.className='solitaire-body hearts-body';w.body.append(body);
  const bar=status(w,t("text_score_54d6249d"),'');
  function seatHtml(p){
   const active=phase==='play'&&turn===p&&trick.length<4;
-  return `<div class="hearts-seat seat-${seats[p]} ${active?'active':''}"><b>${names[p]}</b><span>${scores[p]} pont · ${hands[p].length} lap</span><div class="hearts-backs">${Array.from({length:Math.min(hands[p].length,13)},(_,i)=>`<i style="--back-i:${i}"></i>`).join('')}</div></div>`;
+  return `<div class="hearts-seat seat-${seats[p]} ${active?'active':''}"><b>${esc(names[p])}</b><span>${esc(t("text_points_cards",{points:scores[p],cards:hands[p].length}))}</span><div class="hearts-backs">${Array.from({length:Math.min(hands[p].length,13)},(_,i)=>`<i style="--back-i:${i}"></i>`).join('')}</div></div>`;
  }
  function render(){
   const legal=phase==='play'&&turn===0&&trick.length<4?rules.heartsLegal(hands[0],trick,broken,tricks===0):[];
@@ -389,8 +418,8 @@ register('hearts',()=>{
   });
   $('span',bar).textContent=names.map((n,i)=>`${n}: ${scores[i]}`).join(' · ');
   $('.status-part',bar)?.remove();
-  const hint=phase==='pass'?t("text_pass_three_cards"):over?t("text_game_over"):turn===0?t("text_your_turn"):`${names[turn]} gondolkodik…`;
-  bar.insertAdjacentHTML('beforeend',`<span class="status-part">${hint}</span>`);
+  const hint=phase==='pass'?t("text_pass_three_cards"):over?t("text_game_over"):turn===0?t("text_your_turn"):t("text_name_is_thinking",{name:names[turn]});
+  bar.insertAdjacentHTML('beforeend',`<span class="status-part">${esc(hint)}</span>`);
  }
  body.onclick=e=>{
   const b=e.target.closest('button');if(!b)return;

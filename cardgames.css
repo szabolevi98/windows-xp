@@ -3,6 +3,7 @@
 .playing-card .suit{display:inline-block;font-size:15px;line-height:1;margin:0}
 .playing-card.dimmed{opacity:.5}
 .playing-card[disabled]{cursor:default}
+.playing-card[draggable=true]{cursor:grab}.playing-card.drag-source{opacity:.35;cursor:grabbing}.card-slot.card-drop-target,.playing-card.card-drop-target{outline:2px solid #ffe57a;outline-offset:1px}.card-column.card-drop-target{border-radius:4px;background:#ffffff18;box-shadow:inset 0 0 0 2px #ffe57a}.card-drag-ghost{position:fixed;left:-1000px;top:-1000px;z-index:20000;pointer-events:none;width:63px;height:300px}.card-drag-ghost .playing-card{position:absolute;width:63px;height:86px;opacity:.92;box-shadow:3px 4px 7px #0008}
 
 .freecell-body .card-top{margin-bottom:22px}
 .freecell-body .card-slot[data-cell]{background:#00713b;border-style:dashed}
