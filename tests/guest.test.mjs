@@ -32,7 +32,7 @@ test('The Guest stands on the logon screen from the start, and can be switched o
  assert.equal(xp.session,'admin');
 });
 
-test('Each account keeps its own desk, and neither can see the other one',()=>{
+test('Each account keeps its own desk while the machine retains both profile file systems',()=>{
  const {xp,storage}=boot();
  xp.saveFile({id:'admin-note',name:'Admin.txt',type:'text',parent:'desktop',content:'admin'});
  xp.state.wallpaper='azul';xp.persist();
@@ -52,6 +52,8 @@ test('Each account keeps its own desk, and neither can see the other one',()=>{
  assert.equal(xp.state.wallpaper,'azul','the administrator finds the desk left behind');
  assert.ok(names(xp).includes('Admin.txt'));
  assert.ok(!names(xp).includes('Vendég.txt'));
+ assert.ok(xp.profileFiles('guest').some(f=>f.name==='Vendég.txt'),'Explorer can mount the saved Guest profile for the administrator');
+ assert.equal(xp.profileFiles('admin'),xp.state.files,'the active profile mount is the same live file list as My Documents');
 
  // Both desks survive the round trip, and a reload of the machine.
  xp.switchUser('guest');
@@ -99,6 +101,9 @@ test('The logon screen, the power dialog and User Accounts all know about the Gu
  assert.match(start,/data-account="\$\{account\.id\}"/);
  assert.match(start,/function bindLogin\(after\)/);
  assert.match(start,/XP\.switchUser\(button\.dataset\.account\)/);
+ const explorer=read('js/explorer.js');
+ assert.match(explorer,/XP\.profileFiles\(owner\)/,'Explorer reads the inactive profile without signing into it');
+ assert.match(explorer,/w\.onUnpark=\(\)=>render\(\)/,'an Explorer parked during a user switch refreshes on return');
  // Fast user switching sits beside logging off: it parks the session instead of closing it.
  assert.ok(start.includes(`data-power="switch">\${icon('switchuser')} \${t("${key('Felhasználóváltás')}")}`));
  assert.match(start,/if\(a==='switch'\)\{XP\.sound\('logoff'\);XP\.parkSession\(\);loginScreen\(true\);\}/);
