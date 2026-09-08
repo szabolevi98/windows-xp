@@ -85,6 +85,8 @@ window.XP = (() => {
   }
   // The Guest only shows up once somebody has switched it on, exactly as XP kept it.
   const accounts=(all=false)=>Object.keys(ACCOUNTS).map(accountInfo).filter(info=>all||info.enabled);
+  // Explorer can mount another account's saved profile without replacing the signed-in desktop.
+  const profileFiles=(id=state.session)=>id===state.session?state.files:(Array.isArray(state.profiles?.[id]?.files)?state.profiles[id].files:[]);
   function setGuest(enabled){
     if(state.session==='guest')return false;
     state.guest={...state.guest,enabled:!!enabled};persist();
@@ -526,5 +528,5 @@ window.XP = (() => {
     if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
   window.addEventListener('resize',()=>{const h=$('#desktop').clientHeight;for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,innerWidth-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,h-32))+'px';if(w.el.offsetWidth>innerWidth)w.el.style.width=innerWidth+'px';if(w.el.offsetHeight>h)w.el.style.height=h+'px';}});
   return {$,$$,esc,icon,t,
-    get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+    get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,profileFiles,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

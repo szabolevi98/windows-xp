@@ -199,7 +199,7 @@ test('The Folders button swaps the task pane for the tree',()=>{
  assert.ok(ex.includes(`{id:'recycle',name:t("${key('Lomtár')}")`));
  // The little box opens a branch; walking into a folder opens its own.
  assert.match(ex,/if\(b\.dataset\.twist\)\{const id=b\.dataset\.twist;expanded\.has\(id\)\?expanded\.delete\(id\):expanded\.add\(id\);render\(true\);return;\}/);
- assert.match(ex,/for\(let id=next;id;\)\{const parent=entry\(id\)\?\.parent;if\(!parent\)break;expanded\.add\(parent\);id=parent;\}/);
+ assert.match(ex,/for\(let id=folder;id;\)\{const parent=entry\(id\)\?\.parent;if\(!parent\)break;expanded\.add\(parent\);id=parent;\}/);
  const css=readFileSync(new URL('styles.css',root),'utf8');
  assert.match(css,/\.tree-item\.selected\{background:#316ac5/);
  assert.match(css,/\.toolbar button\.pressed\{/,'the button stays pressed while the tree is open');
