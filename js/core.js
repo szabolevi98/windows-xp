@@ -1,8 +1,8 @@
 'use strict';
 window.XP = (() => {
-  // A képernyőre kerülő szövegek fordítása; a forrás maga a magyar mondat.
-  // Ha a nyelvkezelő valamiért nincs betöltve, a magyar mondat marad.
-  const i18n = window.XP_I18N || {t:(text,params)=>String(text).replace(/\{(\w+)\}/g,(all,name)=>params&&params[name]!==undefined?params[name]:all),
+  // A képernyőre kerülő szövegek fordítása stabil text_* kulcsokból.
+  // Normál betöltéskor a teljes nyelvi réteg már a rendszer előtt elkészül.
+  const i18n = window.XP_I18N || {t:(key,params)=>String(window.XP_STRINGS?.hu?.[key]??key).replace(/\{(\w+)\}/g,(all,name)=>params&&params[name]!==undefined?params[name]:all),
     languages:[{code:'hu',label:'Magyar'}],language:'hu',locale:'hu-HU',setLanguage:()=>false,applyToDom(){}};
   const t = (text, params) => i18n.t(text, params);
   // A számok és a dátumok a nyelv területi beállítását követik.
@@ -17,15 +17,15 @@ window.XP = (() => {
   const avatarPath = name => `assets/avatars/${avatars.includes(name)||name==='guest'?name:'chess'}.png`;
   const avatar = (name, cls='') => `<img class="account-picture ${cls}" src="${avatarPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
-  const defaults = () => ({version:1,user:t('Adminisztrátor'),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,taskbar:{locked:true,clock:true,quickLaunch:true},iconPositions:{},draft:'',files:[
-    {id:'welcome',name:t('Üdv a Windows XP-ben.txt'),type:'text',parent:'documents',content:t('Üdv újra 2001-ben!\n==================\n\nEz a te saját, böngészőben élő Windows XP-d.\n\n• Az asztali ikonokat dupla kattintással nyithatod meg.\n• Az ablakokat mozgathatod, átméretezheted és a tálcára teheted.\n• A Jegyzettömbben írt fájljaidat a Dokumentumokban találod.\n• A Paintben rajzolhatsz, majd elmentheted a képeidet.\n• Az Internet Explorerben a régi, helyi weben kereshetsz.\n• Próbáld ki az Aknakeresőt és a Pasziánszt!\n\nA dokumentumok és a beállítások ebben a böngészőben maradnak.\nA böngésző adatainak törlése ezeket is törli; a fontos fájlokat\na Fájl → Letöltés menüponttal a valódi gépedre is lementheted.\n\nJó szórakozást!\n'),modified:Date.now()},
-    {id:'todo',name:t('Teendők.txt'),type:'text',parent:'documents',content:t('Mai teendők\n\n[ ] Újra felfedezni a Start menüt\n[ ] Rajzolni valamit Paintben\n[ ] Megnyerni egy Aknakereső-játékot\n[ ] Rákeresni: windows xp\n'),modified:Date.now()},
-    {id:'folder-personal',name:t('Személyes'),type:'folder',parent:'documents',modified:Date.now()}
-  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:true},favorites:[{title:t('Google'),url:'google.hu'},{title:t('Wikipédia'),url:'hu.wikipedia.org'},{title:t('Webkatalógus'),url:'about:offline'},{title:t('Windows XP'),url:'www.microsoft.com/windowsxp'}],mineBest:null});
+  const defaults = () => ({version:1,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,taskbar:{locked:true,clock:true,quickLaunch:true},iconPositions:{},draft:'',files:[
+    {id:'welcome',name:t("text_welcome_to_windows_xp_txt"),type:'text',parent:'documents',content:t("text_welcome_back_to_2001_this_is_your_own_windows_xp_living_in_a_browser_d_82cbf277"),modified:Date.now()},
+    {id:'todo',name:t("text_to_do_txt"),type:'text',parent:'documents',content:t("text_things_to_do_today_rediscover_the_start_menu_draw_something_in_paint_w_ed89fdbb"),modified:Date.now()},
+    {id:'folder-personal',name:t("text_personal"),type:'folder',parent:'documents',modified:Date.now()}
+  ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:true},favorites:[{title:t("text_google"),url:'google.hu'},{title:t("text_wikipedia"),url:'hu.wikipedia.org'},{title:t("text_web_directory"),url:'about:offline'},{title:t("text_windows_xp"),url:'www.microsoft.com/windowsxp'}],mineBest:null});
   let state;
   try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
   let storageWarned=false;
-  function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{if(!storageWarned){storageWarned=true;setTimeout(()=>notify(t('A mentés nem sikerült'),t('A böngésző tárhelye megtelt vagy nem elérhető. Töltsd le a fontos dokumentumokat a Fájl menüből.')),0);}return false;}}
+  function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{if(!storageWarned){storageWarned=true;setTimeout(()=>notify(t("text_the_save_did_not_succeed"),t("text_the_browser_storage_is_full_or_unavailable_download_the_documents_that_7b575206")),0);}return false;}}
   function seedProfile(){
   if(!state.iconPositions||typeof state.iconPositions!=='object'||Array.isArray(state.iconPositions))state.iconPositions={};
   if(!avatars.includes(state.avatar)&&state.avatar!=='guest')state.avatar='chess';
@@ -39,8 +39,8 @@ window.XP = (() => {
     state.administratorRenamed=true;
   }
   if(!state.gamesFolderAdded){
-    let folder=state.files.find(f=>f.parent==='desktop'&&f.type==='folder'&&f.name===t('Játékok')&&!f.deleted);
-    if(!folder){folder={id:'folder-games',name:t('Játékok'),type:'folder',parent:'desktop',modified:Date.now()};state.files.push(folder);}
+    let folder=state.files.find(f=>f.parent==='desktop'&&f.type==='folder'&&f.name===t("text_games")&&!f.deleted);
+    if(!folder){folder={id:'folder-games',name:t("text_games"),type:'folder',parent:'desktop',modified:Date.now()};state.files.push(folder);}
     for(const [app,name] of [['mines','Aknakereső'],['solitaire','Pasziánsz']]){
       if(!state.files.some(f=>f.parent===folder.id&&f.type==='shortcut'&&f.app===app&&!f.deleted))state.files.push({id:`shortcut-${app}`,name:t(name),type:'shortcut',app,parent:folder.id,modified:Date.now()});
     }
@@ -50,13 +50,13 @@ window.XP = (() => {
     const existing=state.files.find(f=>f.type==='shortcut'&&f.app==='pinball');
     const otherGame=state.files.find(f=>f.type==='shortcut'&&['mines','solitaire'].includes(f.app));
     const folder=state.files.find(f=>f.type==='folder'&&f.id===(otherGame?.parent||'folder-games'));
-    if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:t('3D Pinball – Space Cadet'),type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
+    if(folder&&!existing)state.files.push({id:'shortcut-pinball',name:t("text_3d_pinball_space_cadet"),type:'shortcut',app:'pinball',parent:folder.id,modified:Date.now(),...(folder.deleted?{deleted:folder.deleted}:{})});
     state.pinballAdded=true;
   }
   // The web catalogue joins the favourites of desktops that were set up before it existed.
   if(!state.catalogueFavourite){
     if(!Array.isArray(state.favorites))state.favorites=defaults().favorites;
-    if(!state.favorites.some(f=>f.url==='about:offline'))state.favorites.push({title:t('Webkatalógus'),url:'about:offline'});
+    if(!state.favorites.some(f=>f.url==='about:offline'))state.favorites.push({title:t("text_web_directory"),url:'about:offline'});
     state.catalogueFavourite=true;
   }
   if(!state.cardGamesAdded){
@@ -71,7 +71,7 @@ window.XP = (() => {
   seedProfile();
   persist();
   const MACHINE=['version','computerName','security','profiles','session','guest'];
-  const ACCOUNTS={admin:{name:t('Adminisztrátor'),avatar:'chess',type:'admin'},guest:{name:t('Vendég'),avatar:'guest',type:'guest'}};
+  const ACCOUNTS={admin:{name:t("text_administrator"),avatar:'chess',type:'admin'},guest:{name:t("text_guest"),avatar:'guest',type:'guest'}};
   const personal=source=>Object.fromEntries(Object.entries(source).filter(([key])=>!MACHINE.includes(key)));
   if(!state.profiles||typeof state.profiles!=='object')state.profiles={};
   if(!state.guest||typeof state.guest!=='object')state.guest={enabled:true};
@@ -176,7 +176,7 @@ window.XP = (() => {
       return Promise.resolve(a.play()).then(()=>'played',failed);
     }catch(error){return Promise.resolve(failed(error));}
   }
-  function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="${esc(t('Értesítés bezárása'))}">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
+  function notify(title,message){const el=$('#balloon');el.innerHTML=`<button aria-label="${esc(t("text_close_notification"))}">×</button><strong>${esc(title)}</strong>${esc(message)}`;el.hidden=false;$('button',el).onclick=()=>el.hidden=true;clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.hidden=true,13000);}
   function focus(win){
     if(!win || (modalDepth&&!win.modal))return;
     const waking=win.minimized&&!win.parked;
@@ -192,12 +192,12 @@ window.XP = (() => {
   // The menu a window carries: on its task button, on its title bar and under Alt+Space.
   function windowMenu(win){
     return [
-      {label:t('Visszaállítás'),disabled:!win.minimized&&!win.maximized,action:()=>{if(win.maximized)maximize(win);else focus(win);}},
-      {label:t('Áthelyezés'),disabled:true},{label:t('Méret'),disabled:true},
-      {label:t('Kis méret'),disabled:win.minimized,action:()=>{focus(win);minimize(win);}},
-      {label:t('Teljes méret'),disabled:win.maximized||win.fixed,action:()=>{if(!win.maximized)maximize(win);}},
+      {label:t("text_restore"),disabled:!win.minimized&&!win.maximized,action:()=>{if(win.maximized)maximize(win);else focus(win);}},
+      {label:t("text_move"),disabled:true},{label:t("text_size"),disabled:true},
+      {label:t("text_minimize"),disabled:win.minimized,action:()=>{focus(win);minimize(win);}},
+      {label:t("text_maximize"),disabled:win.maximized||win.fixed,action:()=>{if(!win.maximized)maximize(win);}},
       null,
-      {label:t('Bezárás'),shortcut:'Alt+F4',action:()=>close(win)}
+      {label:t("text_close"),shortcut:'Alt+F4',action:()=>close(win)}
     ];
   }
   function renderTasks(){
@@ -266,9 +266,9 @@ window.XP = (() => {
       event.preventDefault();event.stopPropagation();
       if(modalDepth)return;
       menu([
-        {label:t('Csoport kis mérete'),action:()=>{sound('minimize');family.forEach(win=>minimize(win,true));}},
+        {label:t("text_minimize_group"),action:()=>{sound('minimize');family.forEach(win=>minimize(win,true));}},
         null,
-        {label:t('Csoport bezárása'),action:()=>family.slice().forEach(win=>close(win))}
+        {label:t("text_close_group"),action:()=>family.slice().forEach(win=>close(win))}
       ],event.clientX,event.clientY);
     };
     return b;
@@ -302,7 +302,7 @@ window.XP = (() => {
     const offset=(windows.size%5)*22;const left=Math.max(0,Math.min(options.left??Math.round((bounds.width-width)/2)+offset,bounds.width-width));
     const top=Math.max(0,Math.min(options.top??Math.round((bounds.height-height)/2)-18+offset,bounds.height-height));
     const el=document.createElement('section');el.className=`window ${options.className||''}`;el.id=id;el.setAttribute('role','dialog');el.setAttribute('aria-label',options.title);el.style.cssText=`left:${left}px;top:${top}px;width:${width}px;height:${height}px;`;
-    el.innerHTML=`<header class="title-bar">${icon(options.icon)}<span class="window-title">${esc(options.title)}</span><div class="window-controls">${options.modal?'':`<button class="window-control minimize" aria-label="${esc(t('Kis méret'))}" title="${esc(t('Kis méret'))}"></button><button class="window-control maximize" aria-label="${esc(t('Teljes méret'))}" title="${esc(t('Teljes méret'))}" ${options.fixed?'disabled':''}></button>`}<button class="window-control close" aria-label="${esc(t('Bezárás'))}" title="${esc(t('Bezárás'))}"></button></div></header><div class="window-content"></div>${options.fixed?'':['n','s','e','w','ne','nw','se','sw'].map(d=>`<div class="resize-edge resize-${d}" data-resize="${d}"></div>`).join('')+`<div class="resize-handle" data-resize="se" aria-label="${esc(t('Átméretezés'))}"></div>`}`;
+    el.innerHTML=`<header class="title-bar">${icon(options.icon)}<span class="window-title">${esc(options.title)}</span><div class="window-controls">${options.modal?'':`<button class="window-control minimize" aria-label="${esc(t("text_minimize"))}" title="${esc(t("text_minimize"))}"></button><button class="window-control maximize" aria-label="${esc(t("text_maximize"))}" title="${esc(t("text_maximize"))}" ${options.fixed?'disabled':''}></button>`}<button class="window-control close" aria-label="${esc(t("text_close"))}" title="${esc(t("text_close"))}"></button></div></header><div class="window-content"></div>${options.fixed?'':['n','s','e','w','ne','nw','se','sw'].map(d=>`<div class="resize-edge resize-${d}" data-resize="${d}"></div>`).join('')+`<div class="resize-handle" data-resize="se" aria-label="${esc(t("text_resize"))}"></div>`}`;
     const win={id,el,body:$('.window-content',el),title:options.title,icon:options.icon,app:options.app,fixed:options.fixed,modal:options.modal,minWidth:options.minWidth||300,minHeight:options.minHeight||180,minimized:false,maximized:false,cleanup:[]};
     win.setTitle=title=>{win.title=title;$('.window-title',el).textContent=title;el.setAttribute('aria-label',title);renderTasks();};win.setIcon=name=>{if(win.icon===name)return;win.icon=name;const img=$('.title-bar img',el);if(img)img.src=iconPath(name);renderTasks();};win.close=()=>close(win);win.focus=()=>focus(win);
     if(options.modal){modalDepth++;el.classList.add('dialog-window');el.setAttribute('aria-modal','true');const shade=document.createElement('div');shade.className='modal-shade';$('#windows').append(shade);win.shade=shade;}
@@ -331,7 +331,7 @@ window.XP = (() => {
   function open(app,...args){
     hideMenus();if(modalDepth)return;
     const fn=apps[app];
-    if(!fn){notify(t('A program nem található'),app);return;}
+    if(!fn){notify(t("text_the_program_could_not_be_found"),app);return;}
     if(PROGRAMS[app]){state.programUse={...state.programUse,[app]:(state.programUse?.[app]||0)+1};persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));}
     return fn(...args);
   }
@@ -379,7 +379,7 @@ window.XP = (() => {
     el.style.left=Math.min(x,innerWidth-el.offsetWidth-3)+'px';el.style.top=Math.min(y,innerHeight-el.offsetHeight-32)+'px';
     el.style.left=Math.max(0,parseInt(el.style.left))+'px';el.style.top=Math.max(0,parseInt(el.style.top))+'px';
   }
-  function menubar(win,menus,logo=false){const bar=document.createElement('nav');bar.className='menu-bar';bar.setAttribute('aria-label',t('Alkalmazás menü'));Object.entries(menus).forEach(([label,items])=>{const b=document.createElement('button');b.textContent=label;b.onclick=e=>{e.stopPropagation();const r=b.getBoundingClientRect();menu(typeof items==='function'?items():items,r.left,r.bottom);};bar.append(b);});if(logo){const span=document.createElement('span');span.className='toolbar-logo';span.innerHTML=icon('windows');bar.append(span);}win.body.append(bar);return bar;}
+  function menubar(win,menus,logo=false){const bar=document.createElement('nav');bar.className='menu-bar';bar.setAttribute('aria-label',t("text_program_menu"));Object.entries(menus).forEach(([label,items])=>{const b=document.createElement('button');b.textContent=label;b.onclick=e=>{e.stopPropagation();const r=b.getBoundingClientRect();menu(typeof items==='function'?items():items,r.left,r.bottom);};bar.append(b);});if(logo){const span=document.createElement('span');span.className='toolbar-logo';span.innerHTML=icon('windows');bar.append(span);}win.body.append(bar);return bar;}
   function hideMenus(){ closeSubmenus();$('#context-menu').hidden=true;$('#start-menu').hidden=true;$('#volume-flyout').hidden=true;$('#start-button').classList.remove('active');$('#start-button').setAttribute('aria-expanded','false'); }
   // A dialog grows to its message: a fixed box let long text slide under the title bar
   // as soon as focusing the button scrolled the overflow into view.
@@ -392,8 +392,8 @@ window.XP = (() => {
     win.el.style.top=`${Math.max(0,Math.round((area.height-height)/2)-18)}px`;
   }
   function dialog(title,message,{input,value='',buttons=['OK'],icon:ic='info'}={}){return new Promise(resolve=>{const w=createWindow({title,icon:ic,width:420,height:input?192:175,fixed:true,modal:true});w.body.innerHTML=`<div class="dialog-body">${icon(ic)}<div class="dialog-copy"><p>${esc(message).replace(/\n/g,'<br>')}</p>${input?`<input type="text" aria-label="${esc(input)}" value="${esc(value)}" maxlength="160">`:''}</div></div><div class="button-row"></div>`;let answered=false;const finish=(button)=>{if(answered)return;answered=true;const val=input?$('input',w.body).value:button;close(w);resolve(button===buttons[0]?val:null);};buttons.forEach((label,i)=>{const b=document.createElement('button');b.className=`xp-button ${i===0?'primary':''}`;b.textContent=label;b.onclick=()=>finish(label);$('.button-row',w.body).append(b);});fitDialog(w);w.onClose=()=>{if(!answered){answered=true;resolve(null);}};w.el.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();finish('');}if(e.key==='Enter'){e.preventDefault();finish(buttons[0]);}if(e.key==='Tab'){const controls=$$('input,button:not(.window-control)',w.body);let idx=controls.indexOf(document.activeElement);idx=(idx+(e.shiftKey?-1:1)+controls.length)%controls.length;controls[idx]?.focus();e.preventDefault();}});setTimeout(()=>{const first=$('input',w.body)||$('.button-row button',w.body);first.focus();first.select?.();},0);});}
-  const prompt=(title,message,value='')=>dialog(title,message,{input:t('Fájlnév'),value,buttons:['OK',t('Mégse')]});
-  const confirm=(title,message)=>dialog(title,message,{buttons:[t('Igen'),t('Nem')]});
+  const prompt=(title,message,value='')=>dialog(title,message,{input:t("text_file_name_a16f7d68"),value,buttons:['OK',t("text_cancel")]});
+  const confirm=(title,message)=>dialog(title,message,{buttons:[t("text_yes"),t("text_no")]});
   function fileName(name){return String(name||'').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'').trim().slice(0,100);}
   function uniqueName(name,parent,ignoreId){
     const taken=candidate=>state.files.some(f=>f.id!==ignoreId&&f.parent===parent&&!f.deleted&&f.name===candidate);
@@ -405,7 +405,7 @@ window.XP = (() => {
   // A copy takes the whole subtree with it and steps its name aside if one is taken.
   function copyInto(id,parent){
     const source=state.files.find(f=>f.id===id&&!f.deleted);if(!source)return null;
-    if(source.type==='folder'&&descendants(id).includes(parent)){sound('error');notify(t('Másolás'),t('Egy mappát nem lehet önmagába másolni.'));return null;}
+    if(source.type==='folder'&&descendants(id).includes(parent)){sound('error');notify(t("text_copy"),t("text_a_folder_cannot_be_copied_into_itself"));return null;}
     const name=uniqueName(source.name,parent);if(!name)return null;
     const clone=(file,newParent,newName)=>{const copy={...file,id:uniqueId(),parent:newParent,name:newName||file.name,modified:Date.now()};state.files.push(copy);return copy;};
     const root=clone(source,parent,name);
@@ -434,8 +434,8 @@ window.XP = (() => {
   function moveFile(id,parent){
     const file=state.files.find(f=>f.id===id&&!f.deleted);
     if(!file||file.parent===parent)return false;
-    if(file.type==='folder'&&descendants(id).includes(parent)){sound('error');notify(t('Áthelyezés'),t('Egy mappát nem lehet önmagába vagy a saját almappájába helyezni.'));return false;}
-    if(state.files.some(other=>other.id!==id&&other.parent===parent&&other.name===file.name&&!other.deleted)){sound('error');notify(t('Áthelyezés'),t('Ezen a helyen már van „{name}” nevű elem.',{name:file.name}));return false;}
+    if(file.type==='folder'&&descendants(id).includes(parent)){sound('error');notify(t("text_move"),t("text_a_folder_cannot_be_moved_into_itself_or_into_one_of_its_own_subfolders"));return false;}
+    if(state.files.some(other=>other.id!==id&&other.parent===parent&&other.name===file.name&&!other.deleted)){sound('error');notify(t("text_move"),t("text_this_location_already_contains_an_item_named_name",{name:file.name}));return false;}
     saveFile({...file,parent});return true;
   }
   // Where a dragged file would land if it were let go at this point on the screen.
@@ -484,22 +484,22 @@ window.XP = (() => {
   async function trashFile(id){
     const file=state.files.find(f=>f.id===id&&!f.deleted);
     if(!file)return false;
-    const answer=await dialog(file.type==='folder'?t('Mappa törlésének megerősítése'):t('Fájl törlésének megerősítése'),
-      t('Biztosan a Lomtárba helyezi ezt: „{name}”?',{name:file.name}),{icon:'recycle',buttons:[t('Igen'),t('Nem')]});
+    const answer=await dialog(file.type==='folder'?t("text_confirm_folder_delete"):t("text_confirm_file_delete"),
+      t("text_are_you_sure_you_want_to_send_name_to_the_recycle_bin",{name:file.name}),{icon:'recycle',buttons:[t("text_yes"),t("text_no")]});
     if(!answer)return false;
     deleteFile(id);return true;
   }
   function deleteFile(id){const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))f.deleted=true;});persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   async function emptyTrash(){
     if(!state.files.some(f=>f.deleted))return false;
-    if(!await confirm(t('Lomtár ürítése'),t('Végleg törlöd a Lomtár összes elemét?')))return false;
+    if(!await confirm(t("text_empty_recycle_bin"),t("text_are_you_sure_you_want_to_delete_everything_in_the_recycle_bin")))return false;
     state.files=state.files.filter(f=>!f.deleted);persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));return true;
   }
   function restoreFile(id){const file=state.files.find(f=>f.id===id);if(!file)return;const parent=state.files.find(f=>f.id===file.parent);if(parent?.deleted)restoreFile(parent.id);const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))delete f.deleted;});persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   function download(name,content,type='text/plain;charset=utf-8'){const blob=content instanceof Blob?content:new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fileName(name)||'dokumentum.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   function shortcutToFile(id,parent='desktop'){
     const source=state.files.find(f=>f.id===id&&!f.deleted);if(!source)return null;
-    const file={id:uniqueId(),name:uniqueName(t('{name} – parancsikon',{name:source.name}),parent)||source.name,
+    const file={id:uniqueId(),name:uniqueName(t("text_name_shortcut",{name:source.name}),parent)||source.name,
       type:'shortcut',target:id,parent,modified:Date.now()};
     saveFile(file);return file;
   }
@@ -512,7 +512,7 @@ window.XP = (() => {
       if(file.target){
         const target=targetOf(file);
         if(target)openFile(target.id);
-        else{sound('error');dialog(t('Hibás parancsikon'),t('A parancsikon hivatkozása nem érhető el. Elképzelhető, hogy az elemet törölték.'),{icon:'error'});}
+        else{sound('error');dialog(t("text_problem_with_shortcut"),t("text_the_item_this_shortcut_refers_to_cannot_be_reached_it_may_have_been_deleted"),{icon:'error'});}
       }else if(apps[file.app])open(file.app);
     }else open('notepad',id);}
   function onFiles(win,fn){const guarded=()=>{if(!win.parked)fn();};document.addEventListener('xp-files-changed',guarded);win.cleanup.push(()=>document.removeEventListener('xp-files-changed',guarded));}

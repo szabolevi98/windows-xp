@@ -32,25 +32,25 @@
   <link rel="stylesheet" href="tray-controls.css?v=2">
   <link rel="stylesheet" href="scrollbar-controls.css?v=2">
   <link rel="stylesheet" href="controls.css?v=3">
-  <script defer src="lang/hu.js?v=2"></script>
-  <script defer src="lang/en.js?v=7"></script>
-  <script defer src="lang/de.js?v=7"></script>
-  <script defer src="js/lang.js?v=3"></script>
-  <script defer src="js/core.js?v=42"></script>
-  <script defer src="js/internet.js?v=12"></script>
-  <script defer src="js/web-pages.js?v=6"></script>
-  <script defer src="js/apps.js?v=13"></script>
-  <script defer src="js/explorer.js?v=18"></script>
-  <script defer src="js/utilities.js?v=29"></script>
-  <script defer src="js/player.js?v=8"></script>
-  <script defer src="js/outlook.js?v=6"></script>
-  <script defer src="js/taskmgr.js?v=12"></script>
-  <script defer src="js/compmgmt.js?v=3"></script>
-  <script defer src="js/games.js?v=6"></script>
-  <script defer src="js/cardgames.js?v=6"></script>
-  <script defer src="js/pinball.js?v=8"></script>
+  <script defer src="lang/hu.js?v=3"></script>
+  <script defer src="lang/en.js?v=8"></script>
+  <script defer src="lang/de.js?v=8"></script>
+  <script defer src="js/lang.js?v=4"></script>
+  <script defer src="js/core.js?v=43"></script>
+  <script defer src="js/internet.js?v=13"></script>
+  <script defer src="js/web-pages.js?v=7"></script>
+  <script defer src="js/apps.js?v=14"></script>
+  <script defer src="js/explorer.js?v=19"></script>
+  <script defer src="js/utilities.js?v=30"></script>
+  <script defer src="js/player.js?v=9"></script>
+  <script defer src="js/outlook.js?v=7"></script>
+  <script defer src="js/taskmgr.js?v=13"></script>
+  <script defer src="js/compmgmt.js?v=4"></script>
+  <script defer src="js/games.js?v=7"></script>
+  <script defer src="js/cardgames.js?v=7"></script>
+  <script defer src="js/pinball.js?v=9"></script>
   <script defer src="js/desktop-grid.js?v=4"></script>
-  <script defer src="js/start.js?v=51"></script>
+  <script defer src="js/start.js?v=52"></script>
 </head>
 <body>
   <audio id="startup-sound" src="assets/sounds/startup.wav" preload="auto" hidden></audio>
@@ -61,25 +61,25 @@
     <div id="selection-box" hidden></div>
   </main>
   <footer id="taskbar">
-    <button id="start-button" aria-label="Start menü" data-i18n-aria-label="Start menü" aria-expanded="false"><img src="assets/icons/windows-logo.png" alt=""><span>start</span></button>
-    <div class="quick-launch"><button id="show-desktop" title="Asztal megjelenítése" data-i18n-title="Asztal megjelenítése"><img src="assets/icons/showdesktop.png" alt="Asztal megjelenítése" data-i18n-alt="Asztal megjelenítése"></button><button data-open="ie" title="Internet Explorer"><img src="assets/icons/ie.png" alt="Internet Explorer"></button><button data-open="player" title="Windows Media Player"><img src="assets/icons/player.png" alt="Windows Media Player"></button></div>
+    <button id="start-button" aria-label="" data-i18n-aria-label="text_start_menu" aria-expanded="false"><img src="assets/icons/windows-logo.png" alt=""><span>start</span></button>
+    <div class="quick-launch"><button id="show-desktop" title="" data-i18n-title="text_show_desktop"><img src="assets/icons/showdesktop.png" alt="" data-i18n-alt="text_show_desktop"></button><button data-open="ie" title="Internet Explorer"><img src="assets/icons/ie.png" alt="Internet Explorer"></button><button data-open="player" title="Windows Media Player"><img src="assets/icons/player.png" alt="Windows Media Player"></button></div>
     <div id="task-buttons"></div>
-    <div class="tray"><button id="tray-toggle" class="tray-toggle" title="Rejtett ikonok megjelenítése" data-i18n-title="Rejtett ikonok megjelenítése" aria-label="Rejtett ikonok megjelenítése" data-i18n-aria-label="Rejtett ikonok megjelenítése" aria-expanded="false" aria-controls="tray-hidden"></button><div id="tray-hidden" class="tray-hidden" hidden><button data-tray="outlook" title="Outlook Express"><img src="assets/icons/mail.png" alt="Outlook Express"></button></div><button data-tray="security" title="Biztonsági központ" data-i18n-title="Biztonsági központ"><img src="assets/icons/security.png" alt="Biztonsági központ" data-i18n-alt="Biztonsági központ"></button><button id="volume-button" title="Hangerő" data-i18n-title="Hangerő"><img src="assets/icons/volume.png" alt="Hangerő" data-i18n-alt="Hangerő"></button><button data-open="network" title="Helyi kapcsolat" data-i18n-title="Helyi kapcsolat"><img src="assets/icons/network.png" alt="Hálózat" data-i18n-alt="Hálózat"></button><button id="clock" title="Dátum és idő" data-i18n-title="Dátum és idő"></button></div>
+    <div class="tray"><button id="tray-toggle" class="tray-toggle" title="" data-i18n-title="text_show_hidden_icons" aria-label="" data-i18n-aria-label="text_show_hidden_icons" aria-expanded="false" aria-controls="tray-hidden"></button><div id="tray-hidden" class="tray-hidden" hidden><button data-tray="outlook" title="Outlook Express"><img src="assets/icons/mail.png" alt="Outlook Express"></button></div><button data-tray="security" title="" data-i18n-title="text_security_center"><img src="assets/icons/security.png" alt="" data-i18n-alt="text_security_center"></button><button id="volume-button" title="" data-i18n-title="text_volume"><img src="assets/icons/volume.png" alt="" data-i18n-alt="text_volume"></button><button data-open="network" title="" data-i18n-title="text_local_area_connection"><img src="assets/icons/network.png" alt="" data-i18n-alt="text_network"></button><button id="clock" title="" data-i18n-title="text_date_and_time"></button></div>
   </footer>
-  <section id="start-menu" aria-label="Start menü" data-i18n-aria-label="Start menü" hidden></section>
+  <section id="start-menu" aria-label="" data-i18n-aria-label="text_start_menu" hidden></section>
   <div id="context-menu" class="popup-menu" role="menu" hidden></div>
   <div id="volume-flyout" hidden>
-    <span class="volume-caption" data-i18n="Hangerő">Hangerő</span>
-    <input type="range" class="volume-dial" min="0" max="100" step="1" aria-label="Hangerő" data-i18n-aria-label="Hangerő" orient="vertical">
-    <label class="volume-mute"><input type="checkbox"> <span data-i18n="Némítás">Némítás</span></label>
+    <span class="volume-caption" data-i18n="text_volume"></span>
+    <input type="range" class="volume-dial" min="0" max="100" step="1" aria-label="" data-i18n-aria-label="text_volume" orient="vertical">
+    <label class="volume-mute"><input type="checkbox"> <span data-i18n="text_mute"></span></label>
   </div>
   <aside id="balloon" hidden></aside>
   <section id="boot-screen" class="full-screen">
-    <div class="boot-center"><div class="windows-brand"><img src="assets/icons/windows-logo.png" alt=""><small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong><p>Professional</p></div><div class="boot-loader"><span></span><span></span><span></span></div><p class="boot-caption" data-i18n="A Windows betöltése…">A Windows betöltése…</p></div>
-    <div class="boot-bottom"><span>Copyright © Microsoft Corporation</span><em>Microsoft</em></div><button id="skip-boot" data-i18n="Kattints az indításhoz">Kattints az indításhoz</button>
+    <div class="boot-center"><div class="windows-brand"><img src="assets/icons/windows-logo.png" alt=""><small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong><p>Professional</p></div><div class="boot-loader"><span></span><span></span><span></span></div><p class="boot-caption" data-i18n="text_loading_windows"></p></div>
+    <div class="boot-bottom"><span>Copyright © Microsoft Corporation</span><em>Microsoft</em></div><button id="skip-boot" data-i18n="text_click_to_start"></button>
   </section>
-  <section id="welcome-screen" class="full-screen" hidden><div class="welcome-top"></div><div class="welcome-center"><span data-i18n="Üdvözöljük">Üdvözöljük</span></div><div class="welcome-bottom"></div></section>
-  <section id="off-screen" class="full-screen" hidden><div class="windows-brand"><img src="assets/icons/windows-logo.png" alt=""><small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong><p>Professional</p></div><p data-i18n="Most már biztonságosan kikapcsolhatja a számítógépet.">Most már biztonságosan kikapcsolhatja a számítógépet.</p><button class="xp-button" id="power-on" data-i18n="Bekapcsolás">Bekapcsolás</button></section>
+  <section id="welcome-screen" class="full-screen" hidden><div class="welcome-top"></div><div class="welcome-center"><span data-i18n="text_welcome"></span></div><div class="welcome-bottom"></div></section>
+  <section id="off-screen" class="full-screen" hidden><div class="windows-brand"><img src="assets/icons/windows-logo.png" alt=""><small>Microsoft®</small><strong>Windows<i>®</i><span>xp<em>™</em></span></strong><p>Professional</p></div><p data-i18n="text_it_is_now_safe_to_turn_off_your_computer"></p><button class="xp-button" id="power-on" data-i18n="text_turn_on"></button></section>
   <noscript>A Windows XP elindításához engedélyezni kell a JavaScriptet. · JavaScript must be enabled to start Windows XP. · JavaScript muss aktiviert sein, um Windows XP zu starten.</noscript>
 </body>
 </html>

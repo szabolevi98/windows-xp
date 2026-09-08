@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {installHungarian} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 
 function load(){
  const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},dispatchEvent(){},createElement:()=>({})},
   localStorage:{getItem:()=>null,setItem(){}},setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console,Math});
- vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
+ installHungarian(context);vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
  vm.runInContext(readFileSync(new URL('js/outlook.js',root),'utf8'),context);
  return context.XP;
 }

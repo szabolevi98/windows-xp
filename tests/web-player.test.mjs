@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import vm from 'node:vm';
+import {installHungarian} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 function boot(saved){
   const storage=new Map();if(saved)storage.set('windows-xp-simulator-v1',JSON.stringify(saved));
   const element={hidden:true,querySelector:()=>element};
   const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},querySelector:()=>element},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},console,setTimeout:()=>0,clearTimeout(){}});
-  vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
+  installHungarian(context);vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
   for(const file of ['internet','web-pages','player'])vm.runInContext(readFileSync(new URL(`js/${file}.js`,root),'utf8'),context);
   return {xp:context.XP,storage};
 }

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import vm from 'node:vm';
+import {installHungarian,key} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 const read=name=>readFileSync(new URL(name,root),'utf8');
 
@@ -19,7 +20,7 @@ function boot(){
   document:{documentElement:{dataset:{}},body:element(),addEventListener(){},dispatchEvent(){},querySelector:()=>element(),createElement:element},
   localStorage:{getItem:()=>null,setItem(){}},setTimeout:()=>0,clearTimeout(){},
   Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console});
- vm.runInContext(read('js/core.js'),context);
+ installHungarian(context);vm.runInContext(read('js/core.js'),context);
  return context.window.XP;
 }
 // A stand-in for a running program: a window with something to clean up.
@@ -102,15 +103,15 @@ test('A parked program keeps to itself while somebody else works',()=>{
  assert.match(read('js/player.js'),/w\.onPark=\(\)=>\{playingWhenParked=!media\.paused&&!media\.ended;media\.pause\(\);\}/);
  assert.match(read('js/player.js'),/w\.onUnpark=\(\)=>\{if\(playingWhenParked\)play\(\);\}/);
  // The Task Manager lists the other session as disconnected.
- assert.match(read('js/taskmgr.js'),/account\.active\?t\('Aktív'\):t\('Leválasztva'\)/);
+ assert.ok(read('js/taskmgr.js').includes(`account.active?t("${key('Aktív')}"):t("${key('Leválasztva')}")`));
 });
 
 test('The bin asks before it takes anything, and the windows sound like XP',()=>{
  const core=read('js/core.js');
  // XP never binned a file without asking first.
  assert.match(core,/async function trashFile\(id\)/);
- assert.match(core,/Biztosan a Lomtárba helyezi ezt: „\{name\}”\?/);
- assert.match(core,/t\('Mappa törlésének megerősítése'\):t\('Fájl törlésének megerősítése'\)/);
+ assert.ok(core.includes(key('Biztosan a Lomtárba helyezi ezt: „{name}”?')));
+ assert.ok(core.includes(`t("${key('Mappa törlésének megerősítése')}"):t("${key('Fájl törlésének megerősítése')}")`));
  assert.match(core,/if\(!answer\)return false;/,'saying no leaves the file alone');
  assert.match(core,/if\(target\.type==='recycle'\)\{trashFile\(id\)/,'dropping on the bin asks too');
  const start=read('js/start.js');
@@ -139,8 +140,8 @@ test('The taskbar groups a crowded program, and every window carries its own men
  assert.match(core,/const grouping=list\.length>fits/);
  assert.match(core,/function groupButton\(app,family\)/);
  assert.match(core,/const label=`\$\{family\.length\} \$\{programName\(family\[0\]\)\}`/);
- assert.match(core,/label:t\('Csoport kis mérete'\)/);
- assert.match(core,/label:t\('Csoport bezárása'\)/);
+ assert.ok(core.includes(`label:t("${key('Csoport kis mérete')}")`));
+ assert.ok(core.includes(`label:t("${key('Csoport bezárása')}")`));
  assert.match(core,/const PROGRAMS=\{notepad:'Jegyzettömb'/,'the group knows the program name');
  // The window menu lives in one place and is reached three ways.
  assert.match(core,/function windowMenu\(win\)/);

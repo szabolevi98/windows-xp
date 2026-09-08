@@ -36,7 +36,7 @@ rules.freecellSafe=(card,foundations)=>{
 
 register('freecell',()=>{
  if(XP.singleton('freecell'))return;
- const w=createWindow({title:t('FreeCell'),icon:'freecell',app:'freecell',width:660,height:565,minWidth:430,minHeight:380});
+ const w=createWindow({title:t("text_freecell"),icon:'freecell',app:'freecell',width:660,height:565,minWidth:430,minHeight:380});
  let columns=[],cells=[null,null,null,null],foundations=[[],[],[],[]],selected=null,number=1,moves=0,snapshots=[],finished=false;
  const stats=()=>state.freecellStats||{played:0,won:0,streak:0,best:0};
  const freeCount=()=>cells.filter(c=>!c).length;
@@ -50,20 +50,20 @@ register('freecell',()=>{
   if(moves&&!finished)record(false);
   number=Math.min(1000000,Math.max(1,Math.floor(next)||1));columns=rules.freecellColumns(number);
   cells=[null,null,null,null];foundations=[[],[],[],[]];selected=null;moves=0;snapshots=[];finished=false;
-  w.setTitle(t('FreeCell – {n}. játék',{n:number}));render();
+  w.setTitle(t("text_freecell_game_n",{n:number}));render();
  }
  function saveMove(){snapshots.push(JSON.stringify({columns,cells,foundations,moves}));if(snapshots.length>200)snapshots.shift();}
  function undo(){if(!snapshots.length)return;({columns,cells,foundations,moves}=JSON.parse(snapshots.pop()));selected=null;render();}
  async function pick(){
-  const answer=await dialog(t('Játék száma'),t('Add meg a leosztás számát (1 – 1 000 000).\nAz eredeti FreeCell számozását követi.'),{input:t('Játék száma'),value:String(number),buttons:['OK',t('Mégse')]});
+  const answer=await dialog(t("text_game_number"),t("text_enter_the_deal_number_1_1_000_000_it_follows_the_original_freecell_numbering"),{input:t("text_game_number"),value:String(number),buttons:['OK',t("text_cancel")]});
   if(answer!==null&&String(answer).trim())reset(Number(String(answer).trim()));
  }
  menubar(w,{
-  [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:t('Játék száma…'),shortcut:'F3',action:pick},{label:t('Ugyanez újra'),action:()=>reset(number)},null,{label:t('Visszavonás'),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t('Automatikus gyűjtés'),action:()=>{collect(true);render();}},null,{label:t('Statisztika…'),action:()=>{const s=stats();XP.dialog(t('FreeCell – Statisztika'),t('Lejátszott játékok: {played}\nMegnyert játékok: {won}\nNyerési arány: {rate}%\nJelenlegi sorozat: {streak}\nLeghosszabb sorozat: {best}',{played:s.played,won:s.won,rate:s.played?Math.round(s.won/s.played*100):0,streak:s.streak,best:s.best}));}},null,{label:t('Kilépés'),action:()=>w.close()}],
-  [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog('FreeCell',t('Cél: mind az 52 lapot ásztól királyig a jobb felső gyűjtőhelyekre rakni.\n\nAz oszlopokban csökkenő sorrendben, váltakozó színnel építkezhetsz.\nA bal felső négy szabad helyre laponként egy lap tehető le.\nÜres oszlopba bármelyik lap kerülhet.\n\nEgyszerre annyi lapot mozgathatsz, amennyi a szabad helyekre és üres oszlopokba beférne: (szabad helyek + 1) × 2 ^ üres oszlopok.\n\nKattints a lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre rakás.\nMinden leosztás számozott, és a 617-es játék mindig ugyanaz.'))}]
+  [t("text_game")]:()=>[{label:t("text_new_game"),shortcut:'F2',action:()=>reset(1+Math.floor(Math.random()*32000))},{label:t("text_select_game"),shortcut:'F3',action:pick},{label:t("text_restart_this_game"),action:()=>reset(number)},null,{label:t("text_undo"),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},{label:t("text_auto_collect"),action:()=>{collect(true);render();}},null,{label:t("text_statistics"),action:()=>{const s=stats();XP.dialog(t("text_freecell_statistics"),t("text_games_played_played_games_won_won_winning_percentage_rate_current_stre_eecc9d44",{played:s.played,won:s.won,rate:s.played?Math.round(s.won/s.played*100):0,streak:s.streak,best:s.best}));}},null,{label:t("text_exit"),action:()=>w.close()}],
+  [t("text_help")]:[{label:t("text_game_rules"),action:()=>XP.dialog('FreeCell',t("text_the_goal_is_to_move_all_52_cards_ace_to_king_to_the_four_home_cells_at_16020498"))}]
  });
  const body=document.createElement('div');body.className='solitaire-body freecell-body';w.body.append(body);
- const bar=status(w,t('Lépések: 0'),'Szabad helyek: 4');
+ const bar=status(w,t("text_moves_0"),'Szabad helyek: 4');
  function stack(){
   if(!selected)return[];
   if(selected.kind==='cell')return cells[selected.index]?[cells[selected.index]]:[];
@@ -94,7 +94,7 @@ register('freecell',()=>{
    saveMove();detach();pile.push(...cards);
   }
   moves++;selected=null;collect(false);render();
-  if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),t('Kiraktad a(z) {n}. játékot {moves} lépésből!',{n:number,moves}));}
+  if(foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t("text_congratulations"),t("text_you_solved_game_n_in_moves_moves",{n:number,moves}));}
   return true;
  }
  function collect(all){
@@ -110,12 +110,12 @@ register('freecell',()=>{
     foundations[c.suit].push(c);changed=true;break;
    }
   }
-  if(all&&foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t('Gratulálunk!'),t('Kiraktad a(z) {n}. játékot {moves} lépésből!',{n:number,moves}));}
+  if(all&&foundations.every(p=>p.length===13)){record(true);XP.sound('notify');notify(t("text_congratulations"),t("text_you_solved_game_n_in_moves_moves",{n:number,moves}));}
  }
  function render(){
   const chosen=(kind,a,b)=>selected?.kind===kind&&(kind==='column'?selected.col===a:selected.index===a);
-  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${esc(t('{n}. szabad hely',{n:i+1}))}"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${esc(t('{suit} gyűjtőhely',{suit:SUITS[i]}))}">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t('{n}. oszlop',{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t('Kattints egy lapra, majd a célhelyre. Dupla kattintás: gyűjtőhelyre.'))}</div>`;
-  $('span',bar).textContent=t('Lépések: ')+moves;
+  body.innerHTML=`<div class="card-top">${cells.map((c,i)=>c?cardHtml(c,`data-cell="${i}"`,chosen('cell',i)):`<button class="card-slot" data-cell="${i}" aria-label="${esc(t("text_free_cell_n",{n:i+1}))}"></button>`).join('')}<span class="spacer"></span>${foundations.map((pile,i)=>pile.length?cardHtml(pile.at(-1),`data-foundation="${i}"`,chosen('foundation',i)):`<button class="card-slot foundation" data-foundation="${i}" aria-label="${esc(t("text_suit_foundation",{suit:SUITS[i]}))}">${SUITS[i]}</button>`).join('')}</div><div class="solitaire-columns">${columns.map((col,c)=>`<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t("text_column_n",{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.kind==='column'&&selected.col===c&&i>=selected.index,`--card-i:${i}`)).join('')}</div>`).join('')}</div><div class="solitaire-help">${esc(t("text_click_a_card_then_its_destination_double_click_sends_it_home"))}</div>`;
+  $('span',bar).textContent=t("text_moves")+moves;
   $('.status-part',bar).textContent=`Szabad helyek: ${freeCount()} · Egyszerre ${rules.freecellCapacity(freeCount(),emptyCount(),false)} lap`;
   const max=Math.max(1,...columns.map(c=>c.length));
   $$('.card-column',body).forEach(el=>el.style.minHeight=Math.max(240,max*22+65)+'px');
@@ -171,24 +171,24 @@ rules.spiderComplete=column=>{
 
 register('spider',()=>{
  if(XP.singleton('spider'))return;
- const w=createWindow({title:t('Pókpasziánsz'),icon:'spider',app:'spider',width:700,height:585,minWidth:440,minHeight:380});
+ const w=createWindow({title:t("text_spider_solitaire"),icon:'spider',app:'spider',width:700,height:585,minWidth:440,minHeight:380});
  let columns=[],stock=[],done=0,selected=null,score=500,moves=0,suitCount=1,snapshots=[];
  function reset(count=suitCount){
   suitCount=count;const deal=rules.spiderDeal(count);
   columns=deal.columns;stock=deal.stock;done=0;selected=null;score=500;moves=0;snapshots=[];
-  w.setTitle(t('Pókpasziánsz – {count} szín',{count}));render();
+  w.setTitle(t("text_spider_solitaire_count_suit_s",{count}));render();
  }
  function saveMove(){snapshots.push(JSON.stringify({columns,stock,done,score,moves}));if(snapshots.length>200)snapshots.shift();}
  function undo(){if(!snapshots.length)return;({columns,stock,done,score,moves}=JSON.parse(snapshots.pop()));selected=null;render();}
  menubar(w,{
-  [t('Játék')]:()=>[{label:t('Új játék'),shortcut:'F2',action:()=>reset()},null,{label:t('Egy szín'),checked:suitCount===1,action:()=>reset(1)},{label:t('Két szín'),checked:suitCount===2,action:()=>reset(2)},{label:t('Négy szín'),checked:suitCount===4,action:()=>reset(4)},null,{label:t('Osztás a pakliból'),disabled:!stock.length,action:deal},{label:t('Visszavonás'),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},null,{label:t('Kilépés'),action:()=>w.close()}],
-  [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog(t('Pókpasziánsz'),t('Cél: nyolc teljes, királytól ászig tartó azonos színű sort összeállítani. Az elkészült sorok lekerülnek az asztalról.\n\nAz oszlopokra színtől függetlenül rakhatsz csökkenő sorrendben, de csak azonos színű, folyamatos sorozatot mozgathatsz együtt.\nÜres oszlopba bármi kerülhet.\n\nA jobb alsó pakliból egyszerre mind a tíz oszlop kap egy lapot – ehhez egyetlen oszlop sem lehet üres.\n\nA pontszám 500-ról indul, minden lépés egy pontba kerül, egy kész sor 100 pontot ér.'))}]
+  [t("text_game")]:()=>[{label:t("text_new_game"),shortcut:'F2',action:()=>reset()},null,{label:t("text_one_suit"),checked:suitCount===1,action:()=>reset(1)},{label:t("text_two_suits"),checked:suitCount===2,action:()=>reset(2)},{label:t("text_four_suits"),checked:suitCount===4,action:()=>reset(4)},null,{label:t("text_deal_from_the_stock"),disabled:!stock.length,action:deal},{label:t("text_undo"),shortcut:'Ctrl+Z',disabled:!snapshots.length,action:undo},null,{label:t("text_exit"),action:()=>w.close()}],
+  [t("text_help")]:[{label:t("text_game_rules"),action:()=>XP.dialog(t("text_spider_solitaire"),t("text_the_goal_is_eight_complete_runs_from_king_to_ace_in_a_single_suit_a_fi_0b383d06"))}]
  });
  const body=document.createElement('div');body.className='solitaire-body spider-body';w.body.append(body);
- const bar=status(w,t('Pontszám: 500'),t('Kész sorok: 0 / 8'));
+ const bar=status(w,t("text_score_500"),t("text_runs_finished_0_8"));
  function deal(){
   if(!stock.length)return;
-  if(columns.some(c=>!c.length)){XP.sound('error');XP.dialog(t('Pókpasziánsz'),t('Nem oszthatsz, amíg üres oszlop van a táblán.'),{icon:'error'});return;}
+  if(columns.some(c=>!c.length)){XP.sound('error');XP.dialog(t("text_spider_solitaire"),t("text_you_cannot_deal_while_a_column_is_empty"),{icon:'error'});return;}
   saveMove();columns.forEach(col=>{const c=stock.pop();c.face=true;col.push(c);});moves++;score--;selected=null;sweep();render();
  }
  function sweep(){
@@ -198,7 +198,7 @@ register('spider',()=>{
    col.splice(at);done++;score+=100;
    const top=col.at(-1);if(top&&!top.face)top.face=true;
   });
-  if(done===8){XP.sound('notify');notify(t('Gratulálunk!'),t('Kiraktad a pókpasziánszt {count} színnel! Pontszám: {score}',{count:suitCount,score}));}
+  if(done===8){XP.sound('notify');notify(t("text_congratulations"),t("text_you_solved_spider_solitaire_with_count_suit_s_score_score",{count:suitCount,score}));}
  }
  function moveTo(target){
   if(!selected||selected.col===target)return false;
@@ -212,12 +212,12 @@ register('spider',()=>{
  }
  function render(){
   let offsets;
-  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t('Nyolc kész sor kell a győzelemhez.'))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="${esc(t('Osztás a pakliból, {count} osztás maradt',{count:Math.ceil(stock.length/10)}))}"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t('Elfogyott a pakli'))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
+  body.innerHTML=`<div class="spider-head"><div class="spider-done">${Array.from({length:done},()=>'<span class="done-pile"></span>').join('')||`<span class="spider-hint">${esc(t("text_eight_finished_runs_win_the_game"))}</span>`}</div><div class="spider-stock">${stock.length?`<button class="playing-card back" data-deal aria-label="${esc(t("text_deal_from_the_stock_count_deals_left",{count:Math.ceil(stock.length/10)}))}"></button><span>${Math.ceil(stock.length/10)}×</span>`:`<span class="spider-hint">${esc(t("text_the_stock_is_empty"))}</span>`}</div></div><div class="solitaire-columns">${columns.map((col,c)=>{
    let y=0;offsets=col.map(card=>{const at=y;y+=card.face?20:8;return at;});
-   return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t('{n}. oszlop',{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
+   return `<div class="card-column" data-column="${c}"><button class="card-slot" data-empty="${c}" aria-label="${esc(t("text_column_n",{n:c+1}))}"></button>${col.map((card,i)=>cardHtml(card,`data-col="${c}" data-index="${i}"`,selected?.col===c&&i>=selected.index,`--card-y:${offsets[i]}`)).join('')}</div>`;
   }).join('')}</div>`;
-  $('span',bar).textContent=t('Pontszám: ')+score;
-  $('.status-part',bar).textContent=t('Kész sorok: {done} / 8',{done});
+  $('span',bar).textContent=t("text_score")+score;
+  $('.status-part',bar).textContent=t("text_completed_runs_done_of_8",{done});
   const max=Math.max(1,...columns.map(col=>col.reduce((y,card)=>y+(card.face?20:8),0)));
   $$('.card-column',body).forEach(el=>el.style.minHeight=Math.max(230,max+60)+'px');
  }
@@ -298,11 +298,11 @@ rules.heartsChoice=(hand,trick,info={})=>{
 
 register('hearts',()=>{
  if(XP.singleton('hearts'))return;
- const w=createWindow({title:t('Hearts'),icon:'hearts',app:'hearts',width:700,height:585,minWidth:440,minHeight:400});
- const names=[state.user||t('Te'),t('Nyugat'),t('Észak'),t('Kelet')];
+ const w=createWindow({title:t("text_hearts"),icon:'hearts',app:'hearts',width:700,height:585,minWidth:440,minHeight:400});
+ const names=[state.user||t("text_you"),t("text_west"),t("text_north"),t("text_east")];
  const seats=['south','west','north','east'];
  let hands=[],scores=[0,0,0,0],taken=[0,0,0,0],trick=[],turn=0,leader=0,tricks=0,broken=false,phase='pass',passIndex=0,chosen=[],queenGone=false,over=false;
- const directions=[{label:'balra',shift:1},{label:'jobbra',shift:3},{label:t('szemközt'),shift:2},{label:t('nincs csere'),shift:0}];
+ const directions=[{label:'balra',shift:1},{label:'jobbra',shift:3},{label:t("text_across"),shift:2},{label:t("text_no_pass"),shift:0}];
  const timers=new Set();
  const later=(fn,ms)=>{const id=setTimeout(()=>{timers.delete(id);fn();},ms);timers.add(id);return id;};
  w.cleanup.push(()=>{timers.forEach(clearTimeout);timers.clear();});
@@ -345,8 +345,8 @@ register('hearts',()=>{
   const lines=names.map((n,i)=>`${n}: +${round[i]} → ${scores[i]}`).join('\n');
   phase='over';render();
   const done=Math.max(...scores)>=100;
-  const title=done?t('Hearts – vége'):t('Hearts – kör vége');
-  const message=(moon>=0?t('{name} bevitte az összes lapot – „lövés a Holdra”!\n\n',{name:names[moon]}):'')+lines+(done?t('\n\nGyőztes: {name}',{name:names[scores.indexOf(Math.min(...scores))]}):'');
+  const title=done?t("text_hearts_game_over"):t("text_hearts_end_of_hand");
+  const message=(moon>=0?t("text_name_took_every_card_shooting_the_moon",{name:names[moon]}):'')+lines+(done?t("text_winner_name",{name:names[scores.indexOf(Math.min(...scores))]}):'');
   XP.sound(done?'notify':'ding');
   XP.dialog(title,message).then(()=>{
    if(done){over=true;render();return;}
@@ -364,11 +364,11 @@ register('hearts',()=>{
   },650);
  }
  menubar(w,{
-  [t('Játék')]:()=>[{label:t('Új játszma'),shortcut:'F2',action:()=>reset(true)},null,{label:t('Pontállás…'),action:()=>XP.dialog(t('Hearts – Pontállás'),names.map((n,i)=>`${n}: ${scores[i]} pont`).join('\n')+t('\n\nA játszma 100 pontnál ér véget, a legkevesebb pont nyer.'))},null,{label:t('Kilépés'),action:()=>w.close()}],
-  [t('Súgó')]:[{label:t('Játékszabályok'),action:()=>XP.dialog('Hearts',t('Négy játékos, 13-13 lap. Minden kör elején három lapot adsz át (balra, jobbra, szemközt, majd csere nélkül).\n\nA treff 2 kezd. Színre színt kell tenni; ha nem tudsz, bármit dobhatsz.\nAz első ütésbe nem tehető kőr és pikk dáma.\nKőrrel csak akkor nyithatsz, ha már esett kőr, vagy csak kőröd maradt.\n\nMinden kőr 1 pont, a pikk dáma 13. A pont rossz: a legkevesebb nyer.\nHa valaki mind a 26 pontot beviszi („lövés a Holdra”), a másik három kap 26-ot.\n\nA játszma akkor ér véget, ha valaki eléri a 100 pontot.'))}]
+  [t("text_game")]:()=>[{label:t("text_new_game_21f91607"),shortcut:'F2',action:()=>reset(true)},null,{label:t("text_score_c23c6e9e"),action:()=>XP.dialog(t("text_hearts_score"),names.map((n,i)=>`${n}: ${scores[i]} pont`).join('\n')+t("text_the_game_ends_at_100_points_the_lowest_score_wins"))},null,{label:t("text_exit"),action:()=>w.close()}],
+  [t("text_help")]:[{label:t("text_game_rules"),action:()=>XP.dialog('Hearts',t("text_four_players_thirteen_cards_each_at_the_start_of_a_hand_you_pass_three_8bdd53e5"))}]
  });
  const body=document.createElement('div');body.className='solitaire-body hearts-body';w.body.append(body);
- const bar=status(w,t('Pontállás'),'');
+ const bar=status(w,t("text_score_54d6249d"),'');
  function seatHtml(p){
   const active=phase==='play'&&turn===p&&trick.length<4;
   return `<div class="hearts-seat seat-${seats[p]} ${active?'active':''}"><b>${names[p]}</b><span>${scores[p]} pont · ${hands[p].length} lap</span><div class="hearts-backs">${Array.from({length:Math.min(hands[p].length,13)},(_,i)=>`<i style="--back-i:${i}"></i>`).join('')}</div></div>`;
@@ -378,17 +378,17 @@ register('hearts',()=>{
   const playable=new Set(legal.map(key));
   const table=trick.map(t=>`<div class="hearts-play play-${seats[t.player]}">${cardHtml(t.card)}</div>`).join('');
   const centre=phase==='pass'
-   ?`<div class="hearts-centre"><p>${esc(t('Válassz ki három lapot, és add át {direction}.',{direction:directions[passIndex%4].label}))}</p><button class="xp-button primary" data-pass ${chosen.length===3?'':'disabled'}>${esc(t('Átadás ({count}/3)',{count:chosen.length}))}</button></div>`
-   :over?`<div class="hearts-centre"><p>${esc(t('A játszma véget ért. Új játszma: F2.'))}</p></div>`
+   ?`<div class="hearts-centre"><p>${esc(t("text_choose_three_cards_and_pass_them_direction",{direction:directions[passIndex%4].label}))}</p><button class="xp-button primary" data-pass ${chosen.length===3?'':'disabled'}>${esc(t("text_pass_count_3",{count:chosen.length}))}</button></div>`
+   :over?`<div class="hearts-centre"><p>${esc(t("text_the_game_is_over_new_game_f2"))}</p></div>`
    :`<div class="hearts-table">${table}</div>`;
-  body.innerHTML=`<div class="hearts-top">${seatHtml(2)}</div><div class="hearts-middle">${seatHtml(1)}${centre}${seatHtml(3)}</div><div class="hearts-hand" aria-label="${esc(t('A te lapjaid'))}">${hands[0].map((c,i)=>cardHtml(c,`data-card="${key(c)}"`,chosen.some(x=>key(x)===key(c)),`--card-i:${i}`)+'').join('')}</div>`;
+  body.innerHTML=`<div class="hearts-top">${seatHtml(2)}</div><div class="hearts-middle">${seatHtml(1)}${centre}${seatHtml(3)}</div><div class="hearts-hand" aria-label="${esc(t("text_your_cards"))}">${hands[0].map((c,i)=>cardHtml(c,`data-card="${key(c)}"`,chosen.some(x=>key(x)===key(c)),`--card-i:${i}`)+'').join('')}</div>`;
   $$('.hearts-hand .playing-card',body).forEach((el,i)=>{
    const c=hands[0][i];
    el.classList.toggle('dimmed',phase==='play'&&!over&&turn===0&&trick.length<4&&!playable.has(key(c)));
   });
   $('span',bar).textContent=names.map((n,i)=>`${n}: ${scores[i]}`).join(' · ');
   $('.status-part',bar)?.remove();
-  const hint=phase==='pass'?t('Add át három lapot.'):over?t('Vége.'):turn===0?t('Te következel.'):`${names[turn]} gondolkodik…`;
+  const hint=phase==='pass'?t("text_pass_three_cards"):over?t("text_game_over"):turn===0?t("text_your_turn"):`${names[turn]} gondolkodik…`;
   bar.insertAdjacentHTML('beforeend',`<span class="status-part">${hint}</span>`);
  }
  body.onclick=e=>{

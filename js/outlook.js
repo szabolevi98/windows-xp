@@ -1,25 +1,25 @@
 'use strict';
 (() => {
   const {$,$$,esc,icon,state,persist,notify,t}=XP;
-  const FOLDERS=[['inbox',t('Beérkezett üzenetek')],['outbox',t('Postázandó üzenetek')],['sent',t('Elküldött elemek')],['deleted',t('Törölt elemek')],['drafts',t('Piszkozatok')]];
-  const CONTACTS=[[t('Kovács Anna'),'anna@netkapu.hu'],[t('Nagy Péter'),'peter.nagy@freemail.hu'],[t('PC Bazár ügyfélszolgálat'),'info@pcbazar.hu'],[t('Netklub fórum'),'forum@netklub.hu']];
+  const FOLDERS=[['inbox',t("text_inbox")],['outbox',t("text_outbox")],['sent',t("text_sent_items")],['deleted',t("text_deleted_items")],['drafts',t("text_drafts")]];
+  const CONTACTS=[[t("text_anna_kovacs"),'anna@netkapu.hu'],[t("text_peter_nagy"),'peter.nagy@freemail.hu'],[t("text_pc_bazar_customer_service"),'info@pcbazar.hu'],[t("text_netklub_forum"),'forum@netklub.hu']];
   const stamp=date=>`${date.getFullYear()}.%m.%d. %H:%M`.replace('%m',String(date.getMonth()+1).padStart(2,'0')).replace('%d',String(date.getDate()).padStart(2,'0')).replace('%H',String(date.getHours()).padStart(2,'0')).replace('%M',String(date.getMinutes()).padStart(2,'0'));
 
   // The delivered post is fixed; only what the user did with it is remembered.
   const POST=[
-    {id:'welcome',from:'Outlook Express',address:'support@netkapu.hu',subject:t('Üdvözöljük az Outlook Expressben!'),ago:184,
-     body:t('Köszönjük, hogy az Outlook Expresst választotta.\n\nEbben a mappában találja a beérkező üzeneteit. Új levelet az eszköztár „Új levél” gombjával írhat, a válaszhoz jelölje ki az üzenetet, és kattintson a „Válasz” gombra.\n\nA fiókja a netkapu.hu levelezőkiszolgálóján van; a Küldés/fogadás gomb minden indításkor és félóránként ellenőrzi a postaládát.')},
-    {id:'netkapu',from:t('Netkapu hírlevél'),address:'hirlevel@netkapu.hu',subject:t('Heti ajánló: mit érdemes megnézni a hálón?'),ago:96,
-     body:t('Kedves Előfizetőnk!\n\nEzen a héten ajánljuk figyelmébe a PC Magazin otthoni gépekről szóló összeállítását, valamint a Netklub fórum új, hardveres rovatát.\n\nA hírlevélről a lap alján iratkozhat le.\n\nÜdvözlettel:\na Netkapu szerkesztősége')},
-    {id:'pcbazar',from:t('PC Bazár'),address:'info@pcbazar.hu',subject:t('Megrendelése összeállítva – 129 900 Ft'),ago:51,
-     body:t('Tisztelt Vásárlónk!\n\nAz Otthoni PC 2400+ konfigurációt összeállítottuk. A gép 2,4 GHz-es processzorral, 512 MB memóriával és 80 GB-os merevlemezzel kerül átadásra.\n\nÁtvétel: személyesen az üzletben, munkanapokon 9 és 18 óra között.\n\nKöszönjük, hogy minket választott!')},
-    {id:'anna',from:t('Kovács Anna'),address:'anna@netkapu.hu',subject:t('Re: hétvégi programok'),ago:19,
-     body:t('Szia!\n\nA szombat nekem is jó. Ha marad időnk, megnézhetnénk azt a fórumos gépépítős leírást is, amit küldtél.\n\nAddig is jó hétvégét!\nAnna')},
-    {id:'forum',from:t('Netklub fórum'),address:'forum@netklub.hu',subject:t('Válasz érkezett a hozzászólásodra'),ago:6,
-     body:t('Valaki válaszolt abban a témában, amelyet figyelsz:\n\n„Melyik hangkártyát érdemes venni?”\n\nA teljes beszélgetést a fórumon olvashatod el.')}
+    {id:'welcome',from:'Outlook Express',address:'support@netkapu.hu',subject:t("text_welcome_to_outlook_express"),ago:184,
+     body:t("text_thank_you_for_choosing_outlook_express_this_folder_holds_the_messages_77ffd1d9")},
+    {id:'netkapu',from:t("text_netkapu_newsletter"),address:'hirlevel@netkapu.hu',subject:t("text_this_week_s_picks_what_to_see_on_the_net"),ago:96,
+     body:t("text_dear_subscriber_this_week_we_recommend_the_pc_magazine_round_up_on_hom_a70acfe5")},
+    {id:'pcbazar',from:t("text_pc_bazar"),address:'info@pcbazar.hu',subject:t("text_your_order_is_ready_huf_129_900"),ago:51,
+     body:t("text_dear_customer_your_home_pc_2400_configuration_is_ready_the_machine_com_d0426efd")},
+    {id:'anna',from:t("text_anna_kovacs"),address:'anna@netkapu.hu',subject:t("text_re_plans_for_the_weekend"),ago:19,
+     body:t("text_hi_saturday_works_for_me_too_if_there_is_time_left_we_could_look_at_th_1f3a065f")},
+    {id:'forum',from:t("text_netklub_forum"),address:'forum@netklub.hu',subject:t("text_your_post_has_an_answer"),ago:6,
+     body:t("text_somebody_replied_in_a_thread_you_are_watching_which_sound_card_is_wort_0d9e1f8f")}
   ];
-  const NEW_POST={id:'later',from:t('Nagy Péter'),address:'peter.nagy@freemail.hu',subject:t('Megjöttek a képek'),ago:0,
-    body:t('Szia!\n\nFeltöltöttem a nyári képeket, a linket a fórumos üzenetben találod. Ha lassú a letöltés, éjjel próbáld meg.\n\nÜdv:\nPéter')};
+  const NEW_POST={id:'later',from:t("text_peter_nagy"),address:'peter.nagy@freemail.hu',subject:t("text_the_pictures_are_up"),ago:0,
+    body:t("text_hi_i_have_uploaded_the_summer_pictures_the_link_is_in_the_forum_messag_2f941a9a")};
 
   const store=()=>{
     if(!state.outlook||typeof state.outlook!=='object')state.outlook={read:[],moved:{},own:[],fetched:false};
@@ -46,7 +46,7 @@
 
   XP.register('outlook',()=>{
     if(XP.singleton('outlook'))return;
-    const w=XP.createWindow({title:t('Beérkezett üzenetek – Outlook Express'),icon:'mail',app:'outlook',className:'outlook-window',width:780,height:560,minWidth:470,minHeight:360});
+    const w=XP.createWindow({title:t("text_inbox_outlook_express"),icon:'mail',app:'outlook',className:'outlook-window',width:780,height:560,minWidth:470,minHeight:360});
     const box=store();
     let folder='inbox',selected=null;
     const delivered=()=>{
@@ -61,22 +61,22 @@
     const save=()=>{persist();document.dispatchEvent(new CustomEvent('xp-mail-changed'));};
 
     XP.menubar(w,{
-      [t('Fájl')]:()=>[{label:t('Új üzenet'),action:()=>compose()},{label:t('Mappa megnyitása'),disabled:true},null,{label:t('Kilépés'),action:()=>w.close()}],
-      [t('Szerkesztés')]:()=>[{label:t('Törlés'),disabled:!selected,action:remove},{label:t('Megjelölés olvasottként'),disabled:!selected,action:()=>{markRead(selected);render();}},{label:t('Az összes megjelölése olvasottként'),action:()=>{delivered().forEach(m=>markRead(m.id));render();}}],
-      [t('Nézet')]:()=>FOLDERS.map(([key,label])=>({label,checked:folder===key,action:()=>{folder=key;selected=null;render();}})),
-      [t('Eszközök')]:[{label:t('Küldés és fogadás'),action:receive},{label:t('Címjegyzék'),action:()=>XP.dialog(t('Címjegyzék'),CONTACTS.map(([name,address])=>`${name}\n${address}`).join('\n\n'))},{label:t('Fiókok'),action:()=>XP.dialog(t('Internetfiókok'),t('Levelezés\n\nFiók: netkapu.hu\nKiszolgáló: mail.netkapu.hu (POP3)\nFelhasználó: ')+(state.user||t('Adminisztrátor')).toLowerCase().replace(/\s+/g,'.')+t('\n\nA kimenő levelekhez az smtp.netkapu.hu kiszolgáló tartozik.'))}],
-      [t('Üzenet')]:()=>[{label:t('Új üzenet'),action:()=>compose()},{label:t('Válasz a feladónak'),disabled:!selected,action:()=>{const m=current();if(m)compose({to:m.address,subject:/^re:/i.test(m.subject)?m.subject:`Re: ${m.subject}`,quote:m});}},{label:t('Továbbítás'),disabled:!selected,action:()=>{const m=current();if(m)compose({subject:`Fw: ${m.subject}`,quote:m});}}],
-      [t('Súgó')]:[{label:t('Az Outlook Express névjegye'),action:()=>XP.dialog('Outlook Express',t('Microsoft Outlook Express 6\n\nVerzió: 6.00.2900.5512\n\nA levelei és a névjegyei ezen a számítógépen maradnak.'))}]
+      [t("text_file")]:()=>[{label:t("text_new_message"),action:()=>compose()},{label:t("text_open_folder"),disabled:true},null,{label:t("text_exit"),action:()=>w.close()}],
+      [t("text_edit")]:()=>[{label:t("text_delete"),disabled:!selected,action:remove},{label:t("text_mark_as_read"),disabled:!selected,action:()=>{markRead(selected);render();}},{label:t("text_mark_all_as_read"),action:()=>{delivered().forEach(m=>markRead(m.id));render();}}],
+      [t("text_view")]:()=>FOLDERS.map(([key,label])=>({label,checked:folder===key,action:()=>{folder=key;selected=null;render();}})),
+      [t("text_tools")]:[{label:t("text_send_and_receive"),action:receive},{label:t("text_address_book"),action:()=>XP.dialog(t("text_address_book"),CONTACTS.map(([name,address])=>`${name}\n${address}`).join('\n\n'))},{label:t("text_accounts"),action:()=>XP.dialog(t("text_internet_accounts"),t("text_mail_account_netkapu_hu_server_mail_netkapu_hu_pop3_user")+(state.user||t("text_administrator")).toLowerCase().replace(/\s+/g,'.')+t("text_outgoing_mail_goes_through_smtp_netkapu_hu"))}],
+      [t("text_message")]:()=>[{label:t("text_new_message"),action:()=>compose()},{label:t("text_reply_to_the_sender"),disabled:!selected,action:()=>{const m=current();if(m)compose({to:m.address,subject:/^re:/i.test(m.subject)?m.subject:`Re: ${m.subject}`,quote:m});}},{label:t("text_forward_737edd41"),disabled:!selected,action:()=>{const m=current();if(m)compose({subject:`Fw: ${m.subject}`,quote:m});}}],
+      [t("text_help")]:[{label:t("text_about_outlook_express"),action:()=>XP.dialog('Outlook Express',t("text_microsoft_outlook_express_6_version_6_00_2900_5512_your_mail_and_your_29719d44"))}]
     });
 
     const toolbar=document.createElement('div');toolbar.className='toolbar';
-    toolbar.innerHTML=`<button data-mail="new">${icon('mail')}<span class="toolbar-label">${esc(t('Új levél'))}</span></button><span class="toolbar-separator"></span><button data-mail="reply">${icon('back')}<span class="toolbar-label">${esc(t('Válasz'))}</span></button><button data-mail="forward">${icon('forward')}<span class="toolbar-label">${esc(t('Továbbítás'))}</span></button><span class="toolbar-separator"></span><button data-mail="delete">${icon('recycle')}<span class="toolbar-label">${esc(t('Törlés'))}</span></button><button data-mail="receive">${icon('refresh')}<span class="toolbar-label">${esc(t('Küldés/fogadás'))}</span></button><button data-mail="addresses">${icon('addressbook')}<span class="toolbar-label">${esc(t('Címek'))}</span></button>`;
+    toolbar.innerHTML=`<button data-mail="new">${icon('mail')}<span class="toolbar-label">${esc(t("text_new_mail"))}</span></button><span class="toolbar-separator"></span><button data-mail="reply">${icon('back')}<span class="toolbar-label">${esc(t("text_reply"))}</span></button><button data-mail="forward">${icon('forward')}<span class="toolbar-label">${esc(t("text_forward_737edd41"))}</span></button><span class="toolbar-separator"></span><button data-mail="delete">${icon('recycle')}<span class="toolbar-label">${esc(t("text_delete"))}</span></button><button data-mail="receive">${icon('refresh')}<span class="toolbar-label">${esc(t("text_send_recv"))}</span></button><button data-mail="addresses">${icon('addressbook')}<span class="toolbar-label">${esc(t("text_addresses"))}</span></button>`;
     w.body.append(toolbar);
 
     const shell=document.createElement('div');shell.className='outlook-shell';
-    shell.innerHTML=`<aside class="oe-side"><div class="oe-tree"></div><div class="oe-contacts"><h3>${esc(t('Névjegyek'))}</h3><ul></ul></div></aside><div class="oe-main"><div class="oe-list"></div><div class="oe-preview"></div></div>`;
+    shell.innerHTML=`<aside class="oe-side"><div class="oe-tree"></div><div class="oe-contacts"><h3>${esc(t("text_contacts"))}</h3><ul></ul></div></aside><div class="oe-main"><div class="oe-list"></div><div class="oe-preview"></div></div>`;
     w.body.append(shell);
-    const bar=XP.status(w,t('0 üzenet'),t('Kapcsolódva'));
+    const bar=XP.status(w,t("text_0_messages"),t("text_connected"));
 
     function markRead(id){if(!box.read.includes(id)){box.read.push(id);save();}}
     function remove(){
@@ -88,25 +88,25 @@
     function receive(){
       if(!box.fetched){
         box.fetched=true;save();render();
-        XP.sound('notify');notify('Outlook Express',t('Egy új üzenet érkezett.'));
+        XP.sound('notify');notify('Outlook Express',t("text_one_new_message_has_arrived"));
         return;
       }
-      XP.dialog('Outlook Express',t('Nem érkezett új üzenet.\n\nUtolsó ellenőrzés: most.'));
+      XP.dialog('Outlook Express',t("text_no_new_messages_last_checked_just_now"));
     }
     function compose({to='',subject='',quote=null}={}){
-      const c=XP.createWindow({title:t('Új üzenet'),icon:'mail',app:'outlook-compose',className:'outlook-window',width:560,height:430,minWidth:380,minHeight:280});
-      const quoted=quote?t('\n\n\n----- Eredeti üzenet -----\nFeladó: {from} <{address}>\nTárgy: {subject}\n\n{body}',{from:quote.from,address:quote.address,subject:quote.subject,body:quote.body}):'';
+      const c=XP.createWindow({title:t("text_new_message"),icon:'mail',app:'outlook-compose',className:'outlook-window',width:560,height:430,minWidth:380,minHeight:280});
+      const quoted=quote?t("text_original_message_from_from_address_subject_subject_body",{from:quote.from,address:quote.address,subject:quote.subject,body:quote.body}):'';
       const form=document.createElement('div');form.className='oe-compose';
-      form.innerHTML=`<label><span>${esc(t('Címzett:'))}</span><input type="text" name="to" value="${esc(to)}" placeholder="${esc(t('valaki@netkapu.hu'))}"></label><label><span>${esc(t('Tárgy:'))}</span><input type="text" name="subject" value="${esc(subject)}"></label><textarea name="body" aria-label="${esc(t('Üzenet szövege'))}">${esc(quoted)}</textarea><div class="button-row"><button class="xp-button primary" data-send>${esc(t('Küldés'))}</button><button class="xp-button" data-draft>${esc(t('Mentés piszkozatként'))}</button><button class="xp-button" data-cancel>${esc(t('Mégse'))}</button></div>`;
+      form.innerHTML=`<label><span>${esc(t("text_to"))}</span><input type="text" name="to" value="${esc(to)}" placeholder="${esc(t("text_someone_netkapu_hu"))}"></label><label><span>${esc(t("text_subject_b46fe40f"))}</span><input type="text" name="subject" value="${esc(subject)}"></label><textarea name="body" aria-label="${esc(t("text_message_body"))}">${esc(quoted)}</textarea><div class="button-row"><button class="xp-button primary" data-send>${esc(t("text_send_to"))}</button><button class="xp-button" data-draft>${esc(t("text_save_as_draft"))}</button><button class="xp-button" data-cancel>${esc(t("text_cancel"))}</button></div>`;
       c.body.append(form);
       const read=()=>({to:$('[name=to]',form).value.trim(),subject:$('[name=subject]',form).value.trim(),body:$('[name=body]',form).value});
       const put=(target)=>{
         const draft=read();
-        if(target==='sent'&&!draft.to){XP.sound('error');XP.dialog('Outlook Express',t('Adjon meg legalább egy címzettet.'),{icon:'error'});return;}
-        box.own.push({id:`own-${Date.now().toString(36)}`,folder:target,from:state.user||t('Adminisztrátor'),address:draft.to||t('(nincs címzett)'),
-          subject:draft.subject||t('(nincs tárgy)'),body:draft.body,at:Date.now()});
+        if(target==='sent'&&!draft.to){XP.sound('error');XP.dialog('Outlook Express',t("text_enter_at_least_one_recipient"),{icon:'error'});return;}
+        box.own.push({id:`own-${Date.now().toString(36)}`,folder:target,from:state.user||t("text_administrator"),address:draft.to||t("text_no_recipient"),
+          subject:draft.subject||t("text_no_subject"),body:draft.body,at:Date.now()});
         save();c.close();
-        if(target==='sent')notify('Outlook Express',t('Az üzenetet elküldtük.'));
+        if(target==='sent')notify('Outlook Express',t("text_the_message_has_been_sent"));
         folder=target;selected=null;render();
       };
       form.onclick=e=>{
@@ -120,26 +120,26 @@
 
     function render(){
       const all=delivered(),totals=counts(all,box.read,box.moved),list=messages();
-      const name=FOLDERS.find(([key])=>key===folder)?.[1]||t('Beérkezett üzenetek');
+      const name=FOLDERS.find(([key])=>key===folder)?.[1]||t("text_inbox");
       w.setTitle(`${name} – Outlook Express`);
-      $('.oe-tree',shell).innerHTML=`<h3>${esc(t('Helyi mappák'))}</h3><ul>${FOLDERS.map(([key,label])=>{
+      $('.oe-tree',shell).innerHTML=`<h3>${esc(t("text_local_folders"))}</h3><ul>${FOLDERS.map(([key,label])=>{
         const unread=totals[key]?.unread||0;
         return `<li><button class="${key===folder?'active':''}" data-folder="${key}">${icon(key==='deleted'?'recycle':'mail')}<span>${esc(label)}${unread?` (${unread})`:''}</span></button></li>`;
       }).join('')}</ul>`;
       $('.oe-contacts ul',shell).innerHTML=CONTACTS.map(([person,address])=>`<li><button data-contact="${esc(address)}">${esc(person)}</button></li>`).join('');
       $('.oe-list',shell).innerHTML=list.length
-        ?`<table><thead><tr><th>${esc(t('Feladó'))}</th><th>${esc(t('Tárgy'))}</th><th>${esc(t('Érkezett'))}</th></tr></thead><tbody>${list.map(m=>{
+        ?`<table><thead><tr><th>${esc(t("text_from"))}</th><th>${esc(t("text_subject"))}</th><th>${esc(t("text_received"))}</th></tr></thead><tbody>${list.map(m=>{
           const unread=!box.read.includes(m.id)&&folder!=='sent'&&folder!=='drafts';
           return `<tr class="${m.id===selected?'selected':''} ${unread?'unread':''}" data-message="${esc(m.id)}"><td>${esc(m.from)}</td><td>${esc(m.subject)}</td><td>${stamp(m.date)}</td></tr>`;
         }).join('')}</tbody></table>`
-        :`<p class="oe-empty">${esc(t('Ebben a mappában nincs üzenet.'))}</p>`;
+        :`<p class="oe-empty">${esc(t("text_there_are_no_messages_in_this_folder"))}</p>`;
       const message=current();
       $('.oe-preview',shell).innerHTML=message
-        ?`<header><b>${esc(message.subject)}</b><span>${esc(t('Feladó: {name} <{address}>',{name:message.from,address:message.address}))}</span><span>${esc(t('Dátum: {date}',{date:stamp(message.date)}))}</span></header><pre>${esc(message.body)}</pre>`
-        :`<p class="oe-empty">${esc(t('Jelöljön ki egy üzenetet az elolvasásához.'))}</p>`;
+        ?`<header><b>${esc(message.subject)}</b><span>${esc(t("text_from_name_address",{name:message.from,address:message.address}))}</span><span>${esc(t("text_date_date",{date:stamp(message.date)}))}</span></header><pre>${esc(message.body)}</pre>`
+        :`<p class="oe-empty">${esc(t("text_select_a_message_to_read_it"))}</p>`;
       const inbox=totals[folder]||{total:0,unread:0};
-      $('span',bar).textContent=t('{total} üzenet, {unread} olvasatlan',{total:inbox.total,unread:inbox.unread});
-      $('.status-part',bar).textContent=t('Kapcsolódva: mail.netkapu.hu');
+      $('span',bar).textContent=t("text_total_message_s_unread_unread",{total:inbox.total,unread:inbox.unread});
+      $('.status-part',bar).textContent=t("text_connected_mail_netkapu_hu");
     }
 
     shell.onclick=e=>{
@@ -158,7 +158,7 @@
       if(action==='forward'&&message)compose({subject:`Fw: ${message.subject}`,quote:message});
       if(action==='delete')remove();
       if(action==='receive')receive();
-      if(action==='addresses')XP.dialog(t('Címjegyzék'),CONTACTS.map(([person,address])=>`${person}\n${address}`).join('\n\n'));
+      if(action==='addresses')XP.dialog(t("text_address_book"),CONTACTS.map(([person,address])=>`${person}\n${address}`).join('\n\n'));
     };
     render();
     return w;

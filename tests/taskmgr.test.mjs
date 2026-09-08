@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {installHungarian,key} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
 
 function load(){
  const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},dispatchEvent(){},createElement:()=>({})},
   localStorage:{getItem:()=>null,setItem(){}},setTimeout:()=>0,clearTimeout(){},Audio:class{play(){return Promise.resolve();}},CustomEvent:class{},console,Math});
- vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
+ installHungarian(context);vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
  vm.runInContext(readFileSync(new URL('js/taskmgr.js',root),'utf8'),context);
  return context.XP;
 }
@@ -46,7 +47,7 @@ test('The Task Manager is a program of its own, reachable the way XP offered it'
  assert.match(source,/clearInterval\(tick\)/,'the live graphs stop when the window closes');
  // Every tab XP had.
  for(const tab of ['Alkalmazások','Folyamatok','Teljesítmény','Hálózat','Felhasználók'])
-  assert.ok(source.includes(tab),`the ${tab} tab is there`);
+  assert.ok(source.includes(key(tab)),`the ${tab} tab is there`);
  assert.match(readFileSync(new URL('js/start.js',root),'utf8'),/\['Feladatkezelő','taskmgr','taskmgr'\]/,'it is listed under All Programs');
  // Both the Run box and the command prompt know its executable name.
  assert.match(readFileSync(new URL('js/utilities.js',root),'utf8'),/taskmgr:'taskmgr'/);
