@@ -455,3 +455,40 @@ button:disabled,.start-item:disabled{cursor:var(--cursor-arrow),default}
 .accounts-nav button:disabled{opacity:.45}
 .accounts-nav img{width:20px;height:20px}
 .accounts-nav .nav-back span{font-weight:bold}
+
+/* An unlocked XP taskbar can be moved to any screen edge and resized from its inner edge. */
+body[data-taskbar-edge=bottom] #desktop{inset:0 0 var(--taskbar-size) 0}
+body[data-taskbar-edge=top] #desktop{inset:var(--taskbar-size) 0 0 0}
+body[data-taskbar-edge=left] #desktop{inset:0 0 0 var(--taskbar-size)}
+body[data-taskbar-edge=right] #desktop{inset:0 var(--taskbar-size) 0 0}
+body[data-taskbar-edge=bottom] #taskbar,body[data-taskbar-edge=top] #taskbar{left:0;right:0;width:auto;height:var(--taskbar-size);flex-direction:row}
+body[data-taskbar-edge=bottom] #taskbar{top:auto;bottom:0}
+body[data-taskbar-edge=top] #taskbar{top:0;bottom:auto}
+body[data-taskbar-edge=left] #taskbar,body[data-taskbar-edge=right] #taskbar{top:0;bottom:0;width:var(--taskbar-size);height:auto;flex-direction:column}
+body[data-taskbar-edge=left] #taskbar{left:0;right:auto}
+body[data-taskbar-edge=right] #taskbar{left:auto;right:0}
+#taskbar-move-grip{display:block;flex:0 0 8px;align-self:center;height:24px;margin:3px 4px 3px 2px;border-left:1px solid #17469b;border-right:1px solid #8db7ff;cursor:move}
+#taskbar-move-grip:after{content:'';display:block;width:2px;height:18px;margin:3px 0 0 2px;border-left:1px dotted #d9e8ff;border-right:1px dotted #19468f}
+#taskbar-resize-grip{position:absolute;z-index:3;touch-action:none}
+body.taskbar-locked #taskbar-move-grip,body.taskbar-locked #taskbar-resize-grip{display:none}
+body:not(.taskbar-locked)[data-taskbar-edge=bottom] #taskbar-resize-grip{display:block;top:-3px;left:0;right:0;height:6px;cursor:ns-resize}
+body:not(.taskbar-locked)[data-taskbar-edge=top] #taskbar-resize-grip{display:block;bottom:-3px;left:0;right:0;height:6px;cursor:ns-resize}
+body:not(.taskbar-locked)[data-taskbar-edge=left] #taskbar-resize-grip{display:block;right:-3px;top:0;bottom:0;width:6px;cursor:ew-resize}
+body:not(.taskbar-locked)[data-taskbar-edge=right] #taskbar-resize-grip{display:block;left:-3px;top:0;bottom:0;width:6px;cursor:ew-resize}
+body[data-taskbar-edge=left] #taskbar-move-grip,body[data-taskbar-edge=right] #taskbar-move-grip{width:calc(100% - 8px);height:8px;flex-basis:8px;margin:3px 4px;border:0;border-top:1px solid #17469b;border-bottom:1px solid #8db7ff}
+body[data-taskbar-edge=left] #taskbar-move-grip:after,body[data-taskbar-edge=right] #taskbar-move-grip:after{width:calc(100% - 6px);height:2px;margin:2px 3px 0;border:0;border-top:1px dotted #d9e8ff;border-bottom:1px dotted #19468f}
+body[data-taskbar-edge=left] #start-button,body[data-taskbar-edge=right] #start-button{width:100%;min-width:0;flex-shrink:0;background-color:#398f32}
+body[data-taskbar-edge=left] .quick-launch,body[data-taskbar-edge=right] .quick-launch{padding:3px 5px;justify-content:center;flex-wrap:wrap}
+body[data-taskbar-edge=left] #task-buttons,body[data-taskbar-edge=right] #task-buttons{width:100%;min-height:0;flex-direction:column;align-items:stretch;padding:3px;gap:3px}
+body[data-taskbar-edge=left] .task-button,body[data-taskbar-edge=right] .task-button{width:100%;max-width:none;min-height:24px;flex-shrink:0}
+body[data-taskbar-edge=left] .tray,body[data-taskbar-edge=right] .tray{width:100%;margin-left:0;margin-top:auto;padding:5px 3px;justify-content:center;flex-wrap:wrap;border-left:0;border-top:1px solid #0a2e52}
+body[data-taskbar-edge=left] .tray .tray-toggle,body[data-taskbar-edge=right] .tray .tray-toggle{margin:0}
+body[data-taskbar-edge=left] #clock,body[data-taskbar-edge=right] #clock{width:100%;padding:2px 0;text-align:center}
+body[data-taskbar-edge=bottom] #start-menu{left:0;right:auto;top:auto;bottom:var(--taskbar-size)}
+body[data-taskbar-edge=top] #start-menu{left:0;right:auto;top:var(--taskbar-size);bottom:auto}
+body[data-taskbar-edge=left] #start-menu{left:var(--taskbar-size);right:auto;top:0;bottom:auto}
+body[data-taskbar-edge=right] #start-menu{left:auto;right:var(--taskbar-size);top:0;bottom:auto}
+body[data-taskbar-edge=bottom] #balloon{right:16px;left:auto;top:auto;bottom:calc(var(--taskbar-size) + 16px)}
+body[data-taskbar-edge=top] #balloon{right:16px;left:auto;top:calc(var(--taskbar-size) + 16px);bottom:auto}
+body[data-taskbar-edge=left] #balloon{right:auto;left:calc(var(--taskbar-size) + 16px);top:auto;bottom:16px}
+body[data-taskbar-edge=right] #balloon{right:calc(var(--taskbar-size) + 16px);left:auto;top:auto;bottom:16px}

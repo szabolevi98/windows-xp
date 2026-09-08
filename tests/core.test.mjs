@@ -280,6 +280,16 @@ test('The taskbar has the tray flyout and every window edge can be grabbed',()=>
  assert.ok(css.includes('.tray-hidden[hidden]{display:none}'));
 });
 
+test('Taskbar dimensions follow its edge and stay within the screen',()=>{
+ const {xp}=boot();
+ const value=input=>JSON.parse(JSON.stringify(input));
+ assert.deepEqual(value(xp.taskbarMetrics({},1280,720)),{edge:'bottom',horizontal:true,size:30});
+ assert.deepEqual(value(xp.taskbarMetrics({edge:'top',horizontalSize:90},1280,720)),{edge:'top',horizontal:true,size:90});
+ assert.deepEqual(value(xp.taskbarMetrics({edge:'left',verticalSize:145},1280,720)),{edge:'left',horizontal:false,size:145});
+ assert.deepEqual(value(xp.taskbarMetrics({edge:'right',verticalSize:9999},800,600)),{edge:'right',horizontal:false,size:400});
+ assert.deepEqual(value(xp.taskbarMetrics({edge:'sideways',horizontalSize:1},1280,720)),{edge:'bottom',horizontal:true,size:30});
+});
+
 test('A dialog is as tall as its message, so nothing hides behind the title bar',()=>{
  const {xp,context}=boot();
  context.document.querySelector=()=>({getBoundingClientRect:()=>({height:700})});

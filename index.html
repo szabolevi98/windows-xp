@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="Angol nyelvű Windows XP asztal a Bliss háttérképpel, Games mappával és megnyitott Internet Explorerrel.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/icons/windows-logo.png">
-  <link rel="stylesheet" href="styles.css?v=70">
+  <link rel="stylesheet" href="styles.css?v=71">
   <link rel="stylesheet" href="pinball.css?v=1">
   <link rel="stylesheet" href="player.css?v=1">
   <link rel="stylesheet" href="outlook.css?v=2">
@@ -36,7 +36,7 @@
   <script defer src="lang/en.js?v=10"></script>
   <script defer src="lang/de.js?v=10"></script>
   <script defer src="js/lang.js?v=4"></script>
-  <script defer src="js/core.js?v=45"></script>
+  <script defer src="js/core.js?v=46"></script>
   <script defer src="js/internet.js?v=13"></script>
   <script defer src="js/web-pages.js?v=7"></script>
   <script defer src="js/apps.js?v=15"></script>
@@ -46,11 +46,11 @@
   <script defer src="js/outlook.js?v=7"></script>
   <script defer src="js/taskmgr.js?v=13"></script>
   <script defer src="js/compmgmt.js?v=4"></script>
-  <script defer src="js/games.js?v=10"></script>
+  <script defer src="js/games.js?v=11"></script>
   <script defer src="js/cardgames.js?v=9"></script>
   <script defer src="js/pinball.js?v=9"></script>
   <script defer src="js/desktop-grid.js?v=4"></script>
-  <script defer src="js/start.js?v=52"></script>
+  <script defer src="js/start.js?v=53"></script>
 </head>
 <body>
   <audio id="startup-sound" src="assets/sounds/startup.wav" preload="auto" hidden></audio>
@@ -61,10 +61,10 @@
     <div id="selection-box" hidden></div>
   </main>
   <footer id="taskbar">
-    <button id="start-button" aria-label="" data-i18n-aria-label="text_start_menu" aria-expanded="false"><img src="assets/icons/windows-logo.png" alt=""><span>start</span></button>
+    <button id="start-button" aria-label="" data-i18n-aria-label="text_start_menu" aria-expanded="false"><img src="assets/icons/windows-logo.png" alt=""><span>start</span></button><span id="taskbar-move-grip" aria-hidden="true"></span>
     <div class="quick-launch"><button id="show-desktop" title="" data-i18n-title="text_show_desktop"><img src="assets/icons/showdesktop.png" alt="" data-i18n-alt="text_show_desktop"></button><button data-open="ie" title="Internet Explorer"><img src="assets/icons/ie.png" alt="Internet Explorer"></button><button data-open="player" title="Windows Media Player"><img src="assets/icons/player.png" alt="Windows Media Player"></button></div>
     <div id="task-buttons"></div>
-    <div class="tray"><button id="tray-toggle" class="tray-toggle" title="" data-i18n-title="text_show_hidden_icons" aria-label="" data-i18n-aria-label="text_show_hidden_icons" aria-expanded="false" aria-controls="tray-hidden"></button><div id="tray-hidden" class="tray-hidden" hidden><button data-tray="outlook" title="Outlook Express"><img src="assets/icons/mail.png" alt="Outlook Express"></button></div><button data-tray="security" title="" data-i18n-title="text_security_center"><img src="assets/icons/security.png" alt="" data-i18n-alt="text_security_center"></button><button id="volume-button" title="" data-i18n-title="text_volume"><img src="assets/icons/volume.png" alt="" data-i18n-alt="text_volume"></button><button data-open="network" title="" data-i18n-title="text_local_area_connection"><img src="assets/icons/network.png" alt="" data-i18n-alt="text_network"></button><button id="clock" title="" data-i18n-title="text_date_and_time"></button></div>
+    <div class="tray"><button id="tray-toggle" class="tray-toggle" title="" data-i18n-title="text_show_hidden_icons" aria-label="" data-i18n-aria-label="text_show_hidden_icons" aria-expanded="false" aria-controls="tray-hidden"></button><div id="tray-hidden" class="tray-hidden" hidden><button data-tray="outlook" title="Outlook Express"><img src="assets/icons/mail.png" alt="Outlook Express"></button></div><button data-tray="security" title="" data-i18n-title="text_security_center"><img src="assets/icons/security.png" alt="" data-i18n-alt="text_security_center"></button><button id="volume-button" title="" data-i18n-title="text_volume"><img src="assets/icons/volume.png" alt="" data-i18n-alt="text_volume"></button><button data-open="network" title="" data-i18n-title="text_local_area_connection"><img src="assets/icons/network.png" alt="" data-i18n-alt="text_network"></button><button id="clock" title="" data-i18n-title="text_date_and_time"></button></div><span id="taskbar-resize-grip" aria-hidden="true"></span>
   </footer>
   <section id="start-menu" aria-label="" data-i18n-aria-label="text_start_menu" hidden></section>
   <div id="context-menu" class="popup-menu" role="menu" hidden></div>
