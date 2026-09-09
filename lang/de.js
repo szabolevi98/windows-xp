@@ -1491,5 +1491,14 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
   "text_points_cards": "{points} Punkte · {cards} Karten",
   "text_name_is_thinking": "{name} denkt nach…",
   "text_access_denied": "Zugriff verweigert",
-  "text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting": "Sie müssen als Computeradministrator angemeldet sein, um diese Einstellung zu ändern."
+  "text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting": "Sie müssen als Computeradministrator angemeldet sein, um diese Einstellung zu ändern.",
+  "text_copy_of_name": "Kopie von {name}",
+  "text_copy_number_of_name": "Kopie ({number}) von {name}",
+  "text_shared_documents": "Gemeinsame Dokumente",
+  "text_original_location": "Ursprünglicher Ort",
+  "text_date_deleted": "Gelöscht am",
+  "text_address_not_valid": "Die Adresse ist ungültig. Überprüfen Sie den Pfad, und wiederholen Sie den Vorgang.",
+  "text_my_network_places": "Netzwerkumgebung",
+  "text_entire_network": "Gesamtes Netzwerk",
+  "text_workgroup_computers": "Arbeitsgruppencomputer anzeigen"
 }});

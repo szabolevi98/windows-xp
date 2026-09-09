@@ -59,7 +59,7 @@ test('Copying duplicates the whole subtree under a free name; cutting moves it o
  assert.equal(xp.clip('folder',false),true);
  assert.equal(xp.clipped,null);
  assert.equal(xp.paste('documents'),true);
- const copy=xp.state.files.find(f=>!f.deleted&&f.name==='Mappa (2)');
+ const copy=xp.state.files.find(f=>!f.deleted&&f.name==='Mappa másolata');
  const copiedNote=xp.state.files.find(f=>!f.deleted&&f.parent===copy.id);
  assert.equal(copiedNote.name,'Bent.txt');
  assert.equal(copiedNote.content,'tartalom');
@@ -67,7 +67,7 @@ test('Copying duplicates the whole subtree under a free name; cutting moves it o
  assert.equal(xp.state.files.find(f=>f.id==='note').parent,'folder');
  // Pasting again keeps counting instead of colliding.
  xp.paste('documents');
- assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Mappa (3)'));
+ assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Mappa (2. másolat)'));
  // The clipboard survives a copy, so it can be pasted somewhere else too.
  assert.equal(xp.canPaste(),true);
  // A cut is marked, moves once, and then the clipboard is spent.
@@ -83,7 +83,7 @@ test('Copying duplicates the whole subtree under a free name; cutting moves it o
  // An extension is kept on the far side of the counter.
  xp.saveFile({id:'pic',name:'Rajz.png',type:'image',parent:'documents',content:'data:,'});
  xp.clip('pic',false);xp.paste('documents');
- assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Rajz (2).png'));
+ assert.ok(xp.state.files.some(f=>!f.deleted&&f.name==='Rajz.png másolata'));
 });
 
 test('The Recycle Bin shows whether it holds anything',()=>{
@@ -92,6 +92,8 @@ test('The Recycle Bin shows whether it holds anything',()=>{
  xp.saveFile({id:'note',name:'Jegyzet.txt',type:'text',parent:'documents',content:''});
  assert.equal(xp.recycleIcon(),'recycle');
  xp.deleteFile('note');
+ assert.equal(xp.state.files.find(f=>f.id==='note').originalParent,'documents');
+ assert.equal(typeof xp.state.files.find(f=>f.id==='note').deletedAt,'number');
  assert.equal(xp.recycleIcon(),'recycle-full');
  xp.restoreFile('note');
  assert.equal(xp.recycleIcon(),'recycle');
