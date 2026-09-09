@@ -153,10 +153,22 @@ test('Explorer shows the views XP had, Details with sortable columns',()=>{
  // Both the menu and the toolbar button offer the same list.
  assert.ok(ex.includes(`[t("${key('Nézet')}")]:()=>[...viewItems()`));
  assert.match(ex,/if\(action==='view'\)\{const box=/);
+ assert.match(ex,/state\.folderViews=\{\.\.\.\(state\.folderViews\|\|\{\}\),\[folder\]:view\};persist\(\)/,'each folder remembers its view');
  const css=readFileSync(new URL('styles.css',root),'utf8');
  assert.match(css,/\.details-header button\{/);
  assert.match(css,/\.details-header:before\{content:"";flex:0 0 16px\}/,'the header lines up past the icon column');
  assert.match(css,/\.tiles-view \.file-item\{display:grid/);
+});
+
+test('Explorer follows XP drive, address bar, network and Recycle Bin behavior',()=>{
+ const ex=readFileSync(new URL('js/explorer.js',root),'utf8');
+ assert.doesNotMatch(ex,/folder_path[^\n]*readonly/,'the address can be typed');
+ assert.match(ex,/addr\.onsubmit=/,'Enter navigates the typed address');
+ assert.doesNotMatch(ex,/if\(selected==='dvd'\)openEntry\('dvd'\)/,'selecting the DVD does not open it');
+ assert.match(ex,/if\(folder==='recycle'\)\{properties\(id\);return;\}/,'opening a deleted file shows its properties');
+ assert.match(ex,/text_original_location/);assert.match(ex,/text_date_deleted/);
+ assert.match(ex,/f\.deleted&&!state\.files\.find\(parent=>parent\.id===f\.parent\)\?\.deleted/,'a deleted folder appears once rather than exposing every child');
+ assert.match(ex,/text_shared_documents/);assert.match(ex,/text_my_network_places/);
 });
 
 test('The Start menu fills its own list of programs',()=>{

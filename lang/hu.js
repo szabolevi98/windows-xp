@@ -1491,5 +1491,14 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_points_cards": "{points} pont · {cards} lap",
   "text_name_is_thinking": "{name} gondolkodik…",
   "text_access_denied": "Hozzáférés megtagadva",
-  "text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting": "A beállítás módosításához számítógép-rendszergazdaként kell bejelentkeznie."
+  "text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting": "A beállítás módosításához számítógép-rendszergazdaként kell bejelentkeznie.",
+  "text_copy_of_name": "{name} másolata",
+  "text_copy_number_of_name": "{name} ({number}. másolat)",
+  "text_shared_documents": "Megosztott dokumentumok",
+  "text_original_location": "Eredeti hely",
+  "text_date_deleted": "Törlés dátuma",
+  "text_address_not_valid": "A cím nem érvényes. Ellenőrizze az elérési utat, majd próbálja újra.",
+  "text_my_network_places": "Hálózati helyek",
+  "text_entire_network": "Teljes hálózat",
+  "text_workgroup_computers": "A munkacsoport számítógépeinek megjelenítése"
 }});

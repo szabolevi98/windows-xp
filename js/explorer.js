@@ -57,10 +57,11 @@ function systemDrive(){
 
 register('explorer',(initial='computer')=>{
   const drive=systemDrive(),system=drive.entries,profileAliases=drive.profileAliases;
-  const folders={computer:{name:t("text_my_computer"),icon:'computer'},documents:{name:t("text_my_documents"),icon:'documents'},pictures:{name:t("text_my_pictures"),icon:'pictures'},music:{name:t("text_my_music"),icon:'music'},desktop:{name:t("text_desktop"),icon:'computer'},recycle:{name:t("text_recycle_bin"),icon:'recycle'},...system};
+  const folders={computer:{name:t("text_my_computer"),icon:'computer'},documents:{name:t("text_my_documents"),icon:'documents'},pictures:{name:t("text_my_pictures"),icon:'pictures'},music:{name:t("text_my_music"),icon:'music'},desktop:{name:t("text_desktop"),icon:'computer'},network:{name:t("text_my_network_places"),icon:'network'},'network-entire':{name:t("text_entire_network"),icon:'network',parent:'network'},'network-workgroup':{name:t("text_workgroup_computers"),icon:'computer',parent:'network'},recycle:{name:t("text_recycle_bin"),icon:'recycle'},...system};
   const dvd={id:'dvd',name:t("text_dvd_drive_d"),icon:'cd',readOnly:true,type:'drive',path:'D:\\'};
+  const sharedDocuments=Object.values(system).find(item=>item.path===`C:\\Documents and Settings\\All Users\\${t("text_my_documents")}\\`);
   const w=createWindow({title:t("text_my_computer"),icon:'computer',app:'explorer',width:760,height:490});
-  let folder=initial,selected=null,backStack=[],forwardStack=[],view='icons',sort={key:'name',dir:1},dragged=false,profileContext=null;
+  let folder=initial,selected=null,backStack=[],forwardStack=[],view=state.folderViews?.[initial]||(initial==='recycle'?'details':'icons'),sort={key:'name',dir:1},dragged=false,profileContext=null;
   let showTree=false;const expanded=new Set(['desktop','computer','documents']);
   // The desktop grid puts an icon's top-left corner where the pointer is, minus half a cell.
   const dropPoint=ev=>{const box=$('#desktop').getBoundingClientRect();return {x:ev.clientX-box.left-42,y:ev.clientY-box.top-40};};
@@ -80,7 +81,7 @@ register('explorer',(initial='computer')=>{
   };
   const folderInfo=()=>entry(folder)||folders.documents;
   const label=name=>t(name);
-  const readOnly=()=>profileContext?profileContext.owner!==XP.session:!!system[folder];
+  const readOnly=()=>folder.startsWith('network')||(profileContext?profileContext.owner!==XP.session:!!system[folder]);
   const selectedFile=()=>savedFile(selected);
   const canEdit=()=>!!selectedFile()&&!readOnly()&&ownerOf(selected)===XP.session&&folder!=='recycle';
   const selectedEntry=()=>entry(selected);
@@ -88,7 +89,7 @@ register('explorer',(initial='computer')=>{
   const entryType=f=>f.type==='folder'?t("text_folder"):f.type==='image'?t("text_png_image"):f.type==='shortcut'?t("text_shortcut"):f.type==='system-file'?(/\.exe$/i.test(f.name)?t("text_application"):t("text_system_file")):f.type==='drive'?t("text_drive"):t("text_text_document");
   function folderPath(id){
     const f=entry(id);if(f?.path)return f.path;
-    if(id==='computer')return t("text_my_computer");if(id==='recycle')return t("text_recycle_bin");
+    if(id==='computer')return t("text_my_computer");if(id==='recycle')return t("text_recycle_bin");if(id.startsWith('network'))return id==='network'?t("text_my_network_places"):`${t("text_my_network_places")}\\${t(f?.name)}`;
     if(profileContext&&f){
       const owner=profileContext.owner,files=XP.profileFiles(owner),names=[];let current=files.find(file=>file.id===realId(id));
       while(current){names.unshift(current.name);if(current.parent===profileContext.root)break;current=files.find(file=>file.id===current.parent);}
@@ -100,6 +101,11 @@ register('explorer',(initial='computer')=>{
     if(id==='documents')return `${base}\\${t("text_my_documents")}`;
     if(id==='pictures'||id==='music')return `${base}\\${t("text_my_documents")}\\${t(folders[id].name)}`;
     return `${base}\\${t(f?.name||"text_my_documents")}`;
+  }
+  function resolveAddress(value){
+    const wanted=String(value||'').trim().replace(/\//g,'\\').replace(/\\+$/,'').toLocaleLowerCase(locale());
+    const candidates=['computer','desktop','documents','pictures','music','network','recycle','disk','dvd',...Object.keys(system),...state.files.filter(file=>file.type==='folder'&&!file.deleted).map(file=>file.id)];
+    return candidates.find(id=>{const info=entry(id);return info&&[folderPath(id),info.name,id].some(name=>String(name).replace(/\\+$/,'').toLocaleLowerCase(locale())===wanted);});
   }
   function buttonId(b){return b?.dataset.file||b?.dataset.folder||b?.dataset.system||(b?.hasAttribute('data-cd')?'dvd':null);}
   const location=()=>({folder,profileContext:profileContext&&{...profileContext}});
@@ -113,7 +119,7 @@ register('explorer',(initial='computer')=>{
     const target=typeof next==='string'?{folder:next}:next;
     if(target.folder===folder&&push)return;
     if(push){backStack.push(location());forwardStack=[];}
-    const previous=profileContext;folder=target.folder;selected=null;
+    const previous=profileContext;folder=target.folder;selected=null;view=state.folderViews?.[folder]||(folder==='recycle'?'details':'icons');
     profileContext=Object.hasOwn(target,'profileContext')?target.profileContext:contextFor(folder,previous);
     for(let id=folder;id;){const parent=entry(id)?.parent;if(!parent)break;expanded.add(parent);id=parent;}
     render();
@@ -130,7 +136,7 @@ register('explorer',(initial='computer')=>{
     if(system[id]){if(system[id].type==='folder')navigate(id);else properties(id);return;}
     if(folders[id]){navigate(id);return;}
     const f=savedFile(id);if(!f)return;
-    if(folder==='recycle'){XP.restoreFile(id);return;}
+    if(folder==='recycle'){properties(id);return;}
     const owner=ownerOf(id);
     if(f.type==='folder')navigate(id);
     else if(owner===XP.session)XP.openFile(f.id);
@@ -194,19 +200,20 @@ register('explorer',(initial='computer')=>{
   },true);
   const toolbar=document.createElement('div');toolbar.className='toolbar';
   toolbar.innerHTML=`<button data-action="back">${icon('back')}<span>${esc(t("text_back"))}</span></button><button data-action="forward" title="${esc(t("text_forward"))}">${icon('forward')}</button><button data-action="up" title="${esc(t("text_up_one_level"))}">${icon('up')}</button><span class="toolbar-separator"></span><button data-action="search">${icon('search')}<span class="toolbar-label">${esc(t("text_search"))}</span></button><button data-action="tree">${icon('folder')}<span class="toolbar-label">${esc(t("text_folders"))}</span></button><button data-action="view">${icon('documents')}<span class="toolbar-label">${esc(t("text_view"))}</span></button>`;w.body.append(toolbar);
-  const addr=document.createElement('div');addr.className='address-bar';addr.innerHTML=`${esc(t("text_address"))} <div class="address-input">${icon('computer')}<input type="text" aria-label="${esc(t("text_folder_path"))}" readonly></div>`;w.body.append(addr);
+  const addr=document.createElement('form');addr.className='address-bar';addr.innerHTML=`${esc(t("text_address"))} <div class="address-input">${icon('computer')}<input type="text" aria-label="${esc(t("text_folder_path"))}"></div><button class="go-button" type="submit"><b>→</b>${esc(t("text_go"))}</button>`;w.body.append(addr);
+  addr.onsubmit=e=>{e.preventDefault();const target=resolveAddress($('input',addr).value);if(target)navigate(target);else{XP.sound('error');XP.dialog(t("text_windows_explorer"),t("text_address_not_valid"),{icon:'error'});$('input',addr).value=folderPath(folder);}};
   const layout=document.createElement('div');layout.className='explorer-layout';layout.innerHTML='<aside class="explorer-sidebar"></aside><div class="explorer-files"></div>';w.body.append(layout);
   const sidebar=$('.explorer-sidebar',layout),filesEl=$('.explorer-files',layout),bar=status(w,'');
   function item(name,ic,data,extra='',columns=''){return `<button class="file-item ${extra}" ${data}>${icon(ic)}<span>${esc(name)}</span>${columns}</button>`;}
   const VIEWS=[['tiles',t("text_tiles")],['icons',t("text_icons")],['list',t("text_list")],['details',t("text_details")]];
-  const viewItems=()=>VIEWS.map(([key,label])=>({label,checked:view===key,action:()=>{view=key;render();}}));
+  const viewItems=()=>VIEWS.map(([key,label])=>({label,checked:view===key,action:()=>{view=key;state.folderViews={...(state.folderViews||{}),[folder]:view};persist();render();}}));
   // What the Details columns show about an entry.
   const TYPES={folder:t("text_file_folder"),text:t("text_text_document"),image:t("text_image"),shortcut:t("text_shortcut")};
   const typeName=file=>TYPES[file.type]||t("text_file");
   const sizeOf=file=>file.type==='folder'?null:Math.max(1,Math.ceil((file.content||'').length/1024));
   const sizeText=file=>{const size=sizeOf(file);return size===null?'':`${size.toLocaleString(locale())} KB`;};
   const dateText=file=>file.modified?new Date(file.modified).toLocaleString(locale(),{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-  const columns=file=>`<span class="col-size">${sizeText(file)}</span><span class="col-type">${esc(typeName(file))}</span><span class="col-date">${esc(dateText(file))}</span>`;
+  const columns=file=>folder==='recycle'?`<span class="col-original">${esc(folderPath(file.originalParent||file.parent))}</span><span class="col-date">${esc(file.deletedAt?new Date(file.deletedAt).toLocaleString(locale(),{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'')}</span>`:`<span class="col-size">${sizeText(file)}</span><span class="col-type">${esc(typeName(file))}</span><span class="col-date">${esc(dateText(file))}</span>`;
   // Clicking a column header sorts by it, and clicking it again turns the order around.
   const compare=(a,b)=>{
     const folders=(b.type==='folder')-(a.type==='folder');
@@ -214,10 +221,12 @@ register('explorer',(initial='computer')=>{
     if(sort.key==='size')return ((sizeOf(a)||0)-(sizeOf(b)||0))*sort.dir||a.name.localeCompare(b.name,'hu');
     if(sort.key==='type')return typeName(a).localeCompare(typeName(b),'hu')*sort.dir||a.name.localeCompare(b.name,'hu');
     if(sort.key==='modified')return ((a.modified||0)-(b.modified||0))*sort.dir||a.name.localeCompare(b.name,'hu');
+    if(sort.key==='deleted')return ((a.deletedAt||0)-(b.deletedAt||0))*sort.dir||a.name.localeCompare(b.name,'hu');
+    if(sort.key==='original')return folderPath(a.originalParent||a.parent).localeCompare(folderPath(b.originalParent||b.parent),'hu')*sort.dir||a.name.localeCompare(b.name,'hu');
     return a.name.localeCompare(b.name,'hu')*sort.dir;
   };
-  const header=()=>view!=='details'?'':`<div class="details-header">${[['name',t("text_name")],['size',t("text_size")],['type',t("text_type")],['modified',t("text_date_modified")]]
-    .map(([key,label])=>`<button data-sort="${key}" class="col-${key==='modified'?'date':key}">${esc(label)}${sort.key===key?`<b>${sort.dir>0?'▲':'▼'}</b>`:''}</button>`).join('')}</div>`;
+  const header=()=>view!=='details'?'':`<div class="details-header">${(folder==='recycle'?[['name',t("text_name")],['original',t("text_original_location")],['deleted',t("text_date_deleted")]]:[['name',t("text_name")],['size',t("text_size")],['type',t("text_type")],['modified',t("text_date_modified")]])
+    .map(([key,label])=>`<button data-sort="${key}" class="col-${key==='modified'||key==='deleted'?'date':key}">${esc(label)}${sort.key===key?`<b>${sort.dir>0?'▲':'▼'}</b>`:''}</button>`).join('')}</div>`;
   function profileAt(id){
     const mounted=system[id];if(mounted?.profileRoot)return {owner:mounted.profileOwner,root:mounted.profileRoot,alias:id};
     const ref=refInfo(id);if(!ref)return null;const root=rootOf(ref.owner,ref.id);return {owner:ref.owner,root,alias:profileAliases[ref.owner]?.[root]};
@@ -231,11 +240,12 @@ register('explorer',(initial='computer')=>{
     .sort((a,b)=>a.name.localeCompare(b.name,'hu')).map(f=>({id:f.id,name:f.name,icon:'folder'}));
   function treeChildren(id){
     if(id==='desktop')return [{id:'computer',name:t("text_my_computer"),icon:'computer'},{id:'documents',name:t("text_my_documents"),icon:'documents'},
-      ...childFolders('desktop'),{id:'recycle',name:t("text_recycle_bin"),icon:XP.recycleIcon()}];
+      {id:'network',name:t("text_my_network_places"),icon:'network'},...childFolders('desktop'),{id:'recycle',name:t("text_recycle_bin"),icon:XP.recycleIcon()}];
     // XP hung the user's own documents under My Computer by name, not a second time as "Dokumentumok".
     if(id==='computer')return [{id:'disk',name:t("text_local_disk_c"),icon:'disk'},{id:'dvd',name:t("text_dvd_drive_d"),icon:'cd'},
-      {id:'documents',name:t("text_user_s_documents",{user:state.user}),icon:'documents'}];
+      ...(sharedDocuments?[{id:sharedDocuments.id,name:t("text_shared_documents"),icon:'documents'}]:[]),{id:'documents',name:t("text_user_s_documents",{user:state.user}),icon:'documents'}];
     if(id==='documents')return [{id:'pictures',name:t("text_my_pictures"),icon:'pictures'},{id:'music',name:t("text_my_music"),icon:'music'},...childFolders('documents')];
+    if(id==='network')return [{id:'network-entire',name:t("text_entire_network"),icon:'network'},{id:'network-workgroup',name:t("text_workgroup_computers"),icon:'computer'}];
     if(system[id]?.profileRoot||refInfo(id))return [...systemChildren(id),...childFolders(id)];
     if(system[id]||id==='disk')return systemChildren(id);
     return childFolders(id);
@@ -255,14 +265,16 @@ register('explorer',(initial='computer')=>{
     $('[data-action=back]',toolbar).disabled=!backStack.length;$('[data-action=forward]',toolbar).disabled=!forwardStack.length;
     $('[data-action=up]',toolbar).disabled=folder==='computer';$('[data-action=tree]',toolbar).classList.toggle('pressed',showTree);
     const actions=readOnly()?`<button data-side="system">${icon('computer')} ${esc(t("text_view_system_information"))}</button><button data-side="control">${icon('control')} ${esc(t("text_control_panel"))}</button>`:folder==='recycle'?`<button data-side="empty">${icon('recycle')} ${esc(t("text_empty_recycle_bin"))}</button><button data-side="restore" ${!selectedFile()?'disabled':''}>${icon('back')} ${esc(t("text_restore_this_item"))}</button>`:`<button data-side="new">${icon('folder')} ${esc(t("text_make_a_new_folder"))}</button><button data-side="notepad">${icon('notepad')} ${esc(t("text_new_document"))}</button>${canEdit()?`<button data-side="rename">${icon('documents')} ${esc(t("text_rename_this_item"))}</button><button data-side="delete">${icon('recycle')} ${esc(t("text_delete_this_item"))}</button>`:''}`;
-    if(showTree){sidebar.innerHTML=treeMarkup();sidebar.classList.add('tree-mode');}else{sidebar.classList.remove('tree-mode');sidebar.innerHTML=`<section class="explorer-panel"><h3>${readOnly()?t("text_system_tasks"):folder==='recycle'?t("text_recycle_bin_tasks"):t("text_file_and_folder_tasks")}</h3><div>${actions}</div></section><section class="explorer-panel"><h3>${esc(t("text_other_places"))}</h3><div>${['computer','documents','pictures','music','recycle'].filter(f=>f!==folder).map(f=>`<button data-folder="${f}">${icon(folders[f].icon)} ${esc(t(folders[f].name))}</button>`).join('')}<button data-side="control">${icon('control')} ${esc(t("text_control_panel"))}</button></div></section><section class="explorer-panel"><h3>${esc(t("text_details"))}</h3><div><b>${esc(details?t(details.name):t(info.name))}</b><p>${details?`${entryType(details)}${details.modified?`<br>${esc(t("text_date_modified"))}: ${new Date(details.modified).toLocaleDateString(locale())}`:''}`:readOnly()?t("text_system_folder"):t("text_your_own_files_and_folders_live_here")}${(details?.readOnly||readOnly())?`<br>${esc(t("text_attributes_read_only"))}`:''}</p></div></section>`;}
+    if(showTree){sidebar.innerHTML=treeMarkup();sidebar.classList.add('tree-mode');}else{sidebar.classList.remove('tree-mode');sidebar.innerHTML=`<section class="explorer-panel"><h3>${readOnly()?t("text_system_tasks"):folder==='recycle'?t("text_recycle_bin_tasks"):t("text_file_and_folder_tasks")}</h3><div>${actions}</div></section><section class="explorer-panel"><h3>${esc(t("text_other_places"))}</h3><div>${['computer','documents','pictures','music','network','recycle'].filter(f=>f!==folder).map(f=>`<button data-folder="${f}">${icon(folders[f].icon)} ${esc(t(folders[f].name))}</button>`).join('')}<button data-side="control">${icon('control')} ${esc(t("text_control_panel"))}</button></div></section><section class="explorer-panel"><h3>${esc(t("text_details"))}</h3><div><b>${esc(details?t(details.name):t(info.name))}</b><p>${details?`${entryType(details)}${details.modified?`<br>${esc(t("text_date_modified"))}: ${new Date(details.modified).toLocaleDateString(locale())}`:''}`:readOnly()?t("text_system_folder"):t("text_your_own_files_and_folders_live_here")}${(details?.readOnly||readOnly())?`<br>${esc(t("text_attributes_read_only"))}`:''}</p></div></section>`;}
     if(keepFiles)return;
     if(!readOnly()&&(folder==='recycle'||['documents','pictures'].includes(folder)||!!savedFile(folder)||!!system[folder]?.profileRoot))filesEl.dataset.dropFolder=storageFolder();
     else delete filesEl.dataset.dropFolder;
     filesEl.className=filesEl.className.replace(/\b(tiles|icons|list|details)-view\b/g,'').trim()+` ${view}-view`;
     let html='',count=0;
     if(folder==='computer'){
-      html=`<div class="explorer-section">${esc(t("text_files_stored_on_this_computer"))}</div><div class="file-grid">${item(t("text_my_documents"),'documents','data-folder="documents"')}${item(t("text_my_pictures"),'pictures','data-folder="pictures"')}${item(t("text_my_music"),'music','data-folder="music"')}</div><div class="explorer-section" style="margin-top:25px">${esc(t("text_hard_disk_drives"))}</div><div class="file-grid">${item(t("text_local_disk_c"),'disk','data-folder="disk"','drive')}</div><div class="explorer-section" style="margin-top:25px">${esc(t("text_devices_with_removable_storage"))}</div><div class="file-grid">${item(dvd.name,'cd','data-cd','drive')}</div>`;count=5;
+      html=`<div class="explorer-section">${esc(t("text_files_stored_on_this_computer"))}</div><div class="file-grid">${sharedDocuments?item(t("text_shared_documents"),'documents',`data-system="${esc(sharedDocuments.id)}"`):''}${item(t("text_user_s_documents",{user:state.user}),'documents','data-folder="documents"')}</div><div class="explorer-section" style="margin-top:25px">${esc(t("text_hard_disk_drives"))}</div><div class="file-grid">${item(t("text_local_disk_c"),'disk','data-folder="disk"','drive')}</div><div class="explorer-section" style="margin-top:25px">${esc(t("text_devices_with_removable_storage"))}</div><div class="file-grid">${item(dvd.name,'cd','data-cd','drive')}</div>`;count=4;
+    }else if(folder==='network'){
+      html=`<div class="explorer-section">${esc(t("text_my_network_places"))}</div><div class="file-grid">${item(t("text_entire_network"),'network','data-folder="network-entire"')}${item(t("text_workgroup_computers"),'computer','data-folder="network-workgroup"')}</div>`;count=2;
     }else if(profileContext){
       const owner=profileContext.owner,parent=system[folder]?.profileRoot?profileContext.root:realId(folder);
       const mounted=Object.values(system).filter(f=>f.parent===folder&&f.type==='folder').sort((a,b)=>a.name.localeCompare(b.name,'hu'));
@@ -275,7 +287,7 @@ register('explorer',(initial='computer')=>{
       const children=Object.values(system).filter(f=>f.parent===folder).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
       count=children.length;html=`${header()}<div class="file-grid">${children.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}</div>`;
     }else{
-      const files=state.files.filter(f=>folder==='recycle'?f.deleted:!f.deleted&&f.parent===folder).sort(compare);
+      const files=state.files.filter(f=>folder==='recycle'?f.deleted&&!state.files.find(parent=>parent.id===f.parent)?.deleted:!f.deleted&&f.parent===folder).sort(compare);
       const ownFolders=folder==='documents'?[item(t("text_my_pictures"),'pictures','data-folder="pictures"'),item(t("text_my_music"),'music','data-folder="music"')].join(''):'';
       count=files.length+(folder==='documents'?2:0);html=`${header()}<div class="file-grid">${ownFolders}${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${files.map(f=>item(f.name,XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`,columns(f))).join('')}</div>`;
       if(folder==='pictures')count+=3;if(folder==='music')count++;
@@ -309,7 +321,6 @@ register('explorer',(initial='computer')=>{
     const b=e.target.closest('.file-item');selected=buttonId(b);
     $$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
     const details=selectedEntry();$('span',bar).textContent=details?`${details.name} · ${entryType(details)}${details.readOnly?' · '+t("text_read_only"):''}`:t("text_no_selection");render(true);
-    if(selected==='dvd')openEntry('dvd');
   };
   function activate(target){
     const b=target.closest('.file-item');if(!b||XP.modal)return;

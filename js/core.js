@@ -476,11 +476,18 @@ window.XP = (() => {
     for(let i=2;i<999;i++){const next=`${base} (${i})${ext}`;if(!taken(next))return next;}
     return null;
   }
+  function copyName(name,parent){
+    const taken=candidate=>state.files.some(f=>f.parent===parent&&!f.deleted&&f.name===candidate);
+    if(!taken(name))return name;
+    const first=t("text_copy_of_name",{name});if(!taken(first))return first;
+    for(let i=2;i<999;i++){const next=t("text_copy_number_of_name",{number:i,name});if(!taken(next))return next;}
+    return null;
+  }
   // A copy takes the whole subtree with it and steps its name aside if one is taken.
   function copyInto(id,parent){
     const source=state.files.find(f=>f.id===id&&!f.deleted);if(!source)return null;
     if(source.type==='folder'&&descendants(id).includes(parent)){sound('error');notify(t("text_copy"),t("text_a_folder_cannot_be_copied_into_itself"));return null;}
-    const name=uniqueName(source.name,parent);if(!name)return null;
+    const name=copyName(source.name,parent);if(!name)return null;
     const clone=(file,newParent,newName)=>{const copy={...file,id:uniqueId(),parent:newParent,name:newName||file.name,modified:Date.now()};state.files.push(copy);return copy;};
     const root=clone(source,parent,name);
     (function walk(originalId,copyId){
@@ -563,13 +570,13 @@ window.XP = (() => {
     if(!answer)return false;
     deleteFile(id);return true;
   }
-  function deleteFile(id){const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))f.deleted=true;});persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));}
+  function deleteFile(id){const ids=descendants(id),deletedAt=Date.now();state.files.forEach(f=>{if(ids.includes(f.id)){f.deleted=true;if(f.id===id){f.deletedAt=deletedAt;f.originalParent=f.parent;}}});persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   async function emptyTrash(){
     if(!state.files.some(f=>f.deleted))return false;
     if(!await confirm(t("text_empty_recycle_bin"),t("text_are_you_sure_you_want_to_delete_everything_in_the_recycle_bin")))return false;
     state.files=state.files.filter(f=>!f.deleted);persist();sound('recycle');document.dispatchEvent(new CustomEvent('xp-files-changed'));return true;
   }
-  function restoreFile(id){const file=state.files.find(f=>f.id===id);if(!file)return;const parent=state.files.find(f=>f.id===file.parent);if(parent?.deleted)restoreFile(parent.id);const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id))delete f.deleted;});persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));}
+  function restoreFile(id){const file=state.files.find(f=>f.id===id);if(!file)return;const parent=state.files.find(f=>f.id===file.parent);if(parent?.deleted)restoreFile(parent.id);const ids=descendants(id);state.files.forEach(f=>{if(ids.includes(f.id)){delete f.deleted;delete f.deletedAt;delete f.originalParent;}});persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));}
   function download(name,content,type='text/plain;charset=utf-8'){const blob=content instanceof Blob?content:new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fileName(name)||'dokumentum.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   function shortcutToFile(id,parent='desktop'){
     const source=state.files.find(f=>f.id===id&&!f.deleted);if(!source)return null;
