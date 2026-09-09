@@ -61,7 +61,7 @@ register('explorer',(initial='computer')=>{
   const dvd={id:'dvd',name:t("text_dvd_drive_d"),icon:'cd',readOnly:true,type:'drive',path:'D:\\'};
   const sharedDocuments=Object.values(system).find(item=>item.path===`C:\\Documents and Settings\\All Users\\${t("text_my_documents")}\\`);
   const w=createWindow({title:t("text_my_computer"),icon:'computer',app:'explorer',width:760,height:490});
-  let folder=initial,selected=null,backStack=[],forwardStack=[],view=state.folderViews?.[initial]||(initial==='recycle'?'details':'icons'),sort={key:'name',dir:1},dragged=false,profileContext=null;
+  let folder=initial,selected=null,selectedIds=new Set(),backStack=[],forwardStack=[],view=state.folderViews?.[initial]||(initial==='recycle'?'details':'icons'),sort={key:'name',dir:1},dragged=false,profileContext=null;
   let showTree=false;const expanded=new Set(['desktop','computer','documents']);
   // The desktop grid puts an icon's top-left corner where the pointer is, minus half a cell.
   const dropPoint=ev=>{const box=$('#desktop').getBoundingClientRect();return {x:ev.clientX-box.left-42,y:ev.clientY-box.top-40};};
@@ -119,7 +119,7 @@ register('explorer',(initial='computer')=>{
     const target=typeof next==='string'?{folder:next}:next;
     if(target.folder===folder&&push)return;
     if(push){backStack.push(location());forwardStack=[];}
-    const previous=profileContext;folder=target.folder;selected=null;view=state.folderViews?.[folder]||(folder==='recycle'?'details':'icons');
+    const previous=profileContext;folder=target.folder;selected=null;selectedIds.clear();view=state.folderViews?.[folder]||(folder==='recycle'?'details':'icons');
     profileContext=Object.hasOwn(target,'profileContext')?target.profileContext:contextFor(folder,previous);
     for(let id=folder;id;){const parent=entry(id)?.parent;if(!parent)break;expanded.add(parent);id=parent;}
     render();
@@ -166,13 +166,21 @@ register('explorer',(initial='computer')=>{
     XP.saveFile({...f,name});
   }
   async function remove(){
+    const chosen=[...selectedIds].filter(id=>savedFile(id));
     const f=selectedFile();if(!f||readOnly())return;
+    if(chosen.length>1){
+      if(!await XP.confirm(folder==='recycle'?t("text_delete_files_permanently"):t("text_confirm_multiple_file_delete"),folder==='recycle'?t("text_are_you_sure_you_want_to_delete_selected_items_for_good",{count:chosen.length}):t("text_are_you_sure_you_want_to_send_selected_items_to_recycle_bin",{count:chosen.length})))return;
+      if(folder==='recycle'){
+        const ids=new Set(chosen.flatMap(id=>XP.descendants(realId(id))));state.files=state.files.filter(file=>!ids.has(file.id));persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));
+      }else chosen.forEach(id=>XP.deleteFile(realId(id)));
+      selected=null;selectedIds.clear();render();return;
+    }
     if(folder==='recycle'){
       if(await XP.confirm(t("text_delete_file_permanently"),t("text_are_you_sure_you_want_to_delete_name_for_good",{name:f.name}))){
         const ids=XP.descendants(f.id);state.files=state.files.filter(f=>!ids.includes(f.id));persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));
       }
     }else await XP.trashFile(f.id);
-    selected=null;
+    selected=null;selectedIds.clear();
   }
   // New items land in the folder on screen, unless it is one that holds no files of its own.
   const pasteParent=storageFolder;
@@ -282,21 +290,22 @@ register('explorer',(initial='computer')=>{
       const files=XP.profileFiles(owner).filter(f=>!f.deleted&&f.parent===parent&&(!f.hidden||state.folderOptions?.showHidden)).sort(compare);
       const refs=files.map(file=>({file,id:profileRef(owner,file.id)}));
       count=mounted.length+files.length;
-      html=`${header()}<div class="file-grid">${mounted.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}${profileContext.root==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${profileContext.root==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${refs.map(({file,id})=>item(displayName(file),XP.fileIcon(file),`data-file="${esc(id)}"`,`${selected===id?'selected':''} ${XP.clipped===file.id?'cut':''} ${file.type==='shortcut'?'shortcut':''}`,columns(file))).join('')}</div>`;
+      html=`${header()}<div class="file-grid">${mounted.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selectedIds.has(f.id)?'selected':'',columns(f))).join('')}${profileContext.root==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${profileContext.root==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${refs.map(({file,id})=>item(displayName(file),XP.fileIcon(file),`data-file="${esc(id)}"`,`${selectedIds.has(id)?'selected':''} ${XP.clipped===file.id?'cut':''} ${file.type==='shortcut'?'shortcut':''}`,columns(file))).join('')}</div>`;
       if(profileContext.root==='pictures')count+=3;if(profileContext.root==='music')count++;
     }else if(readOnly()){
       const children=Object.values(system).filter(f=>f.parent===folder&&(!f.hidden||state.folderOptions?.showHidden)).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
-      count=children.length;html=`${header()}<div class="file-grid">${children.map(f=>item(displayName(f),f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}</div>`;
+      count=children.length;html=`${header()}<div class="file-grid">${children.map(f=>item(displayName(f),f.icon,`data-system="${esc(f.id)}"`,selectedIds.has(f.id)?'selected':'',columns(f))).join('')}</div>`;
     }else{
       const files=state.files.filter(f=>(folder==='recycle'?f.deleted&&!state.files.find(parent=>parent.id===f.parent)?.deleted:!f.deleted&&f.parent===folder)&&(!f.hidden||state.folderOptions?.showHidden)).sort(compare);
       const ownFolders=folder==='documents'?[item(t("text_my_pictures"),'pictures','data-folder="pictures"'),item(t("text_my_music"),'music','data-folder="music"')].join(''):'';
-      count=files.length+(folder==='documents'?2:0);html=`${header()}<div class="file-grid">${ownFolders}${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${files.map(f=>item(displayName(f),XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`,columns(f))).join('')}</div>`;
+      count=files.length+(folder==='documents'?2:0);html=`${header()}<div class="file-grid">${ownFolders}${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${files.map(f=>item(displayName(f),XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selectedIds.has(f.id)?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`,columns(f))).join('')}</div>`;
       if(folder==='pictures')count+=3;if(folder==='music')count++;
     }
     if(!count)html+=`<div class="empty-folder">${icon(folder==='recycle'?'recycle':'folder')}${folder==='recycle'?esc(t("text_the_recycle_bin_is_empty")):esc(t("text_this_folder_is_empty"))}</div>`;
     filesEl.innerHTML=html;
-    $$('.file-item',filesEl).forEach(b=>b.classList.toggle('selected',!!selected&&buttonId(b)===selected));
-    $('span',bar).textContent=`${t("text_count_objects",{count})}${selected?' · '+t("text_1_item_selected"):''}${readOnly()?' · '+t("text_read_only"):''}`;
+    $$('.file-item',filesEl).forEach(b=>b.classList.toggle('selected',selectedIds.has(buttonId(b))));
+    const selection=selectedIds.size===1?t("text_1_item_selected"):selectedIds.size>1?t("text_items_selected",{count:selectedIds.size}):'';
+    $('span',bar).textContent=`${t("text_count_objects",{count})}${selection?' · '+selection:''}${readOnly()?' · '+t("text_read_only"):''}`;
   }
   toolbar.onclick=e=>{
     const action=e.target.closest('[data-action]')?.dataset.action;
@@ -312,17 +321,22 @@ register('explorer',(initial='computer')=>{
     if(b.dataset.side==='tree'){showTree=false;render();return;}
     if(b.dataset.folder)navigate(b.dataset.folder);
     const a=b.dataset.side;if(a==='new')newFolder();if(a==='notepad')newDocument();if(a==='rename')rename();if(a==='delete')remove();if(a==='empty')XP.emptyTrash();
-    if(a==='restore'&&selectedFile()){XP.restoreFile(selected);selected=null;render();}if(a==='control')XP.open('control');if(a==='system')XP.open('system');
+    if(a==='restore'&&selectedFile()){XP.restoreFile(selected);selected=null;selectedIds.clear();render();}if(a==='control')XP.open('control');if(a==='system')XP.open('system');
   };
   filesEl.onclick=e=>{
     // A column header sorts by it; the same header again turns the order around.
     const column=e.target.closest('[data-sort]');
     if(column){const key=column.dataset.sort;sort=sort.key===key?{key,dir:-sort.dir}:{key,dir:1};render();return;}
     if(dragged)return;
-    const b=e.target.closest('.file-item');selected=buttonId(b);
-    $$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
-    const details=selectedEntry();$('span',bar).textContent=details?`${details.name} · ${entryType(details)}${details.readOnly?' · '+t("text_read_only"):''}`:t("text_no_selection");render(true);
-    if(state.folderOptions?.singleClick&&b)activate(b);
+    const b=e.target.closest('.file-item'),id=buttonId(b);if(!id)return;
+    const buttons=$$('.file-item',filesEl),ids=buttons.map(buttonId).filter(Boolean);
+    if(e.shiftKey&&selected){const from=ids.indexOf(selected),to=ids.indexOf(id);if(!e.ctrlKey)selectedIds.clear();if(from>=0&&to>=0)ids.slice(Math.min(from,to),Math.max(from,to)+1).forEach(value=>selectedIds.add(value));}
+    else if(e.ctrlKey){selectedIds.has(id)?selectedIds.delete(id):selectedIds.add(id);}
+    else{selectedIds.clear();selectedIds.add(id);}
+    selected=selectedIds.has(id)?id:[...selectedIds].at(-1)||null;
+    buttons.forEach(el=>el.classList.toggle('selected',selectedIds.has(buttonId(el))));
+    const details=selectedEntry();$('span',bar).textContent=selectedIds.size>1?t("text_items_selected",{count:selectedIds.size}):details?`${details.name} · ${entryType(details)}${details.readOnly?' · '+t("text_read_only"):''}`:t("text_no_selection");render(true);
+    if(state.folderOptions?.singleClick&&b&&!e.ctrlKey&&!e.shiftKey)activate(b);
   };
   function activate(target){
     const b=target.closest('.file-item');if(!b||XP.modal)return;
@@ -358,7 +372,7 @@ register('explorer',(initial='computer')=>{
     document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
   };
   filesEl.oncontextmenu=e=>{
-    e.preventDefault();e.stopPropagation();selected=buttonId(e.target.closest('.file-item'));render();
+    e.preventDefault();e.stopPropagation();const clicked=buttonId(e.target.closest('.file-item'));if(clicked&&!selectedIds.has(clicked)){selected=clicked;selectedIds=new Set([clicked]);}else if(!clicked){selected=null;selectedIds.clear();}render();
     const builtIn=selected&&!selectedFile();
     const actions=folder==='recycle'?[
       {label:t("text_restore"),action:()=>selected&&XP.restoreFile(selected),disabled:!selectedFile()},
@@ -378,14 +392,14 @@ register('explorer',(initial='computer')=>{
   };
   w.el.addEventListener('keydown',e=>{
     if(e.key==='F2'){e.preventDefault();rename();}if(e.key==='Delete')remove();
-    if(e.ctrlKey&&!e.target.closest('input,textarea')){const key=e.key.toLowerCase();if(key==='x'){e.preventDefault();cut();}if(key==='c'){e.preventDefault();copy();}if(key==='v'){e.preventDefault();pasteHere();}}
+    if(e.ctrlKey&&!e.target.closest('input,textarea')){const key=e.key.toLowerCase();if(key==='a'){e.preventDefault();selectedIds=new Set($$('.file-item',filesEl).map(buttonId).filter(Boolean));selected=[...selectedIds][0]||null;render(true);}if(key==='x'){e.preventDefault();cut();}if(key==='c'){e.preventDefault();copy();}if(key==='v'){e.preventDefault();pasteHere();}}
     if(e.key==='Enter'&&e.target.closest('.file-item')){e.preventDefault();activate(e.target);}
     else if(e.key==='Enter'&&selected&&e.target===filesEl){e.preventDefault();openEntry(selected);}
     if(e.key==='F5'){e.preventDefault();render();}
   });
   XP.onFiles(w,()=>{
     if(folder!=='recycle'&&!entry(folder)){folder='documents';profileContext=null;}
-    if(selected&&!entry(selected))selected=null;render();
+    selectedIds=new Set([...selectedIds].filter(id=>entry(id)));if(selected&&!entry(selected))selected=[...selectedIds][0]||null;render();
   });
   w.onUnpark=()=>render();
   render();return w;
