@@ -81,7 +81,7 @@ test('The dictionaries load before the desktop, and markup uses stable keys',()=
  // Older data tables are resolved when they are drawn; literal calls use keys.
  assert.match(start,/\{id:'computer',label:'Sajátgép'/);
  assert.match(start,/label:t\(i\.label\)/);
- assert.match(start,/function startItem\(label,ic,app,subtitle='',minor=false\)\{label=t\(label\);/);
+ assert.match(start,/function startItem\(label,ic,app,subtitle='',minor=false,pinned=false\)\{label=t\(label\);/);
  assert.doesNotMatch(start,/(?<![\w$.])t\(\s*['"][ÁÉÍÓÖŐÚÜŰáéíóöőúüű]/,'literal calls do not use Hungarian text as identifiers');
  // The language is set from the Control Panel, where XP kept it.
  const utils=read('js/utilities.js');

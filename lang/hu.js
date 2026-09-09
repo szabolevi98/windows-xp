@@ -1500,5 +1500,14 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_address_not_valid": "A cím nem érvényes. Ellenőrizze az elérési utat, majd próbálja újra.",
   "text_my_network_places": "Hálózati helyek",
   "text_entire_network": "Teljes hálózat",
-  "text_workgroup_computers": "A munkacsoport számítógépeinek megjelenítése"
+  "text_workgroup_computers": "A munkacsoport számítógépeinek megjelenítése",
+  "text_auto_hide_the_taskbar": "A Tálca automatikus elrejtése",
+  "text_keep_the_taskbar_on_top_of_other_windows": "A Tálca legyen mindig látható",
+  "text_group_similar_taskbar_buttons": "Hasonló elemek csoportosítása a Tálcán",
+  "text_hide_inactive_icons": "Inaktív ikonok elrejtése",
+  "text_quick_launch": "Gyorsindítás",
+  "text_language_bar": "Nyelvi eszköztár",
+  "text_pin_to_start_menu": "Rögzítés a Start menüben",
+  "text_unpin_from_start_menu": "Levétel a Start menüről",
+  "text_remove_from_this_list": "Eltávolítás a listáról"
 }});

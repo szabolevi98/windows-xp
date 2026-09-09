@@ -1500,5 +1500,14 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {en: {
   "text_address_not_valid": "The address is not valid. Check the path and try again.",
   "text_my_network_places": "My Network Places",
   "text_entire_network": "Entire Network",
-  "text_workgroup_computers": "View workgroup computers"
+  "text_workgroup_computers": "View workgroup computers",
+  "text_auto_hide_the_taskbar": "Auto-hide the taskbar",
+  "text_keep_the_taskbar_on_top_of_other_windows": "Keep the taskbar on top of other windows",
+  "text_group_similar_taskbar_buttons": "Group similar taskbar buttons",
+  "text_hide_inactive_icons": "Hide inactive icons",
+  "text_quick_launch": "Quick Launch",
+  "text_language_bar": "Language Bar",
+  "text_pin_to_start_menu": "Pin to Start menu",
+  "text_unpin_from_start_menu": "Unpin from Start menu",
+  "text_remove_from_this_list": "Remove from this list"
 }});
