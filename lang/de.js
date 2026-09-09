@@ -1489,5 +1489,7 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
   "text_right": "rechts",
   "text_name_points": "{name}: {points} Punkte",
   "text_points_cards": "{points} Punkte · {cards} Karten",
-  "text_name_is_thinking": "{name} denkt nach…"
+  "text_name_is_thinking": "{name} denkt nach…",
+  "text_access_denied": "Zugriff verweigert",
+  "text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting": "Sie müssen als Computeradministrator angemeldet sein, um diese Einstellung zu ändern."
 }});
