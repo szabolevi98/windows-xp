@@ -22,3 +22,4 @@
 .taskmgr-facts dt{color:#444}
 .taskmgr-facts dd{margin:0;text-align:right}
 .taskmgr-status .status-part{min-width:150px}
+.taskmgr-window.taskmgr-always-on-top{z-index:8500!important}

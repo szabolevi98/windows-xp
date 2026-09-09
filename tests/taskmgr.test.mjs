@@ -45,6 +45,10 @@ test('The Task Manager is a program of its own, reachable the way XP offered it'
  assert.match(source,/ctrlKey&&event\.altKey&&event\.key==='Delete'/);
  assert.match(source,/XP\.singleton\('taskmgr'\)/,'only one copy ever runs');
  assert.match(source,/clearInterval\(tick\)/,'the live graphs stop when the window closes');
+ assert.doesNotMatch(source,/text_always_on_top"\),disabled:true/,'Always on Top can be changed');
+ assert.doesNotMatch(source,/text_minimize_on_use"\),disabled:true/,'Minimize on Use can be changed');
+ assert.match(source,/XP\.confirm\(t\("text_end_task"\)/,'End Task asks before discarding a program');
+ assert.match(source,/if\(minimizeOnUse\)XP\.minimize\(w\)/,'Switch To honours Minimize on Use');
  // Every tab XP had.
  for(const tab of ['Alkalmazások','Folyamatok','Teljesítmény','Hálózat','Felhasználók'])
   assert.ok(source.includes(key(tab)),`the ${tab} tab is there`);
