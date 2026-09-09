@@ -24,7 +24,7 @@ function renderIcons(){
  items.forEach(item=>{
  const b=document.createElement('button');b.className='desktop-icon'+(selectedIcon===item.id?' selected':'')+(XP.clipped===item.file?' cut':'')+(item.shortcut?' shortcut':'');b.dataset.iconId=item.id;place(b,item.id);
  b.innerHTML=`${icon(item.icon)}<span class="icon-label">${esc(item.label)}</span>`;b.setAttribute('aria-label',item.label);b.title=item.label;
- b.onclick=()=>{if(skipClick){skipClick=false;return;}selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));};b.ondblclick=()=>activateIcon(item);b.onkeydown=e=>{
+ b.onclick=()=>{if(skipClick){skipClick=false;return;}selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));if(state.folderOptions?.singleClick)activateIcon(item);};b.ondblclick=()=>{if(!state.folderOptions?.singleClick)activateIcon(item);};b.onkeydown=e=>{
   if(e.key==='Enter'){e.preventDefault();activateIcon(item);}
   if(e.key==='Delete'&&item.file)XP.trashFile(item.file);
   if(e.ctrlKey){const key=e.key.toLowerCase();if(key==='v'){e.preventDefault();XP.paste('desktop');}if(item.file&&(key==='x'||key==='c')){e.preventDefault();XP.clip(item.file,key==='x');}}

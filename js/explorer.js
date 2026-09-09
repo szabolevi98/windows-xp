@@ -8,7 +8,7 @@ function systemDrive(){
   function add(name,parent,children,ic='folder'){
     const path=parent?entries[parent].path+name:'C:';
     const id=parent?'system:'+path:'disk';
-    const entry={id,name,parent:parent||'computer',type:children?'folder':'system-file',icon:ic,readOnly:true,path:path+(children?'\\':'')};
+    const entry={id,name,parent:parent||'computer',type:children?'folder':'system-file',icon:ic,readOnly:true,path:path+(children?'\\':''),hidden:!children&&/\.(dll|sys)$/i.test(name)};
     entries[id]=entry;
     if(children)for(const child of children)Array.isArray(child)?add(child[0],id,child[1]):add(child,id,null,/\.exe$/i.test(child)?'windows':'documents');
     return entry;
@@ -195,7 +195,7 @@ register('explorer',(initial='computer')=>{
     [t("text_edit")]:()=>[{label:t("text_cut"),shortcut:'Ctrl+X',action:cut,disabled:!canEdit()},{label:t("text_copy"),shortcut:'Ctrl+C',action:copy,disabled:!canEdit()||folder==='recycle'},{label:t("text_paste"),shortcut:'Ctrl+V',action:pasteHere,disabled:!XP.canPaste()||readOnly()||folder==='recycle'},null,{label:t("text_rename"),action:rename,disabled:!canEdit()},{label:t("text_delete"),action:remove,disabled:!selectedFile()||readOnly()}],
     [t("text_view")]:()=>[...viewItems(),{label:t("text_refresh"),shortcut:'F5',action:render}],
     [t("text_favorites")]:[{label:t("text_my_documents"),icon:'documents',action:()=>navigate('documents')},{label:t("text_my_pictures"),icon:'pictures',action:()=>navigate('pictures')}],
-    [t("text_tools")]:[{label:t("text_folder_options"),action:()=>XP.dialog(t("text_folder_options"),t("text_double_click_an_item_to_open_it_right_click_your_own_files_to_rename_d_f9a22505"))}],
+    [t("text_tools")]:[{label:t("text_folder_options"),action:()=>XP.open('folderOptions')}],
     [t("text_help")]:[{label:t("text_help_and_support"),action:()=>XP.open('help')}]
   },true);
   const toolbar=document.createElement('div');toolbar.className='toolbar';
@@ -213,6 +213,7 @@ register('explorer',(initial='computer')=>{
   const sizeOf=file=>file.type==='folder'?null:Math.max(1,Math.ceil((file.content||'').length/1024));
   const sizeText=file=>{const size=sizeOf(file);return size===null?'':`${size.toLocaleString(locale())} KB`;};
   const dateText=file=>file.modified?new Date(file.modified).toLocaleString(locale(),{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+  const displayName=file=>state.folderOptions?.hideExtensions!==false&&file.type!=='folder'?file.name.replace(/\.[^.]+$/,''):file.name;
   const columns=file=>folder==='recycle'?`<span class="col-original">${esc(folderPath(file.originalParent||file.parent))}</span><span class="col-date">${esc(file.deletedAt?new Date(file.deletedAt).toLocaleString(locale(),{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'')}</span>`:`<span class="col-size">${sizeText(file)}</span><span class="col-type">${esc(typeName(file))}</span><span class="col-date">${esc(dateText(file))}</span>`;
   // Clicking a column header sorts by it, and clicking it again turns the order around.
   const compare=(a,b)=>{
@@ -236,7 +237,7 @@ register('explorer',(initial='computer')=>{
     return XP.profileFiles(owner).filter(f=>f.type==='folder'&&!f.deleted&&f.parent===parent)
       .sort((a,b)=>a.name.localeCompare(b.name,'hu')).map(f=>({id:context?profileRef(owner,f.id):f.id,name:f.name,icon:'folder'}));
   };
-  const systemChildren=id=>Object.values(system).filter(f=>f.parent===id&&f.type==='folder')
+  const systemChildren=id=>Object.values(system).filter(f=>f.parent===id&&f.type==='folder'&&(!f.hidden||state.folderOptions?.showHidden))
     .sort((a,b)=>a.name.localeCompare(b.name,'hu')).map(f=>({id:f.id,name:f.name,icon:'folder'}));
   function treeChildren(id){
     if(id==='desktop')return [{id:'computer',name:t("text_my_computer"),icon:'computer'},{id:'documents',name:t("text_my_documents"),icon:'documents'},
@@ -277,19 +278,19 @@ register('explorer',(initial='computer')=>{
       html=`<div class="explorer-section">${esc(t("text_my_network_places"))}</div><div class="file-grid">${item(t("text_entire_network"),'network','data-folder="network-entire"')}${item(t("text_workgroup_computers"),'computer','data-folder="network-workgroup"')}</div>`;count=2;
     }else if(profileContext){
       const owner=profileContext.owner,parent=system[folder]?.profileRoot?profileContext.root:realId(folder);
-      const mounted=Object.values(system).filter(f=>f.parent===folder&&f.type==='folder').sort((a,b)=>a.name.localeCompare(b.name,'hu'));
-      const files=XP.profileFiles(owner).filter(f=>!f.deleted&&f.parent===parent).sort(compare);
+      const mounted=Object.values(system).filter(f=>f.parent===folder&&f.type==='folder'&&(!f.hidden||state.folderOptions?.showHidden)).sort((a,b)=>a.name.localeCompare(b.name,'hu'));
+      const files=XP.profileFiles(owner).filter(f=>!f.deleted&&f.parent===parent&&(!f.hidden||state.folderOptions?.showHidden)).sort(compare);
       const refs=files.map(file=>({file,id:profileRef(owner,file.id)}));
       count=mounted.length+files.length;
-      html=`${header()}<div class="file-grid">${mounted.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}${profileContext.root==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${profileContext.root==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${refs.map(({file,id})=>item(file.name,XP.fileIcon(file),`data-file="${esc(id)}"`,`${selected===id?'selected':''} ${XP.clipped===file.id?'cut':''} ${file.type==='shortcut'?'shortcut':''}`,columns(file))).join('')}</div>`;
+      html=`${header()}<div class="file-grid">${mounted.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}${profileContext.root==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${profileContext.root==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${refs.map(({file,id})=>item(displayName(file),XP.fileIcon(file),`data-file="${esc(id)}"`,`${selected===id?'selected':''} ${XP.clipped===file.id?'cut':''} ${file.type==='shortcut'?'shortcut':''}`,columns(file))).join('')}</div>`;
       if(profileContext.root==='pictures')count+=3;if(profileContext.root==='music')count++;
     }else if(readOnly()){
-      const children=Object.values(system).filter(f=>f.parent===folder).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
-      count=children.length;html=`${header()}<div class="file-grid">${children.map(f=>item(f.name,f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}</div>`;
+      const children=Object.values(system).filter(f=>f.parent===folder&&(!f.hidden||state.folderOptions?.showHidden)).sort((a,b)=>(b.type==='folder')-(a.type==='folder')||a.name.localeCompare(b.name,'hu'));
+      count=children.length;html=`${header()}<div class="file-grid">${children.map(f=>item(displayName(f),f.icon,`data-system="${esc(f.id)}"`,selected===f.id?'selected':'',columns(f))).join('')}</div>`;
     }else{
-      const files=state.files.filter(f=>folder==='recycle'?f.deleted&&!state.files.find(parent=>parent.id===f.parent)?.deleted:!f.deleted&&f.parent===folder).sort(compare);
+      const files=state.files.filter(f=>(folder==='recycle'?f.deleted&&!state.files.find(parent=>parent.id===f.parent)?.deleted:!f.deleted&&f.parent===folder)&&(!f.hidden||state.folderOptions?.showHidden)).sort(compare);
       const ownFolders=folder==='documents'?[item(t("text_my_pictures"),'pictures','data-folder="pictures"'),item(t("text_my_music"),'music','data-folder="music"')].join(''):'';
-      count=files.length+(folder==='documents'?2:0);html=`${header()}<div class="file-grid">${ownFolders}${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${files.map(f=>item(f.name,XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`,columns(f))).join('')}</div>`;
+      count=files.length+(folder==='documents'?2:0);html=`${header()}<div class="file-grid">${ownFolders}${folder==='pictures'?['bliss','azul','autumn'].map(key=>`<button class="file-item" data-wallpaper="${key}"><img src="${XP.wallpaperPath(key)}" alt=""><span>${key==='bliss'?'Bliss':key==='azul'?'Azul':'Autumn'}</span></button>`).join(''):''}${folder==='music'?item(t("text_windows_xp_system_sounds"),'player','data-player'):''}${files.map(f=>item(displayName(f),XP.fileIcon(f),`data-file="${esc(f.id)}"`,`${selected===f.id?'selected':''} ${XP.clipped===f.id?'cut':''} ${f.type==='shortcut'?'shortcut':''}`,columns(f))).join('')}</div>`;
       if(folder==='pictures')count+=3;if(folder==='music')count++;
     }
     if(!count)html+=`<div class="empty-folder">${icon(folder==='recycle'?'recycle':'folder')}${folder==='recycle'?esc(t("text_the_recycle_bin_is_empty")):esc(t("text_this_folder_is_empty"))}</div>`;
@@ -321,6 +322,7 @@ register('explorer',(initial='computer')=>{
     const b=e.target.closest('.file-item');selected=buttonId(b);
     $$('.file-item',filesEl).forEach(el=>el.classList.toggle('selected',el===b));
     const details=selectedEntry();$('span',bar).textContent=details?`${details.name} · ${entryType(details)}${details.readOnly?' · '+t("text_read_only"):''}`:t("text_no_selection");render(true);
+    if(state.folderOptions?.singleClick&&b)activate(b);
   };
   function activate(target){
     const b=target.closest('.file-item');if(!b||XP.modal)return;
@@ -328,7 +330,7 @@ register('explorer',(initial='computer')=>{
     if(b.dataset.wallpaper)XP.open('image',null,XP.wallpaperPath(b.dataset.wallpaper),b.dataset.wallpaper);
     if(b.hasAttribute('data-player'))XP.open('player');
   }
-  filesEl.ondblclick=e=>activate(e.target);filesEl.onpointerup=e=>{if(e.pointerType==='touch')activate(e.target);};
+  filesEl.ondblclick=e=>{if(!state.folderOptions?.singleClick)activate(e.target);};filesEl.onpointerup=e=>{if(e.pointerType==='touch')activate(e.target);};
   // Dragging a file out of the window: the icon follows the pointer and whatever is
   // under it lights up, so the same gesture works towards the desktop or another folder.
   filesEl.onpointerdown=e=>{
