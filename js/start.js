@@ -12,24 +12,33 @@ const baseIcons=[
  {id:'recycle',label:'Lomtár',icon:'recycle',app:'recycle'}
 ];
 const BOOT_DURATION=5500,WELCOME_DURATION=2000;
-let selectedIcon=null,skipClick=false,desktopShown=false,hiddenWindows=[],bootTimer,welcomeTimer,bootPhase='boot';
+let selectedIcon=null,selectedIcons=new Set(),skipClick=false,desktopShown=false,hiddenWindows=[],bootTimer,welcomeTimer,bootPhase='boot';
 let bootGeneration=0,startupPending=false;
 function desktopItems(){return [...baseIcons.map(i=>({...i,label:t(i.label),icon:i.id==='recycle'?XP.recycleIcon():i.icon})),...state.files.filter(f=>f.parent==='desktop'&&!f.deleted).map(f=>({id:f.id,label:f.name,icon:XP.fileIcon(f),file:f.id,shortcut:f.type==='shortcut'}))];}
 function activateIcon(item){if(item.file)XP.openFile(item.file);else XP.open(item.app);}
 function renderIcons(){
  const el=$('#desktop-icons');el.replaceChildren();
  const items=desktopItems(),grid=XP.DesktopGrid.create($('#desktop').clientWidth,$('#desktop').clientHeight,items.length);
- let positions=XP.DesktopGrid.layout(items.map(item=>item.id),state.iconPositions,grid);
+ let positions=XP.DesktopGrid.layout(items.map(item=>item.id),state.desktopOptions?.autoArrange?{}:state.iconPositions,grid);
+ const select=(id,add=false,range=false)=>{
+  if(range&&selectedIcon){
+   const ids=items.map(entry=>entry.id),from=ids.indexOf(selectedIcon),to=ids.indexOf(id);
+   if(from>=0&&to>=0){if(!add)selectedIcons.clear();ids.slice(Math.min(from,to),Math.max(from,to)+1).forEach(value=>selectedIcons.add(value));}
+  }else if(add){selectedIcons.has(id)?selectedIcons.delete(id):selectedIcons.add(id);}
+  else{selectedIcons.clear();selectedIcons.add(id);}
+  selectedIcon=selectedIcons.has(id)?id:[...selectedIcons].at(-1)||null;
+  $$('.desktop-icon').forEach(node=>node.classList.toggle('selected',selectedIcons.has(node.dataset.iconId)));
+ };
  const place=(button,id)=>{const p=XP.DesktopGrid.pixel(positions[id],grid);button.style.left=p.x+'px';button.style.top=p.y+'px';};
  items.forEach(item=>{
- const b=document.createElement('button');b.className='desktop-icon'+(selectedIcon===item.id?' selected':'')+(XP.clipped===item.file?' cut':'')+(item.shortcut?' shortcut':'');b.dataset.iconId=item.id;place(b,item.id);
+ const b=document.createElement('button');b.className='desktop-icon'+(selectedIcons.has(item.id)?' selected':'')+(XP.clipped===item.file?' cut':'')+(item.shortcut?' shortcut':'');b.dataset.iconId=item.id;place(b,item.id);
  b.innerHTML=`${icon(item.icon)}<span class="icon-label">${esc(item.label)}</span>`;b.setAttribute('aria-label',item.label);b.title=item.label;
- b.onclick=()=>{if(skipClick){skipClick=false;return;}selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));if(state.folderOptions?.singleClick)activateIcon(item);};b.ondblclick=()=>{if(!state.folderOptions?.singleClick)activateIcon(item);};b.onkeydown=e=>{
+ b.onclick=e=>{if(skipClick){skipClick=false;return;}select(item.id,e.ctrlKey,e.shiftKey);if(state.folderOptions?.singleClick&&!e.ctrlKey&&!e.shiftKey)activateIcon(item);};b.ondblclick=()=>{if(!state.folderOptions?.singleClick)activateIcon(item);};b.onkeydown=e=>{
   if(e.key==='Enter'){e.preventDefault();activateIcon(item);}
   if(e.key==='Delete'&&item.file)XP.trashFile(item.file);
   if(e.ctrlKey){const key=e.key.toLowerCase();if(key==='v'){e.preventDefault();XP.paste('desktop');}if(item.file&&(key==='x'||key==='c')){e.preventDefault();XP.clip(item.file,key==='x');}}
  };
- b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));XP.menu([{label:t("text_open"),icon:item.icon,action:()=>activateIcon(item)},...(item.id==='computer'?[{label:t("text_explore"),icon:'folder',action:()=>XP.open('explorer')},{label:t("text_search_35795fbf"),icon:'search',action:()=>XP.open('search')},{label:t("text_manage"),icon:'computer',action:()=>XP.open('compmgmt')},null,{label:t("text_map_network_drive"),disabled:true},{label:t("text_disconnect_network_drive"),disabled:true}]:[]),...(item.id==='recycle'?[{label:t("text_empty_recycle_bin"),icon:'recycle',action:XP.emptyTrash,disabled:!state.files.some(f=>f.deleted)}]:[]),...(item.file?[null,{label:t("text_cut"),shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:t("text_copy"),shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:t("text_send_to"),items:[
+ b.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();if(!selectedIcons.has(item.id))select(item.id);XP.menu([{label:t("text_open"),icon:item.icon,action:()=>activateIcon(item)},...(item.id==='computer'?[{label:t("text_explore"),icon:'folder',action:()=>XP.open('explorer')},{label:t("text_search_35795fbf"),icon:'search',action:()=>XP.open('search')},{label:t("text_manage"),icon:'computer',action:()=>XP.open('compmgmt')},null,{label:t("text_map_network_drive"),disabled:true},{label:t("text_disconnect_network_drive"),disabled:true}]:[]),...(item.id==='recycle'?[{label:t("text_empty_recycle_bin"),icon:'recycle',action:XP.emptyTrash,disabled:!state.files.some(f=>f.deleted)}]:[]),...(item.file?[null,{label:t("text_cut"),shortcut:'Ctrl+X',action:()=>XP.clip(item.file,true)},{label:t("text_copy"),shortcut:'Ctrl+C',action:()=>XP.clip(item.file,false)},null,{label:t("text_send_to"),items:[
   {label:t("text_desktop_create_shortcut"),icon:'showdesktop',action:()=>{if(XP.shortcutToFile(item.file))notify(t("text_shortcut"),t("text_the_shortcut_to_name_has_been_created",{name:item.label}));}},
   {label:t("text_my_documents"),icon:'documents',action:()=>{if(XP.copyInto(item.file,'documents'))notify(t("text_send_to"),t("text_a_copy_was_placed_in_my_documents_name",{name:item.label}));}}
  ]},
@@ -38,7 +47,7 @@ function renderIcons(){
   if(e.button!==0)return;
   const sx=e.clientX,sy=e.clientY,left=parseInt(b.style.left),top=parseInt(b.style.top);
   let moved=false;
-  selectedIcon=item.id;$$('.desktop-icon').forEach(n=>n.classList.toggle('selected',n===b));
+  if(!selectedIcons.has(item.id))select(item.id);
   b.setPointerCapture(e.pointerId);
   const finish=(ev,cancelled=false)=>{
    b.onpointermove=null;b.onpointerup=null;b.onpointercancel=null;b.onlostpointercapture=null;
@@ -47,7 +56,7 @@ function renderIcons(){
    XP.highlightDrop(null);
    // Dropped on the bin or into a folder the file leaves the desktop; otherwise it just moves.
    const relocated=item.file&&target&&target.type!=='desktop'&&XP.applyDrop(target,item.file,null,ev.ctrlKey);
-   if(moved&&!cancelled&&!relocated){
+   if(moved&&!cancelled&&!relocated&&!state.desktopOptions?.autoArrange){
     positions=XP.DesktopGrid.drop(positions,item.id,{x:parseInt(b.style.left),y:parseInt(b.style.top)},grid);
     state.iconPositions=positions;persist();
    }
@@ -182,19 +191,22 @@ function sortIcons(by){
  });
  const grid=XP.DesktopGrid.create($('#desktop').clientWidth,$('#desktop').clientHeight,order.length);
  state.iconPositions={};
- if(by!=='grid')order.forEach((item,index)=>{state.iconPositions[item.id]={col:Math.floor(index/grid.rows),row:index%grid.rows};});
+ order.forEach((item,index)=>{state.iconPositions[item.id]={col:Math.floor(index/grid.rows),row:index%grid.rows};});
  persist();renderIcons();
 }
+function toggleAutoArrange(){state.desktopOptions={...(state.desktopOptions||{}),autoArrange:!state.desktopOptions?.autoArrange,alignToGrid:true};if(state.desktopOptions.autoArrange)state.iconPositions={};persist();renderIcons();}
+function alignDesktopIcons(){state.desktopOptions={...(state.desktopOptions||{}),alignToGrid:true};sortIcons('position');}
 async function newDesktop(type){const result=await XP.prompt(type==='folder'?t("text_new_folder"):t("text_new_text_document"),t("text_name_14078c2c"),type==='folder'?t("text_new_folder"):t("text_new_document_txt"));let name=XP.fileName(result);if(!name)return;if(type==='text'&&!name.endsWith('.txt'))name+='.txt';if(state.files.some(f=>f.parent==='desktop'&&f.name===name&&!f.deleted)){notify(t("text_new_item"),t("text_that_name_is_already_taken"));return;}XP.saveFile({id:XP.uniqueId(),name,type,parent:'desktop',content:''});}
 $('#desktop').oncontextmenu=e=>{if(e.target.closest('.window,.desktop-icon'))return;e.preventDefault();XP.menu([
   {label:t("text_arrange_icons_by"),items:[
    {label:t("text_name"),action:()=>sortIcons('name')},{label:t("text_type"),action:()=>sortIcons('type')},
    {label:t("text_modified"),action:()=>sortIcons('modified')},null,
-   {label:t("text_auto_arrange"),action:()=>sortIcons('grid')}
+   {label:t("text_auto_arrange"),checked:!!state.desktopOptions?.autoArrange,action:toggleAutoArrange},
+   {label:t("text_align_to_grid"),checked:state.desktopOptions?.alignToGrid!==false,action:alignDesktopIcons}
   ]},
   {label:t("text_refresh"),action:renderIcons},null,
   {label:t("text_new"),items:[{label:t("text_folder"),icon:'folder',action:()=>newDesktop('folder')},{label:t("text_text_document"),icon:'notepad',action:()=>newDesktop('text')}]},{label:t("text_paste"),shortcut:'Ctrl+V',action:()=>XP.paste('desktop'),disabled:!XP.canPaste()},null,{label:document.fullscreenElement?t("text_exit_full_screen"):t("text_full_screen"),action:()=>{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p?.catch(()=>notify(t("text_full_screen"),t("text_you_can_also_press_f11_for_full_screen")));}},{label:t("text_properties"),icon:'control',action:()=>XP.open('display')}],e.clientX,e.clientY);};
-$('#desktop').addEventListener('pointerdown',e=>{if(e.target.closest('.window,.desktop-icon')||e.button!==0||XP.modal)return;selectedIcon=null;$$('.desktop-icon').forEach(b=>b.classList.remove('selected'));const box=$('#selection-box'),x=e.clientX,y=e.clientY;box.hidden=false;Object.assign(box.style,{left:x+'px',top:y+'px',width:'0px',height:'0px'});function move(ev){Object.assign(box.style,{left:Math.min(x,ev.clientX)+'px',top:Math.min(y,ev.clientY)+'px',width:Math.abs(x-ev.clientX)+'px',height:Math.abs(y-ev.clientY)+'px'});const r=box.getBoundingClientRect();$$('.desktop-icon').forEach(b=>{const br=b.getBoundingClientRect();b.classList.toggle('selected',br.left<r.right&&br.right>r.left&&br.top<r.bottom&&br.bottom>r.top);});}function up(){box.hidden=true;document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);});
+$('#desktop').addEventListener('pointerdown',e=>{if(e.target.closest('.window,.desktop-icon')||e.button!==0||XP.modal)return;if(!e.ctrlKey){selectedIcon=null;selectedIcons.clear();$$('.desktop-icon').forEach(b=>b.classList.remove('selected'));}const box=$('#selection-box'),x=e.clientX,y=e.clientY,original=new Set(selectedIcons);box.hidden=false;Object.assign(box.style,{left:x+'px',top:y+'px',width:'0px',height:'0px'});function move(ev){Object.assign(box.style,{left:Math.min(x,ev.clientX)+'px',top:Math.min(y,ev.clientY)+'px',width:Math.abs(x-ev.clientX)+'px',height:Math.abs(y-ev.clientY)+'px'});const r=box.getBoundingClientRect();selectedIcons=new Set(original);$$('.desktop-icon').forEach(b=>{const br=b.getBoundingClientRect(),inside=br.left<r.right&&br.right>r.left&&br.top<r.bottom&&br.bottom>r.top;if(inside)selectedIcons.add(b.dataset.iconId);b.classList.toggle('selected',selectedIcons.has(b.dataset.iconId));});selectedIcon=[...selectedIcons].at(-1)||null;}function up(){box.hidden=true;document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);});
 // Cascade and tile, both measured against the desktop the way the taskbar arranged them.
 function arrange(mode){
  const list=[...XP.windows.values()].filter(w=>!w.modal&&!w.fixed);
