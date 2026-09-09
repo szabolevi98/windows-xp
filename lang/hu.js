@@ -1539,5 +1539,8 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_stop": "Leállítás",
   "text_content": "Tartalom",
   "text_connections": "Kapcsolatok",
-  "text_programs": "Programok"
+  "text_programs": "Programok",
+  "text_cmd_help_vfs": "Elérhető parancsok:\nHELP  Súgó\nDIR [útvonal]  Mappa tartalma\nCD [útvonal]  Mappaváltás\nTYPE fájl  Szövegfájl megjelenítése\nMD mappa  Új mappa\nDEL fájl  Fájl törlése\nECHO szöveg > fájl  Szövegfájl írása\nCLS  Képernyő törlése\nSTART program  Program indítása\nVER, DATE, TIME, WHOAMI, COLOR, PING, EXIT",
+  "text_access_is_denied": "A hozzáférés megtagadva.",
+  "text_a_subdirectory_or_file_already_exists": "Már létezik ilyen nevű alkönyvtár vagy fájl."
 }});

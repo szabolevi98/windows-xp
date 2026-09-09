@@ -1539,5 +1539,8 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {en: {
   "text_stop": "Stop",
   "text_content": "Content",
   "text_connections": "Connections",
-  "text_programs": "Programs"
+  "text_programs": "Programs",
+  "text_cmd_help_vfs": "Available commands:\nHELP  This help\nDIR [path]  List a directory\nCD [path]  Change directory\nTYPE file  Display a text file\nMD folder  Create a folder\nDEL file  Delete a file\nECHO text > file  Write a text file\nCLS  Clear the screen\nSTART program  Start a program\nVER, DATE, TIME, WHOAMI, COLOR, PING, EXIT",
+  "text_access_is_denied": "Access is denied.",
+  "text_a_subdirectory_or_file_already_exists": "A subdirectory or file with that name already exists."
 }});
