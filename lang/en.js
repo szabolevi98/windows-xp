@@ -1607,5 +1607,7 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {en: {
   "text_manufacturer": "Manufacturer",
   "text_usb_input_device": "USB Input Device",
   "text_device_status": "Device status",
-  "text_this_device_is_working_properly": "This device is working properly."
+  "text_this_device_is_working_properly": "This device is working properly.",
+  "text_standard": "Standard",
+  "text_scientific": "Scientific"
 }});

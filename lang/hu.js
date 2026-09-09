@@ -1607,5 +1607,7 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_manufacturer": "Gyártó",
   "text_usb_input_device": "USB beviteli eszköz",
   "text_device_status": "Eszköz állapota",
-  "text_this_device_is_working_properly": "Az eszköz megfelelően működik."
+  "text_this_device_is_working_properly": "Az eszköz megfelelően működik.",
+  "text_standard": "Standard",
+  "text_scientific": "Tudományos"
 }});
