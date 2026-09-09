@@ -146,8 +146,20 @@ test('The taskbar groups a crowded program, and every window carries its own men
  // The window menu lives in one place and is reached three ways.
  assert.match(core,/function windowMenu\(win\)/);
  assert.match(core,/bar\.oncontextmenu=e=>\{[^}]*menu\(windowMenu\(win\)/,'title bar right click');
- assert.match(core,/\$\('img',bar\)\.onclick=/,'the title bar icon opens it too');
+ assert.match(core,/titleIcon\.onclick=/,'the title bar icon opens it too');
+ assert.match(core,/e\.target===titleIcon[^}]*close\(win\)/,'double-clicking the title bar icon closes the window');
+ assert.match(core,/label:t\("text_move"\),disabled:win\.minimized\|\|win\.maximized,action:\(\)=>beginWindowCommand\(win,'move'\)/,'Move is available when XP allowed it');
+ assert.match(core,/label:t\("text_size"\),disabled:win\.minimized\|\|win\.maximized\|\|win\.fixed,action:\(\)=>beginWindowCommand\(win,'size'\)/,'Size is available for resizable windows');
  assert.match(core,/if\(e\.altKey&&e\.key===' '&&active\)/,'and Alt+Space');
+});
+
+test('Alt+Tab uses recent windows and waits for Alt to be released',()=>{
+ const core=read('js/core.js');
+ assert.match(core,/mru=\[win\.id,\.\.\.mru\.filter\(id=>id!==win\.id\)\]/);
+ assert.match(core,/function stepAltTab\(reverse=false\)/);
+ assert.match(core,/if\(e\.altKey&&e\.key==='Tab'&&!e\.repeat\)/);
+ assert.match(core,/if\(e\.key==='Alt'\)finishAltTab\(false\)/);
+ assert.match(read('styles.css'),/\.alt-tab-switcher\{/);
 });
 
 test('Windows fly to the taskbar and back, and the menus fade in',()=>{

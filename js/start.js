@@ -297,8 +297,8 @@ function logonPower(){
   panel.remove();
   if(action==='cancel')return;
   persist();
-  if(action==='restart'){closeAll();boot();return;}
-  if(action==='shutdown'){closeAll();XP.sound('shutdown');screen.hidden=true;$('#off-screen').hidden=false;bootPhase='off';return;}
+  if(action==='restart'){closeAll();XP.closeParked();boot();return;}
+  if(action==='shutdown'){closeAll();XP.closeParked();XP.sound('shutdown');screen.hidden=true;$('#off-screen').hidden=false;bootPhase='off';return;}
   // Waking from standby returns to the logon screen, since nobody has signed in yet.
   bootPhase='standby';
   $('.welcome-center').innerHTML=`<button class="welcome-user"><span><strong>${esc(t("text_stand_by"))}</strong><small>${esc(t("text_click_to_continue"))}</small></span></button>`;
