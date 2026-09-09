@@ -67,6 +67,19 @@ window.XP = (() => {
     }
     state.cardGamesAdded=true;
   }
+  // Built-in folders and shortcuts follow the interface language after a restart.
+  // A custom name is deliberately left alone.
+  const localizeSeed=(id,key,contentKey)=>{
+    const file=state.files.find(item=>item.id===id);if(!file)return;
+    const known=Object.values(window.XP_STRINGS||{}).map(table=>table?.[key]).filter(Boolean);
+    if(known.includes(file.name))file.name=t(key);
+    if(contentKey){const contents=Object.values(window.XP_STRINGS||{}).map(table=>table?.[contentKey]).filter(Boolean);if(contents.includes(file.content))file.content=t(contentKey);}
+  };
+  localizeSeed('folder-games','text_games');
+  localizeSeed('shortcut-mines','text_minesweeper');localizeSeed('shortcut-solitaire','text_solitaire');localizeSeed('shortcut-pinball','text_3d_pinball_space_cadet');
+  localizeSeed('shortcut-freecell','text_freecell');localizeSeed('shortcut-spider','text_spider_solitaire');localizeSeed('shortcut-hearts','text_hearts');
+  localizeSeed('welcome','text_welcome_to_windows_xp_txt','text_welcome_back_to_2001_this_is_your_own_windows_xp_living_in_a_browser_d_82cbf277');
+  localizeSeed('todo','text_to_do_txt','text_things_to_do_today_rediscover_the_start_menu_draw_something_in_paint_w_ed89fdbb');localizeSeed('folder-personal','text_personal');
   }
   seedProfile();
   persist();
