@@ -27,13 +27,23 @@
     const w=XP.createWindow({title:t("text_windows_task_manager"),icon:'taskmgr',app:'taskmgr',className:'taskmgr-window',
       width:520,height:500,minWidth:400,minHeight:340});
     const TABS=[['apps',t("text_applications")],['processes',t("text_processes")],['performance',t("text_performance")],['network',t("text_network")],['users',t("text_users")]];
-    let tab='apps',selectedTask=null,selectedProcess=null,cpu=3,history=Array(60).fill(3),net=Array(60).fill(0);
+    const savedOptions=state.taskManager||{};
+    let tab='apps',selectedTask=null,selectedProcess=null,cpu=3,history=Array(60).fill(3),net=Array(60).fill(0),
+      alwaysOnTop=savedOptions.alwaysOnTop!==false,minimizeOnUse=!!savedOptions.minimizeOnUse;
+    const saveOptions=()=>{
+      state.taskManager={alwaysOnTop,minimizeOnUse};
+      XP.persist();
+      w.el.classList.toggle('taskmgr-always-on-top',alwaysOnTop);
+    };
     const others=()=>[...XP.windows.values()].filter(win=>!win.modal);
     const rows=()=>processes(others().map(win=>win.app),state.user||t("text_administrator"));
 
     XP.menubar(w,{
       [t("text_file")]:()=>[{label:t("text_new_task_run"),action:()=>XP.open('run')},null,{label:t("text_exit_task_manager"),action:()=>w.close()}],
-      [t("text_options")]:[{label:t("text_always_on_top"),disabled:true},{label:t("text_minimize_on_use"),disabled:true}],
+      [t("text_options")]:()=>[
+        {label:t("text_always_on_top"),checked:alwaysOnTop,action:()=>{alwaysOnTop=!alwaysOnTop;saveOptions();}},
+        {label:t("text_minimize_on_use"),checked:minimizeOnUse,action:()=>{minimizeOnUse=!minimizeOnUse;saveOptions();}}
+      ],
       [t("text_view")]:()=>TABS.map(([key,label])=>({label,checked:tab===key,action:()=>{tab=key;render();}})),
       [t("text_shut_down")]:[{label:t("text_stand_by"),action:()=>XP.open('power')},{label:t("text_turn_off"),action:()=>XP.open('power')},null,{label:t("text_log_off"),action:()=>XP.open('logoff')}],
       [t("text_help")]:[{label:t("text_about_task_manager"),action:()=>XP.dialog(t("text_windows_task_manager"),t("text_windows_task_manager_shows_the_programs_and_processes_that_are_running_5b17cd95"))}]
@@ -116,8 +126,13 @@
     buttons.onclick=event=>{
       const action=event.target.closest('[data-do]')?.dataset.do;
       const target=selectedTask&&XP.windows.get(selectedTask);
-      if(action==='end'){if(target)XP.close(target);selectedTask=null;render();}
-      if(action==='switch'&&target)XP.focus(target);
+      if(action==='end'&&target){
+        XP.confirm(t("text_end_task"),t("text_do_you_want_to_end_name_unsaved_data_will_be_lost",{name:target.title})).then(answer=>{
+          if(answer)XP.close(target);
+          selectedTask=null;render();
+        });
+      }
+      if(action==='switch'&&target){XP.focus(target);if(minimizeOnUse)XP.minimize(w);}
       if(action==='new')XP.open('run');
       if(action==='logoff'||action==='switch-user')XP.open('logoff');
       if(action==='kill'){
@@ -143,6 +158,7 @@
     },1200);
     w.cleanup.push(()=>clearInterval(tick));
     XP.onFiles(w,render);
+    saveOptions();
     render();
     return w;
   });
