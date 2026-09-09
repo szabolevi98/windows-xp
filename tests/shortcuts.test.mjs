@@ -176,6 +176,16 @@ test('Explorer follows XP drive, address bar, network and Recycle Bin behavior',
  assert.match(ex,/text_shared_documents/);assert.match(ex,/text_my_network_places/);
 });
 
+test('Folder and Internet Options are real property sheets',()=>{
+ const utils=read('js/utilities.js'),ex=read('js/explorer.js'),ie=read('js/internet.js'),player=read('js/player.js');
+ assert.match(utils,/register\('folderOptions'/);assert.match(utils,/register\('internetOptions'/);
+ assert.match(utils,/state\.folderOptions=\{\.\.\.draft\}/);
+ assert.match(ex,/state\.folderOptions\?\.singleClick/);assert.match(ex,/hideExtensions!==false/);assert.match(ex,/folderOptions\?\.showHidden/);
+ assert.match(ie,/XP\.open\('internetOptions'\)/);assert.match(ie,/state\.browserHistory=\[/);
+ assert.doesNotMatch(ie,/t\("text_shut_down"\)/);assert.doesNotMatch(player,/t\("text_shut_down"\)/);
+ assert.match(ie,/t\("text_stop"\)/);assert.match(player,/t\("text_stop"\)/);
+});
+
 test('The Start menu fills its own list of programs',()=>{
  const core=readFileSync(new URL('js/core.js',root),'utf8');
  // Opening a program counts, but only the ones that belong on that list.

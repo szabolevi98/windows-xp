@@ -388,15 +388,42 @@ function soundProperties(initial='volume'){
  });
 }
 
+register('folderOptions',()=>{
+ const draft={singleClick:false,showHidden:false,hideExtensions:true,...(state.folderOptions||{})};
+ return propertySheet({app:'folderOptions',title:t("text_folder_options"),icon:'folder',width:455,height:500,initial:'general',
+  tabs:[['general',t("text_general")],['view',t("text_view")],['types',t("text_file_types")]],
+  read(tab,panel){if(tab==='general')draft.singleClick=$('[name=click-mode]:checked',panel)?.value==='single';if(tab==='view'){draft.showHidden=$('[name=hidden]:checked',panel)?.value==='show';draft.hideExtensions=$('[name=hide-extensions]',panel).checked;}},
+  draw(tab,panel){
+   if(tab==='general')panel.innerHTML=`<fieldset><legend>${esc(t("text_click_items_as_follows"))}</legend><label class="settings-field"><input type="radio" name="click-mode" value="single" ${draft.singleClick?'checked':''}> <b>${esc(t("text_single_click_to_open_an_item"))}</b><br><small>${esc(t("text_point_to_select"))}</small></label><label class="settings-field"><input type="radio" name="click-mode" value="double" ${draft.singleClick?'':'checked'}> <b>${esc(t("text_double_click_to_open_an_item"))}</b><br><small>${esc(t("text_single_click_to_select"))}</small></label></fieldset>`;
+   if(tab==='view')panel.innerHTML=`<fieldset><legend>${esc(t("text_advanced_settings"))}</legend><b>${esc(t("text_hidden_files_and_folders"))}</b><label class="settings-check"><input type="radio" name="hidden" value="hide" ${draft.showHidden?'':'checked'}> ${esc(t("text_do_not_show_hidden_files_and_folders"))}</label><label class="settings-check"><input type="radio" name="hidden" value="show" ${draft.showHidden?'checked':''}> ${esc(t("text_show_hidden_files_and_folders"))}</label><label class="settings-check"><input type="checkbox" name="hide-extensions" ${draft.hideExtensions?'checked':''}> ${esc(t("text_hide_extensions_for_known_file_types"))}</label></fieldset>`;
+   if(tab==='types')panel.innerHTML=`<p>${esc(t("text_registered_file_types"))}</p><div class="file-type-list">${[['notepad','TXT',t("text_text_document")],['pictures','BMP',t("text_image")],['pictures','PNG',t("text_image")],['windows','EXE',t("text_application")]].map(([ic,ext,name])=>`<div>${icon(ic)}<b>${ext}</b><span>${esc(name)}</span></div>`).join('')}</div>`;
+  },
+  apply(){state.folderOptions={...draft};persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));}
+ });
+});
+
+register('internetOptions',()=>{
+ const draft={home:state.browserHome||'google.hu',historyDays:state.browserHistoryDays??20};
+ return propertySheet({app:'internetOptions',title:t("text_internet_options_7382f1bc"),icon:'ie',width:455,height:505,initial:'general',
+  tabs:[['general',t("text_general")],['security',t("text_security")],['privacy',t("text_privacy")],['content',t("text_content")],['connections',t("text_connections")],['programs',t("text_programs")],['advanced',t("text_advanced")]],
+  read(tab,panel){if(tab==='general'){draft.home=($('[name=home-page]',panel).value.trim()||'google.hu').slice(0,300);draft.historyDays=Math.max(0,Math.min(999,Number($('[name=history-days]',panel).value)||0));}},
+  draw(tab,panel){
+   if(tab==='general'){panel.innerHTML=`<fieldset><legend>${esc(t("text_home_page"))}</legend><p>${esc(t("text_home_page_address"))}</p><input type="text" name="home-page" value="${esc(draft.home)}"><div class="settings-inline"><button class="xp-button" data-home-current>${esc(t("text_use_current"))}</button><button class="xp-button" data-home-default>${esc(t("text_use_default"))}</button></div></fieldset><fieldset><legend>${esc(t("text_temporary_internet_files"))}</legend><p>${esc(t("text_delete_cached_pages_and_browsing_history"))}</p><button class="xp-button" data-clear-history>${esc(t("text_clear_history"))}</button></fieldset><fieldset><legend>${esc(t("text_history"))}</legend><label>${esc(t("text_days_to_keep_pages_in_history"))} <input type="number" name="history-days" min="0" max="999" value="${draft.historyDays}"></label></fieldset>`;const setHome=value=>{const input=$('[name=home-page]',panel);input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));};$('[data-home-current]',panel).onclick=()=>setHome(state.browserCurrent||state.browserHome||'google.hu');$('[data-home-default]',panel).onclick=()=>setHome('google.hu');$('[data-clear-history]',panel).onclick=()=>{state.browserHistory=[];persist();document.dispatchEvent(new CustomEvent('xp-browser-history-cleared'));notify(t("text_internet_options_7382f1bc"),t("text_the_browsing_history_has_been_cleared"));};}
+   else panel.innerHTML=`<div class="settings-block"><b>${esc(t(tab==='security'?"text_security":tab==='privacy'?"text_privacy":"text_internet_options_7382f1bc"))}</b><p>${esc(t("text_local_browser_settings_apply_to_the_pages_stored_on_this_computer"))}</p></div>`;
+  },
+  apply(){state.browserHome=draft.home;state.browserHistoryDays=draft.historyDays;persist();}
+ });
+});
+
 register('control',()=>{
  if(XP.singleton('control'))return;
  const w=createWindow({title:t("text_control_panel"),icon:'control',app:'control',width:760,height:525,minWidth:470,minHeight:380});
  const note=(title,text)=>()=>XP.dialog(title,text);
- const applets={
+  const applets={
   display:{name:t("text_display"),icon:'control',hint:t("text_wallpaper_screen_saver_and_colour_scheme"),open:()=>XP.open('display')},
-  folders:{name:t("text_folder_options"),icon:'folder',hint:t("text_how_items_are_opened"),open:note(t("text_folder_options"),t("text_double_click_an_item_to_open_it_or_tap_once_on_a_touch_screen_right_cl_9257a4dd"))},
+   folders:{name:t("text_folder_options"),icon:'folder',hint:t("text_how_items_are_opened"),open:()=>XP.open('folderOptions')},
   network:{name:t("text_network_connections"),icon:'network',hint:t("text_the_state_of_the_local_area_connection"),open:()=>XP.open('network')},
-  internet:{name:t("text_internet_options_7382f1bc"),icon:'ie',hint:t("text_home_page_history_and_favourites"),open:()=>XP.open('ie')},
+   internet:{name:t("text_internet_options_7382f1bc"),icon:'ie',hint:t("text_home_page_history_and_favourites"),open:()=>XP.open('internetOptions')},
   programs:{name:t("text_add_or_remove_programs"),icon:'programs',hint:t("text_the_programs_installed_on_this_computer"),open:()=>XP.dialog(t("text_add_or_remove_programs"),t("text_currently_installed_programs_internet_explorer_6_12_4_mb_windows_media_364cc81b"))},
   volume:{name:t("text_sounds_and_audio_devices_34b385fc"),icon:'volume',hint:t("text_system_sounds_and_volume"),open:()=>XP.open('sounds')},
   player:{name:t("text_audio_devices"),icon:'player',hint:t("text_playback_and_audio_files"),open:()=>XP.open('player')},
@@ -651,9 +678,9 @@ register('security',()=>{
   const toggle=button.dataset.toggle;
   if(toggle){if(!isAdministrator()){administratorRequired();return;}state.security[toggle]=!state.security[toggle];persist();opened=toggle;render();XP.sound(state.security[toggle]?'ding':'error');return;}
   const manage=button.dataset.manage;
-  if(manage){if(manage==='ie')XP.open('ie');else{opened=manage;render();}return;}
+  if(manage){if(manage==='ie')XP.open('internetOptions');else{opened=manage;render();}return;}
   const link=button.dataset.link;
-  if(link==='ie')XP.open('ie');
+  if(link==='ie')XP.open('internetOptions');
   if(link==='help')XP.open('help');
   if(link==='update')XP.dialog('Windows Update',t("text_the_computer_is_up_to_date_last_checked_today_last_installed_windows_x_bc6b7724"));
   if(link==='about')XP.dialog(t("text_about_security_center"),t("text_security_center_shows_the_three_most_important_protections_of_this_com_915c58fa"));
