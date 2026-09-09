@@ -51,8 +51,8 @@ register('paint',(fileId)=>{
 });
 
 register('calculator',()=>{
- if(XP.singleton('calculator'))return;const w=createWindow({title:t("text_calculator"),icon:'calculator',app:'calculator',width:310,height:337,fixed:true});let value='0',stored=null,op=null,fresh=true,memory=0,lastOp=null,lastValue=null,scientific=state.calculatorView==='scientific',angle='deg';
- const setView=mode=>{scientific=mode==='scientific';state.calculatorView=mode;persist();body.classList.toggle('scientific',scientific);w.el.style.width=(scientific?520:310)+'px';renderKeys();};
+ if(XP.singleton('calculator'))return;const w=createWindow({title:t("text_calculator"),icon:'calculator',app:'calculator',width:310,height:365,fixed:true});let value='0',stored=null,op=null,fresh=true,memory=0,lastOp=null,lastValue=null,scientific=state.calculatorView==='scientific',angle='deg';
+ const setView=mode=>{scientific=mode==='scientific';state.calculatorView=mode;persist();body.classList.toggle('scientific',scientific);w.el.style.width=(scientific?520:310)+'px';w.el.style.height='365px';renderKeys();};
  menubar(w,{[t("text_edit")]:[{label:t("text_result_to_notepad"),action:()=>{state.draft=value;XP.open('notepad');}}],[t("text_view")]:()=>[{label:t("text_standard"),checked:!scientific,action:()=>setView('standard')},{label:t("text_scientific"),checked:scientific,action:()=>setView('scientific')}],[t("text_help")]:[{label:t("text_usage"),action:()=>XP.dialog(t("text_calculator"),t("text_use_the_buttons_or_the_keyboard_enter_result_escape_clear_backspace_delete"))} ]});
  const body=document.createElement('div');body.className='calc';body.innerHTML=`<div class="calc-display" role="status" aria-label="${esc(t("text_result"))}">0</div><div class="calc-top"><button class="xp-button" data-key="back">Backspace</button><button class="xp-button" data-key="CE">CE</button><button class="xp-button" data-key="C">C</button></div><div class="calc-grid"></div><div class="calc-foot">${esc(t("text_the_keyboard_works_too"))}</div>`;w.body.append(body);
  const standardKeys=['MC','7','8','9','/','MR','4','5','6','*','MS','1','2','3','-','M+','0','±','.','+','√','%','1/x','=','C'];

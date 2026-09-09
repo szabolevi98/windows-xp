@@ -504,13 +504,13 @@ register('control',()=>{
   if(here){
    files.className='explorer-files control-files';
    files.innerHTML=`<h1 class="control-title">${esc(here.name)}</h1><p class="control-lead">${esc(here.hint)}</p><h2 class="control-sub">${esc(t("text_pick_a_control_panel_icon"))}</h2><div class="file-grid">${here.items.map(id=>`<button class="file-item" data-applet="${id}">${icon(applets[id].icon)}<span>${esc(applets[id].name)}</span></button>`).join('')}</div>`;
-   bar.firstElementChild.textContent=`${here.items.length} objektum`;
+   bar.firstElementChild.textContent=t("text_count_objects",{count:here.items.length});
    return;
   }
   if(classic){
    files.className='explorer-files control-files';
    files.innerHTML=`<div class="file-grid">${Object.entries(applets).map(([id,a])=>`<button class="file-item" data-applet="${id}">${icon(a.icon)}<span>${esc(a.name)}</span></button>`).join('')}</div>`;
-   bar.firstElementChild.textContent=`${Object.keys(applets).length} objektum`;
+   bar.firstElementChild.textContent=t("text_count_objects",{count:Object.keys(applets).length});
    return;
   }
   files.className='explorer-files control-files category-view';
@@ -665,7 +665,7 @@ register('volume',()=>{
 register('calendar',()=>{
  const current=XP.now(),pad=value=>String(value).padStart(2,'0');
  const draft={date:`${current.getFullYear()}-${pad(current.getMonth()+1)}-${pad(current.getDate())}`,time:`${pad(current.getHours())}:${pad(current.getMinutes())}:${pad(current.getSeconds())}`,zone:state.timeZone||'local',internet:!!state.internetTime};let year=current.getFullYear(),month=current.getMonth(),sheet;
- sheet=propertySheet({app:'calendar',title:t("text_date_and_time_properties"),icon:'datetime',width:440,height:500,initial:'datetime',tabs:[['datetime',t("text_date_and_time")],['timezone',t("text_time_zone")],['internet',t("text_internet_time")]],
+ sheet=propertySheet({app:'calendar',title:t("text_date_and_time_properties"),icon:'datetime',width:440,height:550,initial:'datetime',tabs:[['datetime',t("text_date_and_time")],['timezone',t("text_time_zone")],['internet',t("text_internet_time")]],
   read(tab,panel){if(tab==='datetime'){draft.date=$('[name=system-date]',panel)?.value||draft.date;draft.time=$('[name=system-time]',panel)?.value||draft.time;}if(tab==='timezone')draft.zone=$('[name=time-zone]',panel)?.value||draft.zone;if(tab==='internet')draft.internet=!!$('[name=internet-time]',panel)?.checked;},
   draw(tab,panel){
    if(tab==='datetime'){
