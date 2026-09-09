@@ -175,7 +175,7 @@ const trayNotices={
  mail:null
 };
 $$('[data-tray]').forEach(button=>button.onclick=()=>{const notice=trayNotices[button.dataset.tray];if(notice)XP.dialog(notice[0],notice[1]);else XP.open(button.dataset.tray);});
-function updateClock(){const now=new Date();$('#clock').textContent=now.toLocaleTimeString(locale(),{hour:'2-digit',minute:'2-digit'});$('#clock').title=now.toLocaleDateString(locale(),{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
+function updateClock(){const now=XP.now?.()||new Date();$('#clock').textContent=now.toLocaleTimeString(locale(),{hour:'2-digit',minute:'2-digit'});$('#clock').title=now.toLocaleDateString(locale(),{year:'numeric',month:'long',day:'numeric',weekday:'long'});}
 // Sorting fills the columns in the order the chosen key gives, the way XP lined them up.
 function sortIcons(by){
  const items=desktopItems(),file=id=>state.files.find(f=>f.id===id);
