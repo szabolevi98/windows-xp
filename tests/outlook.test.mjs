@@ -43,7 +43,7 @@ test('Outlook Express is a program of its own, reachable the way XP offered it',
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  assert.match(start,/\['Outlook Express','mail','outlook'\]/,'it is listed under All Programs');
  // XP pinned Internet and E-mail at the top of the Start menu, and put both on the desktop.
- assert.match(start,/startItem\('Email','mail','outlook','Outlook Express'\)/,'it is pinned to the Start menu');
+ assert.match(start,/app==='outlook'\?startItem\('Email','mail',app,'Outlook Express',false,true\)/,'it is pinned to the Start menu');
  assert.doesNotMatch(start,/startItem\('Dokumentumok','documents','documents','A saját fájljaid'\)/,'Documents gave up the pinned slot but keeps its place on the right');
  assert.match(start,/\{id:'outlook',label:'Outlook Express',icon:'mail',app:'outlook'\}/,'it has a desktop icon');
  assert.doesNotMatch(start,/mail:\['Outlook Express'/,'the tray notice is gone');

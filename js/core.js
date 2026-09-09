@@ -17,7 +17,7 @@ window.XP = (() => {
   const avatarPath = name => `assets/avatars/${avatars.includes(name)||name==='guest'?name:'chess'}.png`;
   const avatar = (name, cls='') => `<img class="account-picture ${cls}" src="${avatarPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
-  const defaults = () => ({version:1,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,taskbar:{locked:true,clock:true,quickLaunch:true,edge:'bottom',horizontalSize:30,verticalSize:106},iconPositions:{},draft:'',files:[
+  const defaults = () => ({version:1,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,pinnedPrograms:['ie','outlook'],taskbar:{locked:true,clock:true,quickLaunch:true,autoHide:false,alwaysOnTop:true,group:true,hideInactive:true,edge:'bottom',horizontalSize:30,verticalSize:106},iconPositions:{},draft:'',files:[
     {id:'welcome',name:t("text_welcome_to_windows_xp_txt"),type:'text',parent:'documents',content:t("text_welcome_back_to_2001_this_is_your_own_windows_xp_living_in_a_browser_d_82cbf277"),modified:Date.now()},
     {id:'todo',name:t("text_to_do_txt"),type:'text',parent:'documents',content:t("text_things_to_do_today_rediscover_the_start_menu_draw_something_in_paint_w_ed89fdbb"),modified:Date.now()},
     {id:'folder-personal',name:t("text_personal"),type:'folder',parent:'documents',modified:Date.now()}
@@ -173,6 +173,9 @@ window.XP = (() => {
     const taskbar=state.taskbar||{};
     document.body.classList.toggle('no-clock',taskbar.clock===false);
     document.body.classList.toggle('no-quick-launch',taskbar.quickLaunch===false);
+    document.body.classList.toggle('taskbar-auto-hide',taskbar.autoHide===true);
+    document.body.classList.toggle('taskbar-behind',taskbar.alwaysOnTop===false);
+    document.body.classList.toggle('no-hide-inactive',taskbar.hideInactive===false);
     document.body.classList.toggle('taskbar-locked',taskbar.locked!==false);
     const layout=taskbarMetrics(taskbar);state.taskbar={...taskbar,edge:layout.edge,[layout.horizontal?'horizontalSize':'verticalSize']:layout.size};
     document.body.dataset.taskbarEdge=layout.edge;
@@ -187,6 +190,7 @@ window.XP = (() => {
       win.el.style.left=Math.max(0,Math.min(parseInt(win.el.style.left)||0,Math.max(0,areaWidth-100)))+'px';
       win.el.style.top=Math.max(0,Math.min(parseInt(win.el.style.top)||0,Math.max(0,areaHeight-32)))+'px';
     }
+    renderTasks();
   }
   function sound(name){
     if(!state.sounds||state.volume<=0)return Promise.resolve('muted');
@@ -271,13 +275,13 @@ window.XP = (() => {
     ];
   }
   function renderTasks(){
-    const container=$('#task-buttons');container.replaceChildren();
+    const container=$('#task-buttons');if(!container?.replaceChildren)return;container.replaceChildren();
     const list=[...windows.values()].filter(win=>!win.modal);
     // XP collapsed a program's windows into one button once the bar ran out of room.
     const fits=Math.max(1,Math.floor((container.clientWidth||600)/154));
     const grouped=new Map();
     for(const win of list)grouped.set(win.app,[...(grouped.get(win.app)||[]),win]);
-    const grouping=list.length>fits;
+    const grouping=state.taskbar?.group!==false&&list.length>fits;
     const done=new Set();
     for(const win of list){
       const family=grouped.get(win.app);
@@ -406,7 +410,7 @@ window.XP = (() => {
     hideMenus();if(modalDepth)return;
     const fn=apps[app];
     if(!fn){notify(t("text_the_program_could_not_be_found"),app);return;}
-    if(PROGRAMS[app]){state.programUse={...state.programUse,[app]:(state.programUse?.[app]||0)+1};persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));}
+    if(PROGRAMS[app]){state.programUse={...state.programUse,[app]:Math.max(0,state.programUse?.[app]||0)+1};persist();document.dispatchEvent(new CustomEvent('xp-settings-changed'));}
     return fn(...args);
   }
   function register(name,fn){apps[name]=fn;}

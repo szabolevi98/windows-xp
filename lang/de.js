@@ -1500,5 +1500,14 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
   "text_address_not_valid": "Die Adresse ist ungültig. Überprüfen Sie den Pfad, und wiederholen Sie den Vorgang.",
   "text_my_network_places": "Netzwerkumgebung",
   "text_entire_network": "Gesamtes Netzwerk",
-  "text_workgroup_computers": "Arbeitsgruppencomputer anzeigen"
+  "text_workgroup_computers": "Arbeitsgruppencomputer anzeigen",
+  "text_auto_hide_the_taskbar": "Taskleiste automatisch ausblenden",
+  "text_keep_the_taskbar_on_top_of_other_windows": "Taskleiste immer im Vordergrund halten",
+  "text_group_similar_taskbar_buttons": "Ähnliche Elemente gruppieren",
+  "text_hide_inactive_icons": "Inaktive Symbole ausblenden",
+  "text_quick_launch": "Schnellstart",
+  "text_language_bar": "Eingabegebietsschemaleiste",
+  "text_pin_to_start_menu": "An Startmenü anheften",
+  "text_unpin_from_start_menu": "Vom Startmenü lösen",
+  "text_remove_from_this_list": "Aus dieser Liste entfernen"
 }});

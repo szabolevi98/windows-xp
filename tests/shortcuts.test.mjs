@@ -61,17 +61,21 @@ test('The taskbar has properties of its own, and they hold',()=>{
  const utils=read('js/utilities.js');
  assert.match(utils,/register\('taskbar'/);
  assert.ok(utils.includes(key('A Tálca és a Start menü tulajdonságai')));
- for(const label of ['A Tálca rögzítése','A Gyorsindítás eszköztár megjelenítése','Az óra megjelenítése'])
+ for(const label of ['A Tálca rögzítése','A Tálca automatikus elrejtése','A Tálca legyen mindig látható','Hasonló elemek csoportosítása a Tálcán','A Gyorsindítás eszköztár megjelenítése','Az óra megjelenítése','Inaktív ikonok elrejtése'])
   assert.ok(utils.includes(key(label)),`the sheet offers ${label}`);
  assert.match(utils,/state\.taskbar=\{\.\.\.state\.taskbar,\.\.\.draft\};persist\(\);XP\.applySettings\(\)/);
  const core=read('js/core.js');
- assert.match(core,/taskbar:\{locked:true,clock:true,quickLaunch:true,edge:'bottom',horizontalSize:30,verticalSize:106\}/,'the settings start out the way XP had them');
+ assert.match(core,/taskbar:\{locked:true,clock:true,quickLaunch:true,autoHide:false,alwaysOnTop:true,group:true,hideInactive:true,edge:'bottom',horizontalSize:30,verticalSize:106\}/,'the settings start out the way XP had them');
  // Hiding the clock or the Quick Launch bar has to actually hide them.
  assert.match(core,/classList\.toggle\('no-clock',taskbar\.clock===false\)/);
  assert.match(core,/classList\.toggle\('no-quick-launch',taskbar\.quickLaunch===false\)/);
+ assert.match(core,/classList\.toggle\('taskbar-auto-hide',taskbar\.autoHide===true\)/);
+ assert.match(core,/classList\.toggle\('taskbar-behind',taskbar\.alwaysOnTop===false\)/);
+ assert.match(core,/const grouping=state\.taskbar\?\.group!==false&&list\.length>fits/);
  const css=read('styles.css');
  assert.match(css,/body\.no-clock #clock\{display:none\}/);
  assert.match(css,/body\.no-quick-launch \.quick-launch\{display:none\}/);
+ assert.match(css,/body\.taskbar-auto-hide\[data-taskbar-edge=bottom\] #taskbar:not\(:hover\)/);
  // Unlocking exposes separate move and resize targets; their result is persisted.
  const html=readFileSync(new URL('index.html',root),'utf8');
  assert.match(html,/id="taskbar-move-grip"/);
@@ -80,6 +84,7 @@ test('The taskbar has properties of its own, and they hold',()=>{
  assert.match(start,/taskbar\.onpointerdown=/);
  assert.match(start,/taskbarEdgeAt\(ev\.clientX,ev\.clientY\)/);
  assert.match(start,/function finishTaskbarChange\(\)\{persist\(\);XP\.applySettings\(\);renderIcons\(\)/);
+ assert.match(start,/label:t\("text_toolbars"\),items:/,'Toolbars opens a real submenu');
  for(const edge of ['top','right','bottom','left'])assert.ok(css.includes(`body[data-taskbar-edge=${edge}] #desktop`),`${edge} reserves its work area`);
 });
 
@@ -174,12 +179,14 @@ test('Explorer follows XP drive, address bar, network and Recycle Bin behavior',
 test('The Start menu fills its own list of programs',()=>{
  const core=readFileSync(new URL('js/core.js',root),'utf8');
  // Opening a program counts, but only the ones that belong on that list.
- assert.match(core,/if\(PROGRAMS\[app\]\)\{state\.programUse=\{\.\.\.state\.programUse,\[app\]:\(state\.programUse\?\.\[app\]\|\|0\)\+1\}/);
+ assert.match(core,/if\(PROGRAMS\[app\]\)\{state\.programUse=\{\.\.\.state\.programUse,\[app\]:Math\.max\(0,state\.programUse\?\.\[app\]\|\|0\)\+1\}/);
 
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  assert.match(start,/function frequentPrograms\(\)/);
- assert.match(start,/app!=='ie'&&app!=='outlook'/,'the pinned pair keeps out of the list below');
+ assert.match(start,/!pinned\.includes\(app\)&&count>=0/,'pinned and removed programs stay out of the list below');
  assert.match(start,/\.slice\(0,5\)/,'five entries, so the menu stays the height XP had');
+ assert.match(start,/const pinnedPrograms=\(\)=>/,'the pinned area is persisted');
+ assert.match(start,/text_pin_to_start_menu/);assert.match(start,/text_unpin_from_start_menu/);assert.match(start,/text_remove_from_this_list/);
  assert.match(start,/const DEFAULT_FREQUENT=\['player','notepad','paint','calculator','mines'\]/,'a fresh desktop still has a list');
  // Explorer belongs under Accessories, not among the frequently used programs.
  assert.doesNotMatch(start,/explorer:\['Windows Intéző','folder'\]/);

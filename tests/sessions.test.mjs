@@ -137,7 +137,7 @@ test('The taskbar groups a crowded program, and every window carries its own men
  const core=read('js/core.js');
  // One button per program once the bar runs out of room, labelled the way XP labelled it.
  assert.match(core,/const fits=Math\.max\(1,Math\.floor\(\(container\.clientWidth\|\|600\)\/154\)\)/);
- assert.match(core,/const grouping=list\.length>fits/);
+ assert.match(core,/const grouping=state\.taskbar\?\.group!==false&&list\.length>fits/);
  assert.match(core,/function groupButton\(app,family\)/);
  assert.match(core,/const label=`\$\{family\.length\} \$\{programName\(family\[0\]\)\}`/);
  assert.ok(core.includes(`label:t("${key('Csoport kis mérete')}")`));

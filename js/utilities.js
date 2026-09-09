@@ -212,7 +212,7 @@ register('mouse',()=>{
 
 register('printers',()=>XP.dialog(t("text_printers_and_faxes"),t("text_no_printer_is_installed_to_set_one_up_start_the_add_printer_wizard_or_dd849121"),{icon:'printers'}));
 register('taskbar',(initial='taskbar')=>{
- const draft={...{locked:true,clock:true,quickLaunch:true},...(state.taskbar||{})};
+ const draft={...{locked:true,clock:true,quickLaunch:true,autoHide:false,alwaysOnTop:true,group:true,hideInactive:true},...(state.taskbar||{})};
  const check=(key,label)=>`<label class="settings-check"><input type="checkbox" data-key="${key}" ${draft[key]?'checked':''}> ${esc(label)}</label>`;
  return propertySheet({
   app:'taskbar',title:t("text_taskbar_and_start_menu_properties"),icon:'taskbar',initial,width:400,height:430,
@@ -221,8 +221,8 @@ register('taskbar',(initial='taskbar')=>{
   draw(tab,panel){
    panel.innerHTML=tab==='taskbar'
     ?`<div class="preview-taskbar-strip"><span class="strip-start">start</span><span class="strip-task">${esc(t("text_notepad"))}</span><span class="strip-tray">${(new Date()).toLocaleTimeString(locale(),{hour:'2-digit',minute:'2-digit'})}</span></div>
-       <fieldset><legend>${esc(t("text_taskbar_appearance"))}</legend>${check('locked',t("text_lock_the_taskbar"))}${check('quickLaunch',t("text_show_quick_launch"))}</fieldset>
-       <fieldset><legend>${esc(t("text_notification_area"))}</legend>${check('clock',t("text_show_the_clock"))}<p class="settings-note">${esc(t("text_the_taskbar_hides_inactive_icons_behind_the_arrow"))}</p></fieldset>`
+       <fieldset><legend>${esc(t("text_taskbar_appearance"))}</legend>${check('locked',t("text_lock_the_taskbar"))}${check('autoHide',t("text_auto_hide_the_taskbar"))}${check('alwaysOnTop',t("text_keep_the_taskbar_on_top_of_other_windows"))}${check('group',t("text_group_similar_taskbar_buttons"))}${check('quickLaunch',t("text_show_quick_launch"))}</fieldset>
+       <fieldset><legend>${esc(t("text_notification_area"))}</legend>${check('clock',t("text_show_the_clock"))}${check('hideInactive',t("text_hide_inactive_icons"))}<p class="settings-note">${esc(t("text_the_taskbar_hides_inactive_icons_behind_the_arrow"))}</p></fieldset>`
     :`<fieldset><legend>${esc(t("text_start_menu_style"))}</legend><label class="settings-check"><input type="radio" name="start-style" checked> ${esc(t("text_start_menu"))}</label><p class="settings-note">${esc(t("text_this_style_offers_the_programs_used_most_often_and_puts_the_internet_a_7af5bd41"))}</p><label class="settings-check"><input type="radio" name="start-style" disabled> ${esc(t("text_classic_start_menu"))}</label><p class="settings-note">${esc(t("text_brings_back_the_look_and_the_behaviour_of_earlier_versions_of_windows"))}</p></fieldset>`;
   },
   apply(){state.taskbar={...state.taskbar,...draft};persist();XP.applySettings();}

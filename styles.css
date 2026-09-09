@@ -280,6 +280,9 @@ body[data-theme=classic] .explorer-sidebar{background:#d4d0c8}
 
 body.no-clock #clock{display:none}
 body.no-quick-launch .quick-launch{display:none}
+body.taskbar-behind #taskbar{z-index:15}body.no-hide-inactive .tray .tray-toggle{display:none}body.no-hide-inactive .tray-hidden[hidden]{display:flex}
+body.taskbar-auto-hide[data-taskbar-edge=bottom] #desktop,body.taskbar-auto-hide[data-taskbar-edge=top] #desktop,body.taskbar-auto-hide[data-taskbar-edge=left] #desktop,body.taskbar-auto-hide[data-taskbar-edge=right] #desktop{inset:0}
+body.taskbar-auto-hide #taskbar{transition:transform .14s ease .25s}body.taskbar-auto-hide[data-taskbar-edge=bottom] #taskbar:not(:hover){transform:translateY(calc(100% - 2px))}body.taskbar-auto-hide[data-taskbar-edge=top] #taskbar:not(:hover){transform:translateY(calc(-100% + 2px))}body.taskbar-auto-hide[data-taskbar-edge=left] #taskbar:not(:hover){transform:translateX(calc(-100% + 2px))}body.taskbar-auto-hide[data-taskbar-edge=right] #taskbar:not(:hover){transform:translateX(calc(100% - 2px))}
 .settings-check{display:flex;align-items:center;gap:7px;margin:7px 0}
 .settings-note{margin:2px 0 10px 23px;color:#555}
 .preview-taskbar-strip{display:flex;align-items:center;gap:6px;height:30px;padding:0 4px 0 0;margin-bottom:14px;border:1px inset #d4d0c8;background:linear-gradient(#1f6fd8,#1152c2 12%,#2b7ae4 88%,#0d3fa5)}
