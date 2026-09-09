@@ -340,12 +340,25 @@ window.XP = (() => {
       event.preventDefault();event.stopPropagation();
       if(modalDepth)return;
       menu([
+        {label:t("text_restore_group"),action:()=>family.forEach(win=>focus(win))},
         {label:t("text_minimize_group"),action:()=>{sound('minimize');family.forEach(win=>minimize(win,true));}},
+        null,
+        {label:t("text_cascade"),action:()=>arrangeGroup(family,'cascade')},
+        {label:t("text_tile_horizontally"),action:()=>arrangeGroup(family,'rows')},
+        {label:t("text_tile_vertically"),action:()=>arrangeGroup(family,'columns')},
         null,
         {label:t("text_close_group"),action:()=>family.slice().forEach(win=>close(win))}
       ],event.clientX,event.clientY);
     };
     return b;
+  }
+  function arrangeGroup(family,mode){
+    const area=$('#desktop'),width=area.clientWidth,height=area.clientHeight,count=family.length;
+    family.forEach((win,index)=>{
+      if(win.maximized)maximize(win);win.minimized=false;win.el.hidden=false;
+      const box=mode==='cascade'?{left:24*index,top:24*index,width:Math.min(650,width-24*count),height:Math.min(470,height-24*count)}:mode==='rows'?{left:0,top:Math.round(index*height/count),width,height:Math.round(height/count)}:{left:Math.round(index*width/count),top:0,width:Math.round(width/count),height};
+      Object.assign(win.el.style,{left:box.left+'px',top:box.top+'px',width:Math.max(win.minWidth,box.width)+'px',height:Math.max(win.minHeight,box.height)+'px'});focus(win);
+    });
   }
   function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);mru=mru.filter(id=>id!==win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
   function minimize(win,quiet){

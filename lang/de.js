@@ -1609,5 +1609,10 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
   "text_device_status": "Gerätestatus",
   "text_this_device_is_working_properly": "Das Gerät funktioniert einwandfrei.",
   "text_standard": "Standard",
-  "text_scientific": "Wissenschaftlich"
+  "text_scientific": "Wissenschaftlich",
+  "text_restore_group": "Gruppe wiederherstellen",
+  "text_cascade": "Überlappend",
+  "text_tile_horizontally": "Untereinander",
+  "text_tile_vertically": "Nebeneinander",
+  "text_cannot_change_only_administrator_to_limited": "Das einzige Administratorkonto des Computers kann nicht in ein eingeschränktes Konto geändert werden."
 }});

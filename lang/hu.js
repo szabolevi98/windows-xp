@@ -1609,5 +1609,10 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_device_status": "Eszköz állapota",
   "text_this_device_is_working_properly": "Az eszköz megfelelően működik.",
   "text_standard": "Standard",
-  "text_scientific": "Tudományos"
+  "text_scientific": "Tudományos",
+  "text_restore_group": "Csoport visszaállítása",
+  "text_cascade": "Lépcsőzetes elrendezés",
+  "text_tile_horizontally": "Mozaik vízszintesen",
+  "text_tile_vertically": "Mozaik függőlegesen",
+  "text_cannot_change_only_administrator_to_limited": "A számítógép egyetlen rendszergazdai fiókja nem állítható korlátozott típusúra."
 }});
