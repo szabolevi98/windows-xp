@@ -153,7 +153,7 @@ window.XP = (() => {
   const fileIcon=file=>file.type==='folder'?'folder':file.type==='image'?'pictures':
     file.type==='shortcut'?(file.icon||shortcutApps[file.app]||(targetOf(file)?fileIcon(targetOf(file)):'help')):'notepad';
   const windows = new Map(), apps = {};
-  let sequence=0,z=20,active=null,modalDepth=0;
+  let sequence=0,z=20,active=null,modalDepth=0,mru=[],altSwitch=null;
   const uniqueId = () => `f-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
   const wallpaperPath = name => name==='bliss'?'assets/wallpapers/bliss-hd.jpg':name==='none'?'':name==='windows-xp'?'assets/wallpapers/windows-xp.jpg':`assets/wallpapers/${name==='autumn'?'autumn':'azul'}-1920.jpg`;
   function taskbarMetrics(settings={},width=globalThis.innerWidth||1280,height=globalThis.innerHeight||720){
@@ -167,7 +167,7 @@ window.XP = (() => {
     document.documentElement.dataset.cursors=state.cursors||'default';
     const desktop=$('#desktop'),fit=state.wallpaperFit||'fill';
     desktop.style.backgroundImage=state.wallpaper==='none'?'none':`url("${wallpaperPath(state.wallpaper)}")`;
-    desktop.style.backgroundSize=fit==='fill'?'cover':'auto';
+    desktop.style.backgroundSize=fit==='fill'?'100% 100%':'auto';
     desktop.style.backgroundRepeat=fit==='tile'?'repeat':'no-repeat';
     desktop.style.backgroundPosition=fit==='tile'?'left top':'center';
     const taskbar=state.taskbar||{};
@@ -203,7 +203,7 @@ window.XP = (() => {
     if(!win || (modalDepth&&!win.modal))return;
     const waking=win.minimized&&!win.parked;
     if(waking){sound('restore');const from=taskRect(win);win.el.hidden=false;flyWindow(win,from,true);}
-    active=win.id;win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
+    active=win.id;mru=[win.id,...mru.filter(id=>id!==win.id)];win.el.hidden=false;win.minimized=false;win.el.style.zIndex=++z;for(const w of windows.values())w.el.classList.toggle('inactive',w.id!==active);renderTasks();win.onFocus?.();}
   function frontmost(){const next=[...windows.values()].filter(w=>!w.minimized).sort((a,b)=>Number(b.el.style.zIndex)-Number(a.el.style.zIndex))[0];active=null;if(next)focus(next);else renderTasks();}
   // The name of the program behind a window, for the grouped taskbar buttons.
   const PROGRAMS={notepad:'Jegyzettömb',paint:'Paint',calculator:'Számológép',cmd:'Parancssor',ie:'Internet Explorer',
@@ -211,11 +211,59 @@ window.XP = (() => {
     solitaire:'Pasziánsz',freecell:'FreeCell',spider:'Pókpasziánsz',hearts:'Hearts',pinball:'3D Pinball',
     taskmgr:'Feladatkezelő',help:'Súgó és támogatás',image:'Képnézegető'};
   const programName=win=>t(PROGRAMS[win.app]||win.title.split(' – ').at(-1));
+  function beginWindowCommand(win,kind){
+    if(!win||win.minimized||win.maximized||(kind==='size'&&win.fixed))return;
+    hideMenus();focus(win);
+    const el=win.el,start={left:parseInt(el.style.left)||0,top:parseInt(el.style.top)||0,width:el.offsetWidth,height:el.offsetHeight};
+    const area=$('#desktop'),step=8;
+    el.classList.add('window-command',kind==='move'?'moving':'sizing');
+    const finish=restore=>{
+      if(restore)Object.assign(el.style,{left:start.left+'px',top:start.top+'px',width:start.width+'px',height:start.height+'px'});
+      el.classList.remove('window-command','moving','sizing');
+      document.removeEventListener('keydown',key,true);document.removeEventListener('pointermove',pointer,true);document.removeEventListener('pointerdown',accept,true);
+    };
+    const move=(dx,dy)=>{
+      if(kind==='move'){
+        el.style.left=Math.max(-el.offsetWidth+100,Math.min(area.clientWidth-90,(parseInt(el.style.left)||0)+dx))+'px';
+        el.style.top=Math.max(0,Math.min(area.clientHeight-29,(parseInt(el.style.top)||0)+dy))+'px';
+      }else{
+        el.style.width=Math.max(win.minWidth,Math.min(area.clientWidth-(parseInt(el.style.left)||0),el.offsetWidth+dx))+'px';
+        el.style.height=Math.max(win.minHeight,Math.min(area.clientHeight-(parseInt(el.style.top)||0),el.offsetHeight+dy))+'px';
+      }
+    };
+    const key=e=>{
+      if(e.key==='Escape'){e.preventDefault();finish(true);return;}
+      if(e.key==='Enter'){e.preventDefault();finish(false);return;}
+      const delta={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]}[e.key];
+      if(delta){e.preventDefault();move(...delta);}
+    };
+    let last=null;
+    const pointer=e=>{if(last)move(e.clientX-last.x,e.clientY-last.y);last={x:e.clientX,y:e.clientY};};
+    const accept=e=>{if(!e.target.closest('.popup-menu'))finish(false);};
+    document.addEventListener('keydown',key,true);document.addEventListener('pointermove',pointer,true);setTimeout(()=>document.addEventListener('pointerdown',accept,true));
+  }
+  function stepAltTab(reverse=false){
+    if(!altSwitch){
+      const list=mru.map(id=>windows.get(id)).filter(win=>win&&!win.modal&&!win.parked);
+      if(!list.length)return;
+      altSwitch={list,index:list.length>1?(reverse?list.length-1:1):0};
+      const box=document.createElement('div');box.className='alt-tab-switcher';box.setAttribute('role','listbox');box.innerHTML='<strong>Windows XP</strong><div></div><p></p>';document.body.append(box);altSwitch.el=box;
+    }else altSwitch.index=(altSwitch.index+(reverse?-1:1)+altSwitch.list.length)%altSwitch.list.length;
+    const chosen=altSwitch.list[altSwitch.index],items=$('div',altSwitch.el);
+    items.innerHTML=altSwitch.list.map((win,index)=>`<span class="${index===altSwitch.index?'selected':''}" role="option" aria-selected="${index===altSwitch.index}">${icon(win.icon)}</span>`).join('');
+    $('p',altSwitch.el).textContent=chosen.title;
+  }
+  function finishAltTab(cancel=false){
+    if(!altSwitch)return;
+    const chosen=altSwitch.list[altSwitch.index];altSwitch.el.remove();altSwitch=null;
+    if(!cancel&&chosen&&windows.has(chosen.id))focus(chosen);
+  }
   // The menu a window carries: on its task button, on its title bar and under Alt+Space.
   function windowMenu(win){
     return [
       {label:t("text_restore"),disabled:!win.minimized&&!win.maximized,action:()=>{if(win.maximized)maximize(win);else focus(win);}},
-      {label:t("text_move"),disabled:true},{label:t("text_size"),disabled:true},
+      {label:t("text_move"),disabled:win.minimized||win.maximized,action:()=>beginWindowCommand(win,'move')},
+      {label:t("text_size"),disabled:win.minimized||win.maximized||win.fixed,action:()=>beginWindowCommand(win,'size')},
       {label:t("text_minimize"),disabled:win.minimized,action:()=>{focus(win);minimize(win);}},
       {label:t("text_maximize"),disabled:win.maximized||win.fixed,action:()=>{if(!win.maximized)maximize(win);}},
       null,
@@ -295,7 +343,7 @@ window.XP = (() => {
     };
     return b;
   }
-  function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
+  function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);mru=mru.filter(id=>id!==win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
   function minimize(win,quiet){
     if(win.modal)return;
     if(!quiet)sound('minimize');
@@ -334,9 +382,10 @@ window.XP = (() => {
     el.addEventListener('contextmenu',e=>e.preventDefault());
     $('.close',el).onclick=()=>close(win);
     if(!options.modal){$('.minimize',el).onclick=()=>minimize(win);$('.maximize',el).onclick=()=>maximize(win);}
-    const bar=$('.title-bar',el);bar.ondblclick=e=>{if(!e.target.closest('button'))maximize(win);};
+    const bar=$('.title-bar',el),titleIcon=$('img',bar);let iconClickTimer;
+    bar.ondblclick=e=>{if(e.target===titleIcon){clearTimeout(iconClickTimer);close(win);}else if(!e.target.closest('button'))maximize(win);};
     bar.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();if(!modalDepth||win.modal)menu(windowMenu(win),e.clientX,e.clientY);};
-    $('img',bar).onclick=e=>{e.stopPropagation();const box=el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);};
+    titleIcon.onclick=e=>{e.stopPropagation();clearTimeout(iconClickTimer);iconClickTimer=setTimeout(()=>{if(!windows.has(win.id))return;const box=el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);},220);};
     bar.onpointerdown=e=>{if(e.button!==0||e.target.closest('button')||win.maximized)return;focus(win);e.preventDefault();const rect=el.getBoundingClientRect(),dragBounds=$('#desktop').getBoundingClientRect(),sx=e.clientX,sy=e.clientY;bar.setPointerCapture(e.pointerId);bar.onpointermove=ev=>{el.style.left=`${Math.max(-rect.width+100,Math.min(dragBounds.width-90,rect.left+ev.clientX-sx))}px`;el.style.top=`${Math.max(0,Math.min(dragBounds.height-29,rect.top+ev.clientY-sy))}px`;};bar.onpointerup=()=>{bar.onpointermove=null;};bar.onlostpointercapture=()=>bar.onpointermove=null;};
     // Every edge and corner resizes; dragging the top or left edge moves the window as it shrinks.
     for(const grip of $$('[data-resize]',el))grip.onpointerdown=e=>{
@@ -544,8 +593,9 @@ window.XP = (() => {
   function status(win,text,extra=''){const bar=document.createElement('footer');bar.className='status-bar';bar.innerHTML=`<span>${esc(text)}</span>${extra?`<span class="status-part">${esc(extra)}</span>`:''}`;win.body.append(bar);return bar;}
   document.addEventListener('pointerdown',e=>{if(!e.target.closest('#context-menu,.submenu,#start-menu,#start-button,.menu-bar,#volume-flyout,#volume-button'))hideMenus();});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)open(b.dataset.open);});
-  document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape')hideMenus();if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key===' '&&active){e.preventDefault();const win=windows.get(active);if(win){const box=win.el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);}}
-    if(e.altKey&&e.key==='Tab'){e.preventDefault();const list=[...windows.values()];const index=list.findIndex(w=>w.id===active);if(list.length)focus(list[(index+1)%list.length]);}});
+  document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape'){hideMenus();finishAltTab(true);}if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key===' '&&active){e.preventDefault();const win=windows.get(active);if(win){const box=win.el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);}}
+    if(e.altKey&&e.key==='Tab'&&!e.repeat){e.preventDefault();stepAltTab(e.shiftKey);}});
+  document.addEventListener('keyup',e=>{if(e.key==='Alt')finishAltTab(false);});
   window.addEventListener('resize',()=>{const area=$('#desktop'),width=area.clientWidth,height=area.clientHeight;applySettings();for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,width-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,height-32))+'px';if(w.el.offsetWidth>width)w.el.style.width=width+'px';if(w.el.offsetHeight>height)w.el.style.height=height+'px';}});
   return {$,$$,esc,icon,t,
     get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,taskbarMetrics,wallpaperPath,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,profileFiles,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};

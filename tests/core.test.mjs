@@ -513,6 +513,7 @@ test('Turning off from the logon screen offers the same three choices XP did',()
  // Waking from standby goes back to the logon screen, not to a desktop nobody signed into.
  assert.match(panel,/bootPhase='standby'[\s\S]*loginScreen\(\)/);
  assert.match(start,/\$\('\.welcome-power'\)\.onclick=logonPower;/,'the button opens the panel');
+ assert.equal((panel.match(/XP\.closeParked\(\)/g)||[]).length,2,'restart and shutdown close parked sessions');
  const css=readFileSync(new URL('styles.css',root),'utf8');
  assert.match(css,/\.logon-power\{[^}]*position:absolute[^}]*\}/,'the panel sits inside the screen');
 });
