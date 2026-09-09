@@ -1609,5 +1609,10 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {en: {
   "text_device_status": "Device status",
   "text_this_device_is_working_properly": "This device is working properly.",
   "text_standard": "Standard",
-  "text_scientific": "Scientific"
+  "text_scientific": "Scientific",
+  "text_restore_group": "Restore Group",
+  "text_cascade": "Cascade",
+  "text_tile_horizontally": "Tile Horizontally",
+  "text_tile_vertically": "Tile Vertically",
+  "text_cannot_change_only_administrator_to_limited": "The computer's only administrator account cannot be changed to a limited account."
 }});
