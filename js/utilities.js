@@ -1,6 +1,8 @@
 'use strict';
 (() => {
 const {$,$$,esc,icon,state,register,createWindow,menubar,status,persist,notify,t,locale}=XP;
+const isAdministrator=()=>XP.session==='admin'&&state.accountType==='admin';
+const administratorRequired=()=>{XP.sound('error');XP.dialog(t("text_access_denied"),t("text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting"),{icon:'error'});};
 // --- Képernyőkímélő ------------------------------------------------------
 const saver={el:null,stop:null,at:0};
 const saverSettings=()=>({name:state.screensaver?.name||'none',minutes:Math.max(1,Number(state.screensaver?.minutes)||10)});
@@ -75,7 +77,10 @@ function propertySheet({app,title,icon:ic,tabs,initial,width=470,height=515,read
  const row=document.createElement('div');row.className='button-row';
  row.innerHTML=`<button class="xp-button primary" data-sheet="ok">OK</button><button class="xp-button" data-sheet="cancel">${esc(t("text_cancel"))}</button><button class="xp-button" data-sheet="apply">${esc(t("text_apply"))}</button>`;
  w.body.append(row);
- row.onclick=e=>{const action=e.target.dataset.sheet;if(!action)return;if(action!=='cancel'){read(current,panel);apply();}if(action!=='apply')w.close();};
+ const applyButton=$('[data-sheet=apply]',row);applyButton.disabled=true;
+ const changed=()=>applyButton.disabled=false;
+ body.addEventListener('input',changed);body.addEventListener('change',changed);
+ row.onclick=e=>{const action=e.target.dataset.sheet;if(!action)return;if(action!=='cancel'){read(current,panel);apply();applyButton.disabled=true;}if(action!=='apply')w.close();};
  w.repaint=paint;
  paint();
  return w;
@@ -297,6 +302,7 @@ function displayProperties(initial='themes'){
 register('system',()=>systemProperties());
 function systemProperties(initial='general'){
  const draft={computerName:state.computerName||'OTTHONI-PC',updates:state.security?.updates!==false};
+ const admin=isAdministrator();
  const info=(title,text)=>()=>XP.dialog(title,text);
  return propertySheet({
   app:'system',title:t("text_system_properties"),icon:'computer',initial,height:520,
@@ -311,7 +317,7 @@ function systemProperties(initial='general'){
     panel.innerHTML=`<div class="system-brand">${icon('windows')}<div><strong>Windows<span>xp</span></strong><br>Professional</div></div><dl class="system-facts"><dt>${esc(t("text_system_0fb27331"))}</dt><dd>Microsoft Windows XP<br>Professional<br>Version 2002<br>Service Pack 3</dd><dt>${esc(t("text_registered_to"))}</dt><dd>${esc(state.user)}<br>${esc(draft.computerName)}<br>55274-640-1234567-23456</dd><dt>${esc(t("text_computer"))}</dt><dd>Intel(R) Pentium(R) 4 CPU 2.40GHz<br>${esc(t("text_2_40_ghz_512_mb_of_ram"))}<br>${esc(t("text_size_kb_of_your_own_data",{size:(used/1024).toFixed(1)}))}</dd></dl><p class="settings-note">${esc(t("text_windows_xp_is_a_trademark_of_microsoft_corporation_this_program_is_an_2cc81451"))}</p>`;
    }
    if(tab==='name'){
-    panel.innerHTML=`<p>${esc(t("text_the_computer_is_known_on_the_network_by_the_following_details"))}</p><label class="settings-field"><span>${esc(t("text_computer_description"))}</span><input type="text" value="Otthoni gép" readonly></label><label class="settings-field"><span>${esc(t("text_full_computer_name"))}</span><input type="text" name="computer" maxlength="15" value="${esc(draft.computerName)}"></label><label class="settings-field"><span>${esc(t("text_workgroup"))}</span><input type="text" value="MUNKACSOPORT" readonly></label><p class="settings-note">${esc(t("text_click_apply_once_you_have_changed_the_name_it_appears_on_my_computer_a_e5cd75e4"))}</p>`;
+    panel.innerHTML=`<p>${esc(t("text_the_computer_is_known_on_the_network_by_the_following_details"))}</p><label class="settings-field"><span>${esc(t("text_computer_description"))}</span><input type="text" value="Otthoni gép" readonly></label><label class="settings-field"><span>${esc(t("text_full_computer_name"))}</span><input type="text" name="computer" maxlength="15" value="${esc(draft.computerName)}" ${admin?'':'disabled'}></label><label class="settings-field"><span>${esc(t("text_workgroup"))}</span><input type="text" value="MUNKACSOPORT" readonly></label><p class="settings-note">${esc(admin?t("text_click_apply_once_you_have_changed_the_name_it_appears_on_my_computer_a_e5cd75e4"):t("text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting"))}</p>`;
    }
    if(tab==='hardware'){
     panel.innerHTML=`<div class="settings-block"><b>${esc(t("text_device_manager"))}</b><p>${esc(t("text_device_manager_lists_every_device_in_this_computer_and_their_propertie_44068a4f"))}</p><button class="xp-button" data-hw="devices">${esc(t("text_device_manager"))}</button></div><div class="settings-block"><b>${esc(t("text_drivers"))}</b><p>${esc(t("text_driver_signing_makes_it_possible_to_check_whether_what_is_installed_wo_3fda7da3"))}</p><button class="xp-button" data-hw="drivers">${esc(t("text_driver_signing"))}</button></div>`;
@@ -322,7 +328,7 @@ function systemProperties(initial='general'){
     };
    }
    if(tab==='advanced'){
-    panel.innerHTML=`<p class="settings-note">${esc(t("text_changing_this_needs_administrator_rights"))}</p><div class="settings-block"><b>${esc(t("text_performance"))}</b><p>${esc(t("text_visual_effects_processor_scheduling_memory_usage_and_virtual_memory"))}</p><button class="xp-button" data-adv="perf">${esc(t("text_options"))}</button></div><div class="settings-block"><b>${esc(t("text_user_profiles"))}</b><p>${esc(t("text_the_desktop_and_the_settings_that_belong_to_a_logon"))}</p><button class="xp-button" data-adv="profiles">${esc(t("text_options"))}</button></div><div class="settings-block"><b>${esc(t("text_startup_and_recovery"))}</b><p>${esc(t("text_system_startup_system_failure_and_debugging_information"))}</p><button class="xp-button" data-adv="boot">${esc(t("text_options"))}</button></div>`;
+    panel.innerHTML=`<p class="settings-note">${esc(t("text_changing_this_needs_administrator_rights"))}</p><div class="settings-block"><b>${esc(t("text_performance"))}</b><p>${esc(t("text_visual_effects_processor_scheduling_memory_usage_and_virtual_memory"))}</p><button class="xp-button" data-adv="perf" ${admin?'':'disabled'}>${esc(t("text_options"))}</button></div><div class="settings-block"><b>${esc(t("text_user_profiles"))}</b><p>${esc(t("text_the_desktop_and_the_settings_that_belong_to_a_logon"))}</p><button class="xp-button" data-adv="profiles" ${admin?'':'disabled'}>${esc(t("text_options"))}</button></div><div class="settings-block"><b>${esc(t("text_startup_and_recovery"))}</b><p>${esc(t("text_system_startup_system_failure_and_debugging_information"))}</p><button class="xp-button" data-adv="boot" ${admin?'':'disabled'}>${esc(t("text_options"))}</button></div>`;
     panel.onclick=e=>{
      const kind=e.target.dataset?.adv;
      if(kind==='perf')info(t("text_performance_options"),t("text_visual_effects_let_windows_choose_what_is_best_processor_scheduling_pr_e943b53e"))();
@@ -331,10 +337,11 @@ function systemProperties(initial='general'){
     };
    }
    if(tab==='updates'){
-    panel.innerHTML=`<p>${esc(t("text_windows_can_download_and_install_the_important_updates_in_the_background"))}</p><label class="settings-field"><input type="radio" name="updates" value="auto" ${draft.updates?'checked':''}> <b>${esc(t("text_automatic_recommended"))}</b><br><small>${esc(t("text_updates_are_downloaded_and_installed_on_their_own"))}</small></label><label class="settings-field"><input type="radio" name="updates" value="off" ${draft.updates?'':'checked'}> <b>${esc(t("text_turn_off_automatic_updates"))}</b><br><small>${esc(t("text_you_have_to_fetch_the_updates_yourself_windows_does_not_recommend_this_setting"))}</small></label><p class="settings-note">${esc(t("text_the_same_setting_also_shows_in_security_center"))}</p>`;
+    panel.innerHTML=`<p>${esc(t("text_windows_can_download_and_install_the_important_updates_in_the_background"))}</p><label class="settings-field"><input type="radio" name="updates" value="auto" ${draft.updates?'checked':''} ${admin?'':'disabled'}> <b>${esc(t("text_automatic_recommended"))}</b><br><small>${esc(t("text_updates_are_downloaded_and_installed_on_their_own"))}</small></label><label class="settings-field"><input type="radio" name="updates" value="off" ${draft.updates?'':'checked'} ${admin?'':'disabled'}> <b>${esc(t("text_turn_off_automatic_updates"))}</b><br><small>${esc(t("text_you_have_to_fetch_the_updates_yourself_windows_does_not_recommend_this_setting"))}</small></label><p class="settings-note">${esc(admin?t("text_the_same_setting_also_shows_in_security_center"):t("text_you_must_be_logged_on_as_a_computer_administrator_to_change_this_setting"))}</p>`;
    }
   },
   apply(){
+   if(!admin)return;
    state.computerName=draft.computerName;
    if(!state.security||typeof state.security!=='object')state.security={firewall:true,updates:true};
    state.security.updates=draft.updates;
@@ -642,7 +649,7 @@ register('security',()=>{
   const panel=button.dataset.panel;
   if(panel){opened=opened===panel?'':panel;render();return;}
   const toggle=button.dataset.toggle;
-  if(toggle){state.security[toggle]=!state.security[toggle];persist();opened=toggle;render();XP.sound(state.security[toggle]?'ding':'error');return;}
+  if(toggle){if(!isAdministrator()){administratorRequired();return;}state.security[toggle]=!state.security[toggle];persist();opened=toggle;render();XP.sound(state.security[toggle]?'ding':'error');return;}
   const manage=button.dataset.manage;
   if(manage){if(manage==='ie')XP.open('ie');else{opened=manage;render();}return;}
   const link=button.dataset.link;

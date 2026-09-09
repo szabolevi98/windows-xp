@@ -119,3 +119,12 @@ test('The logon screen, the power dialog and User Accounts all know about the Gu
  assert.doesNotMatch(utils,/data-for="guest"/,'nobody edits the Guest picture');
  assert.ok(utils.includes(`typeName=type=>type==='guest'?t("${key('Vendég fiók')}")`));
 });
+
+test('Machine-wide settings require an administrator while personal settings remain available',()=>{
+ const utils=read('js/utilities.js');
+ assert.match(utils,/const isAdministrator=\(\)=>XP\.session==='admin'&&state\.accountType==='admin'/);
+ assert.match(utils,/if\(!isAdministrator\(\)\)\{administratorRequired\(\);return;\}state\.security\[toggle\]/,'Security Center refuses machine changes');
+ assert.match(utils,/if\(!admin\)return;\s*state\.computerName=draft\.computerName/,'System Properties refuses machine changes');
+ assert.match(utils,/const applyButton=\$\('\[data-sheet=apply\]'[^;]*;applyButton\.disabled=true/,'Apply starts disabled');
+ assert.match(utils,/body\.addEventListener\('input',changed\);body\.addEventListener\('change',changed\)/,'editing a property sheet enables Apply');
+});
