@@ -144,8 +144,11 @@ register('regional',()=>{
  const draft={language:XP.language};
  const SAMPLES={hu:['2026. szeptember 7.','13:45:20','1 234 567,89 Ft'],
    en:['Monday, 07 September 2026','1:45:20 PM','$1,234,567.89'],
-   de:['Montag, 7. September 2026','13:45:20','1.234.567,89 €']};
- const REGIONS={hu:t("text_hungarian_hungary"),en:'English (United States)',de:'Deutsch (Deutschland)'};
+   de:['Montag, 7. September 2026','13:45:20','1.234.567,89 €'],
+   fr:['lundi 7 septembre 2026','13:45:20','1 234 567,89 €'],
+   es:['lunes, 7 de septiembre de 2026','13:45:20','1.234.567,89 €']};
+ const REGIONS={hu:t("text_hungarian_hungary"),en:'English (United States)',de:'Deutsch (Deutschland)',
+   fr:'Français (France)',es:'Español (España)'};
  return propertySheet({
   app:'regional',title:t("text_regional_and_language_options"),icon:'datetime',width:420,height:460,initial:'formats',
   tabs:[['formats',t("text_regional_options")],['languages',t("text_languages")],['advanced',t("text_advanced")]],

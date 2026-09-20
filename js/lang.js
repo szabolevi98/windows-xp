@@ -10,12 +10,14 @@ window.XP_I18N = (() => {
   const SUPPORTED = Object.freeze([
     {code: 'hu', label: 'Magyar'},
     {code: 'en', label: 'English'},
-    {code: 'de', label: 'Deutsch'}
+    {code: 'de', label: 'Deutsch'},
+    {code: 'fr', label: 'Français'},
+    {code: 'es', label: 'Español'}
   ]);
   const FALLBACK = 'en';
   // A dátumok, órák és számok is a nyelvhez igazodnak: az XP-ben ezt
   // ugyanaz a Területi és nyelvi beállítások ablak döntötte el.
-  const LOCALES = {hu: 'hu-HU', en: 'en-US', de: 'de-DE'};
+  const LOCALES = {hu: 'hu-HU', en: 'en-US', de: 'de-DE', fr: 'fr-FR', es: 'es-ES'};
   const KEY = 'windows-xp-simulator-lang';
   const dictionaries = window.XP_STRINGS || {};
   const hungarianKeys = new Map(Object.entries(dictionaries.hu || {}).map(([key, value]) => [value, key]));

@@ -2,7 +2,7 @@
 
 ![Windows XP Simulator – the English desktop with Internet Explorer open](docs/screenshot.jpg)
 
-A dependency-free Windows XP experience in HTML, CSS and JavaScript, speaking English, Hungarian and German.
+A Windows XP desktop recreated in HTML, CSS and JavaScript, with working windows, built-in apps, classic games and settings saved in your browser. It runs locally without a build step, package installation or external dependencies.
 
 **[Live demo – try it in your browser](https://windows-xp.levente.net/)**
 
@@ -12,11 +12,19 @@ Opening `index.html` directly works. Saves belong to one browser and one address
 
 ## Languages
 
-The interface speaks English, Hungarian and German. The browser's own language decides by default; anything else starts in English. The choice can be changed in Control Panel → Date, Time, Language, and Regional Options → **Regional and Language Options**, and it survives until the next start.
+Available interface languages:
+
+- English
+- Hungarian — Magyar
+- German — Deutsch
+- French — Français
+- Spanish — Español
+
+The browser's language selects the default; unsupported languages fall back to English. Change it in Control Panel → Date, Time, Language, and Regional Options → **Regional and Language Options**. The choice is saved between visits. Restart the simulated desktop when prompted to apply it to every open program.
 
 Dates, clocks and number formats follow the language: a Monday reads `Montag, 7. September 2026` in German and `Monday, September 7, 2026` in English. The documents and folders created on the first run are named in the machine's language too.
 
-The code uses stable `text_*` keys, such as `t('text_open')`. The English, Hungarian and German text each live in their own `lang/<code>.js` dictionary, and the tests check that all three hold exactly the same keys. A new language needs one new dictionary and one line in the list in `js/lang.js`.
+The code uses stable `text_*` keys, such as `t('text_open')`. Each language has a complete `lang/<code>.js` dictionary. Tests check that all five dictionaries have the same keys and preserve placeholders such as `{count}`. To add a language, create its dictionary, load it in `index.html`, register its name and locale in `js/lang.js`, and add its regional examples in `js/utilities.js`.
 
 ## What it does
 
@@ -124,7 +132,7 @@ Every asset is in the repository, so nothing has to be downloaded to run the sim
 
 `node --test tests/*.test.mjs`
 
-The 115 automated tests cover saving documents and settings, the file operations, the icon grid, resizing windows and the taskbar, starting up and the sound handling, the rules of the card games, Minesweeper's board sizes, Pinball's pausing and focus, the assets and the CSP. They also check every local page's images and internal links, the basket and the guest book being saved, HTML escaping, and Media Player's playback order.
+The 120 automated tests cover saving documents and settings, the file operations, the icon grid, resizing windows and the taskbar, starting up and the sound handling, the rules of the card games, Minesweeper's board sizes, Pinball's pausing and focus, the assets and the CSP. They also check every local page's images and internal links, the basket and the guest book being saved, HTML escaping, Media Player's playback order, and all five languages, including translation keys, placeholders, detection and saved preferences.
 
 Loading takes 5.5 seconds, after which the sign-in screen waits: the desktop always opens by clicking the name, and then two seconds of welcome follow. That click is also the gesture a browser waits for before it will play sound. If sound is refused anyway, the screen stays at sign-in and the next click tries again.
 
