@@ -237,4 +237,15 @@ A teljes felhasználókezelés, felhőmentés, valódi internet és email, keret
 
 Böngészőben ellenőrizve: ékezetes és HTML-nek látszó szöveg importja valódi szövegként, hibás PNG elutasítása, 1024 × 1024-es PNG előnézete és megnyitása Paintben teljes méretben, importált dokumentum újratöltés utáni visszaolvasása, gyorsindítás mentése és fiókválasztása, Aknakereső 200%-os nagyítása változatlan táblával és zászlóval, 390 × 844-es nézet görgetése, valamint a Pasziánsz megnyitása JavaScript-hiba nélkül.
 
-További érdemes feladatok: az általános érintéses menü- és ablakvezérlők célmérete, a betöltési méretek mért optimalizálása, valamint automatizált böngészős és képi regressziótesztek. Ezek a második csomagban még nem készültek el.
+Az első értékelés szerint további érdemes feladatok voltak az általános érintéses menü- és ablakvezérlők célmérete, a betöltési méretek mért optimalizálása, valamint automatizált böngészős és képi regressziótesztek. A következő rész tartalmazza az ezekről hozott végleges felhasználói döntést és a betöltési mérést.
+
+## 8. Felhasználói döntések és betöltési vizsgálat – 2026. október 5.
+
+| Tétel | Aktuális döntés | Indok |
+|---|---|---|
+| További érintéses fejlesztések | **Nem végezzük el** | A szimulátor célja asztali használat; a jelenlegi kezelés a felhasználó szerint megfelelő. |
+| Új automatizált böngészős és képi tesztrendszer | **Nem végezzük el** | A felhasználó nem tartja szükségesnek a közvetlen felhasználói érték hiánya miatt. A meglévő tesztek megmaradnak. |
+| Betöltés vizsgálata | **Elvégezve** | Az éles oldal kiszolgálása a mért kapcsolaton gyors, a JS/CSS tömörítése és a statikus gyorsítótárazás működik. Általános átépítés nem indokolt. |
+| Két túlméretezett tálcaikon | **Célzott javításra érdemes; még nincs módosítva** | Az Asztal megjelenítése és Biztonsági központ ikonja 1024 × 1024 pixeles, de a tálcán 16 × 16-ban látható. Együtt 524 498 bájtot tesznek ki, a megfigyelt induló erőforrások teljes HTTP-válaszméretének 30,7%-át. Az összes felhasználási hely ellenőrzése után kisebb változatokkal csökkenthető a letöltés az XP-élmény megőrzésével. |
+
+Részletes módszer, számok és korlátok: [Betöltési mérés](BETOLTES-MERES-HU.md). A mostani kérés első körös vizsgálatra vonatkozott: futó kódot, képeket és szerverbeállításokat nem változtattunk.
