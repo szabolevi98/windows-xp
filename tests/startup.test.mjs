@@ -5,12 +5,13 @@ import vm from 'node:vm';
 import {hu} from './i18n-test-helper.mjs';
 
 // Exercise the actual startup handlers against a deterministic clock.
-function startSession(outcomes=['played']){
+function startSession(outcomes=['played'],initialState={}){
   let now=0,nextId=1;
   const timers=new Map(),elements=new Map(),listeners=new Map(),sounds=[],notices=[],apps=new Map();let lastWindow;
   const element=()=>({hidden:false,style:{},dataset:{},classList:{add(){},remove(){},toggle(){}},clientHeight:900,clientWidth:1280,replaceChildren(){},append(){},setAttribute(){},addEventListener(){},remove(){},pause(){},currentTime:0});
   const $=selector=>{if(!elements.has(selector))elements.set(selector,element());return elements.get(selector);};
   const xp={locale:()=>'hu-HU',t:hu, $, $$:selector=>selector.startsWith('.welcome-user')?[$('.welcome-user')]:[],esc:String,icon:()=>'',avatar:()=>'',avatarPath:()=>'',recycleIcon:()=>'recycle',accounts:()=>[{id:'admin',name:'Test',avatar:'chess',type:'admin',active:true,enabled:true}],switchUser:()=>false,parkSession(){},closeParked(){},state:{files:[],iconPositions:{},user:'Test',showWelcome:false},register(name,fn){apps.set(name,fn);},persist(){},notify(title){notices.push(title);},hideMenus(){},applySettings(){},windows:new Map(),open(name){return apps.get(name)?.();},createWindow(){lastWindow={el:element(),body:element(),cleanup:[],close(){}};return lastWindow;},sound(name){sounds.push({name,time:now});const result=name==='startup'?(outcomes.shift()||'played'):'played';return typeof result==='function'?result():Promise.resolve(result);}};
+  Object.assign(xp.state,initialState);
   const context=vm.createContext({XP:xp,document:{body:element(),createElement:element,addEventListener(name,callback){if(!listeners.has(name))listeners.set(name,[]);listeners.get(name).push(callback);}},window:{addEventListener(){}},innerWidth:1280,innerHeight:930,setTimeout(callback,delay){const id=nextId++;timers.set(id,{at:now+delay,callback});return id;},clearTimeout:id=>timers.delete(id),setInterval(){}});
   vm.runInContext(readFileSync(new URL('../js/desktop-grid.js',import.meta.url),'utf8'),context);
   vm.runInContext(readFileSync(new URL('../js/start.js',import.meta.url),'utf8'),context);
@@ -21,6 +22,24 @@ function startSession(outcomes=['played']){
 
 // Booting stops at the logon screen; the desktop is only reached by clicking the account.
 const BOOT=5500,WELCOME=2000;
+
+test('Fast startup skips both delays but still waits for the account click',async()=>{
+ const {$,advance,sounds}=startSession(['played'],{fastStartup:true});
+ assert.equal($('#boot-screen').hidden,true);assert.equal($('#welcome-screen').hidden,false);
+ await advance(30000);assert.equal(sounds.length,0,'fast startup does not bypass login');
+ $('.welcome-user').onclick();await advance(0);
+ assert.equal($('#welcome-screen').hidden,true);assert.equal(sounds.length,1);assert.equal(sounds[0].time,30000);
+});
+
+test('Fast startup retains sound refusal and supports returning to the original delays',async()=>{
+ const {$,advance,sounds,state}=startSession(['blocked','played'],{fastStartup:true});
+ $('.welcome-user').onclick();await advance(0);assert.equal($('#welcome-screen').hidden,false);
+ await $('.welcome-user').onclick();assert.equal($('#welcome-screen').hidden,true);
+ state.fastStartup=false;$('#power-on').onclick();await advance(BOOT-1);
+ assert.equal($('#boot-screen').hidden,false);assert.equal(sounds.length,2);
+ await advance(1);$('.welcome-user').onclick();await advance(WELCOME-1);assert.equal(sounds.length,2);
+ await advance(1);assert.equal(sounds.length,3);
+});
 
 test('Startup waits on the loading screen, then on the logon screen until the name is clicked',async()=>{
   const {$,sounds,advance}=startSession();

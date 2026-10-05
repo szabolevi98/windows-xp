@@ -1638,5 +1638,20 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {fr: {
   "text_draft_saved": "Brouillon enregistré.",
   "text_recovered_drafts": "Récupérer les brouillons",
   "text_draft_text": "Brouillon de texte",
-  "text_draft_image": "Brouillon d’image"
+  "text_draft_image": "Brouillon d’image",
+  "text_import_file": "Importer un fichier…",
+  "text_import_help": "Importez un texte UTF-8 (.txt) ou une image PNG de 2 Mo maximum. Les images peuvent mesurer jusqu’à 4096 × 4096 pixels. Les textes vont dans Mes documents et les images dans Mes images.",
+  "text_import_choose": "Fichier de votre ordinateur",
+  "text_import_reading": "Vérification du fichier…",
+  "text_import_preview": "{name} → {folder}. L’import crée un nouveau fichier.",
+  "text_import_invalid": "Ce fichier n’est pas un texte UTF-8 pris en charge ou une image PNG lisible, ou il dépasse la limite de taille.",
+  "text_import_add": "Importer et ouvrir",
+  "text_import_saved": "Importé et enregistré : {name}",
+  "text_import_unsaved": "{name} a été ajouté au bureau, mais le navigateur n’a pas pu l’enregistrer. Téléchargez une sauvegarde avant de quitter.",
+  "text_import_help_short": "Importez votre propre texte ou image PNG.",
+  "text_simulator_options": "Options du simulateur",
+  "text_startup_options": "Démarrage",
+  "text_fast_startup": "Démarrage rapide",
+  "text_fast_startup_help": "Ignore les délais de chargement et de bienvenue. L’écran de connexion reste. S’applique aux deux comptes au prochain démarrage.",
+  "text_board_zoom": "Zoom du plateau : {percent} %"
 }});

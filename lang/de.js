@@ -1640,5 +1640,20 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
   "text_draft_saved": "Entwurf gespeichert.",
   "text_recovered_drafts": "Entwürfe wiederherstellen",
   "text_draft_text": "Textentwurf",
-  "text_draft_image": "Bildentwurf"
+  "text_draft_image": "Bildentwurf",
+  "text_import_file": "Datei importieren…",
+  "text_import_help": "Importiere eine UTF-8-Textdatei (.txt) oder ein PNG-Bild bis 2 MB. Bilder dürfen bis zu 4096 × 4096 Pixel groß sein. Texte kommen in Eigene Dateien, Bilder in Eigene Bilder.",
+  "text_import_choose": "Datei vom Computer",
+  "text_import_reading": "Datei wird geprüft…",
+  "text_import_preview": "{name} → {folder}. Der Import erstellt eine neue Datei.",
+  "text_import_invalid": "Diese Datei ist kein unterstützter UTF-8-Text oder lesbares PNG-Bild oder überschreitet die Größenbegrenzung.",
+  "text_import_add": "Importieren und öffnen",
+  "text_import_saved": "Importiert und gespeichert: {name}",
+  "text_import_unsaved": "{name} wurde diesem Desktop hinzugefügt, konnte aber nicht gespeichert werden. Lade vor dem Verlassen eine Sicherung herunter.",
+  "text_import_help_short": "Importiere deinen eigenen Text oder ein PNG-Bild.",
+  "text_simulator_options": "Simulatoroptionen",
+  "text_startup_options": "Start",
+  "text_fast_startup": "Schnellstart",
+  "text_fast_startup_help": "Überspringt die Lade- und Begrüßungswartezeit. Der Anmeldebildschirm bleibt. Gilt ab dem nächsten Start für beide Konten.",
+  "text_board_zoom": "Spielfeldzoom: {percent}%"
 }});

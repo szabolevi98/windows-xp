@@ -53,13 +53,13 @@ test('Outlook Express is a program of its own, reachable the way XP offered it',
 });
 
 test('Every program the Start menu lists is one the desktop can actually open',()=>{
- const sources=['apps','backup','cardgames','explorer','games','internet','outlook','pinball','player','start','taskmgr','utilities']
+ const sources=['apps','backup','cardgames','explorer','games','import','internet','outlook','pinball','player','start','taskmgr','utilities']
   .map(name=>readFileSync(new URL(`js/${name}.js`,root),'utf8')).join('\n');
- const registered=new Set(Array.from(sources.matchAll(/register\('([a-z0-9-]+)'/g),m=>m[1]));
+ const registered=new Set(Array.from(sources.matchAll(/register\('([a-zA-Z0-9-]+)'/g),m=>m[1]));
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  // All Programs is a nested list now: folders hold arrays, plain entries an app id.
  const menu=start.slice(start.indexOf('const programsMenu='),start.indexOf('function programsMarkup'));
- const listed=Array.from(menu.matchAll(/\['[^']+','[a-z0-9-]+','([a-z0-9-]+)'\]/g),m=>m[1]);
+ const listed=Array.from(menu.matchAll(/\['[^']+','[a-z0-9-]+','([a-zA-Z0-9-]+)'\]/g),m=>m[1]);
  assert.ok(listed.length>=15,'the list still holds every program');
  for(const app of listed)assert.ok(registered.has(app),`${app} is a registered program`);
  for(const app of ['ie','outlook','player','notepad','paint','calculator','cmd','explorer','help'])

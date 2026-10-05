@@ -86,6 +86,14 @@ function propertySheet({app,title,icon:ic,tabs,initial,width=470,height=515,read
  return w;
 }
 const monitor=inner=>`<div class="monitor-preview"><div class="monitor-screen">${inner||''}</div></div>`;
+register('simulatorOptions',()=>{
+ const draft={fastStartup:state.fastStartup===true};
+ return propertySheet({app:'simulatorOptions',title:t('text_simulator_options'),icon:'control',width:470,height:300,tabs:[['startup',t('text_startup_options')]],
+  read(tab,panel){draft.fastStartup=$('[name=fast-startup]',panel).checked;},
+  draw(tab,panel){panel.innerHTML=`<fieldset><legend>${esc(t('text_startup_options'))}</legend><label class="settings-check"><input type="checkbox" name="fast-startup" ${draft.fastStartup?'checked':''}> ${esc(t('text_fast_startup'))}</label><p>${esc(t('text_fast_startup_help'))}</p></fieldset>`;},
+  apply(){state.fastStartup=draft.fastStartup;persist();}
+ });
+});
 const wallpaperStyle=(name,fit)=>name==='none'?'background:#3a6ea5':`background:#3a6ea5 url('${XP.wallpaperPath(name)}') ${fit==='tile'?'left top/auto repeat':fit==='center'?'center/auto no-repeat':'center/cover no-repeat'}`;
 
 // --- Tálca és Start menü tulajdonságai -----------------------------------
@@ -460,6 +468,7 @@ register('control',()=>{
   player:{name:t("text_audio_devices"),icon:'player',hint:t("text_playback_and_audio_files"),open:()=>XP.open('player')},
   system:{name:t("text_system"),icon:'computer',hint:t("text_system_information_and_storage"),open:()=>XP.open('system')},
   backup:{name:t('text_backup'),icon:'disk',hint:t('text_backup_description'),open:()=>XP.open('backup')},
+  simulatorOptions:{name:t('text_simulator_options'),icon:'control',hint:t('text_fast_startup'),open:()=>XP.open('simulatorOptions')},
   cleanup:{name:t("text_disk_cleanup"),icon:'disk',hint:t("text_free_up_space_on_the_disk"),open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog(t("text_disk_cleanup_c"),t("text_disk_cleanup_can_remove_the_following_files_temporary_internet_files_3_607783f7",{trash:(trash*0.06).toFixed(2),count:trash,total:(4.01+trash*0.06).toFixed(2)}));}},
   printers:{name:t("text_printers_and_faxes"),icon:'printers',hint:t("text_installed_printers"),open:()=>XP.open('printers')},
   mouse:{name:t("text_mouse"),icon:'mouse',hint:t("text_the_scheme_of_the_mouse_pointers"),open:()=>XP.open('mouse')},
@@ -474,7 +483,7 @@ register('control',()=>{
   {id:'network',name:t("text_network_and_internet_connections"),icon:'network',hint:t("text_connection_status_and_browser_settings"),items:['network','internet']},
   {id:'programs',name:t("text_add_or_remove_programs"),icon:'programs',hint:t("text_the_list_of_programs_installed_on_this_computer"),items:['programs']},
   {id:'sound',name:t("text_sounds_speech_and_audio_devices"),icon:'volume',hint:t("text_system_sounds_volume_and_playback"),items:['volume','player']},
-  {id:'performance',name:t("text_performance_and_maintenance"),icon:'computer',hint:t("text_system_information_and_disk_maintenance"),items:['system','cleanup','backup']},
+  {id:'performance',name:t("text_performance_and_maintenance"),icon:'computer',hint:t("text_system_information_and_disk_maintenance"),items:['system','cleanup','backup','simulatorOptions']},
   {id:'hardware',name:t("text_printers_and_other_hardware"),icon:'printers',hint:t("text_printers_faxes_and_devices"),items:['printers','mouse']},
   {id:'accounts',name:t("text_user_accounts"),icon:'user',hint:t("text_your_user_name_and_your_profile"),items:['profile']},
   {id:'datetime',name:t("text_date_time_language_and_regional_options"),icon:'datetime',hint:t("text_calendar_the_exact_time_and_the_language_settings"),items:['datetime','regional']},
@@ -746,6 +755,6 @@ register('security',()=>{
  return w;
 });
 register('help',()=>{
- if(XP.singleton('help'))return;const w=createWindow({title:t("text_help_and_support"),icon:'help',app:'help',width:720,height:540});const body=document.createElement('div');body.className='help-content';body.innerHTML=`<div class="help-banner">${icon('windows')}<div><h1>${esc(t("text_welcome_back_to_windows_xp"))}</h1><p>${esc(t("text_a_familiar_place_possibilities_worth_rediscovering"))}</p></div></div><div class="help-cards">${[['ie',t("text_explore_the_old_web"),t("text_google_local_pages_and_a_search_that_works"),'ie'],['notepad',t("text_write_your_ideas_down"),t("text_your_notes_are_kept_in_the_browser"),'notepad'],['paint',t("text_make_something"),t("text_draw_colour_and_save_your_picture"),'paint'],['mines',t("text_take_a_little_break"),t("text_a_classic_game_of_minesweeper"),'mines'],['documents',t("text_your_own_files"),t("text_make_folders_and_put_your_documents_in_order"),'documents'],['control',t("text_make_the_desktop_yours"),t("text_choose_a_wallpaper_a_colour_scheme_and_a_name"),'display']].map(([ic,title,text,app])=>`<button class="help-card" data-open="${app}">${icon(ic)}<span><strong>${title}</strong>${text}</span></button>`).join('')}</div><div class="help-shortcuts"><b>${esc(t("text_a_few_small_helps"))}</b><br>${esc(t("text_double_click_open_right_click_context_menu"))}<br>${esc(t("text_ctrl_s_save_ctrl_esc_start_menu_alt_f4_close_window"))}<br>${esc(t("text_windows_move_by_their_title_bar_and_resize_from_the_bottom_right_corner"))}<br>${esc(t("text_desktop_icons_can_be_dragged_about_and_the_recycle_bin_gives_files_back"))}</div><p style="font-size:10px;color:#888">${esc(t("text_your_documents_drawings_and_settings_stay_on_this_computer_save_what_m_4403ea39"))}</p>`;w.body.append(body);return w;
+ if(XP.singleton('help'))return;const w=createWindow({title:t("text_help_and_support"),icon:'help',app:'help',width:720,height:540});const body=document.createElement('div');body.className='help-content';body.innerHTML=`<div class="help-banner">${icon('windows')}<div><h1>${esc(t("text_welcome_back_to_windows_xp"))}</h1><p>${esc(t("text_a_familiar_place_possibilities_worth_rediscovering"))}</p></div></div><div class="help-cards">${[['ie',t("text_explore_the_old_web"),t("text_google_local_pages_and_a_search_that_works"),'ie'],['notepad',t("text_write_your_ideas_down"),t("text_your_notes_are_kept_in_the_browser"),'notepad'],['paint',t("text_make_something"),t("text_draw_colour_and_save_your_picture"),'paint'],['mines',t("text_take_a_little_break"),t("text_a_classic_game_of_minesweeper"),'mines'],['documents',t('text_import_file'),t('text_import_help_short'),'import'],['disk',t('text_backup'),t('text_backup_description'),'backup'],['documents',t("text_your_own_files"),t("text_make_folders_and_put_your_documents_in_order"),'documents'],['control',t("text_make_the_desktop_yours"),t("text_choose_a_wallpaper_a_colour_scheme_and_a_name"),'display']].map(([ic,title,text,app])=>`<button class="help-card" data-open="${app}">${icon(ic)}<span><strong>${title}</strong>${text}</span></button>`).join('')}</div><div class="help-shortcuts"><b>${esc(t("text_a_few_small_helps"))}</b><br>${esc(t("text_double_click_open_right_click_context_menu"))}<br>${esc(t("text_ctrl_s_save_ctrl_esc_start_menu_alt_f4_close_window"))}<br>${esc(t("text_windows_move_by_their_title_bar_and_resize_from_the_bottom_right_corner"))}<br>${esc(t("text_desktop_icons_can_be_dragged_about_and_the_recycle_bin_gives_files_back"))}</div><p style="font-size:10px;color:#888">${esc(t("text_your_documents_drawings_and_settings_stay_on_this_computer_save_what_m_4403ea39"))}</p>`;w.body.append(body);return w;
 });
 })();

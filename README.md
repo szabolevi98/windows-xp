@@ -53,7 +53,9 @@ The code uses stable `text_*` keys, such as `t('text_open')`. Each language has 
 - A browsable, read-only C: drive: WINDOWS, Program Files, Documents and Settings, Temp and their subfolders. The DVD drive asks for a disc when clicked.
 - Paint: pencil, brush, eraser, fill, line, rectangle, ellipse, text, colour picker, palette, undo, and saving or downloading a PNG.
 - Calculator: the arithmetic, percent, square root, reciprocal, memory and the keyboard.
+- Import your own UTF-8 TXT and PNG files from the File menu in Notepad or Paint, or Start → All Programs → Accessories → System Tools → Import file. Preview first, then create a new file in My Documents or My Pictures. Existing files are preserved with a numbered name when necessary. Files are limited to 2 MB; PNG dimensions are limited to 4096 × 4096 and the image must decode successfully. Paint uses the imported picture's full canvas dimensions.
 - Minesweeper: Beginner 9×9/10, Intermediate 16×16/40 and Expert 30×16/99, a custom board from 9–30 by 9–24, a safe first click, flag and question marks, chording with both buttons, the counter, the timer and best times.
+- Minesweeper's View menu offers 100%, 150% and 200% board zoom without resetting the current game. The choice is saved per account; touch devices default to 150% when no choice has been made. Large boards scroll inside the window on a small screen.
 - Klondike Solitaire: dragging cards and runs, click and double-click play, drawing one or three, the classic scoring, foundations, redealing, undo and auto-collect.
 - FreeCell: the original numbered deals (game 617 is game 617 here too), dragging cards and legal runs, four free cells, auto-collect, undo and a win record.
 - Spider Solitaire: dragging same-suit runs, one, two or four suits, ten columns, dealing from the stock, completed runs lifted off, and the original scoring that starts at 500.
@@ -92,6 +94,7 @@ Everything needed to run is in the `assets` folder. The CSP forbids network call
 - `js/core.js`: windows, menus, dialogs, file operations and save scheduling.
 - `js/storage.js`: saved-state validation, storage failure and stale-tab protection.
 - `js/backup.js`: full backup export, validated import and recovery controls.
+- `js/import.js`: TXT/PNG validation, previews and adding personal files.
 - `js/internet.js`: Internet Explorer, the search engine and the local web.
 - `js/web-pages.js` and `web-pages.css`: the interactive demonstration pages and what they save.
 - `js/apps.js`: documents, Paint, Calculator, the command prompt.
@@ -138,8 +141,10 @@ Every asset is in the repository, so nothing has to be downloaded to run the sim
 
 `node --test tests/*.test.mjs`
 
-The 134 automated tests cover saving documents and settings, damaged-state recovery, stale-tab conflicts, backup round-trips and failed restores, deferred saves and profile switching, the file operations, the icon grid, resizing windows and the taskbar, starting up and the sound handling, the rules of the card games, Minesweeper's board sizes, Pinball's pausing and focus, the assets and the CSP. They also check every local page's images and internal links, the basket and the guest book being saved, HTML escaping, Media Player's playback order, recipe units in all five languages, translation keys, placeholders, detection and saved preferences.
+The 144 automated tests cover saving documents and settings, damaged-state recovery, stale-tab conflicts, backup round-trips and failed restores, deferred saves and profile switching, TXT/PNG validation and import, filename collisions, the file operations, the icon grid, resizing windows and the taskbar, regular and fast startup with sound handling, the rules of the card games, Minesweeper's board sizes, Pinball's pausing and focus, the assets and the CSP. They also check every local page's images and internal links, the basket and the guest book being saved, HTML escaping, Media Player's playback order, recipe units in all five languages, translation keys, placeholders, detection and saved preferences.
 
 Loading takes 5.5 seconds, after which the sign-in screen waits: the desktop always opens by clicking the name, and then two seconds of welcome follow. That click is also the gesture a browser waits for before it will play sound. If sound is refused anyway, the screen stays at sign-in and the next click tries again.
+
+Optional **Fast startup** in Control Panel → Performance and Maintenance → Simulator Options skips the loading and welcome delays from the next startup. The account click and sound handling still apply. The preference is shared by both accounts and can be switched off to return to the original timing. Simulator Options is also in Start → All Programs → Accessories → System Tools. Help and Support links directly to file import and backup.
 
 Checked in a browser: dragging all eight window edges and corners, maximising and restoring; reactivating Pinball from another window, from the controls below it and after closing its help; Media Player playback and library search; the local web pages, the basket, a post and a mail draft, and all of those surviving a reload.

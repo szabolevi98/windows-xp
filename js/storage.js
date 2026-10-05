@@ -19,11 +19,12 @@ window.XP_STORAGE = (() => {
       if(!record(p))fail();
       for(const key of ['user','avatar','wallpaper','wallpaperFit','theme','visualStyle','cursors','draft','paintDraft','browserHome','browserCurrent','pinballIni','timeZone'])
         if(p[key]!==undefined&&typeof p[key]!=='string')fail();
-      for(const key of ['sounds','showWelcome','controlClassic','internetTime','mineMarks'])
+      for(const key of ['sounds','showWelcome','controlClassic','internetTime','mineMarks','fastStartup'])
         if(p[key]!==undefined&&typeof p[key]!=='boolean')fail();
       for(const key of ['volume','clockOffset','desktopLayoutVersion','solitaireDraw','browserHistoryDays'])
         if(p[key]!==undefined&&(typeof p[key]!=='number'||!Number.isFinite(p[key])))fail();
       if(p.volume!==undefined&&(p.volume<0||p.volume>100))fail();
+      if(p.mineZoom!==undefined&&![1,1.5,2].includes(p.mineZoom))fail();
       for(const key of ['taskbar','screensaver','iconPositions','programUse','folderOptions','folderViews','desktopOptions','playerSettings','taskManager','mixer','mouse','webDemo','outlook','freecellStats','mineCustom','drafts'])
         if(p[key]!==undefined&&!record(p[key]))fail();
       if(p.pinnedPrograms!==undefined&&(!Array.isArray(p.pinnedPrograms)||p.pinnedPrograms.some(x=>typeof x!=='string')))fail();

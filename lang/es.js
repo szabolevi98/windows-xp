@@ -1638,5 +1638,20 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {es: {
   "text_draft_saved": "Borrador guardado.",
   "text_recovered_drafts": "Recuperar borradores",
   "text_draft_text": "Borrador de texto",
-  "text_draft_image": "Borrador de imagen"
+  "text_draft_image": "Borrador de imagen",
+  "text_import_file": "Importar archivo…",
+  "text_import_help": "Importa un texto UTF-8 (.txt) o una imagen PNG de hasta 2 MB. Las imágenes pueden medir hasta 4096 × 4096 píxeles. Los textos van a Mis documentos y las imágenes a Mis imágenes.",
+  "text_import_choose": "Archivo de tu ordenador",
+  "text_import_reading": "Comprobando archivo…",
+  "text_import_preview": "{name} → {folder}. La importación crea un archivo nuevo.",
+  "text_import_invalid": "Este archivo no es un texto UTF-8 compatible o una imagen PNG legible, o supera el límite de tamaño.",
+  "text_import_add": "Importar y abrir",
+  "text_import_saved": "Importado y guardado: {name}",
+  "text_import_unsaved": "{name} se añadió al escritorio, pero el navegador no pudo guardarlo. Descarga una copia de seguridad antes de salir.",
+  "text_import_help_short": "Importa tu propio texto o imagen PNG.",
+  "text_simulator_options": "Opciones del simulador",
+  "text_startup_options": "Inicio",
+  "text_fast_startup": "Inicio rápido",
+  "text_fast_startup_help": "Omite las esperas de carga y bienvenida. Se conserva la pantalla de inicio de sesión. Se aplica a ambas cuentas a partir del próximo inicio.",
+  "text_board_zoom": "Zoom del tablero: {percent}%"
 }});

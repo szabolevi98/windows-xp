@@ -106,7 +106,7 @@ const programsMenu=[
  ['Kellékek','programs',[
   ['Jegyzettömb','notepad','notepad'],['Paint','paint','paint'],['Parancssor','cmd','cmd'],
   ['Számológép','calculator','calculator'],['Windows Intéző','folder','explorer'],
-  ['Rendszereszközök','folder',[['Feladatkezelő','taskmgr','taskmgr'],['Vezérlőpult','control','control'],['text_backup','disk','backup'],['text_recovered_drafts','documents','drafts']]]
+  ['Rendszereszközök','folder',[['Feladatkezelő','taskmgr','taskmgr'],['Vezérlőpult','control','control'],['text_backup','disk','backup'],['text_import_file','documents','import'],['text_simulator_options','control','simulatorOptions'],['text_recovered_drafts','documents','drafts']]]
  ]],
  ['Játékok','programs',[
   ['Aknakereső','mines','mines'],['FreeCell','freecell','freecell'],['Hearts','hearts','hearts'],
@@ -302,8 +302,8 @@ $('#taskbar').oncontextmenu=e=>{
 };
 function closeAll(){[...XP.windows.values()].forEach(w=>XP.close(w));}
 function resetStartup(){bootGeneration++;startupPending=false;const startup=$('#startup-sound');startup.pause();startup.currentTime=0;}
-function boot(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();bootPhase='boot';$('#off-screen').hidden=true;$('#welcome-screen').hidden=true;$('#boot-screen').hidden=false;XP.hideMenus();bootTimer=setTimeout(loginScreen,BOOT_DURATION);}
-function welcome(){if(bootPhase!=='boot')return;clearTimeout(bootTimer);bootPhase='welcome';$('#boot-screen').hidden=true;$('#welcome-screen').hidden=false;$('.welcome-center').innerHTML=`<span>${esc(t("text_welcome"))}</span>`;$('.welcome-bottom').innerHTML='';welcomeTimer=setTimeout(enterDesktop,WELCOME_DURATION);}
+function boot(){clearTimeout(bootTimer);clearTimeout(welcomeTimer);resetStartup();bootPhase='boot';$('#off-screen').hidden=true;$('#welcome-screen').hidden=true;$('#boot-screen').hidden=false;XP.hideMenus();if(state.fastStartup)loginScreen();else bootTimer=setTimeout(loginScreen,BOOT_DURATION);}
+function welcome(){if(bootPhase!=='boot')return;clearTimeout(bootTimer);bootPhase='welcome';$('#boot-screen').hidden=true;$('#welcome-screen').hidden=false;$('.welcome-center').innerHTML=`<span>${esc(t("text_welcome"))}</span>`;$('.welcome-bottom').innerHTML='';welcomeTimer=setTimeout(enterDesktop,state.fastStartup?0:WELCOME_DURATION);}
 async function enterDesktop(){
  if(bootPhase!=='welcome'||startupPending)return;
  startupPending=true;const generation=bootGeneration;

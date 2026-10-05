@@ -217,6 +217,24 @@ Külön, kézi böngészős próba készült a két névtelen Jegyzettömb-piszk
 
 ### Későbbi, továbbra is érdemes feladatok
 
-A TXT/PNG-import, a menthető gyorsindítás, az opcionális felfedezési segítség, az érintéses célméretek és Aknakereső-nagyítás, a betöltési méretek mért optimalizálása, valamint az ismételhető automatizált böngésző- és képi regressziótesztek külön következő körre maradnak. A mostani böngészős ellenőrzések nem egy új automatizált tesztfuttató részei.
+A TXT/PNG-import, a menthető gyorsindítás, az opcionális felfedezési segítség, az érintéses célméretek és Aknakereső-nagyítás, a betöltési méretek mért optimalizálása, valamint az ismételhető automatizált böngésző- és képi regressziótesztek az első csomag után további feladatok voltak. A következő rész rögzíti a második csomagban elvégzett munkát. A mostani böngészős ellenőrzések nem egy új automatizált tesztfuttató részei.
 
 A teljes felhasználókezelés, felhőmentés, valódi internet és email, keretrendszeres újraírás és egyéb nagy infrastruktúrájú ötletek döntése változatlan: a jelenlegi szimulátorhoz nem indokoltak.
+
+## 7. Második javítási csomag – 2026. október 5.
+
+| Tétel | Állapot | Eredmény és határ |
+|---|---|---|
+| TXT és PNG behozatala | **Elkészült – érdemes** | Fájlmenüből vagy a Start rendszereszközei közül megnyitható importáló, előnézettel. UTF-8 TXT és dekódolható PNG, legfeljebb 2 MB; a PNG legfeljebb 4096 × 4096 pixeles. Új fájl keletkezik az aktív profil Dokumentumok/Képek mappájában, névütközésnél számozással. A korábban mentett fájl megmarad. |
+| Importált kép mérete Paintben | **Elkészült – érdemes** | A megnyitott kép saját mérete határozza meg a vásznat, így a nagyobb képet nem vágja le a régi 660 × 370-es vászon. Új rajznál az eredeti alapméret áll vissza. |
+| Választható gyorsindítás | **Elkészült – érdemes** | Új, kis beállítóablak a Vezérlőpultban és a Start menüben. Mindkét fiókra érvényes, a betöltési és üdvözlési várakozást hagyja el. Belépéshez továbbra is fiókot kell választani. Kikapcsolva az eredeti időzítés tér vissza. |
+| Aknakereső-nagyítás | **Elkészült – érdemes** | Nézet menüben 100%, 150%, 200%; profilhoz mentve. Érintéses eszközön választás hiányában 150% az alap. A nagyítás megőrzi a tábla állapotát és a futó időt, kis nézetben az ablakon belül lehet görgetni. |
+| Felfedezési segítség | **Kis bővítés elkészült – érdemes** | A meglévő, F1-gyel is elérhető Súgó az importálót és a biztonsági mentést is közvetlenül kínálja. Kötelező túra továbbra sem indokolt. |
+
+### Ellenőrzés és fennmaradó munka
+
+**144/144 automatizált teszt sikeres.** A tíz új eset az UTF-8 és BOM kezelését, a PNG ellenőrzését, hibás és túl nagy fájlok elutasítását, névütközést, mentési hibát, újratöltést, profilok elkülönítését, a közös gyorsindítási beállítást és a gyorsindítás hangkezelését vizsgálja.
+
+Böngészőben ellenőrizve: ékezetes és HTML-nek látszó szöveg importja valódi szövegként, hibás PNG elutasítása, 1024 × 1024-es PNG előnézete és megnyitása Paintben teljes méretben, importált dokumentum újratöltés utáni visszaolvasása, gyorsindítás mentése és fiókválasztása, Aknakereső 200%-os nagyítása változatlan táblával és zászlóval, 390 × 844-es nézet görgetése, valamint a Pasziánsz megnyitása JavaScript-hiba nélkül.
+
+További érdemes feladatok: az általános érintéses menü- és ablakvezérlők célmérete, a betöltési méretek mért optimalizálása, valamint automatizált böngészős és képi regressziótesztek. Ezek a második csomagban még nem készültek el.

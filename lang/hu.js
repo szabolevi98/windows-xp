@@ -1640,5 +1640,20 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
   "text_draft_saved": "Piszkozat elmentve.",
   "text_recovered_drafts": "Piszkozatok visszaállítása",
   "text_draft_text": "Szöveges piszkozat",
-  "text_draft_image": "Rajzpiszkozat"
+  "text_draft_image": "Rajzpiszkozat",
+  "text_import_file": "Fájl importálása…",
+  "text_import_help": "UTF-8 szöveget (.txt) vagy PNG-képet hozhatsz be, legfeljebb 2 MB méretben. A kép legfeljebb 4096 × 4096 pixeles lehet. A szöveg a Dokumentumokba, a kép a Képekbe kerül.",
+  "text_import_choose": "Fájl a számítógépről",
+  "text_import_reading": "Fájl ellenőrzése…",
+  "text_import_preview": "{name} → {folder}. Az import új fájlt hoz létre.",
+  "text_import_invalid": "Ez a fájl nem olvasható támogatott UTF-8 szövegként vagy PNG-képként, vagy túllépi a méretkorlátot.",
+  "text_import_add": "Importálás és megnyitás",
+  "text_import_saved": "Importálva és elmentve: {name}",
+  "text_import_unsaved": "{name} bekerült erre az asztalra, de a böngésző nem tudta elmenteni. Kilépés előtt tölts le biztonsági mentést.",
+  "text_import_help_short": "Hozd be saját szövegedet vagy PNG-képedet.",
+  "text_simulator_options": "Szimulátor beállításai",
+  "text_startup_options": "Indítás",
+  "text_fast_startup": "Gyorsindítás",
+  "text_fast_startup_help": "Átugorja a betöltési és üdvözlési várakozást. A bejelentkezési képernyő megmarad. Mindkét fiókra érvényes, a következő indítástól.",
+  "text_board_zoom": "Tábla nagyítása: {percent}%"
 }});

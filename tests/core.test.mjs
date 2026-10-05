@@ -380,7 +380,7 @@ test('The Security Centre is a window, reachable from the tray, the control pane
 test('Every control panel category leads to applets that exist, in both views',()=>{
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  const block=utils.slice(utils.indexOf('const applets={'),utils.indexOf('let classic='));
- const applets=new Set(Array.from(block.matchAll(/^\s*([a-z]+):\{name:t\(/gm),m=>m[1]));
+ const applets=new Set(Array.from(block.matchAll(/^\s*([a-zA-Z]+):\{name:t\(/gm),m=>m[1]));
  const categories=Array.from(block.matchAll(/id:'([a-z]+)',name:t\(["']([^"']+)["']\)/g),m=>m[1]);
  assert.ok(applets.size>=12,'the classic view lists the individual applets');
  assert.ok(categories.length>=9,'the category view keeps the original XP categories');

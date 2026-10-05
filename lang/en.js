@@ -1640,5 +1640,20 @@ window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {en: {
   "text_draft_saved": "Draft saved.",
   "text_recovered_drafts": "Recover drafts",
   "text_draft_text": "Text draft",
-  "text_draft_image": "Picture draft"
+  "text_draft_image": "Picture draft",
+  "text_import_file": "Import file…",
+  "text_import_help": "Bring in a UTF-8 text file (.txt) or PNG picture up to 2 MB. Pictures can be up to 4096 × 4096 pixels. Text goes to My Documents and pictures to My Pictures.",
+  "text_import_choose": "File from your computer",
+  "text_import_reading": "Checking file…",
+  "text_import_preview": "{name} → {folder}. Import creates a new file.",
+  "text_import_invalid": "This file is not supported UTF-8 text or a readable PNG picture, or it exceeds the size limit.",
+  "text_import_add": "Import and open",
+  "text_import_saved": "Imported and saved: {name}",
+  "text_import_unsaved": "{name} was added to this desktop, but the browser could not save it. Download a backup before leaving.",
+  "text_import_help_short": "Bring in your own text or PNG picture.",
+  "text_simulator_options": "Simulator Options",
+  "text_startup_options": "Startup",
+  "text_fast_startup": "Fast startup",
+  "text_fast_startup_help": "Skip the loading and welcome delays. The sign-in screen stays. Applies to both accounts from the next startup.",
+  "text_board_zoom": "Board zoom: {percent}%"
 }});

@@ -17,7 +17,7 @@ window.XP = (() => {
   const avatarPath = name => `assets/avatars/${avatars.includes(name)||name==='guest'?name:'chess'}.png`;
   const avatar = (name, cls='') => `<img class="account-picture ${cls}" src="${avatarPath(name)}" alt="" draggable="false">`;
   const KEY = 'windows-xp-simulator-v1';
-  const defaults = () => ({version:1,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,pinnedPrograms:['ie','outlook'],taskbar:{locked:true,clock:true,quickLaunch:true,autoHide:false,alwaysOnTop:true,group:true,hideInactive:true,edge:'bottom',horizontalSize:30,verticalSize:106},iconPositions:{},draft:'',files:[
+  const defaults = () => ({version:1,fastStartup:false,user:t("text_administrator"),wallpaper:'bliss',wallpaperFit:'fill',theme:'blue',visualStyle:'xp',cursors:'default',avatar:'chess',accountType:'admin',computerName:'OTTHONI-PC',screensaver:{name:'none',minutes:10},volume:55,sounds:true,showWelcome:true,pinnedPrograms:['ie','outlook'],taskbar:{locked:true,clock:true,quickLaunch:true,autoHide:false,alwaysOnTop:true,group:true,hideInactive:true,edge:'bottom',horizontalSize:30,verticalSize:106},iconPositions:{},draft:'',files:[
     {id:'welcome',name:t("text_welcome_to_windows_xp_txt"),type:'text',parent:'documents',content:t("text_welcome_back_to_2001_this_is_your_own_windows_xp_living_in_a_browser_d_82cbf277"),modified:Date.now()},
     {id:'todo',name:t("text_to_do_txt"),type:'text',parent:'documents',content:t("text_things_to_do_today_rediscover_the_start_menu_draw_something_in_paint_w_ed89fdbb"),modified:Date.now()},
     {id:'folder-personal',name:t("text_personal"),type:'folder',parent:'documents',modified:Date.now()}
@@ -102,7 +102,7 @@ window.XP = (() => {
   }
   seedProfile();
   persist();
-  const MACHINE=['version','computerName','security','profiles','session','guest'];
+  const MACHINE=['fastStartup','version','computerName','security','profiles','session','guest'];
   const ACCOUNTS={admin:{name:t("text_administrator"),avatar:'chess',type:'admin'},guest:{name:t("text_guest"),avatar:'guest',type:'guest'}};
   const personal=source=>Object.fromEntries(Object.entries(source).filter(([key])=>!MACHINE.includes(key)));
   if(!state.profiles||typeof state.profiles!=='object')state.profiles={};
