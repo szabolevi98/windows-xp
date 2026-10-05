@@ -266,7 +266,7 @@ test('The share card points at an image that ships, at the size it claims',()=>{
 
 test('The entry point loads only local resources and blocks external connections',()=>{
  const html=readFileSync(new URL('index.html',root),'utf8');assert.match(html,/connect-src 'none'/);assert.match(html,/frame-src 'self'/);assert.match(html,/form-action 'none'/);
- for(const [,src]of [...html.matchAll(/\bsrc="([^"]+)"/g),...html.matchAll(/<link\b[^>]*\bhref="([^"]+)"/g)]){assert.ok(!/^https?:/.test(src),src);assert.ok(existsSync(new URL(src,root)),src);}
+ for(const [,src]of html.matchAll(/(?:src|href)="([^"]+)"/g)){assert.ok(!/^https?:/.test(src),src);assert.ok(existsSync(new URL(src,root)),src);}
 });
 
 test('The desktop belongs to Adminisztrátor, but a name the user chose is kept',()=>{

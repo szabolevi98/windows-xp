@@ -155,6 +155,6 @@ Copyright © 2026 Levente Szabó (szabolevi98).
 
 The simulator's original source code is licensed under the **GNU Affero General Public License, Version 3 only** (`AGPL-3.0-only`). See [LICENSE](LICENSE) for the full terms.
 
-If you make a modified version available to users over a network, you must prominently offer those users free access to that version's complete corresponding source code, as required by section 13. The sign-in screen and Help and Support link directly to this [source repository](https://github.com/szabolevi98/windows-xp).
+If you make a modified version available to users over a network, you must prominently offer those users free access to that version's complete corresponding source code, as required by section 13. The source code is available in this [repository](https://github.com/szabolevi98/windows-xp).
 
 Third-party code, images, sounds, fonts and other assets remain subject to their own licenses and terms; they are not relicensed under the AGPL. This includes Microsoft's Windows XP artwork and sounds, the Space Cadet game assets, and the MIT-licensed Pinball engine. See the asset sources above, [assets/sources.json](assets/sources.json) and the bundled third-party LICENSE and NOTICE files. Trademarks remain with their respective owners.

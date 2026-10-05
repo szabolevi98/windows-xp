@@ -1,7 +1,6 @@
 'use strict';
 // Magyar translations. Application code uses stable text_* keys; visible text lives here.
 window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {hu: {
-  "text_source_code_agpl": "Forráskód (AGPLv3)",
   "text_loading_windows": "A Windows betöltése…",
   "text_click_to_start": "Kattints az indításhoz",
   "text_welcome": "Üdvözöljük",
