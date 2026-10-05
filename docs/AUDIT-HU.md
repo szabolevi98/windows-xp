@@ -249,3 +249,14 @@ Az első értékelés szerint további érdemes feladatok voltak az általános 
 | Két túlméretezett tálcaikon | **Célzott javításra érdemes; még nincs módosítva** | Az Asztal megjelenítése és Biztonsági központ ikonja 1024 × 1024 pixeles, de a tálcán 16 × 16-ban látható. Együtt 524 498 bájtot tesznek ki, a megfigyelt induló erőforrások teljes HTTP-válaszméretének 30,7%-át. Az összes felhasználási hely ellenőrzése után kisebb változatokkal csökkenthető a letöltés az XP-élmény megőrzésével. |
 
 Részletes módszer, számok és korlátok: [Betöltési mérés](BETOLTES-MERES-HU.md). A mostani kérés első körös vizsgálatra vonatkozott: futó kódot, képeket és szerverbeállításokat nem változtattunk.
+
+## 9. Jóváhagyott ikonoptimalizálás – 2026. október 5.
+
+A felhasználó a mérés után jóváhagyta a két ikon kicsinyítését. Mindkettő 96 × 96-os, átlátszó RGBA PNG lett; a 16–38 pixeles megjelenítési helyekhez és nagyobb pixelsűrűséghez is marad tartalék. A forrásnyilvántartás az eredeti URL-t, az új fájlméretet és az átalakítást tartalmazza.
+
+- Asztal megjelenítése: 282 627 → **11 263 bájt**.
+- Biztonsági központ: 241 871 → **11 734 bájt**.
+- Együtt 524 498 → **22 997 bájt**, megtakarítás **501 501 bájt** (95,6% az ikonokon, 29,4% a korábban mért induló erőforrásokon).
+- A képek közvetlen HTML-hivatkozásai és közös ikonfeloldója `?v=2` URL-t használnak; az index új core-verziót kér, így a korábbi gyorsítótár nem tartja meg a nagy fájlokat.
+
+Ellenőrzés: **144/144 meglévő teszt sikeres**; böngészőben a tálca 16 pixeles és a Biztonsági központ fejlécének 38 pixeles ikonja rendben megjelenik, az Asztal megjelenítése gomb elrejti és visszaállítja az ablakot. JavaScript-hiba nem jelentkezett. Új tesztrendszer nem készült, az általános betöltési átépítés továbbra sem indokolt. A kiválasztott auditfeladatok ezzel elkészültek.

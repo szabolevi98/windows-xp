@@ -543,12 +543,14 @@
   {
     "file": "icons/security.png",
     "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/SecurityCenter.png",
-    "bytes": 241871
+    "bytes": 11734,
+    "note": "Az eredeti 1024×1024-es képből 96×96-os RGBA PNG, Pillow Lanczos kicsinyítéssel, az átlátszóság megtartásával."
   },
   {
     "file": "icons/showdesktop.png",
     "url": "https://raw.githubusercontent.com/softwarehistorysociety/XPIcons/main/XP/Desktop.png",
-    "bytes": 282627
+    "bytes": 11263,
+    "note": "Az eredeti 1024×1024-es képből 96×96-os RGBA PNG, Pillow Lanczos kicsinyítéssel, az átlátszóság megtartásával."
   },
   {
     "file": "icons/shutdown.png",

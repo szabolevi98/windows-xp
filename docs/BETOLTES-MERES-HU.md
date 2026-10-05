@@ -47,3 +47,17 @@ A két ikon együtt 524 498 bájt, a megfigyelt erőforrások 30,7%-a. Kisebb, a
 A `js/start.js` alapbeállításban 5500 ms induló képernyőt és a fiókválasztás után 2000 ms üdvözlést ír elő. Ez a szimuláció része, nem letöltési hiba. A már elkészült gyorsindítás ezeket kihagyja. A Pinball iframe és játékmotor csak a program megnyitásakor töltődik be, nincs az induló listában.
 
 Az audit alapján tervezett további érintéses fejlesztést és új böngészős/képi tesztrendszert a felhasználó döntése alapján elhagyjuk.
+
+## A mérés után jóváhagyott javítás
+
+Az eredeti mérést a fenti táblázatok őrzik. A két ikon azóta 96 × 96-os RGBA PNG-re lett kicsinyítve, az átlátszóságot megtartva:
+
+| Fájl | Eredeti | Új |
+|---|---|---|
+| `showdesktop.png` | 282 627 bájt | 11 263 bájt |
+| `security.png` | 241 871 bájt | 11 734 bájt |
+| Összesen | 524 498 bájt | 22 997 bájt |
+
+A megtakarítás **501 501 bájt**, az eredeti 1 706 786 bájtos induló erőforrás-összeg **29,4%-a**. Csak e két fájl cseréjével azonos erőforráslistán 1 205 285 bájt maradna; ez az eredeti mérésből számolt érték, nem új teljes oldalbetöltési idő. A rövid URL-verziózás miatti JS/HTML-méreteltérés ebben nincs benne.
+
+A közvetlen és generált ikon-URL-ek `?v=2` változata megkerüli a korábbi képek gyorsítótárát. A 144 meglévő teszt és a tálca, valamint a Biztonsági központ nagyobb ikonjának kézi böngészős ellenőrzése sikeres. Az XP-indulás időzítése és az egyéb erőforrások változatlanok.

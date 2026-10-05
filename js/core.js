@@ -10,7 +10,7 @@ window.XP = (() => {
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const iconPath = name => `assets/icons/${name==='windows'?'windows-logo':name || 'documents'}.${name === 'recycle' || name === 'pinball' ? 'ico' : 'png'}`;
+  const iconPath = name => `assets/icons/${name==='windows'?'windows-logo':name || 'documents'}.${name === 'recycle' || name === 'pinball' ? 'ico' : 'png'}${name==='showdesktop'||name==='security'?'?v=2':''}`;
   const icon = (name, cls='') => `<img class="${cls}" src="${iconPath(name)}" alt="" draggable="false">`;
   // The genuine Windows XP account tiles, in the order the Control Panel showed them.
   const avatars = ['chess','guitar','ball','butterfly','fish','frog','dog','cat','duck','horses','car','airplane','astronaut','beach','palm-tree','red-flower','pink-flower','snowflake','skater','kick','dirt-bike','giraffe','drip','africa','lift-off'];
