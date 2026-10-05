@@ -102,7 +102,7 @@ test('The tray speaker opens the little slider, and two clicks the mixer',()=>{
  assert.match(start,/\$\('#clock'\)\.ondblclick=\(\)=>XP\.open\('calendar'\)/);
  assert.doesNotMatch(start,/\$\('#clock'\)\.onclick=/);
  const core=readFileSync(new URL('js/core.js',root),'utf8');
- assert.match(core,/hideMenus\(\)\{[^}]*#volume-flyout'\)\.hidden=true/,'it closes with the other menus');
+ assert.match(core,/hideMenus\([^)]*\)\{[^}]*#volume-flyout'\)\.hidden=true/,'it closes with the other menus');
 
  const utils=readFileSync(new URL('js/utilities.js',root),'utf8');
  // Hangerő-szabályozó: the master and the channels a sound card of the day offered.
@@ -123,7 +123,7 @@ test('Menus cascade, and Send To reaches the desktop from a file as well',()=>{
  assert.match(core,/item\.items\?'<b class="submenu-arrow">▶<\/b>':''/);
  assert.match(core,/const left=anchor\.right\+el\.offsetWidth\+2>innerWidth\?/,'it flips when the screen runs out');
  assert.match(core,/function closeFrom\(depth\)/,'and a deeper level closes with its parent');
- assert.match(core,/hideMenus\(\)\{ closeSubmenus\(\)/);
+ assert.match(core,/hideMenus\([^)]*\)\{ closeSubmenus\(\)/);
  // A shortcut can point at a file, showing that file's icon and opening it.
  assert.match(core,/function shortcutToFile\(id,parent='desktop'\)/);
  assert.ok(core.includes(key('{name} – parancsikon')));

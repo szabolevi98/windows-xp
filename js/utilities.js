@@ -129,7 +129,8 @@ register('drive',(which='disk')=>{
    }
    if(tab==='tools')panel.innerHTML=`<fieldset><legend>${esc(t("text_error_checking"))}</legend><p>${esc(t("text_this_option_checks_the_volume_for_errors"))}</p><div class="button-row"><button class="xp-button" disabled>${esc(t("text_check_now"))}</button></div></fieldset>
      <fieldset><legend>${esc(t("text_defragmentation"))}</legend><p>${esc(t("text_this_option_defragments_the_files_on_the_volume"))}</p><div class="button-row"><button class="xp-button" disabled>${esc(t("text_defragment_now"))}</button></div></fieldset>
-     <fieldset><legend>${esc(t("text_backup"))}</legend><p>${esc(t("text_this_option_backs_up_the_files_on_the_volume"))}</p><div class="button-row"><button class="xp-button" disabled>${esc(t("text_backup_now"))}</button></div></fieldset>`;
+     <fieldset><legend>${esc(t("text_backup"))}</legend><p>${esc(t('text_backup_description'))}</p><div class="button-row"><button class="xp-button" data-backup-now>${esc(t("text_backup_now"))}</button></div></fieldset>`;
+   if(tab==='tools')$('[data-backup-now]',panel).onclick=()=>XP.open('backup');
    if(tab==='hardware')panel.innerHTML=`<p>${esc(t("text_all_disk_drives"))}</p><table class="taskmgr-table"><thead><tr><th>${esc(t("text_name"))}</th><th>${esc(t("text_type"))}</th></tr></thead><tbody>
      <tr><td>${icon('disk')}ST340016A</td><td>${esc(t("text_disk_drives"))}</td></tr>
      <tr><td>${icon('cd')}HL-DT-ST DVD-ROM GDR8162B</td><td>${esc(t("text_dvd_cd_rom_drives"))}</td></tr>
@@ -458,6 +459,7 @@ register('control',()=>{
   volume:{name:t("text_sounds_and_audio_devices_34b385fc"),icon:'volume',hint:t("text_system_sounds_and_volume"),open:()=>XP.open('sounds')},
   player:{name:t("text_audio_devices"),icon:'player',hint:t("text_playback_and_audio_files"),open:()=>XP.open('player')},
   system:{name:t("text_system"),icon:'computer',hint:t("text_system_information_and_storage"),open:()=>XP.open('system')},
+  backup:{name:t('text_backup'),icon:'disk',hint:t('text_backup_description'),open:()=>XP.open('backup')},
   cleanup:{name:t("text_disk_cleanup"),icon:'disk',hint:t("text_free_up_space_on_the_disk"),open:()=>{const trash=state.files.filter(f=>f.deleted).length;XP.dialog(t("text_disk_cleanup_c"),t("text_disk_cleanup_can_remove_the_following_files_temporary_internet_files_3_607783f7",{trash:(trash*0.06).toFixed(2),count:trash,total:(4.01+trash*0.06).toFixed(2)}));}},
   printers:{name:t("text_printers_and_faxes"),icon:'printers',hint:t("text_installed_printers"),open:()=>XP.open('printers')},
   mouse:{name:t("text_mouse"),icon:'mouse',hint:t("text_the_scheme_of_the_mouse_pointers"),open:()=>XP.open('mouse')},
@@ -472,7 +474,7 @@ register('control',()=>{
   {id:'network',name:t("text_network_and_internet_connections"),icon:'network',hint:t("text_connection_status_and_browser_settings"),items:['network','internet']},
   {id:'programs',name:t("text_add_or_remove_programs"),icon:'programs',hint:t("text_the_list_of_programs_installed_on_this_computer"),items:['programs']},
   {id:'sound',name:t("text_sounds_speech_and_audio_devices"),icon:'volume',hint:t("text_system_sounds_volume_and_playback"),items:['volume','player']},
-  {id:'performance',name:t("text_performance_and_maintenance"),icon:'computer',hint:t("text_system_information_and_disk_maintenance"),items:['system','cleanup']},
+  {id:'performance',name:t("text_performance_and_maintenance"),icon:'computer',hint:t("text_system_information_and_disk_maintenance"),items:['system','cleanup','backup']},
   {id:'hardware',name:t("text_printers_and_other_hardware"),icon:'printers',hint:t("text_printers_faxes_and_devices"),items:['printers','mouse']},
   {id:'accounts',name:t("text_user_accounts"),icon:'user',hint:t("text_your_user_name_and_your_profile"),items:['profile']},
   {id:'datetime',name:t("text_date_time_language_and_regional_options"),icon:'datetime',hint:t("text_calendar_the_exact_time_and_the_language_settings"),items:['datetime','regional']},

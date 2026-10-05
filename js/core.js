@@ -22,11 +22,30 @@ window.XP = (() => {
     {id:'todo',name:t("text_to_do_txt"),type:'text',parent:'documents',content:t("text_things_to_do_today_rediscover_the_start_menu_draw_something_in_paint_w_ed89fdbb"),modified:Date.now()},
     {id:'folder-personal',name:t("text_personal"),type:'folder',parent:'documents',modified:Date.now()}
   ],security:{firewall:true,updates:true},session:'admin',profiles:{},guest:{enabled:true},favorites:[{title:t("text_google"),url:'google.hu'},{title:t("text_wikipedia"),url:'hu.wikipedia.org'},{title:t("text_web_directory"),url:'about:offline'},{title:t("text_windows_xp"),url:'www.microsoft.com/windowsxp'}],mineBest:null});
-  let state;
-  try { const saved=JSON.parse(localStorage.getItem(KEY)); state={...defaults(),...(saved?.version===1?saved:{})}; if(!Array.isArray(state.files)) state.files=defaults().files; } catch { state=defaults(); }
-  let storageWarned=false;
-  function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{if(!storageWarned){storageWarned=true;setTimeout(()=>notify(t("text_the_save_did_not_succeed"),t("text_the_browser_storage_is_full_or_unavailable_download_the_documents_that_7b575206")),0);}return false;}}
+  const storage=window.XP_STORAGE.create({key:KEY,defaults,onChange:kind=>{
+    document.dispatchEvent(new CustomEvent('xp-storage-changed',{detail:{kind}}));
+  }});
+  const state=storage.initial;
+  let storageWarned=false,saveTimer=null;
+  function persist(){
+    clearTimeout(saveTimer);saveTimer=null;
+    const ok=storage.write(state);
+    if(ok)storageWarned=false;
+    else if(!storageWarned){storageWarned=true;setTimeout(()=>notify(t("text_the_save_did_not_succeed"),t(storage.kind==='conflict'?'text_save_conflict':storage.kind==='recovery'?'text_save_recovery':'text_the_browser_storage_is_full_or_unavailable_download_the_documents_that_7b575206')),0);}
+    return ok;
+  }
+  function schedulePersist(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,300);document.dispatchEvent(new CustomEvent('xp-save-pending'));}
+  function flushPersist(){return saveTimer===null?storage.kind==='saved':persist();}
+  function resetStorage(expected){return storage.replace({state:defaults(),language:i18n.language||'hu'},expected);}
+  window.addEventListener('pagehide',flushPersist);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)flushPersist();});
   function seedProfile(){
+  if(!state.draftsMigrated){
+    state.drafts=state.drafts||{};
+    if(state.draft)state.drafts['legacy-text']={type:'text',content:state.draft,name:t('text_draft_text'),modified:Date.now()};
+    if(state.paintDraft)state.drafts['legacy-image']={type:'image',content:state.paintDraft,name:t('text_draft_image'),modified:Date.now()};
+    state.draft='';delete state.paintDraft;state.draftsMigrated=true;
+  }
   if(!state.iconPositions||typeof state.iconPositions!=='object'||Array.isArray(state.iconPositions))state.iconPositions={};
   if(!avatars.includes(state.avatar)&&state.avatar!=='guest')state.avatar='chess';
   // Apply the new desktop arrangement once, without discarding personal files or settings.
@@ -145,15 +164,16 @@ window.XP = (() => {
     if(!ACCOUNTS[id])return false;
     if(id==='guest'&&!state.guest?.enabled)return false;
     if(id===state.session)return unparkSession(id)||true;
+    flushPersist();
     parkSession();
     state.profiles={...state.profiles,[state.session]:personal(state)};
-    const saved=state.profiles[id],complete=saved&&Array.isArray(saved.files);
+    const saved=state.profiles[id];
     for(const key of Object.keys(state))if(!MACHINE.includes(key))delete state[key];
     Object.assign(state,{...personal(defaults()),user:t(ACCOUNTS[id].name),avatar:ACCOUNTS[id].avatar,
       accountType:ACCOUNTS[id].type,...(saved||{})});
     state.session=id;
     if(id==='guest')state.avatar='guest';
-    if(!complete)seedProfile();
+    seedProfile();
     persist();applySettings();
     document.dispatchEvent(new CustomEvent('xp-settings-changed'));
     document.dispatchEvent(new CustomEvent('xp-files-changed'));
@@ -200,8 +220,8 @@ window.XP = (() => {
       if(win.maximized)continue;
       if(win.el.offsetWidth>areaWidth)win.el.style.width=areaWidth+'px';
       if(win.el.offsetHeight>areaHeight)win.el.style.height=areaHeight+'px';
-      win.el.style.left=Math.max(0,Math.min(parseInt(win.el.style.left)||0,Math.max(0,areaWidth-100)))+'px';
-      win.el.style.top=Math.max(0,Math.min(parseInt(win.el.style.top)||0,Math.max(0,areaHeight-32)))+'px';
+      win.el.style.left=Math.max(0,Math.min(parseInt(win.el.style.left)||0,Math.max(0,areaWidth-win.el.offsetWidth)))+'px';
+      win.el.style.top=Math.max(0,Math.min(parseInt(win.el.style.top)||0,Math.max(0,areaHeight-win.el.offsetHeight)))+'px';
     }
     renderTasks();
   }
@@ -373,7 +393,7 @@ window.XP = (() => {
       Object.assign(win.el.style,{left:box.left+'px',top:box.top+'px',width:Math.max(win.minWidth,box.width)+'px',height:Math.max(win.minHeight,box.height)+'px'});focus(win);
     });
   }
-  function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);mru=mru.filter(id=>id!==win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();}
+  function close(win){if(!windows.has(win.id))return;if(win.onClose?.()===false)return;win.cleanup.forEach(fn=>fn());win.el.remove();windows.delete(win.id);mru=mru.filter(id=>id!==win.id);if(win.modal){modalDepth--;win.shade?.remove();}frontmost();if(win.modal&&win.returnFocus?.isConnected)win.returnFocus.focus();}
   function minimize(win,quiet){
     if(win.modal)return;
     if(!quiet)sound('minimize');
@@ -405,7 +425,9 @@ window.XP = (() => {
     el.innerHTML=`<header class="title-bar">${icon(options.icon)}<span class="window-title">${esc(options.title)}</span><div class="window-controls">${options.modal?'':`<button class="window-control minimize" aria-label="${esc(t("text_minimize"))}" title="${esc(t("text_minimize"))}"></button><button class="window-control maximize" aria-label="${esc(t("text_maximize"))}" title="${esc(t("text_maximize"))}" ${options.fixed?'disabled':''}></button>`}<button class="window-control close" aria-label="${esc(t("text_close"))}" title="${esc(t("text_close"))}"></button></div></header><div class="window-content"></div>${options.fixed?'':['n','s','e','w','ne','nw','se','sw'].map(d=>`<div class="resize-edge resize-${d}" data-resize="${d}"></div>`).join('')+`<div class="resize-handle" data-resize="se" aria-label="${esc(t("text_resize"))}"></div>`}`;
     const win={id,el,body:$('.window-content',el),title:options.title,icon:options.icon,app:options.app,fixed:options.fixed,modal:options.modal,minWidth:options.minWidth||300,minHeight:options.minHeight||180,minimized:false,maximized:false,cleanup:[]};
     win.setTitle=title=>{win.title=title;$('.window-title',el).textContent=title;el.setAttribute('aria-label',title);renderTasks();};win.setIcon=name=>{if(win.icon===name)return;win.icon=name;const img=$('.title-bar img',el);if(img)img.src=iconPath(name);renderTasks();};win.close=()=>close(win);win.focus=()=>focus(win);
-    if(options.modal){modalDepth++;el.classList.add('dialog-window');el.setAttribute('aria-modal','true');const shade=document.createElement('div');shade.className='modal-shade';$('#windows').append(shade);win.shade=shade;}
+    if(options.modal){modalDepth++;win.returnFocus=document.activeElement;el.classList.add('dialog-window');el.setAttribute('aria-modal','true');const shade=document.createElement('div');shade.className='modal-shade';$('#windows').append(shade);win.shade=shade;
+      el.addEventListener('keydown',event=>{if(event.key!=='Tab')return;const controls=$$('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]',el).filter(c=>c.getClientRects().length);if(!controls.length)return;event.preventDefault();event.stopImmediatePropagation();const index=controls.indexOf(document.activeElement),next=(index+(event.shiftKey?-1:1)+controls.length)%controls.length;controls[next].focus();});
+    }
     windows.set(id,win);$('#windows').append(el);
     el.addEventListener('pointerdown',()=>focus(win));
     // Keep the host browser's modern context menu out of simulated application windows.
@@ -443,21 +465,45 @@ window.XP = (() => {
   function singleton(app){const w=[...windows.values()].find(w=>w.app===app);if(w){focus(w);return w;}return null;}
   // Menus cascade: an item with `items` opens a child menu beside itself.
   const submenus=[];
+  let menuOrigin=null;
   const depthOf=el=>submenus.find(entry=>entry.el===el)?.depth??0;
   function closeFrom(depth){while(submenus.length&&submenus.at(-1).depth>=depth)submenus.pop().el.remove();}
   const closeSubmenus=parent=>closeFrom(parent?depthOf(parent)+1:0);
   function paintMenu(el,items){
     el.replaceChildren();
+    el.onkeydown=e=>{
+      const buttons=$$('button:not(:disabled)',el),index=buttons.indexOf(document.activeElement);
+      if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){
+        e.preventDefault();e.stopPropagation();
+        const next=e.key==='Home'?0:e.key==='End'?buttons.length-1:(index+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length;
+        buttons[next]?.focus();
+      }
+      if(e.key==='ArrowRight'){
+        const button=buttons[index],entry=submenus.find(s=>s.owner===button);
+        if(button?.getAttribute('aria-haspopup')==='menu'){
+          e.preventDefault();e.stopPropagation();button.click();
+          const child=entry?.el||submenus.find(s=>s.owner===button)?.el;
+          $('button:not(:disabled)',child)?.focus();
+        }
+      }
+      if(e.key==='ArrowLeft'||e.key==='Escape'){
+        e.preventDefault();e.stopPropagation();
+        const entry=submenus.find(s=>s.el===el);
+        if(entry){closeFrom(entry.depth);entry.owner.focus();}
+        else hideMenus(true);
+      }
+      if(e.key==='Tab')hideMenus(true);
+    };
     items.forEach(item=>{
       if(item===null){el.append(document.createElement('hr'));return;}
       const b=document.createElement('button');b.setAttribute('role','menuitem');b.disabled=!!item.disabled;
       b.innerHTML=`${item.icon?icon(item.icon):`<span>${item.checked?'✓':''}</span>`}${esc(item.label)}${item.shortcut?`<kbd>${esc(item.shortcut)}</kbd>`:''}${item.items?'<b class="submenu-arrow">▶</b>':''}`;
       if(item.items&&!item.disabled){
         const open=()=>openSubmenu(b,item.items);
-        b.onpointerenter=open;b.onfocus=open;b.onclick=e=>{e.stopPropagation();open();};
+        b.setAttribute('aria-haspopup','menu');b.onpointerenter=open;b.onclick=e=>{e.stopPropagation();open();};
       }else{
         b.onpointerenter=()=>closeSubmenus(el);
-        b.onclick=e=>{e.stopPropagation();hideMenus();item.action?.();};
+        b.onclick=e=>{e.stopPropagation();hideMenus(true);item.action?.();};
       }
       el.append(b);
     });
@@ -477,14 +523,16 @@ window.XP = (() => {
   }
   function menu(items,x,y){
     const el=$('#context-menu');
+    if(el.hidden)menuOrigin=document.activeElement;
     closeFrom(0);
     paintMenu(el,items);
     el.hidden=false;
     el.style.left=Math.min(x,innerWidth-el.offsetWidth-3)+'px';el.style.top=Math.min(y,innerHeight-el.offsetHeight-32)+'px';
     el.style.left=Math.max(0,parseInt(el.style.left))+'px';el.style.top=Math.max(0,parseInt(el.style.top))+'px';
+    $('button:not(:disabled)',el)?.focus();
   }
   function menubar(win,menus,logo=false){const bar=document.createElement('nav');bar.className='menu-bar';bar.setAttribute('aria-label',t("text_program_menu"));Object.entries(menus).forEach(([label,items])=>{const b=document.createElement('button');b.textContent=label;b.onclick=e=>{e.stopPropagation();const r=b.getBoundingClientRect();menu(typeof items==='function'?items():items,r.left,r.bottom);};bar.append(b);});if(logo){const span=document.createElement('span');span.className='toolbar-logo';span.innerHTML=icon('windows');bar.append(span);}win.body.append(bar);return bar;}
-  function hideMenus(){ closeSubmenus();$('#context-menu').hidden=true;$('#start-menu').hidden=true;$('#volume-flyout').hidden=true;$('#start-button').classList.remove('active');$('#start-button').setAttribute('aria-expanded','false'); }
+  function hideMenus(restoreFocus=false){ closeSubmenus();$('#context-menu').hidden=true;$('#start-menu').hidden=true;$('#volume-flyout').hidden=true;$('#start-button').classList.remove('active');$('#start-button').setAttribute('aria-expanded','false');if(restoreFocus&&menuOrigin?.isConnected)menuOrigin.focus();menuOrigin=null; }
   // A dialog grows to its message: a fixed box let long text slide under the title bar
   // as soon as focusing the button scrolled the overflow into view.
   function fitDialog(win){
@@ -590,7 +638,7 @@ window.XP = (() => {
     const ghost=document.createElement('div');ghost.className='drag-ghost';
     ghost.innerHTML=source.innerHTML;document.body.append(ghost);return ghost;
   }
-  function saveFile(file){const i=state.files.findIndex(f=>f.id===file.id);const next={...file,modified:Date.now()};if(i<0)state.files.push(next);else state.files[i]=next;const ok=persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));return ok;}
+  function saveFile(file,deferred=false){const i=state.files.findIndex(f=>f.id===file.id);const next={...file,modified:Date.now()};if(i<0)state.files.push(next);else state.files[i]=next;if(deferred)schedulePersist();const ok=deferred?null:persist();document.dispatchEvent(new CustomEvent('xp-files-changed'));return ok;}
   function descendants(id){const ids=[id];for(let i=0;i<ids.length;i++)state.files.filter(f=>f.parent===ids[i]).forEach(f=>ids.push(f.id));return ids;}
   async function trashFile(id){
     const file=state.files.find(f=>f.id===id&&!f.deleted);
@@ -634,7 +682,7 @@ window.XP = (() => {
   document.addEventListener('keydown',e=>{if(modalDepth)return;if(e.key==='Escape'){hideMenus();finishAltTab(true);}if(e.altKey&&e.key==='F4'){e.preventDefault();if(active)close(windows.get(active));}if(e.ctrlKey&&e.key==='Escape'){e.preventDefault();$('#start-button').click();}if(e.altKey&&e.key===' '&&active){e.preventDefault();const win=windows.get(active);if(win){const box=win.el.getBoundingClientRect();menu(windowMenu(win),box.left,box.top+26);}}
     if(e.altKey&&e.key==='Tab'&&!e.repeat){e.preventDefault();stepAltTab(e.shiftKey);}});
   document.addEventListener('keyup',e=>{if(e.key==='Alt')finishAltTab(false);});
-  window.addEventListener('resize',()=>{const area=$('#desktop'),width=area.clientWidth,height=area.clientHeight;applySettings();for(const w of windows.values()){if(w.maximized)continue;w.el.style.left=Math.max(0,Math.min(parseInt(w.el.style.left)||0,width-100))+'px';w.el.style.top=Math.max(0,Math.min(parseInt(w.el.style.top)||0,height-32))+'px';if(w.el.offsetWidth>width)w.el.style.width=width+'px';if(w.el.offsetHeight>height)w.el.style.height=height+'px';}});
+  window.addEventListener('resize',applySettings);
   return {$,$$,esc,icon,t,
-    get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,persist,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,taskbarMetrics,wallpaperPath,now,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,profileFiles,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
+    get language(){return i18n.language;},locale,setLanguage:code=>i18n.setLanguage(code),get languages(){return i18n.languages;},applyToDom:root=>i18n.applyToDom(root),iconPath,recycleIcon,avatar,avatarPath,avatars,fileIcon,state,storage,persist,schedulePersist,flushPersist,resetStorage,apps,windows,open,register,singleton,createWindow,resizeBox,fitDialog,focus,close,minimize,maximize,menu,menubar,hideMenus,dialog,prompt,confirm,notify,sound,applySettings,taskbarMetrics,wallpaperPath,now,uniqueId,fileName,uniqueName,saveFile,moveFile,copyInto,clip,paste,canPaste,deleteFile,trashFile,emptyTrash,restoreFile,descendants,dropTarget,highlightDrop,applyDrop,dragGhost,download,openFile,shortcutTo,shortcutToFile,onFiles,status,accounts,accountInfo,profileFiles,switchUser,parkSession,closeParked,setGuest,get session(){return state.session;},get clipped(){return clipboard?.cut&&canPaste()?clipboard.id:null;},get active(){return active;},get modal(){return modalDepth>0;}};
 })();

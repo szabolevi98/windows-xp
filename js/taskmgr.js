@@ -37,6 +37,8 @@
     };
     const others=()=>[...XP.windows.values()].filter(win=>!win.modal);
     const rows=()=>processes(others().map(win=>win.app),state.user||t("text_administrator"));
+    const structure=()=>JSON.stringify([tab,others().map(win=>[win.id,win.title,win.minimized]),XP.accounts().map(a=>[a.id,a.name,a.active,a.running])]);
+    let renderedStructure='';
 
     XP.menubar(w,{
       [t("text_file")]:()=>[{label:t("text_new_task_run"),action:()=>XP.open('run')},null,{label:t("text_exit_task_manager"),action:()=>w.close()}],
@@ -74,6 +76,7 @@
     };
 
     function render(){
+      renderedStructure=structure();
       $$('[data-tab]',bar).forEach(button=>button.classList.toggle('active',button.dataset.tab===tab));
       const running=others(),list=rows();
       if(tab==='apps'){
@@ -96,7 +99,7 @@
         buttons.innerHTML='';
       }
       if(tab==='network'){
-        panel.innerHTML=`<div class="taskmgr-graph wide"><h3>Helyi kapcsolat</h3><canvas class="net-graph"></canvas></div><table class="taskmgr-table"><thead><tr><th>${esc(t("text_adapter"))}</th><th>${esc(t("text_network_utilization"))}</th><th>${esc(t("text_link_speed"))}</th><th>${esc(t("text_status"))}</th></tr></thead><tbody><tr><td>Helyi kapcsolat</td><td>${(net.at(-1)/10).toFixed(2)} %</td><td>100 Mbps</td><td>${esc(t("text_operational"))}</td></tr></tbody></table>`;
+        panel.innerHTML=`<div class="taskmgr-graph wide"><h3>${esc(t("text_local_area_connection"))}</h3><canvas class="net-graph"></canvas></div><table class="taskmgr-table"><thead><tr><th>${esc(t("text_adapter"))}</th><th>${esc(t("text_network_utilization"))}</th><th>${esc(t("text_link_speed"))}</th><th>${esc(t("text_status"))}</th></tr></thead><tbody><tr><td>${esc(t("text_local_area_connection"))}</td><td>${(net.at(-1)/10).toFixed(2)} %</td><td>100 Mbps</td><td>${esc(t("text_operational"))}</td></tr></tbody></table>`;
         graph($('.net-graph',panel),net,'#ffd23f');
         buttons.innerHTML='';
       }
@@ -149,12 +152,18 @@
     };
 
     const tick=setInterval(()=>{
-      if(w.parked)return;
+      if(w.parked||w.minimized||document.hidden)return;
       const load=Math.min(96,2+others().length*4+Math.round(Math.random()*7));
       cpu=Math.round((cpu*2+load)/3);
       history=[...history.slice(1),cpu];
       net=[...net.slice(1),Math.min(60,Math.round(Math.random()*(others().length?14:3)))];
-      render();
+      if(structure()!==renderedStructure)render();
+      else {
+        $('.status-part',footer).textContent=t('text_cpu_usage_percent',{percent:cpu});
+        if(tab==='processes')$$('tbody tr',panel).forEach((row,index)=>{const process=rows()[index],share=process.name==='System Idle Process'?100-cpu:process.app?Math.round(cpu/Math.max(1,others().length)):0;row.cells[2].textContent=String(share).padStart(2,'0');});
+        if(tab==='performance'){$('.meter-box b',panel).textContent=cpu+'%';graph($('.cpu-graph',panel),history,'#26ff5c');}
+        if(tab==='network'){$('tbody tr',panel).cells[1].textContent=(net.at(-1)/10).toFixed(2)+' %';graph($('.net-graph',panel),net,'#ffd23f');}
+      }
     },1200);
     w.cleanup.push(()=>clearInterval(tick));
     XP.onFiles(w,render);

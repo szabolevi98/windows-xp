@@ -19,4 +19,7 @@ export function hu(key,params){
 
 export function installHungarian(context){
  context.window.XP_STRINGS={hu:hungarian};
+ context.CustomEvent??=class{constructor(type,options={}){this.type=type;this.detail=options.detail;}};
+ context.document.dispatchEvent??=()=>{};
+ vm.runInContext(readFileSync(new URL('js/storage.js',root),'utf8'),context);
 }

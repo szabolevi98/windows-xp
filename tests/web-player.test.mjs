@@ -4,14 +4,29 @@ import {readFileSync,existsSync} from 'node:fs';
 import vm from 'node:vm';
 import {installHungarian} from './i18n-test-helper.mjs';
 const root=new URL('../',import.meta.url);
-function boot(saved){
+function boot(saved,language='hu'){
   const storage=new Map();if(saved)storage.set('windows-xp-simulator-v1',JSON.stringify(saved));
   const element={hidden:true,querySelector:()=>element};
   const context=vm.createContext({window:{addEventListener(){}},document:{addEventListener(){},querySelector:()=>element},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},console,setTimeout:()=>0,clearTimeout(){}});
-  installHungarian(context);vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
+  installHungarian(context);
+  if(language!=='hu')vm.runInContext(readFileSync(new URL(`lang/${language}.js`,root),'utf8'),context);
+  const dictionary=context.window.XP_STRINGS[language];
+  context.window.XP_I18N={language,locale:language==='hu'?'hu-HU':'en-US',t:(key,params)=>String(dictionary[key]??key).replace(/\{(\w+)\}/g,(all,name)=>params?.[name]??all)};
+  vm.runInContext(readFileSync(new URL('js/core.js',root),'utf8'),context);context.XP=context.window.XP;
   for(const file of ['internet','web-pages','player'])vm.runInContext(readFileSync(new URL(`js/${file}.js`,root),'utf8'),context);
   return {xp:context.XP,storage};
 }
+
+test('Recipe quantities keep the same units and proportions in every language',()=>{
+ for(const language of ['hu','en','de','fr','es']) {
+  const {xp}=boot(null,language),recipe=xp.webPages.find(page=>page.id==='recipes');
+  const initial=recipe.body;
+  assert.ok(initial.includes('200 g'));assert.ok(initial.includes('300 ml'));assert.ok(initial.includes('200 ml'));assert.equal(initial.includes('20 dkg liszt'),false);
+  for(const [n,flour,milk,water] of [[1,200,300,200],[2,400,600,400],[3,600,900,600]]) {
+   const html=xp.recipeIngredients(n);assert.ok(html.includes(`${flour} g`));assert.ok(html.includes(`${milk} ml`));assert.ok(html.includes(`${water} ml`));
+  }
+ }
+});
 test('Every local website has a unique address, working internal links and bundled images',()=>{
   const {xp}=boot(),pages=xp.webPages;
   assert.equal(pages.length,20);assert.equal(new Set(pages.map(p=>p.id)).size,pages.length);assert.equal(new Set(pages.map(p=>p.url)).size,pages.length);

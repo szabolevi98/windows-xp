@@ -48,7 +48,7 @@ The code uses stable `text_*` keys, such as `t('text_open')`. Each language has 
 - Outlook Express: local folders with unread counts, a reading pane, writing, replying and forwarding, deleting and Send/Receive. Read, sent and deleted mail is kept.
 - Internet Explorer: the old Google, keyword search across the local web, 20 built-in pages, the address bar, history, favourites that can be added and removed, a home page that can be set, and find on a page. Unknown addresses get a local error page. All six games can be started from `www.jatekbarlang.hu`.
 - The local web: the Netkapu news portal with a poll, a PC magazine, the PC Bazár classifieds with a saved basket, the Netklub forum with posts that are kept, a mailbox with sample letters and a draft, city weather, and a searchable demonstration railway timetable. The wallpaper gallery sets the desktop background, the recipe page scales portions, and the HTML school previews the page you write.
-- Notepad: a draft, saving documents, autosave, find, word wrap, and downloading the text file.
+- Notepad: separate drafts for each document, saving documents, autosave, find, word wrap, and downloading the text file. Notepad and Paint drafts can be reopened from Start → All Programs → Accessories → System Tools → Recover drafts.
 - The file manager: your own folders, documents, pictures, renaming, deleting, restoring, the Recycle Bin and searching for files. Four views from the View menu or the toolbar: Tiles, Icons, List and Details — the last with Name, Size, Type and Date Modified columns, sorted by clicking a header. The Folders button puts the folder tree where the task pane is, and the properties of Local Disk (C:) show the familiar pie of used and free space.
 - A browsable, read-only C: drive: WINDOWS, Program Files, Documents and Settings, Temp and their subfolders. The DVD drive asks for a disc when clicked.
 - Paint: pencil, brush, eraser, fill, line, rectangle, ellipse, text, colour picker, palette, undo, and saving or downloading a PNG.
@@ -74,7 +74,11 @@ Icons on the desktop open on a double click. One tap is enough on a touch screen
 
 The `windows-xp-simulator-v1` key in localStorage holds the documents, folders, pictures, drafts, settings, favourites and icon positions, the local web's basket, posts, vote and mail draft, the Media Player settings, and the Minesweeper, FreeCell and Space Cadet scores. Open windows and games in progress are not saved.
 
-If local storage is unavailable or full, the program says so. Clearing the browser's data clears the saves with it. Documents and pictures that matter can be downloaded to the machine. Audio and video opened in Media Player are available only in that player window.
+Open **Backup** in Control Panel → Performance and Maintenance, or Start → All Programs → Accessories → System Tools. Download one JSON file containing both accounts' documents, pictures, drafts and settings, together with the interface language. Select it again to validate and preview it before restoring. Restoration replaces both accounts' saved data and reloads the page; open programs and games in progress are not restored.
+
+If local storage is unavailable or full, the program reports the failed save instead of showing a successful autosave. A damaged or unsupported save is preserved, with automatic writes paused; Backup can download the original data, restore a valid backup or start over after confirmation. If another tab changes the save, an older tab stops writing and shows a persistent warning in the notification area. Download any work from that tab before reloading it.
+
+Typing and drawing use a 300 ms save delay to combine frequent changes. Manual saves, closing an editor, switching accounts, hiding the page and leaving it flush pending changes. Each unnamed document has its own draft; the previous shared Notepad and Paint drafts migrate into the recovery list. Clearing browser data still clears the saves. Audio and video opened in Media Player are available only in that player window.
 
 Everything needed to run is in the `assets` folder. The CSP forbids network calls, external resources and posting forms anywhere else; it allows an iframe only from this origin, which is how Space Cadet runs. Internet Explorer renders local content into the DOM — it does not load real web pages.
 
@@ -85,7 +89,9 @@ Everything needed to run is in the `assets` folder. The CSP forbids network call
 - `caption-controls.css`, `tray-controls.css`, `scrollbar-controls.css`, `controls.css`:
   the parts of the interface drawn from the bitmaps in the original `luna.msstyles`.
   The classic theme does not use them.
-- `js/core.js`: windows, menus, dialogs, saving, file operations.
+- `js/core.js`: windows, menus, dialogs, file operations and save scheduling.
+- `js/storage.js`: saved-state validation, storage failure and stale-tab protection.
+- `js/backup.js`: full backup export, validated import and recovery controls.
 - `js/internet.js`: Internet Explorer, the search engine and the local web.
 - `js/web-pages.js` and `web-pages.css`: the interactive demonstration pages and what they save.
 - `js/apps.js`: documents, Paint, Calculator, the command prompt.
@@ -132,7 +138,7 @@ Every asset is in the repository, so nothing has to be downloaded to run the sim
 
 `node --test tests/*.test.mjs`
 
-The 120 automated tests cover saving documents and settings, the file operations, the icon grid, resizing windows and the taskbar, starting up and the sound handling, the rules of the card games, Minesweeper's board sizes, Pinball's pausing and focus, the assets and the CSP. They also check every local page's images and internal links, the basket and the guest book being saved, HTML escaping, Media Player's playback order, and all five languages, including translation keys, placeholders, detection and saved preferences.
+The 134 automated tests cover saving documents and settings, damaged-state recovery, stale-tab conflicts, backup round-trips and failed restores, deferred saves and profile switching, the file operations, the icon grid, resizing windows and the taskbar, starting up and the sound handling, the rules of the card games, Minesweeper's board sizes, Pinball's pausing and focus, the assets and the CSP. They also check every local page's images and internal links, the basket and the guest book being saved, HTML escaping, Media Player's playback order, recipe units in all five languages, translation keys, placeholders, detection and saved preferences.
 
 Loading takes 5.5 seconds, after which the sign-in screen waits: the desktop always opens by clicking the name, and then two seconds of welcome follow. That click is also the gesture a browser waits for before it will play sound. If sound is refused anyway, the screen stays at sign-in and the next click tries again.
 

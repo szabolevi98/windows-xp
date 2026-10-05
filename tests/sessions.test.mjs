@@ -98,7 +98,7 @@ test('A parked program keeps to itself while somebody else works',()=>{
  assert.doesNotMatch(core,/parkSession[\s\S]{0,400}win\.el\.remove\(\)/,'parking never detaches the window');
  // A parked window does not redraw from the other account's files.
  assert.match(core,/const guarded=\(\)=>\{if\(!win\.parked\)fn\(\);\}/);
- assert.match(read('js/taskmgr.js'),/setInterval\(\(\)=>\{\s*\n\s*if\(w\.parked\)return;/);
+ assert.match(read('js/taskmgr.js'),/setInterval\(\(\)=>\{\s*\n\s*if\(w\.parked\|\|w\.minimized\|\|document\.hidden\)return;/);
  // Nor does it play music at them.
  assert.match(read('js/player.js'),/w\.onPark=\(\)=>\{playingWhenParked=!media\.paused&&!media\.ended;media\.pause\(\);\}/);
  assert.match(read('js/player.js'),/w\.onUnpark=\(\)=>\{if\(playingWhenParked\)play\(\);\}/);

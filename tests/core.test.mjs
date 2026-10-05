@@ -187,7 +187,37 @@ test('Untrusted display text and filenames cannot introduce HTML or paths',()=>{
  const {xp}=boot();assert.equal(xp.esc('<img src=x onerror="alert(1)">'),'&lt;img src=x onerror=&quot;alert(1)&quot;&gt;');assert.equal(xp.fileName('../a/b:c?.txt'),'..abc.txt');assert.ok(!xp.fileName('a\u0000b').includes('\u0000'));
 });
 test('Storage exhaustion reports a failed save',()=>{
- const {xp,context}=boot();context.localStorage.setItem=()=>{throw new Error('QuotaExceededError');};assert.equal(xp.persist(),false);
+ const {xp,context}=boot();xp.state.draft='A new unsaved note';context.localStorage.setItem=()=>{throw new Error('QuotaExceededError');};assert.equal(xp.persist(),false);
+});
+
+test('Typing is coalesced and an explicit flush writes the newest text',()=>{
+ const {xp,storage,context}=boot(),timers=new Map();let next=1;
+ context.setTimeout=(fn,delay)=>{const id=next++;timers.set(id,{fn,delay});return id;};context.clearTimeout=id=>timers.delete(id);
+ xp.saveFile({id:'typing',name:'Typing.txt',parent:'documents',type:'text',content:'a'},true);
+ xp.saveFile({id:'typing',name:'Typing.txt',parent:'documents',type:'text',content:'ab'},true);
+ assert.equal(timers.size,1);
+ assert.equal(JSON.parse(storage.get('windows-xp-simulator-v1')).files.some(f=>f.id==='typing'),false);
+ assert.equal(xp.flushPersist(),true);assert.equal(timers.size,0);
+ assert.equal(JSON.parse(storage.get('windows-xp-simulator-v1')).files.find(f=>f.id==='typing').content,'ab');
+});
+
+test('Switching profiles flushes pending text into the outgoing account',()=>{
+ const {xp,storage,context}=boot();
+ const element=context.document.querySelector();Object.assign(element,{dataset:{},style:{},clientWidth:1280,clientHeight:720,replaceChildren(){},classList:{toggle(){}}});
+ context.document.body=element;context.document.documentElement=element;
+ xp.saveFile({id:'pending-admin',name:'Pending.txt',parent:'documents',type:'text',content:'utolsó billentyű'},true);
+ xp.switchUser('guest');
+ const saved=JSON.parse(storage.get('windows-xp-simulator-v1'));
+ assert.equal(saved.profiles.admin.files.find(f=>f.id==='pending-admin').content,'utolsó billentyű');
+ assert.equal(xp.state.files.some(f=>f.id==='pending-admin'),false);
+});
+
+test('Legacy drafts migrate once without replacing independent recovered drafts',()=>{
+ const {xp,storage}=boot({version:1,draft:'régi piszkozat',files:[]});
+ assert.equal(xp.state.drafts['legacy-text'].content,'régi piszkozat');
+ xp.state.drafts.other={type:'text',content:'második piszkozat'};xp.persist();
+ const next=boot(JSON.parse(storage.get('windows-xp-simulator-v1'))).xp;
+ assert.equal(next.state.drafts.other.content,'második piszkozat');assert.equal(next.state.drafts['legacy-text'].content,'régi piszkozat');
 });
 
 test('Startup audio restarts from the beginning and reports autoplay denial instead of hiding it',async()=>{

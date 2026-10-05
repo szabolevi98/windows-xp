@@ -106,7 +106,7 @@ const programsMenu=[
  ['Kellékek','programs',[
   ['Jegyzettömb','notepad','notepad'],['Paint','paint','paint'],['Parancssor','cmd','cmd'],
   ['Számológép','calculator','calculator'],['Windows Intéző','folder','explorer'],
-  ['Rendszereszközök','folder',[['Feladatkezelő','taskmgr','taskmgr'],['Vezérlőpult','control','control']]]
+  ['Rendszereszközök','folder',[['Feladatkezelő','taskmgr','taskmgr'],['Vezérlőpult','control','control'],['text_backup','disk','backup'],['text_recovered_drafts','documents','drafts']]]
  ]],
  ['Játékok','programs',[
   ['Aknakereső','mines','mines'],['FreeCell','freecell','freecell'],['Hearts','hearts','hearts'],
@@ -122,12 +122,32 @@ function programsMarkup(entries){
   if(entry===null)return '<div class="start-separator"></div>';
   const [label,ic,target]=entry;
   if(!Array.isArray(target))return startItem(label,ic,target);
-  return `<div class="menu-folder"><button class="start-item folder">${icon(ic)}<span>${esc(t(label))}</span><b class="submenu-arrow">▶</b></button><div class="popup-menu folder-menu">${programsMarkup(target)}</div></div>`;
+  return `<div class="menu-folder"><button class="start-item folder" aria-haspopup="menu">${icon(ic)}<span>${esc(t(label))}</span><b class="submenu-arrow">▶</b></button><div class="popup-menu folder-menu" role="menu">${programsMarkup(target)}</div></div>`;
  }).join('');
 }
 function startItem(label,ic,app,subtitle='',minor=false,pinned=false){label=t(label);subtitle=subtitle?t(subtitle):'';return `<button class="start-item ${minor?'minor':''}" data-open="${app}" data-label="${esc(label)}" data-icon="${ic}" ${pinned?'data-pinned="true"':''}>${icon(ic)}<span>${subtitle?`<b>${label}</b><small>${subtitle}</small>`:label}</span></button>`;}
 function renderStart(){const el=$('#start-menu'),pinned=pinnedPrograms();el.innerHTML=`<header class="start-header"><button class="start-user" data-open="profile" title="${esc(t("text_user_accounts"))}"><img class="start-avatar" src="${XP.avatarPath(state.avatar)}" alt="${esc(t("text_account_picture"))}"><span>${esc(state.user)}</span></button></header><div class="start-columns"><div class="start-left">${pinned.map(app=>app==='ie'?startItem('Internet','ie',app,'Internet Explorer',false,true):app==='outlook'?startItem('Email','mail',app,'Outlook Express',false,true):startItem(PROGRAM_ITEMS[app][0],PROGRAM_ITEMS[app][1],app,'',false,true)).join('')}${pinned.length?'<div class="start-separator"></div>':''}${frequentPrograms().map(app=>startItem(PROGRAM_ITEMS[app][0],PROGRAM_ITEMS[app][1],app)).join('')}<div class="start-separator"></div><button class="start-item all-programs" id="all-programs">${esc(t("text_all_programs"))} <b>▶</b></button></div><div class="start-right">${startItem(t("text_my_documents"),'documents','documents')}${startItem('Képek','pictures','pictures')}${startItem('Zene','music','music')}${startItem('Sajátgép','computer','computer')}<div class="start-separator"></div>${startItem('Vezérlőpult','control','control','',true)}${startItem('Nyomtatók és faxok','printers','printers','',true)}${startItem('Hálózati kapcsolatok','network','network','',true)}<div class="start-separator"></div>${startItem('Súgó és támogatás','help','help','',true)}${startItem('Keresés','search','search','',true)}${startItem('Futtatás…','run','run','',true)}</div></div><footer class="start-footer"><button data-open="logoff">${icon('logoff')} ${t("text_log_off")}</button><button data-open="power">${icon('shutdown')} ${t("text_turn_off")}</button></footer><div class="programs-menu popup-menu" hidden>${programsMarkup(programsMenu)}</div>`;$('#all-programs').onclick=e=>{e.stopPropagation();$('.programs-menu',el).hidden=!$('.programs-menu',el).hidden;};}
-$('#start-button').onclick=e=>{e.stopPropagation();if(XP.modal)return;const el=$('#start-menu');if(el.hidden){renderStart();el.hidden=false;$('#start-button').classList.add('active');$('#start-button').setAttribute('aria-expanded','true');}else XP.hideMenus();};
+$('#start-button').onclick=e=>{e.stopPropagation();if(XP.modal)return;const el=$('#start-menu');if(el.hidden){renderStart();el.hidden=false;$('#start-button').classList.add('active');$('#start-button').setAttribute('aria-expanded','true');$('.start-item',el)?.focus();}else XP.hideMenus();};
+$('#start-menu').onkeydown=e=>{
+ const root=$('#start-menu'),button=e.target.closest('button');if(!button)return;
+ const scope=button.closest('.folder-menu,.programs-menu')||root;
+ const buttons=$$('button:not(:disabled)',scope).filter(b=>(b.closest('.folder-menu,.programs-menu')||root)===scope&&b.getClientRects().length);
+ if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){
+  e.preventDefault();e.stopPropagation();const index=buttons.indexOf(button);
+  const next=e.key==='Home'?0:e.key==='End'?buttons.length-1:(index+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length;
+  buttons[next]?.focus();
+ }
+ if(e.key==='ArrowRight'){
+  const child=button.id==='all-programs'?$('.programs-menu',root):button.classList.contains('folder')?$('.folder-menu',button.parentElement):null;
+  if(child){e.preventDefault();e.stopPropagation();child.hidden=false;$('button',child)?.focus();}
+ }
+ if(e.key==='ArrowLeft'||e.key==='Escape'){
+  e.preventDefault();e.stopPropagation();
+  if(scope.classList.contains('folder-menu'))$('.folder',scope.parentElement)?.focus();
+  else if(scope.classList.contains('programs-menu')){scope.hidden=true;$('#all-programs').focus();}
+  else {XP.hideMenus();$('#start-button').focus();}
+ }
+};
 $('#start-menu').oncontextmenu=e=>{
  const button=e.target.closest('.start-item[data-open]');if(!button)return;
  e.preventDefault();e.stopPropagation();

@@ -113,7 +113,7 @@ test('Every sentence the code asks for has a translation',()=>{
  const missing=[];
  let seen=0;
  for(const file of ['core','start','explorer','apps','utilities','internet','web-pages','outlook',
-  'player','games','cardgames','pinball','taskmgr','compmgmt']){
+  'player','games','cardgames','pinball','taskmgr','compmgmt','backup']){
   const source=read(`js/${file}.js`);
   for(const match of source.matchAll(call)){
    seen++;
