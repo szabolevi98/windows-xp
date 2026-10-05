@@ -1,6 +1,7 @@
 'use strict';
 // German translations. Application code uses stable text_* keys; visible text lives here.
 window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {de: {
+  "text_source_code_agpl": "Quellcode (AGPLv3)",
   "text_loading_windows": "Windows wird gestartet…",
   "text_click_to_start": "Zum Starten klicken",
   "text_welcome": "Willkommen",

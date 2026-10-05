@@ -148,3 +148,13 @@ Loading takes 5.5 seconds, after which the sign-in screen waits: the desktop alw
 Optional **Fast startup** in Control Panel → Performance and Maintenance → Simulator Options skips the loading and welcome delays from the next startup. The account click and sound handling still apply. The preference is shared by both accounts and can be switched off to return to the original timing. Simulator Options is also in Start → All Programs → Accessories → System Tools. Help and Support links directly to file import and backup.
 
 Checked in a browser: dragging all eight window edges and corners, maximising and restoring; reactivating Pinball from another window, from the controls below it and after closing its help; Media Player playback and library search; the local web pages, the basket, a post and a mail draft, and all of those surviving a reload.
+
+## License
+
+Copyright © 2026 Levente Szabó (szabolevi98).
+
+The simulator's original source code is licensed under the **GNU Affero General Public License, Version 3 only** (`AGPL-3.0-only`). See [LICENSE](LICENSE) for the full terms.
+
+If you make a modified version available to users over a network, you must prominently offer those users free access to that version's complete corresponding source code, as required by section 13. The sign-in screen and Help and Support link directly to this [source repository](https://github.com/szabolevi98/windows-xp).
+
+Third-party code, images, sounds, fonts and other assets remain subject to their own licenses and terms; they are not relicensed under the AGPL. This includes Microsoft's Windows XP artwork and sounds, the Space Cadet game assets, and the MIT-licensed Pinball engine. See the asset sources above, [assets/sources.json](assets/sources.json) and the bundled third-party LICENSE and NOTICE files. Trademarks remain with their respective owners.

@@ -1,6 +1,7 @@
 'use strict';
 // Spanish translations. Stable text_* keys match the English dictionary.
 window.XP_STRINGS = Object.assign(window.XP_STRINGS || {}, {es: {
+  "text_source_code_agpl": "Código fuente (AGPLv3)",
   "text_loading_windows": "Cargando Windows…",
   "text_click_to_start": "Haga clic para iniciar",
   "text_welcome": "Bienvenido",

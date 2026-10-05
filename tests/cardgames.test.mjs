@@ -159,7 +159,7 @@ test('A full Hearts hand plays out legally and always accounts for all 26 points
 test('The card games ship as local resources and are wired into the shell',()=>{
  const html=readFileSync(new URL('index.html',root),'utf8');
  for(const file of ['cardgames.css','js/cardgames.js'])assert.ok(html.includes(file),`${file} is loaded by the entry point`);
- for(const [,src] of html.matchAll(/(?:src|href)="([^"]+)"/g))assert.doesNotMatch(src,/^(?:https?:)?\/\//);
+ for(const [,src] of [...html.matchAll(/\bsrc="([^"]+)"/g),...html.matchAll(/<link\b[^>]*\bhref="([^"]+)"/g)])assert.doesNotMatch(src,/^(?:https?:)?\/\//);
  const start=readFileSync(new URL('js/start.js',root),'utf8');
  for(const app of ['freecell','spider','hearts'])assert.ok(start.includes(`'${app}'`),`${app} is in the start menu`);
  const code=readFileSync(new URL('js/cardgames.js',root),'utf8');
